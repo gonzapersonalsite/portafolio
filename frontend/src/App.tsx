@@ -1,35 +1,78 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { Suspense } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { Box, CircularProgress } from '@mui/material';
+
+// Public Pages
+import HomePage from '@/pages/public/HomePage';
+import AboutPage from '@/pages/public/AboutPage';
+import SkillsPage from '@/pages/public/SkillsPage';
+import ExperiencePage from '@/pages/public/ExperiencePage';
+import ProjectsPage from '@/pages/public/ProjectsPage';
+import ContactPage from '@/pages/public/ContactPage';
+
+// Admin Pages
+const LoginPage = React.lazy(() => import('@/pages/admin/LoginPage'));
+const DashboardLayout = React.lazy(() => import('@/components/admin/DashboardLayout'));
+import PublicLayout from '@/components/layout/PublicLayout';
+const SkillsManagement = React.lazy(() => import('@/pages/admin/SkillsManagement'));
+const ExperiencesManagement = React.lazy(() => import('@/pages/admin/ExperiencesManagement'));
+const ProjectsManagement = React.lazy(() => import('@/pages/admin/ProjectsManagement'));
+const ProfileManagement = React.lazy(() => import('@/pages/admin/ProfileManagement'));
+const SpokenLanguageManagement = React.lazy(() => import('@/pages/admin/SpokenLanguageManagement'));
+
+import { useAuthStore } from '@/context/AuthStore';
+
+// Protected Route Component
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  return isAuthenticated ? <>{children}</> : <Navigate to="/admin/login" replace />;
+};
+
+const LoadingFallback = () => (
+  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <CircularProgress />
+  </Box>
+);
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/" element={<PublicLayout />}>
+        <Route index element={<HomePage />} />
+        <Route path="about" element={<AboutPage />} />
+        <Route path="skills" element={<SkillsPage />} />
+        <Route path="experience" element={<ExperiencePage />} />
+        <Route path="projects" element={<ProjectsPage />} />
+        <Route path="contact" element={<ContactPage />} />
+      </Route>
+
+      {/* Admin Routes */}
+      <Route path="/admin/login" element={
+        <Suspense fallback={<LoadingFallback />}>
+          <LoginPage />
+        </Suspense>
+      } />
+
+      <Route path="/admin" element={
+        <ProtectedRoute>
+          <Suspense fallback={<LoadingFallback />}>
+            <DashboardLayout />
+          </Suspense>
+        </ProtectedRoute>
+      }>
+        <Route index element={<Navigate to="/admin/skills" replace />} />
+        <Route path="skills" element={<SkillsManagement />} />
+        <Route path="experiences" element={<ExperiencesManagement />} />
+        <Route path="projects" element={<ProjectsManagement />} />
+        <Route path="profile" element={<ProfileManagement />} />
+        <Route path="languages" element={<SpokenLanguageManagement />} />
+      </Route>
+
+      {/* Catch all */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
 }
 
-export default App
+export default App;
