@@ -10,6 +10,7 @@ import { publicService } from '@/services/publicService';
 import { formatImageUrl } from '@/utils/imageUtils';
 import { AboutSkeleton, PageHeaderSkeleton } from '@/components/common/SkeletonLoaders';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
+import RichTextRenderer from '@/components/common/RichTextRenderer';
 import type { Skill, Profile, SpokenLanguage } from '@/types';
 
 const AboutPage: React.FC = () => {
@@ -101,12 +102,16 @@ const AboutPage: React.FC = () => {
                         <Typography variant="h5" gutterBottom fontWeight="bold">
                             {profile ? getLocalizedText(profile.aboutIntroTitleEn, profile.aboutIntroTitleEs) : t('about.introTitle')}
                         </Typography>
-                        <Typography variant="body1" paragraph color="text.secondary" sx={{ fontSize: '1.1rem', lineHeight: 1.8 }}>
-                            {profile ? getLocalizedText(profile.aboutSummaryEn, profile.aboutSummaryEs) : t('about.summary')}
-                        </Typography>
-                        <Typography variant="body1" paragraph color="text.secondary" sx={{ fontSize: '1.1rem', lineHeight: 1.8 }}>
-                            {profile ? getLocalizedText(profile.aboutPhilosophyEn, profile.aboutPhilosophyEs) : t('about.philosophy')}
-                        </Typography>
+                        
+                        <RichTextRenderer 
+                            text={profile ? getLocalizedText(profile.aboutSummaryEn, profile.aboutSummaryEs) : t('about.summary')} 
+                        />
+
+                        <Box sx={{ mt: 2 }}>
+                            <RichTextRenderer 
+                                text={profile ? getLocalizedText(profile.aboutPhilosophyEn, profile.aboutPhilosophyEs) : t('about.philosophy')} 
+                            />
+                        </Box>
 
                         <Divider sx={{ my: 4 }} />
 

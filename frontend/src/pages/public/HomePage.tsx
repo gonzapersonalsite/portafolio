@@ -14,6 +14,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { formatImageUrl } from '@/utils/imageUtils';
 import { HeroSkeleton, ProjectCardSkeleton } from '@/components/common/SkeletonLoaders';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
+import RichTextRenderer from '@/components/common/RichTextRenderer';
 import type { Profile as ProfileType, Project } from '@/types';
 
 const float = keyframes`
@@ -115,9 +116,13 @@ const HomePage: React.FC = () => {
                             <Typography variant="h4" color="text.secondary" gutterBottom sx={{ mb: 4 }}>
                                 {profile ? getLocalizedText(profile.subtitleEn, profile.subtitleEs) : "Full Stack Developer"}
                             </Typography>
-                            <Typography variant="body1" paragraph sx={{ maxWidth: 600, mb: 4, fontSize: '1.1rem' }}>
-                                {profile ? getLocalizedText(profile.descriptionEn, profile.descriptionEs) : t('home.description', "I build exceptional digital experiences...")}
-                            </Typography>
+                            
+                            <Box sx={{ maxWidth: 600, mb: 4 }}>
+                                <RichTextRenderer 
+                                    text={profile ? getLocalizedText(profile.descriptionEn, profile.descriptionEs) : t('home.description', "I build exceptional digital experiences...")}
+                                />
+                            </Box>
+
                             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                                 <Button
                                     variant="contained"
