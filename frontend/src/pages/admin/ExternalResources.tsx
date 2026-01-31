@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import LaunchIcon from '@mui/icons-material/Launch';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import EmailIcon from '@mui/icons-material/Email';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
 const ExternalResources: React.FC = () => {
     const { t, i18n } = useTranslation();
@@ -18,21 +19,25 @@ const ExternalResources: React.FC = () => {
             title: 'PostImages',
             url: 'https://postimages.org/',
             icon: <CloudUploadIcon sx={{ fontSize: 40, color: 'primary.main' }} />,
-            description: isEnglish 
-                ? 'Used to upload images and generate direct URLs for use in the portfolio (projects, skills, etc.).'
-                : 'Utilizado para subir imágenes y generar URLs directas para su uso en el portafolio (proyectos, habilidades, etc.).',
+            description: t('admin.resources.postImages.description'),
             tags: ['Images', 'Hosting', 'CDN'],
-            actionText: isEnglish ? 'Go to PostImages' : 'Ir a PostImages'
+            actionText: t('admin.resources.postImages.action')
         },
         {
             title: 'EmailJS Dashboard',
             url: 'https://dashboard.emailjs.com/admin',
             icon: <EmailIcon sx={{ fontSize: 40, color: 'secondary.main' }} />,
-            description: isEnglish 
-                ? 'Manages the contact form functionality. Used to view email logs, templates, and API keys.'
-                : 'Gestiona la funcionalidad del formulario de contacto. Utilizado para ver registros de correos, plantillas y claves API.',
+            description: t('admin.resources.emailJs.description'),
             tags: ['Email', 'Forms', 'Contact'],
-            actionText: isEnglish ? 'Go to EmailJS' : 'Ir a EmailJS'
+            actionText: t('admin.resources.emailJs.action')
+        },
+        {
+            title: 'Vercel Dashboard',
+            url: 'https://vercel.com/gonzapersonalsites-projects/portafolio',
+            icon: <RocketLaunchIcon sx={{ fontSize: 40, color: 'text.primary' }} />,
+            description: t('admin.resources.vercel.description'),
+            tags: ['Deployment', 'Hosting', 'Frontend'],
+            actionText: t('admin.resources.vercel.action')
         }
     ];
 
@@ -43,9 +48,7 @@ const ExternalResources: React.FC = () => {
                     {t('admin.externalResources')}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
-                    {isEnglish 
-                        ? 'Quick access to external tools and services connected to this portfolio.' 
-                        : 'Acceso rápido a herramientas y servicios externos conectados a este portafolio.'}
+                    {t('admin.externalResourcesDescription')}
                 </Typography>
             </Paper>
 

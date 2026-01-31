@@ -140,6 +140,20 @@ const resources = {
                 invalidCredentials: 'Invalid credentials. Please check your username and password.',
                 welcomeBack: 'Welcome back! Please enter your credentials.',
                 genericError: 'An unexpected error occurred.',
+                resources: {
+                    postImages: {
+                        description: 'Used to upload images and generate direct URLs for use in the portfolio (projects, skills, etc.).',
+                        action: 'Go to PostImages'
+                    },
+                    emailJs: {
+                        description: 'Manages the contact form functionality. Used to view email logs, templates, and API keys.',
+                        action: 'Go to EmailJS'
+                    },
+                    vercel: {
+                        description: 'Manage frontend deployments, domains, and production environment variables.',
+                        action: 'Go to Vercel'
+                    }
+                }
             },
             common: {
                 loading: 'Loading...',
@@ -245,6 +259,7 @@ const resources = {
                 projects: 'Gestión de Proyectos',
                 languages: 'Gestión de Idiomas',
                 externalResources: 'Recursos Externos',
+                externalResourcesDescription: 'Acceso rápido a herramientas y servicios externos conectados a este portafolio.',
                 add: 'Añadir Nuevo',
                 edit: 'Editar',
                 delete: 'Eliminar',
@@ -300,6 +315,20 @@ const resources = {
                 invalidCredentials: 'Credenciales inválidas. Por favor, verifica tu usuario y contraseña.',
                 welcomeBack: '¡Bienvenido de nuevo! Por favor, introduce tus credenciales.',
                 genericError: 'Ha ocurrido un error inesperado.',
+                resources: {
+                    postImages: {
+                        description: 'Utilizado para subir imágenes y generar URLs directas para su uso en el portafolio (proyectos, habilidades, etc.).',
+                        action: 'Ir a PostImages'
+                    },
+                    emailJs: {
+                        description: 'Gestiona la funcionalidad del formulario de contacto. Utilizado para ver registros de correos, plantillas y claves API.',
+                        action: 'Ir a EmailJS'
+                    },
+                    vercel: {
+                        description: 'Gestiona los despliegues del frontend, dominios y variables de entorno de producción.',
+                        action: 'Ir a Vercel'
+                    }
+                }
             },
             common: {
                 loading: 'Cargando...',
