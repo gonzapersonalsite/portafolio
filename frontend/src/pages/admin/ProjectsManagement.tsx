@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
     Box, Button, Typography, Dialog,
     DialogTitle, DialogContent, DialogActions, TextField,
-    Card, CardContent, CardMedia, CardActions, Checkbox, FormControlLabel, Grid,
+    Card, CardContent, CardActions, Checkbox, FormControlLabel, Grid,
     Snackbar, Alert
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -12,6 +12,7 @@ import type { Project } from '@/types';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { formatImageUrl } from '@/utils/imageUtils';
+import ImageWithFallback from '@/components/common/ImageWithFallback';
 import ConfirmDialog from '@/components/common/ConfirmDialog';
 
 const ProjectsManagement: React.FC = () => {
@@ -144,27 +145,21 @@ const ProjectsManagement: React.FC = () => {
                 {projects.map((proj) => (
                     <Grid size={{ xs: 12, md: 6, lg: 4 }} key={proj.id}>
                         <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                            <Box sx={{ position: 'relative', pt: '56.25%', overflow: 'hidden' }}>
-                                <CardMedia
-                                    component="img"
-                                    image={formatImageUrl(proj.imageUrl)}
+                            <Box sx={{ position: 'relative' }}>
+                                <ImageWithFallback
+                                    src={formatImageUrl(proj.imageUrl)}
                                     alt={proj.titleEn}
+                                    type="project"
+                                    aspectRatio="16/9"
                                     sx={{
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 0,
                                         width: '100%',
-                                        height: '100%',
                                         objectFit: 'cover'
                                     }}
                                     // @ts-ignore
                                     referrerPolicy="no-referrer"
-                                    onError={(e: any) => {
-                                        e.target.src = 'https://via.placeholder.com/300x169?text=Image+Load+Error';
-                                    }}
                                 />
                                 {proj.featured && (
-                                    <Box sx={{ position: 'absolute', top: 8, right: 8, bgcolor: 'background.paper', borderRadius: '50%', p: 0.5, display: 'flex', boxShadow: 2 }}>
+                                    <Box sx={{ position: 'absolute', top: 8, right: 8, bgcolor: 'background.paper', borderRadius: '50%', p: 0.5, display: 'flex', boxShadow: 2, zIndex: 1 }}>
                                         <StarIcon color="warning" />
                                     </Box>
                                 )}

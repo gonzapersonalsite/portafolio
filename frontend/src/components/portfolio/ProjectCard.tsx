@@ -3,7 +3,6 @@ import {
     Box,
     Card,
     CardContent,
-    CardMedia,
     Typography,
     Button,
     Chip,
@@ -16,6 +15,7 @@ import StarIcon from '@mui/icons-material/Star';
 import type { Project } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/context/LanguageContext';
+import ImageWithFallback from '@/components/common/ImageWithFallback';
 
 import { formatImageUrl } from '@/utils/imageUtils';
 
@@ -46,27 +46,18 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                     : '0 12px 24px rgba(0,0,0,0.4)'
             }
         }}>
-            <Box sx={{ position: 'relative', pt: '56.25%', overflow: 'hidden' }}>
-                <CardMedia
-                    component="img"
-                    image={imageUrl}
-                    alt={title}
-                    sx={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        backgroundColor: 'rgba(0,0,0,0.05)'
-                    }}
-                    // @ts-ignore
-                    referrerPolicy="no-referrer"
-                    onError={(e: any) => {
-                        e.target.src = 'https://via.placeholder.com/400x225?text=Image+Not+Found';
-                    }}
-                />
-            </Box>
+            <ImageWithFallback
+                src={imageUrl}
+                alt={title}
+                type="project"
+                aspectRatio="16/9"
+                sx={{
+                    width: '100%',
+                    backgroundColor: 'rgba(0,0,0,0.05)'
+                }}
+                // @ts-ignore
+                referrerPolicy="no-referrer"
+            />
             <CardContent sx={{ flexGrow: 1, p: 3 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1.5 }}>
                     <Typography variant="h5" component="h3" sx={{ fontWeight: 700, pr: 2 }}>

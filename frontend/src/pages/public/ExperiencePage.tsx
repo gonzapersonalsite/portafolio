@@ -8,6 +8,7 @@ import { publicService } from '@/services/publicService';
 import type { Experience } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
 import { ExperienceSkeleton, PageHeaderSkeleton } from '@/components/common/SkeletonLoaders';
+import RichTextRenderer from '@/components/common/RichTextRenderer';
 
 const ExperiencePage: React.FC = () => {
     const { t } = useTranslation();
@@ -67,7 +68,7 @@ const ExperiencePage: React.FC = () => {
                     position="right"
                     sx={{
                         [`& .${timelineOppositeContentClasses.root}`]: {
-                            flex: 0.2, // Adjust opposite content width
+                            flex: 0.3, // Adjust opposite content width to prevent date wrapping
                         },
                         p: 0
                     }}
@@ -77,7 +78,7 @@ const ExperiencePage: React.FC = () => {
                             <TimelineOppositeContent color="text.secondary" sx={{ py: '12px', px: 2, display: { xs: 'none', md: 'block' } }}>
                                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                                     <CalendarMonthIcon fontSize="small" />
-                                    <Typography variant="body2" fontWeight="bold">
+                                    <Typography variant="body2" fontWeight="bold" sx={{ whiteSpace: 'nowrap' }}>
                                         {exp.startDate} — {exp.endDate || t('common.present', 'Present')}
                                     </Typography>
                                 </Box>
@@ -121,9 +122,9 @@ const ExperiencePage: React.FC = () => {
                                     <Typography variant="subtitle1" fontWeight="500" gutterBottom>
                                         @{language === 'en' ? exp.companyEn : exp.companyEs}
                                     </Typography>
-                                    <Typography variant="body1" color="text.secondary" paragraph sx={{ mt: 2 }}>
-                                        {language === 'en' ? exp.descriptionEn : exp.descriptionEs}
-                                    </Typography>
+                                    <Box sx={{ mt: 2, mb: 2 }}>
+                                        <RichTextRenderer text={language === 'en' ? exp.descriptionEn : exp.descriptionEs} />
+                                    </Box>
                                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
                                         {exp.technologies.map(tech => (
                                             <Chip key={tech} label={tech} size="small" variant="outlined" />

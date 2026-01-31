@@ -14,6 +14,7 @@ import type { Experience } from '@/types';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import ConfirmDialog from '@/components/common/ConfirmDialog';
+import RichTextRenderer from '@/components/common/RichTextRenderer';
 
 const ExperiencesManagement: React.FC = () => {
     const [experiences, setExperiences] = useState<Experience[]>([]);
@@ -26,7 +27,7 @@ const ExperiencesManagement: React.FC = () => {
     const [saving, setSaving] = useState(false);
     const { t } = useTranslation();
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     const { control, register, handleSubmit, reset, setValue } = useForm<Experience>();
 
@@ -157,9 +158,9 @@ const ExperiencesManagement: React.FC = () => {
                                     />
                                 </Box>
                                 
-                                <Typography variant="body2" paragraph sx={{ mt: 1 }}>
-                                    {exp.descriptionEn}
-                                </Typography>
+                                <Box sx={{ mt: 1 }}>
+                                    <RichTextRenderer text={exp.descriptionEn} />
+                                </Box>
                                 
                                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 1 }}>
                                     {exp.technologies?.map((tech) => (

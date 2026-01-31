@@ -9,6 +9,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { publicService } from '@/services/publicService';
 import { formatImageUrl } from '@/utils/imageUtils';
 import { AboutSkeleton, PageHeaderSkeleton } from '@/components/common/SkeletonLoaders';
+import ImageWithFallback from '@/components/common/ImageWithFallback';
 import type { Skill, Profile, SpokenLanguage } from '@/types';
 
 const AboutPage: React.FC = () => {
@@ -69,12 +70,15 @@ const AboutPage: React.FC = () => {
 
                 <Grid container spacing={6} sx={{ mt: 2 }}>
                     <Grid size={{ xs: 12, md: 5 }}>
-                        <Box
-                            component="img"
-                            src={formatImageUrl(profile?.imageUrl) || ""}
-                            alt={language === 'en' ? profile?.fullNameEn : profile?.fullNameEs}
+                        <ImageWithFallback
+                            src={formatImageUrl(profile?.imageUrl)}
+                            alt={language === 'en' ? profile?.fullNameEn || "Profile" : profile?.fullNameEs || "Perfil"}
+                            type="profile"
+                            aspectRatio="1/1"
                             sx={{
-                                width: '100%',
+                                maxWidth: 400,
+                                margin: '0 auto',
+                                display: 'block',
                                 borderRadius: 4,
                                 boxShadow: theme.shadows[10]
                             }}
@@ -95,13 +99,13 @@ const AboutPage: React.FC = () => {
 
                     <Grid size={{ xs: 12, md: 7 }}>
                         <Typography variant="h5" gutterBottom fontWeight="bold">
-                            {profile ? getLocalizedText(profile.aboutIntroTitleEn, profile.aboutIntroTitleEs) : t('about.introTitle', "Software Engineer based in Palma de Mallorca, Spain")}
+                            {profile ? getLocalizedText(profile.aboutIntroTitleEn, profile.aboutIntroTitleEs) : t('about.introTitle')}
                         </Typography>
                         <Typography variant="body1" paragraph color="text.secondary" sx={{ fontSize: '1.1rem', lineHeight: 1.8 }}>
-                            {profile ? getLocalizedText(profile.aboutSummaryEn, profile.aboutSummaryEs) : t('about.summary', "Superior Technician...")}
+                            {profile ? getLocalizedText(profile.aboutSummaryEn, profile.aboutSummaryEs) : t('about.summary')}
                         </Typography>
                         <Typography variant="body1" paragraph color="text.secondary" sx={{ fontSize: '1.1rem', lineHeight: 1.8 }}>
-                            {profile ? getLocalizedText(profile.aboutPhilosophyEn, profile.aboutPhilosophyEs) : t('about.philosophy', "Always learning...")}
+                            {profile ? getLocalizedText(profile.aboutPhilosophyEn, profile.aboutPhilosophyEs) : t('about.philosophy')}
                         </Typography>
 
                         <Divider sx={{ my: 4 }} />

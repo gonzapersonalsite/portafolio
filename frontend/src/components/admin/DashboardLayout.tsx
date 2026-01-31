@@ -64,25 +64,30 @@ const DashboardLayout: React.FC = () => {
                         aria-label="open drawer"
                         edge="start"
                         onClick={handleDrawerToggle}
-                        sx={{ mr: 2, display: { sm: 'none' } }}
+                        sx={{ mr: 2, display: { lg: 'none' } }}
                     >
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
                         {t('admin.dashboard')}
                     </Typography>
-                    <Box sx={{ mr: 1 }}>
-                        <LanguageSelector />
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box sx={{ mr: 1 }}>
+                            <LanguageSelector />
+                        </Box>
+                        <Button color="inherit" onClick={() => navigate('/')} sx={{ whiteSpace: 'nowrap', display: { xs: 'none', sm: 'inline-flex' } }}>
+                            {t('admin.backToPublic')}
+                        </Button>
+                        <Button color="inherit" onClick={handleLogout} sx={{ whiteSpace: 'nowrap' }}>
+                            {t('admin.logout')}
+                        </Button>
                     </Box>
-                    <Button color="inherit" onClick={handleLogout}>
-                        {t('admin.logout')}
-                    </Button>
                 </Toolbar>
             </AppBar>
 
             <Box
                 component="nav"
-                sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+                sx={{ width: { lg: drawerWidth }, flexShrink: { lg: 0 } }}
             >
                 <Drawer
                     variant="temporary"
@@ -90,7 +95,7 @@ const DashboardLayout: React.FC = () => {
                     onClose={handleDrawerToggle}
                     ModalProps={{ keepMounted: true }}
                     sx={{
-                        display: { xs: 'block', sm: 'none' },
+                        display: { xs: 'block', lg: 'none' },
                         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
                     }}
                 >
@@ -99,7 +104,7 @@ const DashboardLayout: React.FC = () => {
                 <Drawer
                     variant="permanent"
                     sx={{
-                        display: { xs: 'none', sm: 'block' },
+                        display: { xs: 'none', lg: 'block' },
                         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
                     }}
                     open
@@ -110,7 +115,7 @@ const DashboardLayout: React.FC = () => {
 
             <Box
                 component="main"
-                sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+                sx={{ flexGrow: 1, p: 3, width: { lg: `calc(100% - ${drawerWidth}px)` } }}
             >
                 <Toolbar />
                 <Outlet />

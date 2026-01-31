@@ -13,6 +13,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { Link as RouterLink } from 'react-router-dom';
 import { formatImageUrl } from '@/utils/imageUtils';
 import { HeroSkeleton, ProjectCardSkeleton } from '@/components/common/SkeletonLoaders';
+import ImageWithFallback from '@/components/common/ImageWithFallback';
 import type { Profile as ProfileType, Project } from '@/types';
 
 const float = keyframes`
@@ -91,7 +92,7 @@ const HomePage: React.FC = () => {
                         <Grid size={{ xs: 12, md: 7 }}>
                             <Typography
                                 variant="overline"
-                                color="primary"
+                                color="text.primary"
                                 sx={{ letterSpacing: 2, fontWeight: 'bold' }}
                             >
                                 {profile ? getLocalizedText(profile.greetingEn, profile.greetingEs) : t('home.greeting', "HELLO WORLD")}
@@ -231,12 +232,15 @@ const HomePage: React.FC = () => {
             <Container sx={{ py: 10 }}>
                 <Grid container spacing={6} alignItems="center">
                     <Grid size={{ xs: 12, md: 6 }}>
-                        <Box
-                            component="img"
-                            src={formatImageUrl(profile?.imageUrl) || ""}
-                            alt={language === 'en' ? profile?.fullNameEn : profile?.fullNameEs}
+                        <ImageWithFallback
+                            src={formatImageUrl(profile?.imageUrl)}
+                            alt={language === 'en' ? profile?.fullNameEn || "Profile" : profile?.fullNameEs || "Perfil"}
+                            type="profile"
+                            aspectRatio="1/1"
                             sx={{
-                                width: '100%',
+                                maxWidth: 400,
+                                margin: '0 auto',
+                                display: 'block',
                                 borderRadius: 4,
                                 boxShadow: theme.shadows[8],
                                 transform: 'rotate(-2deg)',
@@ -250,10 +254,10 @@ const HomePage: React.FC = () => {
                             {t('about.subtitle', "WHO I AM")}
                         </Typography>
                         <Typography variant="h3" component="h2" gutterBottom fontWeight="bold" sx={{ mb: 3 }}>
-                            {profile ? getLocalizedText(profile.aboutTitleEn, profile.aboutTitleEs) : t('about.title', "Passionate about creating meaningul digital solutions")}
+                            {profile ? getLocalizedText(profile.aboutTitleEn, profile.aboutTitleEs) : t('about.title')}
                         </Typography>
                         <Typography variant="body1" color="text.secondary" paragraph sx={{ fontSize: '1.1rem', mb: 3 }}>
-                            {profile ? getLocalizedText(profile.aboutSummaryEn, profile.aboutSummaryEs) : t('about.summary', "With over 5 years of experience...")}
+                            {profile ? getLocalizedText(profile.aboutSummaryEn, profile.aboutSummaryEs) : t('about.summary')}
                         </Typography>
                         <Button
                             variant="outlined"

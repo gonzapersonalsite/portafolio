@@ -25,8 +25,11 @@ public class InputSanitizer {
         // Remove all HTML tags to prevent XSS
         input = input.replaceAll("<[^>]*>", "");
         
-        // Remove dangerous SQL patternspace
-        String sanitized = input.trim().replaceAll("\\s+", " ");
+        // Remove non-printable control characters but keep format (newlines, tabs)
+        // This maintains strict security against hidden control chars while preserving text structure
+        input = input.replaceAll("[\\p{Cntrl}&&[^\\r\\n\\t]]", "");
+        
+        String sanitized = input.trim();
         
         return sanitized;
     }

@@ -1,15 +1,18 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import apiClient from '../services/apiClient';
-import type { AuthResponse } from '../types';
+import type { AuthResponse, Profile } from '../types';
+import { publicService } from '../services/publicService';
 
 interface AuthState {
     token: string | null;
     username: string | null;
     isAuthenticated: boolean;
+    profile: Profile | null;
     login: (data: AuthResponse) => void;
     logout: () => void;
     validateToken: () => Promise<boolean>;
+    fetchProfile: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -18,6 +21,7 @@ export const useAuthStore = create<AuthState>()(
             token: null,
             username: null,
             isAuthenticated: false,
+            profile: null,
 
             login: (data: AuthResponse) => {
                 localStorage.setItem('token', data.token);
@@ -33,7 +37,8 @@ export const useAuthStore = create<AuthState>()(
                 set({
                     token: null,
                     username: null,
-                    isAuthenticated: false
+                    isAuthenticated: false,
+                    profile: null
                 });
             },
 
@@ -55,10 +60,27 @@ export const useAuthStore = create<AuthState>()(
                     return false;
                 }
             },
+
+            fetchProfile: async () => {
+                const { profile } = get();
+                if (profile) return; // Return cached profile if exists
+
+                try {
+                    const data = await publicService.getProfile();
+                    set({ profile: data });
+                } catch (error) {
+                    console.error('Failed to fetch profile:', error);
+                }
+            }
         }),
         {
             name: 'auth-storage',
-            partialize: (state) => ({ token: state.token, username: state.username, isAuthenticated: state.isAuthenticated }),
+            partialize: (state) => ({ 
+                token: state.token, 
+                username: state.username, 
+                isAuthenticated: state.isAuthenticated,
+                profile: state.profile 
+            }),
         }
     )
 );

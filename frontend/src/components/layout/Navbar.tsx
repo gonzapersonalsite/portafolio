@@ -12,7 +12,6 @@ import {
     ListItemText,
     ListItemButton,
     useScrollTrigger,
-    useTheme,
     Container,
     Slide,
 } from '@mui/material';
@@ -23,8 +22,7 @@ import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useColorMode } from '@/context/ThemeContext';
 import LanguageSelector from '../common/LanguageSelector';
-import { publicService } from '@/services/publicService';
-import type { Profile as ProfileType } from '@/types';
+import { useAuthStore } from '@/context/AuthStore';
 
 interface Props {
     children: React.ReactElement;
@@ -45,21 +43,15 @@ const Navbar: React.FC = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const { t } = useTranslation();
     const { mode, toggleColorMode } = useColorMode();
-    const theme = useTheme();
     const location = useLocation();
-    const [profile, setProfile] = useState<ProfileType | null>(null);
+    
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const profile = useAuthStore((state) => state.profile);
+    const fetchProfile = useAuthStore((state) => state.fetchProfile);
 
     useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const data = await publicService.getProfile();
-                setProfile(data);
-            } catch (err) {
-                console.error("Failed to fetch profile in navbar:", err);
-            }
-        };
         fetchProfile();
-    }, []);
+    }, [fetchProfile]);
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
@@ -89,6 +81,13 @@ const Navbar: React.FC = () => {
                         </ListItemButton>
                     </ListItem>
                 ))}
+                {isAuthenticated && (
+                    <ListItem disablePadding>
+                        <ListItemButton component={RouterLink} to="/admin" sx={{ textAlign: 'center' }}>
+                            <ListItemText primary={t('admin.dashboard')} />
+                        </ListItemButton>
+                    </ListItem>
+                )}
             </List>
         </Box>
     );
@@ -110,7 +109,7 @@ const Navbar: React.FC = () => {
                                 aria-label="open drawer"
                                 edge="start"
                                 onClick={handleDrawerToggle}
-                                sx={{ mr: 2, display: { sm: 'none' } }}
+                                sx={{ mr: 2, display: { lg: 'none' } }}
                             >
                                 <MenuIcon />
                             </IconButton>
@@ -132,17 +131,17 @@ const Navbar: React.FC = () => {
                                 {profile?.logoText ? (
                                     <>
                                         {profile.logoText.split('.')[0]}
-                                        <span style={{ color: theme.palette.primary.main }}>.{profile.logoText.split('.')[1] || 'DEV'}</span>
+                                        <Box component="span" sx={{ color: 'primary.main' }}>.{profile.logoText.split('.')[1] || 'DEV'}</Box>
                                     </>
                                 ) : (
                                     <>
-                                        GONZALO<span style={{ color: theme.palette.primary.main }}>.DEV</span>
+                                        GONZALO<Box component="span" sx={{ color: 'primary.main' }}>.DEV</Box>
                                     </>
                                 )}
                             </Typography>
 
                             {/* Desktop/Tablet Menu */}
-                            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                            <Box sx={{ display: { xs: 'none', lg: 'flex' }, gap: 1, alignItems: 'center' }}>
                                 {navItems.map((item) => (
                                     <Button
                                         key={item.path}
@@ -151,7 +150,11 @@ const Navbar: React.FC = () => {
                                         sx={{
                                             color: location.pathname === item.path ? 'primary.main' : 'text.primary',
                                             fontWeight: location.pathname === item.path ? 700 : 500,
-                                            mx: 1
+                                            fontSize: '0.95rem',
+                                            textTransform: 'none',
+                                            minWidth: 'auto',
+                                            px: 1.5,
+                                            whiteSpace: 'nowrap'
                                         }}
                                     >
                                         {item.label}
@@ -160,10 +163,31 @@ const Navbar: React.FC = () => {
                             </Box>
 
                             {/* Actions */}
-                            <Box sx={{ ml: 2, display: 'flex', gap: 1 }}>
+                            <Box sx={{ ml: 2, display: 'flex', gap: 1.5, alignItems: 'center' }}>
+                                {isAuthenticated && (
+                                    <Button
+                                        component={RouterLink}
+                                        to="/admin"
+                                        color="primary"
+                                        variant="outlined"
+                                        size="small"
+                                        sx={{ 
+                                            display: { xs: 'none', lg: 'inline-flex' },
+                                            borderRadius: 20,
+                                            textTransform: 'none',
+                                            fontWeight: 600,
+                                            px: 2,
+                                            py: 0.5,
+                                            minHeight: 32,
+                                            whiteSpace: 'nowrap'
+                                        }}
+                                    >
+                                        {t('admin.dashboard')}
+                                    </Button>
+                                )}
                                 <LanguageSelector />
-                                <IconButton onClick={toggleColorMode} color="inherit">
-                                    {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+                                <IconButton onClick={toggleColorMode} color="inherit" size="small">
+                                    {mode === 'dark' ? <Brightness7Icon fontSize="small" /> : <Brightness4Icon fontSize="small" />}
                                 </IconButton>
                             </Box>
                         </Toolbar>
@@ -180,7 +204,7 @@ const Navbar: React.FC = () => {
                         keepMounted: true, // Better open performance on mobile.
                     }}
                     sx={{
-                        display: { xs: 'block', sm: 'none' },
+                        display: { xs: 'block', lg: 'none' },
                         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
                     }}
                 >

@@ -17,6 +17,7 @@ const resources = {
             home: {
                 cta: 'View Projects',
                 resume: 'Download CV',
+                description: 'Web application developer focused on creating intuitive and functional digital experiences.',
                 chips: {
                     frontend: 'Frontend Developer',
                     backend: 'Backend Architect',
@@ -27,6 +28,10 @@ const resources = {
             about: {
                 subtitle: 'WHO I AM',
                 heading: 'My Story',
+                introTitle: 'Software Developer based in Palma de Mallorca, Spain',
+                title: 'Passionate about technology and development',
+                summary: 'Software developer with a passion for creating efficient solutions. I enjoy working on both frontend and backend to deliver complete products.',
+                philosophy: 'I believe in the importance of clean code and continuous improvement. Every project is an opportunity to learn and grow professionally.',
                 skills: 'Core Competencies',
                 languages: 'Languages',
                 more: 'More About Me'
@@ -73,6 +78,7 @@ const resources = {
             admin: {
                 login: 'Login',
                 logout: 'Logout',
+                backToPublic: 'Back to Public',
                 dashboard: 'Dashboard',
                 username: 'Username',
                 password: 'Password',
@@ -166,6 +172,7 @@ const resources = {
             home: {
                 cta: 'Ver Proyectos',
                 resume: 'Descargar CV',
+                description: 'Desarrollador de aplicaciones web enfocado en crear experiencias digitales intuitivas y funcionales.',
                 chips: {
                     frontend: 'Desarrollador Frontend',
                     backend: 'Arquitecto Backend',
@@ -176,6 +183,10 @@ const resources = {
             about: {
                 subtitle: 'QUIÉN SOY',
                 heading: 'Mi Historia',
+                introTitle: 'Desarrollador de Software en Palma de Mallorca, España',
+                title: 'Apasionado por la tecnología y el desarrollo',
+                summary: 'Desarrollador de software con pasión por crear soluciones eficientes. Disfruto trabajando tanto en el frontend como en el backend para entregar productos completos.',
+                philosophy: 'Creo en la importancia del código limpio y la mejora continua. Cada proyecto es una oportunidad para aprender y crecer profesionalmente.',
                 skills: 'Competencias Principales',
                 languages: 'Idiomas',
                 more: 'Más Sobre Mí'
@@ -222,6 +233,7 @@ const resources = {
             admin: {
                 login: 'Iniciar Sesión',
                 logout: 'Cerrar Sesión',
+                backToPublic: 'Volver al Inicio Público',
                 dashboard: 'Panel de Control',
                 username: 'Usuario',
                 password: 'Contraseña',

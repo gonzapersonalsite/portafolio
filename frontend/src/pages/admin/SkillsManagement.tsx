@@ -4,7 +4,7 @@ import {
     TableHead, TableRow, IconButton, Typography, Dialog,
     DialogTitle, DialogContent, DialogActions, TextField, Slider,
     Select, MenuItem, InputLabel, FormControl, Grid, Snackbar, Alert,
-    useMediaQuery, 
+    useMediaQuery, Card, CardContent, CardActions, Chip
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
@@ -27,8 +27,7 @@ const SkillsManagement: React.FC = () => {
     const [saving, setSaving] = useState(false);
     const { t } = useTranslation();
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const { control, register, handleSubmit, reset, setValue, watch } = useForm<Skill>();
     const currentLevel = watch('level');
 
@@ -128,43 +127,96 @@ const SkillsManagement: React.FC = () => {
                 </Button>
             </Box>
 
-            <TableContainer component={Paper} sx={{ width: '100%', overflowX: 'auto' }}>
-                <Table sx={{ minWidth: 650 }}>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.name')} (EN)</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.name')} (ES)</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.category')}</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.level')}</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.order')}</TableCell>
-                            <TableCell align="right" sx={{ fontWeight: 'bold' }}>{t('common.actions')}</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {skills.map((skill) => (
-                            <TableRow key={skill.id} hover>
-                                <TableCell>{skill.nameEn}</TableCell>
-                                <TableCell>{skill.nameEs}</TableCell>
-                                <TableCell>
-                                    <Typography variant="body2" sx={{ bgcolor: 'action.hover', px: 1, borderRadius: 1, display: 'inline-block' }}>
-                                        {skill.category}
+            {isMobile ? (
+                <Box>
+                    {skills.map((skill) => (
+                        <Card key={skill.id} sx={{ mb: 2 }}>
+                            <CardContent>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                                    <Box>
+                                        <Typography variant="h6" component="div">
+                                            {skill.nameEn}
+                                        </Typography>
+                                        <Typography color="text.secondary" variant="body2">
+                                            {skill.nameEs}
+                                        </Typography>
+                                    </Box>
+                                    <Chip 
+                                        label={skill.category} 
+                                        size="small" 
+                                        color="primary" 
+                                        variant="outlined"
+                                    />
+                                </Box>
+                                
+                                <Box sx={{ mb: 1 }}>
+                                    <Typography variant="body2" component="span" fontWeight="bold">
+                                        {t('admin.level')}:
                                     </Typography>
-                                </TableCell>
-                                <TableCell>{skill.level}%</TableCell>
-                                <TableCell>{skill.order}</TableCell>
-                                <TableCell align="right">
-                                    <IconButton onClick={() => handleOpen(skill)} color="primary" size="small">
-                                        <EditIcon fontSize="small" />
-                                    </IconButton>
-                                    <IconButton onClick={() => handleDeleteClick(skill.id)} color="error" size="small">
-                                        <DeleteIcon fontSize="small" />
-                                    </IconButton>
-                                </TableCell>
+                                    <Typography variant="body2" component="span" sx={{ ml: 1 }}>
+                                        {skill.level}%
+                                    </Typography>
+                                </Box>
+
+                                <Box sx={{ mb: 1 }}>
+                                    <Typography variant="body2" component="span" fontWeight="bold">
+                                        {t('admin.order')}:
+                                    </Typography>
+                                    <Typography variant="body2" component="span" sx={{ ml: 1 }}>
+                                        {skill.order}
+                                    </Typography>
+                                </Box>
+                            </CardContent>
+                            <CardActions sx={{ justifyContent: 'flex-end' }}>
+                                <IconButton onClick={() => handleOpen(skill)} color="primary">
+                                    <EditIcon />
+                                </IconButton>
+                                <IconButton onClick={() => handleDeleteClick(skill.id)} color="error">
+                                    <DeleteIcon />
+                                </IconButton>
+                            </CardActions>
+                        </Card>
+                    ))}
+                </Box>
+            ) : (
+                <TableContainer component={Paper} sx={{ width: '100%', overflowX: 'auto' }}>
+                    <Table sx={{ minWidth: 650 }}>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.name')} (EN)</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.name')} (ES)</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.category')}</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.level')}</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.order')}</TableCell>
+                                <TableCell align="right" sx={{ fontWeight: 'bold' }}>{t('common.actions')}</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                            {skills.map((skill) => (
+                                <TableRow key={skill.id} hover>
+                                    <TableCell>{skill.nameEn}</TableCell>
+                                    <TableCell>{skill.nameEs}</TableCell>
+                                    <TableCell>
+                                        <Typography variant="body2" sx={{ bgcolor: 'action.hover', px: 1, borderRadius: 1, display: 'inline-block' }}>
+                                            {skill.category}
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell>{skill.level}%</TableCell>
+                                    <TableCell>{skill.order}</TableCell>
+                                    <TableCell align="right">
+                                        <IconButton onClick={() => handleOpen(skill)} color="primary" size="small">
+                                            <EditIcon fontSize="small" />
+                                        </IconButton>
+                                        <IconButton onClick={() => handleDeleteClick(skill.id)} color="error" size="small">
+                                            <DeleteIcon fontSize="small" />
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            )}
 
             <ConfirmDialog
                 open={deleteDialogOpen}

@@ -17,7 +17,7 @@ import ConfirmDialog from '@/components/common/ConfirmDialog';
 const SpokenLanguageManagement: React.FC = () => {
     const { t } = useTranslation();
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const [languages, setLanguages] = useState<SpokenLanguage[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
