@@ -4,7 +4,7 @@
  * @param url The raw image URL from the database
  */
 export const formatImageUrl = (url: string | undefined): string => {
-    if (!url) return 'https://via.placeholder.com/400x225?text=No+Image';
+    if (!url) return 'https://placehold.co/400x225?text=No+Image';
 
     // Check if it's a Google Drive link
     if (url.includes('drive.google.com')) {

@@ -1,3 +1,7 @@
+# Entorno de Desarrollo Local
+# Este archivo levanta la base de datos, backend y frontend para desarrollar en local.
+# REQUIERE un archivo .env en este directorio con las variables configuradas.
+
 services:
   database:
     image: postgres:16-alpine
@@ -30,6 +34,7 @@ services:
       - CORS_ORIGINS=${CORS_ORIGINS}
       - ADMIN_USERNAME=${ADMIN_USERNAME}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - RATE_LIMIT_ENABLED=${RATE_LIMIT_ENABLED}
     depends_on:
       database:
         condition: service_healthy
@@ -45,5 +50,8 @@ services:
      environment:
        - VITE_API_BASE_URL=${VITE_API_BASE_URL}
        - VITE_API_TARGET=${VITE_API_TARGET}
+       - VITE_EMAILJS_SERVICE_ID=${VITE_EMAILJS_SERVICE_ID}
+       - VITE_EMAILJS_TEMPLATE_ID=${VITE_EMAILJS_TEMPLATE_ID}
+       - VITE_EMAILJS_PUBLIC_KEY=${VITE_EMAILJS_PUBLIC_KEY}
      depends_on:
        - backend
