@@ -4,6 +4,7 @@ import com.gonzalomartinez.portfolio_backend.domain.model.*;
 import com.gonzalomartinez.portfolio_backend.domain.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,7 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-@Profile("!prod")
 @RequiredArgsConstructor
 @Slf4j
 public class DataSeeder implements CommandLineRunner {
@@ -26,6 +26,12 @@ public class DataSeeder implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
     private final ProfileRepository profileRepository;
     private final SpokenLanguageRepository spokenLanguageRepository;
+    
+    @Value("${app.admin.username}")
+    private String adminUsername;
+
+    @Value("${app.admin.password}")
+    private String adminPassword;
 
     @Override
     public void run(String... args) {
@@ -58,13 +64,13 @@ public class DataSeeder implements CommandLineRunner {
     
     private void seedUsers() {
         User admin = User.builder()
-                .username("admin")
-                .passwordHash(passwordEncoder.encode("admin123"))
+                .username(adminUsername)
+                .passwordHash(passwordEncoder.encode(adminPassword))
                 .role("ADMIN")
                 .build();
         
         userRepository.save(admin);
-        log.info("Created admin user - username: admin, password: admin123");
+        log.info("Created admin user - username: {}", adminUsername);
     }
     
     private void seedSkills() {

@@ -1,1 +1,16 @@
+# Global Ignores
+**/node_modules
+**/dist
+**/build
+**/.gradle
+**/.DS_Store
+**/.idea
+**/.vscode
+
+# Environment Variables
+**/.env
+**/.env.*
+!**/.env.example
+
+# User rules
 user_rules.md

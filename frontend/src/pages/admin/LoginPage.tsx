@@ -13,7 +13,12 @@ const LoginPage: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const login = useAuthStore((state) => state.login);
     const navigate = useNavigate();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+
+    // Clear error when language changes
+    React.useEffect(() => {
+        setError(null);
+    }, [i18n.language]);
 
     const onSubmit = async (data: any) => {
         try {

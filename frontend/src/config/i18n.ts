@@ -150,7 +150,8 @@ const resources = {
                 present: 'Present',
                 sending: 'Sending...',
                 skipToContent: 'Skip to main content',
-                returnToTop: 'Return to top'
+                returnToTop: 'Return to top',
+                actions: 'Actions'
             },
             footer: {
                 rights: 'All rights reserved.',
