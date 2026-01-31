@@ -122,7 +122,30 @@ const ExperiencePage: React.FC = () => {
                                     <Typography variant="subtitle1" fontWeight="500" gutterBottom>
                                         @{language === 'en' ? exp.companyEn : exp.companyEs}
                                     </Typography>
-                                    <Box sx={{ mt: 2, mb: 2 }}>
+                                    <Box sx={{ 
+                                        mt: 2, 
+                                        mb: 2,
+                                        maxHeight: '200px',
+                                        overflowY: 'auto',
+                                        p: 1.5,
+                                        bgcolor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)',
+                                        borderRadius: 2,
+                                        border: '1px solid',
+                                        borderColor: 'divider',
+                                        '&::-webkit-scrollbar': {
+                                            width: '4px',
+                                        },
+                                        '&::-webkit-scrollbar-track': {
+                                            background: 'transparent',
+                                        },
+                                        '&::-webkit-scrollbar-thumb': {
+                                            background: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)',
+                                            borderRadius: '4px',
+                                        },
+                                        '&::-webkit-scrollbar-thumb:hover': {
+                                            background: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
+                                        }
+                                    }}>
                                         <RichTextRenderer text={language === 'en' ? exp.descriptionEn : exp.descriptionEs} />
                                     </Box>
                                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>

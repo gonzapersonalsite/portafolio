@@ -3,7 +3,7 @@ import {
     Box, Button, Typography, Dialog,
     DialogTitle, DialogContent, DialogActions, TextField,
     Card, CardContent, CardActions, Checkbox, FormControlLabel, Grid,
-    Snackbar, Alert
+    Snackbar, Alert, Chip
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import StarIcon from '@mui/icons-material/Star';
@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { formatImageUrl } from '@/utils/imageUtils';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
 import ConfirmDialog from '@/components/common/ConfirmDialog';
+import RichTextRenderer from '@/components/common/RichTextRenderer';
 
 const ProjectsManagement: React.FC = () => {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -168,24 +169,35 @@ const ProjectsManagement: React.FC = () => {
                                 <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
                                     {proj.titleEn}
                                 </Typography>
-                                <Typography variant="body2" color="text.secondary" sx={{
-                                    display: '-webkit-box',
-                                    WebkitLineClamp: 2,
-                                    WebkitBoxOrient: 'vertical',
-                                    overflow: 'hidden',
-                                    mb: 1
+                                <Box sx={{ 
+                                    mb: 1, 
+                                    maxHeight: '100px', 
+                                    overflowY: 'auto',
+                                    p: 1,
+                                    bgcolor: 'action.hover',
+                                    borderRadius: 1,
+                                    border: '1px solid',
+                                    borderColor: 'divider',
+                                    '&::-webkit-scrollbar': {
+                                        width: '4px',
+                                    },
+                                    '&::-webkit-scrollbar-track': {
+                                        background: 'transparent',
+                                    },
+                                    '&::-webkit-scrollbar-thumb': {
+                                        background: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)',
+                                        borderRadius: '4px',
+                                    },
+                                    '&::-webkit-scrollbar-thumb:hover': {
+                                        background: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
+                                    }
                                 }}>
-                                    {proj.descriptionEn}
-                                </Typography>
+                                    <RichTextRenderer text={proj.descriptionEn} variant="body2" />
+                                </Box>
                                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                    {proj.technologies?.slice(0, 3).map((tech) => (
-                                        <Typography key={tech} variant="caption" sx={{ bgcolor: 'action.hover', px: 1, borderRadius: 1 }}>
-                                            {tech}
-                                        </Typography>
+                                    {proj.technologies?.map((tech) => (
+                                        <Chip key={tech} label={tech} size="small" />
                                     ))}
-                                    {proj.technologies?.length > 3 && (
-                                        <Typography variant="caption">+{proj.technologies.length - 3}</Typography>
-                                    )}
                                 </Box>
                             </CardContent>
                             <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>

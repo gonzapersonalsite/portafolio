@@ -4,6 +4,7 @@ import CircleIcon from '@mui/icons-material/Circle';
 
 interface RichTextRendererProps {
     text: string;
+    variant?: 'body1' | 'body2' | 'caption' | 'subtitle1' | 'subtitle2';
 }
 
 /**
@@ -12,7 +13,7 @@ interface RichTextRendererProps {
  * - Preserves paragraphs for normal text
  * - Handles mixed content
  */
-const RichTextRenderer: React.FC<RichTextRendererProps> = ({ text }) => {
+const RichTextRenderer: React.FC<RichTextRendererProps> = ({ text, variant = 'body1' }) => {
     if (!text) return null;
 
     // Normalize newlines: handle \r\n, \n, and escaped \\n (common in JSON from backend)
@@ -33,18 +34,18 @@ const RichTextRenderer: React.FC<RichTextRendererProps> = ({ text }) => {
                 <List key={`list-${keyIndex}`} dense sx={{ py: 0, my: 1 }}>
                     {currentList.map((item, i) => (
                         <ListItem key={i} alignItems="flex-start" sx={{ py: 0.5, pl: 0 }}>
-                             <ListItemIcon sx={{ minWidth: 20, mt: 1 }}>
+                             <ListItemIcon sx={{ minWidth: 20, mt: 0.5 }}>
                                 <CircleIcon sx={{ fontSize: 6, color: 'text.secondary' }} />
                              </ListItemIcon>
                              <ListItemText 
                                 primary={item} 
                                 primaryTypographyProps={{ 
-                                    variant: 'body1', 
+                                    variant: variant, 
                                     color: 'text.secondary',
                                     sx: { lineHeight: 1.6 }
                                 }}
                                 sx={{ m: 0 }}
-                             />
+                            />
                         </ListItem>
                     ))}
                 </List>
@@ -82,7 +83,7 @@ const RichTextRenderer: React.FC<RichTextRendererProps> = ({ text }) => {
                 elements.push(
                     <Typography 
                         key={`text-${index}`} 
-                        variant="body1" 
+                        variant={variant} 
                         color="text.secondary" 
                         sx={{ mb: 1, lineHeight: 1.6 }}
                     >
