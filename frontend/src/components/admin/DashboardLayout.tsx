@@ -7,6 +7,7 @@ import BuildIcon from '@mui/icons-material/Build';
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
 import TranslateIcon from '@mui/icons-material/Translate';
+import LinkIcon from '@mui/icons-material/Link';
 import { useAuthStore } from '@/context/AuthStore';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../common/LanguageSelector';
@@ -34,6 +35,7 @@ const DashboardLayout: React.FC = () => {
         { text: t('admin.experiences'), icon: <WorkIcon />, path: '/admin/experiences' },
         { text: t('admin.projects'), icon: <CodeIcon />, path: '/admin/projects' },
         { text: t('admin.languages', "Languages"), icon: <TranslateIcon />, path: '/admin/languages' },
+        { text: t('admin.externalResources'), icon: <LinkIcon />, path: '/admin/external-resources' },
     ];
 
     const drawer = (

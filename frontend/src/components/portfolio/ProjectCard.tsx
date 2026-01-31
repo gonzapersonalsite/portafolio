@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/context/LanguageContext';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
 import RichTextRenderer from '@/components/common/RichTextRenderer';
+import ScrollableContent from '@/components/common/ScrollableContent';
 
 import { formatImageUrl } from '@/utils/imageUtils';
 
@@ -68,30 +69,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                         <StarIcon color="warning" sx={{ fontSize: '1.5rem', flexShrink: 0 }} />
                     )}
                 </Box>
-                <Box sx={{ 
-                    mb: 3, 
-                    maxHeight: '150px', 
-                    overflowY: 'auto',
-                    p: 1.5,
-                    bgcolor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)',
-                    borderRadius: 2,
-                    border: '1px solid',
-                    borderColor: 'divider',
-                    '&::-webkit-scrollbar': {
-                        width: '4px',
-                    },
-                    '&::-webkit-scrollbar-track': {
-                        background: 'transparent',
-                    },
-                    '&::-webkit-scrollbar-thumb': {
-                        background: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)',
-                        borderRadius: '4px',
-                    },
-                    '&::-webkit-scrollbar-thumb:hover': {
-                        background: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
-                    }
-                }}>
-                    <RichTextRenderer text={description} variant="body2" />
+                <Box sx={{ mb: 3 }}>
+                    <ScrollableContent maxHeight="150px">
+                        <RichTextRenderer text={description} variant="body2" />
+                    </ScrollableContent>
                 </Box>
                 <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mt: 'auto' }}>
                     {project.technologies.map((tech) => (

@@ -19,6 +19,7 @@ const ExperiencesManagement = React.lazy(() => import('@/pages/admin/Experiences
 const ProjectsManagement = React.lazy(() => import('@/pages/admin/ProjectsManagement'));
 const ProfileManagement = React.lazy(() => import('@/pages/admin/ProfileManagement'));
 const SpokenLanguageManagement = React.lazy(() => import('@/pages/admin/SpokenLanguageManagement'));
+const ExternalResources = React.lazy(() => import('@/pages/admin/ExternalResources'));
 
 import { useAuthStore } from '@/context/AuthStore';
 
@@ -67,6 +68,7 @@ function App() {
         <Route path="projects" element={<ProjectsManagement />} />
         <Route path="profile" element={<ProfileManagement />} />
         <Route path="languages" element={<SpokenLanguageManagement />} />
+        <Route path="external-resources" element={<ExternalResources />} />
       </Route>
 
       {/* Catch all */}

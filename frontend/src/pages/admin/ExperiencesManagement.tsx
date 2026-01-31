@@ -15,6 +15,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import ConfirmDialog from '@/components/common/ConfirmDialog';
 import RichTextRenderer from '@/components/common/RichTextRenderer';
+import ScrollableContent from '@/components/common/ScrollableContent';
 
 const ExperiencesManagement: React.FC = () => {
     const [experiences, setExperiences] = useState<Experience[]>([]);
@@ -158,30 +159,10 @@ const ExperiencesManagement: React.FC = () => {
                                     />
                                 </Box>
                                 
-                                <Box sx={{ 
-                                    mt: 1,
-                                    maxHeight: '150px',
-                                    overflowY: 'auto',
-                                    p: 1,
-                                    bgcolor: 'action.hover',
-                                    borderRadius: 1,
-                                    border: '1px solid',
-                                    borderColor: 'divider',
-                                    '&::-webkit-scrollbar': {
-                                        width: '4px',
-                                    },
-                                    '&::-webkit-scrollbar-track': {
-                                        background: 'transparent',
-                                    },
-                                    '&::-webkit-scrollbar-thumb': {
-                                        background: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)',
-                                        borderRadius: '4px',
-                                    },
-                                    '&::-webkit-scrollbar-thumb:hover': {
-                                        background: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
-                                    }
-                                }}>
-                                    <RichTextRenderer text={exp.descriptionEn} variant="body2" />
+                                <Box sx={{ mt: 1 }}>
+                                    <ScrollableContent maxHeight="150px" sx={{ bgcolor: 'action.hover', p: 1 }}>
+                                        <RichTextRenderer text={exp.descriptionEn} variant="body2" />
+                                    </ScrollableContent>
                                 </Box>
                                 
                                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 1 }}>

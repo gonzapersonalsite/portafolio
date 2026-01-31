@@ -15,6 +15,7 @@ import { formatImageUrl } from '@/utils/imageUtils';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
 import ConfirmDialog from '@/components/common/ConfirmDialog';
 import RichTextRenderer from '@/components/common/RichTextRenderer';
+import ScrollableContent from '@/components/common/ScrollableContent';
 
 const ProjectsManagement: React.FC = () => {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -169,30 +170,10 @@ const ProjectsManagement: React.FC = () => {
                                 <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
                                     {proj.titleEn}
                                 </Typography>
-                                <Box sx={{ 
-                                    mb: 1, 
-                                    maxHeight: '100px', 
-                                    overflowY: 'auto',
-                                    p: 1,
-                                    bgcolor: 'action.hover',
-                                    borderRadius: 1,
-                                    border: '1px solid',
-                                    borderColor: 'divider',
-                                    '&::-webkit-scrollbar': {
-                                        width: '4px',
-                                    },
-                                    '&::-webkit-scrollbar-track': {
-                                        background: 'transparent',
-                                    },
-                                    '&::-webkit-scrollbar-thumb': {
-                                        background: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)',
-                                        borderRadius: '4px',
-                                    },
-                                    '&::-webkit-scrollbar-thumb:hover': {
-                                        background: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
-                                    }
-                                }}>
-                                    <RichTextRenderer text={proj.descriptionEn} variant="body2" />
+                                <Box sx={{ mb: 1 }}>
+                                    <ScrollableContent maxHeight="100px" sx={{ bgcolor: 'action.hover', p: 1 }}>
+                                        <RichTextRenderer text={proj.descriptionEn} variant="body2" />
+                                    </ScrollableContent>
                                 </Box>
                                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                     {proj.technologies?.map((tech) => (
