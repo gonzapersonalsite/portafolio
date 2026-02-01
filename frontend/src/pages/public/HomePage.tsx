@@ -261,9 +261,11 @@ const HomePage: React.FC = () => {
                         <Typography variant="h3" component="h2" gutterBottom fontWeight="bold" sx={{ mb: 3 }}>
                             {profile ? getLocalizedText(profile.aboutTitleEn, profile.aboutTitleEs) : t('about.title')}
                         </Typography>
-                        <Typography variant="body1" color="text.secondary" paragraph sx={{ fontSize: '1.1rem', mb: 3 }}>
-                            {profile ? getLocalizedText(profile.aboutSummaryEn, profile.aboutSummaryEs) : t('about.summary')}
-                        </Typography>
+                        <Box sx={{ mb: 3, '& p': { fontSize: '1.1rem' } }}>
+                            <RichTextRenderer 
+                                text={profile ? getLocalizedText(profile.aboutSummaryEn, profile.aboutSummaryEs) : t('about.summary')}
+                            />
+                        </Box>
                         <Button
                             variant="outlined"
                             color="primary"
