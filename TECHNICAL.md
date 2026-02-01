@@ -40,6 +40,17 @@ Este documento detalla la arquitectura, tecnologías y procedimientos de desplie
         *   **Value:** `https://written-christalle-gonzalomartinezgarcia-4b1d8f11.koyeb.app/api`
     4.  Redesplegar el Frontend en Vercel (Redeploy).
 
+## Flujo de Actualizaciones (CI/CD)
+
+El proyecto está configurado con **Despliegue Continuo**. Esto significa que:
+
+1.  **Haces cambios** en tu código local.
+2.  **Haces commit y push** a la rama `main` en GitHub.
+3.  ☁️ **Vercel** detecta el cambio en GitHub y **redespliega el Frontend** automáticamente.
+4.  ☁️ **Koyeb** detecta el cambio en GitHub y **redespliega el Backend** automáticamente.
+
+¡No necesitas hacer nada manual! Solo esperar unos minutos a que los cambios se reflejen.
+
 ## Desarrollo Local
 
 ### Requisitos
@@ -54,3 +65,10 @@ Este documento detalla la arquitectura, tecnologías y procedimientos de desplie
 ### Estructura de Carpetas
 *   `/backend`: Código fuente Java/Spring Boot.
 *   `/frontend`: Código fuente React/TypeScript.
+
+## Enlaces Útiles (Producción)
+
+*   **Frontend:** `https://mi-portafolio-gonzalo.vercel.app`
+*   **API Base:** `https://written-christalle-gonzalomartinezgarcia-4b1d8f11.koyeb.app/api`
+*   **Documentación API (Swagger):** `https://written-christalle-gonzalomartinezgarcia-4b1d8f11.koyeb.app/swagger-ui/index.html`
+*   **Panel Admin:** `https://mi-portafolio-gonzalo.vercel.app/admin/login`
