@@ -5,6 +5,8 @@ import { publicService } from '@/services/publicService';
 import type { Project } from '@/types';
 import ProjectCard from '@/components/portfolio/ProjectCard';
 import { ProjectGridSkeleton, PageHeaderSkeleton } from '@/components/common/SkeletonLoaders';
+import EmptyState from '@/components/common/EmptyState';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
 const ProjectsPage: React.FC = () => {
     const { t } = useTranslation();
@@ -63,6 +65,15 @@ const ProjectsPage: React.FC = () => {
                             <ProjectCard project={project} />
                         </Grid>
                     ))}
+                    {projects.length === 0 && (
+                        <Grid size={{ xs: 12 }}>
+                            <EmptyState
+                                title={t('admin.emptyState.projects.title', 'Building the Future')}
+                                description={t('admin.emptyState.projects.description', 'No projects here yet, but great things are in the making.')}
+                                icon={<RocketLaunchIcon />}
+                            />
+                        </Grid>
+                    )}
                 </Grid>
             </Container>
         </Box>

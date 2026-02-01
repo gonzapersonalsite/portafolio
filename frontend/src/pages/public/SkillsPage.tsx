@@ -5,6 +5,8 @@ import { publicService } from '@/services/publicService';
 import type { Skill } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
 import { SkillsSkeleton, PageHeaderSkeleton } from '@/components/common/SkeletonLoaders';
+import EmptyState from '@/components/common/EmptyState';
+import PsychologyIcon from '@mui/icons-material/Psychology';
 
 const SkillsPage: React.FC = () => {
     const { t } = useTranslation();
@@ -72,51 +74,61 @@ const SkillsPage: React.FC = () => {
                 </Typography>
 
                 <Grid container spacing={4}>
-                    {Object.entries(skillsByCategory).map(([category, categorySkills]) => (
-                        <Grid size={{ xs: 12, md: 6 }} key={category}>
-                            <Paper
-                                elevation={0}
-                                sx={{
-                                    p: 4,
-                                    height: '100%',
-                                    bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : 'grey.50',
-                                    borderRadius: 4,
-                                    border: `1px solid ${theme.palette.divider}`
-                                }}
-                            >
-                                <Typography variant="h5" fontWeight="bold" gutterBottom color="primary" sx={{ mb: 3 }}>
-                                    {category}
-                                </Typography>
-                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                    {categorySkills.map((skill) => (
-                                        <Box key={skill.id}>
-                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                                                <Typography variant="subtitle1" fontWeight="600">
-                                                    {language === 'en' ? skill.nameEn : skill.nameEs}
-                                                </Typography>
-                                                <Typography variant="body2" color="text.secondary">
-                                                    {skill.level}%
-                                                </Typography>
-                                            </Box>
-                                            <LinearProgress
-                                                variant="determinate"
-                                                value={skill.level}
-                                                sx={{
-                                                    height: 8,
-                                                    borderRadius: 4,
-                                                    bgcolor: theme.palette.mode === 'dark' ? 'grey.800' : 'grey.200',
-                                                    '& .MuiLinearProgress-bar': {
+                    {skills.length > 0 ? (
+                        Object.entries(skillsByCategory).map(([category, categorySkills]) => (
+                            <Grid size={{ xs: 12, md: 6 }} key={category}>
+                                <Paper
+                                    elevation={0}
+                                    sx={{
+                                        p: 4,
+                                        height: '100%',
+                                        bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : 'grey.50',
+                                        borderRadius: 4,
+                                        border: `1px solid ${theme.palette.divider}`
+                                    }}
+                                >
+                                    <Typography variant="h5" fontWeight="bold" gutterBottom color="primary" sx={{ mb: 3 }}>
+                                        {category}
+                                    </Typography>
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                        {categorySkills.map((skill) => (
+                                            <Box key={skill.id}>
+                                                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                                                    <Typography variant="subtitle1" fontWeight="600">
+                                                        {language === 'en' ? skill.nameEn : skill.nameEs}
+                                                    </Typography>
+                                                    <Typography variant="body2" color="text.secondary">
+                                                        {skill.level}%
+                                                    </Typography>
+                                                </Box>
+                                                <LinearProgress
+                                                    variant="determinate"
+                                                    value={skill.level}
+                                                    sx={{
+                                                        height: 8,
                                                         borderRadius: 4,
-                                                        background: `linear-gradient(90deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`
-                                                    }
-                                                }}
-                                            />
-                                        </Box>
-                                    ))}
-                                </Box>
-                            </Paper>
+                                                        bgcolor: theme.palette.mode === 'dark' ? 'grey.800' : 'grey.200',
+                                                        '& .MuiLinearProgress-bar': {
+                                                            borderRadius: 4,
+                                                            background: `linear-gradient(90deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`
+                                                        }
+                                                    }}
+                                                />
+                                            </Box>
+                                        ))}
+                                    </Box>
+                                </Paper>
+                            </Grid>
+                        ))
+                    ) : (
+                        <Grid size={{ xs: 12 }}>
+                            <EmptyState
+                                title={t('admin.emptyState.skills.title', 'Unlocking Potential')}
+                                description={t('admin.emptyState.skills.description', 'Skills are being honed and added. Stay tuned for updates.')}
+                                icon={<PsychologyIcon />}
+                            />
                         </Grid>
-                    ))}
+                    )}
                 </Grid>
             </Container>
         </Box>

@@ -15,6 +15,8 @@ import { formatImageUrl } from '@/utils/imageUtils';
 import { HeroSkeleton, ProjectCardSkeleton } from '@/components/common/SkeletonLoaders';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
 import RichTextRenderer from '@/components/common/RichTextRenderer';
+import EmptyState from '@/components/common/EmptyState';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import type { Profile as ProfileType, Project } from '@/types';
 
 const float = keyframes`
@@ -225,9 +227,13 @@ const HomePage: React.FC = () => {
                             </Grid>
                         ))}
                         {featuredProjects.length === 0 && (
-                            <Typography variant="body1" color="text.secondary" sx={{ py: 4, width: '100%', textAlign: 'center' }}>
-                                {t('common.noProjects', "No featured projects yet.")}
-                            </Typography>
+                            <Grid size={{ xs: 12 }}>
+                                <EmptyState
+                                    title={t('admin.emptyState.projects.title', 'Building the Future')}
+                                    description={t('admin.emptyState.projects.description', 'No projects here yet, but great things are in the making.')}
+                                    icon={<RocketLaunchIcon />}
+                                />
+                            </Grid>
                         )}
                     </Grid>
                 </Container>

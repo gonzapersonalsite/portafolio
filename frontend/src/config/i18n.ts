@@ -161,6 +161,20 @@ const resources = {
                         description: 'Manage backend deployments, logs, and environment variables for the Spring Boot application.',
                         action: 'Go to Koyeb'
                     }
+                },
+                emptyState: {
+                    projects: {
+                        title: 'Building the Future',
+                        description: 'No projects here yet, but great things are in the making.'
+                    },
+                    experience: {
+                        title: 'The Journey Begins',
+                        description: 'Every expert was once a beginner. My professional path starts here.'
+                    },
+                    skills: {
+                        title: 'Unlocking Potential',
+                        description: 'Skills are being honed and added. Stay tuned for updates.'
+                    }
                 }
             },
             common: {
@@ -343,6 +357,20 @@ const resources = {
                     koyeb: {
                         description: 'Gestiona los despliegues del backend, registros y variables de entorno para la aplicación Spring Boot.',
                         action: 'Ir a Koyeb'
+                    }
+                },
+                emptyState: {
+                    projects: {
+                        title: 'Construyendo el Futuro',
+                        description: 'Aún no hay proyectos aquí, pero grandes cosas se están gestando.'
+                    },
+                    experience: {
+                        title: 'El Viaje Comienza',
+                        description: 'Todo experto fue una vez principiante. Mi trayectoria profesional empieza aquí.'
+                    },
+                    skills: {
+                        title: 'Desbloqueando Potencial',
+                        description: 'Las habilidades se están perfeccionando y añadiendo. Mantente al tanto.'
                     }
                 }
             },
