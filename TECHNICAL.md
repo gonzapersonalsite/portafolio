@@ -1,108 +1,56 @@
-# Documentación Técnica
+# Guía Técnica del Proyecto Portafolio
 
-Este documento detalla la arquitectura, tecnologías y decisiones de diseño del proyecto.
+Este documento detalla la arquitectura, tecnologías y procedimientos de despliegue para el proyecto Portafolio.
 
-## 🏗 Arquitectura Global
+## Arquitectura
 
-El proyecto sigue una arquitectura **Full Stack** clásica separada en dos servicios principales:
+*   **Frontend:** React (Vite) + TypeScript + Material UI.
+*   **Backend:** Java (Spring Boot 3) + PostgreSQL.
+*   **Base de Datos:** PostgreSQL (Neon Tech).
+*   **Despliegue Frontend:** Vercel.
+*   **Despliegue Backend:** Koyeb.
 
-*   **Frontend (Cliente):** Aplicación SPA (Single Page Application) moderna.
-*   **Backend (Servidor):** API RESTful robusta.
-*   **Base de Datos:** Relacional (PostgreSQL) containerizada.
+## Despliegue (Producción)
 
-## 💻 Frontend (`/frontend`)
+### 1. Base de Datos (Neon Tech)
+*   **Plataforma:** Neon (Serverless PostgreSQL).
+*   **Región:** AWS Europe (Frankfurt) - `eu-central-1`.
+*   **Conexión:** `jdbc:postgresql://<host>/<database>?sslmode=require`.
 
-### Tecnologías Clave
-*   **Framework:** React 18 con TypeScript (creado via Vite).
-*   **UI Library:** Material UI (MUI) v5. Diseño adaptativo y tema claro/oscuro.
-*   **Estado:** Zustand (gestión ligera de estado global, ej: Autenticación).
-*   **Routing:** React Router DOM v6.
-*   **HTTP Client:** Axios con interceptores para manejo de tokens JWT.
+### 2. Backend (Koyeb)
+*   **Plataforma:** Koyeb (PaaS).
+*   **Región:** Frankfurt (para baja latencia con la DB).
+*   **Build:** Dockerfile.
+*   **Variables de Entorno (Koyeb):**
+    *   `SPRING_DATASOURCE_URL`: URL completa de Neon (con `?sslmode=require`).
+    *   `SPRING_DATASOURCE_USERNAME`: Usuario de Neon (`neondb_owner`).
+    *   `SPRING_DATASOURCE_PASSWORD`: Contraseña de Neon.
+    *   `JWT_SECRET`: Clave secreta para tokens.
+    *   `ADMIN_USERNAME`: Usuario administrador.
+    *   `ADMIN_PASSWORD`: Contraseña administrador.
+    *   `CORS_ORIGINS`: `https://mi-portafolio-gonzalo.vercel.app`
 
-### Sistema de Traducciones (i18n)
-El proyecto utiliza una estrategia híbrida de internacionalización:
-1.  **UI Estática (Botones, Menús):** Gestionada por `react-i18next`. Los archivos JSON están en `src/locales`.
-2.  **Contenido Dinámico (Proyectos, Experiencias):** Se almacena en la base de datos con columnas duplicadas (ej: `description_en`, `description_es`). El frontend decide qué campo mostrar según el idioma seleccionado en el contexto global (`LanguageContext`).
+### 3. Frontend (Vercel)
+*   **Plataforma:** Vercel.
+*   **Conexión con Backend:**
+    1.  Obtener la **Public URL** del servicio en Koyeb (ej: `https://mi-backend.koyeb.app`).
+    2.  Ir a Vercel -> Project Settings -> Environment Variables.
+    3.  Añadir:
+        *   **Key:** `VITE_API_BASE_URL`
+        *   **Value:** `https://written-christalle-gonzalomartinezgarcia-4b1d8f11.koyeb.app/api`
+    4.  Redesplegar el Frontend en Vercel (Redeploy).
 
-### Decisiones de Diseño Frontend
-*   **Componentes Reutilizables:** Uso intensivo de componentes genéricos (`ConfirmDialog`, `RichTextRenderer`, `ImageWithFallback`) para mantener el código DRY (Don't Repeat Yourself).
-*   **Rich Text Personalizado:** Implementación de un renderizador de texto propio (`RichTextRenderer`) para soportar listas y párrafos limpios sin el peso y riesgo de seguridad de un editor HTML completo.
+## Desarrollo Local
 
----
+### Requisitos
+*   Node.js & npm
+*   Java 21 (JDK)
+*   Docker (opcional, para DB local) o conexión a Neon.
 
-## ⚙️ Backend (`/backend`)
+### Ejecución
+1.  **Backend:** `./gradlew bootRun`
+2.  **Frontend:** `npm run dev`
 
-### Tecnologías Clave
-*   **Framework:** Java Spring Boot 3.
-*   **Seguridad:** Spring Security 6 + JWT (JSON Web Tokens).
-*   **Persistencia:** Spring Data JPA + Hibernate.
-*   **Base de Datos:** PostgreSQL 16.
-*   **Validación:** Bean Validation (Jakarta Validation).
-
-### Arquitectura Backend
-Sigue el patrón de capas estándar:
-1.  **Controllers:** Manejan las peticiones HTTP y DTOs.
-2.  **Services:** Contienen la lógica de negocio.
-3.  **Repositories:** Interfaz con la base de datos (JPA).
-4.  **Security:** Filtros JWT para proteger endpoints administrativos (`/api/admin/**`).
-
----
-
-## 🚀 Guía de Despliegue (Deployment)
-
-En mi caso, opto por Vercel (frontend) y Render (backend), aprovechando sus planes gratuitos y CI/CD automáticos. Teóricamente (y con práctica en DAW), domino despliegues tradicionales: Tomcat para apps Java/Spring Boot (manejo WAR/JAR, configuración server.xml), Apache/Nginx como reverse proxy/SSL (virtual hosts, mod_proxy), y pipelines CI básicos. Elijo PaaS para este portafolio por simplicidad y escalabilidad sin O&M manual.
-
-### 1. Frontend (Vercel)
-
-Configuración específica para desplegar la carpeta `/frontend` en Vercel.
-
-| Configuración | Valor | Notas |
-| :--- | :--- | :--- |
-| **Framework Preset** | Vite | Vercel suele detectarlo automáticamente. |
-| **Root Directory** | `frontend` | **Importante:** Debes indicar que el proyecto está en esta subcarpeta. |
-| **Build Command** | `npm run build` | Compila el TypeScript y genera los estáticos. |
-| **Output Directory** | `dist` | Carpeta donde Vite deja los archivos compilados. |
-| **Install Command** | `npm install` | Instala las dependencias. |
-
-**Variables de Entorno (Environment Variables):**
-Debes configurarlas en el panel de Vercel (Settings -> Environment Variables):
-
-*   `VITE_API_BASE_URL`: La URL pública de tu backend en producción (ej: `https://mi-backend.onrender.com/api`).
-*   `VITE_EMAILJS_SERVICE_ID`: Tu ID de servicio de EmailJS.
-*   `VITE_EMAILJS_TEMPLATE_ID`: Tu ID de plantilla de EmailJS.
-*   `VITE_EMAILJS_PUBLIC_KEY`: Tu clave pública de EmailJS.
-
-### 2. Backend (Koyeb + Neon)
-*Opción "Forever Free" recomendada: Neon (DB) + Koyeb (Backend)*
-
-Para evitar la expiración de servicios gratuitos como Render o el crédito limitado de Railway, utilizamos esta combinación robusta:
-
-1.  **Base de Datos (Neon.tech):**
-    *   PostgreSQL serverless gratuito (0.5GB).
-    *   Región recomendada: **Europe (Frankfurt)**.
-    *   No caduca ni borra datos por inactividad.
-
-2.  **Backend (Koyeb):**
-    *   PaaS similar a Render/Heroku.
-    *   **Plan Free:** 1 Servicio Web (Nano Instance) en **Frankfurt**.
-    *   Despliegue via **GitHub** (detecta el `Dockerfile` automáticamente).
-
-**Pasos de Configuración:**
-
-1.  **Base de Datos:** Crear proyecto en Neon -> Copiar Connection String.
-2.  **Koyeb:**
-    *   Crear App -> Web Service -> GitHub -> Seleccionar repositorio.
-    *   **Builder:** Dockerfile.
-    *   **Work Directory:** `backend/portfolio-backend`.
-    *   **Variables de Entorno:**
-        *   `SPRING_DATASOURCE_URL`: La URL de Neon (añadir `?sslmode=require`).
-        *   `SPRING_DATASOURCE_USERNAME`: Usuario de Neon.
-        *   `SPRING_DATASOURCE_PASSWORD`: Contraseña de Neon.
-        *   `JWT_SECRET`: Tu secreto generado.
-        *   `ADMIN_PASSWORD`: Tu contraseña de admin.
-        *   `CORS_ORIGINS`: `https://mi-portafolio-gonzalo.vercel.app`
-
-### Comandos de Construcción (Referencia Local)
-El proyecto usa **Gradle** (no Maven).
-*   **Build:** `./gradlew build -x test`
-*   **Run:** `java -jar build/libs/*.jar`
+### Estructura de Carpetas
+*   `/backend`: Código fuente Java/Spring Boot.
+*   `/frontend`: Código fuente React/TypeScript.

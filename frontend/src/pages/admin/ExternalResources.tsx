@@ -8,11 +8,12 @@ import LaunchIcon from '@mui/icons-material/Launch';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import EmailIcon from '@mui/icons-material/Email';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+import StorageIcon from '@mui/icons-material/Storage';
+import DnsIcon from '@mui/icons-material/Dns';
 
 const ExternalResources: React.FC = () => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const theme = useTheme();
-    const isEnglish = i18n.language === 'en';
 
     const resources = [
         {
@@ -38,6 +39,22 @@ const ExternalResources: React.FC = () => {
             description: t('admin.resources.vercel.description'),
             tags: ['Deployment', 'Hosting', 'Frontend'],
             actionText: t('admin.resources.vercel.action')
+        },
+        {
+            title: 'Neon Database',
+            url: 'https://console.neon.tech/app/projects/green-star-02988068?database=neondb',
+            icon: <StorageIcon sx={{ fontSize: 40, color: '#00e599' }} />,
+            description: t('admin.resources.neon.description'),
+            tags: ['Database', 'PostgreSQL', 'Serverless'],
+            actionText: t('admin.resources.neon.action')
+        },
+        {
+            title: 'Koyeb Dashboard',
+            url: 'https://app.koyeb.com/services',
+            icon: <DnsIcon sx={{ fontSize: 40, color: 'text.secondary' }} />,
+            description: t('admin.resources.koyeb.description'),
+            tags: ['Backend', 'Deployment', 'PaaS'],
+            actionText: t('admin.resources.koyeb.action')
         }
     ];
 

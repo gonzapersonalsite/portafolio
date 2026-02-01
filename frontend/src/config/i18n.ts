@@ -152,6 +152,14 @@ const resources = {
                     vercel: {
                         description: 'Manage frontend deployments, domains, and production environment variables.',
                         action: 'Go to Vercel'
+                    },
+                    neon: {
+                        description: 'Manage the serverless PostgreSQL database. View connection strings, tables, and data.',
+                        action: 'Go to Neon Console'
+                    },
+                    koyeb: {
+                        description: 'Manage backend deployments, logs, and environment variables for the Spring Boot application.',
+                        action: 'Go to Koyeb'
                     }
                 }
             },
@@ -327,6 +335,14 @@ const resources = {
                     vercel: {
                         description: 'Gestiona los despliegues del frontend, dominios y variables de entorno de producción.',
                         action: 'Ir a Vercel'
+                    },
+                    neon: {
+                        description: 'Gestiona la base de datos PostgreSQL serverless. Ver cadenas de conexión, tablas y datos.',
+                        action: 'Ir a Consola Neon'
+                    },
+                    koyeb: {
+                        description: 'Gestiona los despliegues del backend, registros y variables de entorno para la aplicación Spring Boot.',
+                        action: 'Ir a Koyeb'
                     }
                 }
             },
