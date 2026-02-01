@@ -229,8 +229,8 @@ const HomePage: React.FC = () => {
                         {featuredProjects.length === 0 && (
                             <Grid size={{ xs: 12 }}>
                                 <EmptyState
-                                    title={t('admin.emptyState.projects.title', 'Building the Future')}
-                                    description={t('admin.emptyState.projects.description', 'No projects here yet, but great things are in the making.')}
+                                    title={t('admin.emptyState.featured.title', 'Highlights Coming Soon')}
+                                    description={t('admin.emptyState.featured.description', 'Curating the best projects to showcase here.')}
                                     icon={<RocketLaunchIcon />}
                                 />
                             </Grid>

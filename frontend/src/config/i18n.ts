@@ -167,6 +167,10 @@ const resources = {
                         title: 'Building the Future',
                         description: 'No projects here yet, but great things are in the making.'
                     },
+                    featured: {
+                        title: 'Highlights Coming Soon',
+                        description: 'Curating the best projects to showcase here.'
+                    },
                     experience: {
                         title: 'The Journey Begins',
                         description: 'Every expert was once a beginner. My professional path starts here.'
@@ -363,6 +367,10 @@ const resources = {
                     projects: {
                         title: 'Construyendo el Futuro',
                         description: 'Aún no hay proyectos aquí, pero grandes cosas se están gestando.'
+                    },
+                    featured: {
+                        title: 'Destacados Próximamente',
+                        description: 'Seleccionando los mejores proyectos para mostrar aquí.'
                     },
                     experience: {
                         title: 'El Viaje Comienza',
