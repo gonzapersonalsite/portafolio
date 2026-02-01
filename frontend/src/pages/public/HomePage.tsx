@@ -115,7 +115,7 @@ const HomePage: React.FC = () => {
                                 color="text.primary"
                                 sx={{ letterSpacing: 2, fontWeight: 'bold' }}
                             >
-                                {profile ? getLocalizedText(profile.greetingEn, profile.greetingEs) : t('home.greeting', "HELLO WORLD")}
+                                {profile ? getLocalizedText(profile.greetingEn, profile.greetingEs) : t('home.greeting')}
                             </Typography>
                             <Typography
                                 variant="h2"
@@ -133,12 +133,12 @@ const HomePage: React.FC = () => {
                                 {language === 'en' ? profile?.fullNameEn : profile?.fullNameEs}
                             </Typography>
                             <Typography variant="h4" color="text.secondary" gutterBottom sx={{ mb: 4 }}>
-                                {profile ? getLocalizedText(profile.subtitleEn, profile.subtitleEs) : "Full Stack Developer"}
+                                {profile ? getLocalizedText(profile.subtitleEn, profile.subtitleEs) : ""}
                             </Typography>
                             
                             <Box sx={{ maxWidth: 600, mb: 4 }}>
                                 <RichTextRenderer 
-                                    text={profile ? getLocalizedText(profile.descriptionEn, profile.descriptionEs) : t('home.description', "I build exceptional digital experiences...")}
+                                    text={profile ? getLocalizedText(profile.descriptionEn, profile.descriptionEs) : t('home.description')}
                                 />
                             </Box>
 
@@ -156,9 +156,10 @@ const HomePage: React.FC = () => {
                                     variant="outlined"
                                     size="large"
                                     startIcon={<DownloadIcon />}
-                                    href={profile?.cvUrl || "https://drive.google.com/uc?export=download&id=1Xm8xf5GpKLoDaZqA9jBE9CDXNHLJrGtG"}
+                                    href={profile?.cvUrl || "#"}
                                     target="_blank"
                                     rel="noopener noreferrer"
+                                    disabled={!profile?.cvUrl}
                                 >
                                     {t('home.resume', "Download CV")}
                                 </Button>
@@ -262,8 +263,7 @@ const HomePage: React.FC = () => {
                     <Grid size={{ xs: 12, md: 6 }}>
                         <ImageWithFallback
                             src={formatImageUrl(profile?.imageUrl)}
-                            alt={language === 'en' ? profile?.fullNameEn || "Profile" : profile?.fullNameEs || "Perfil"}
-                            type="profile"
+                            alt={(language === 'en' ? profile?.fullNameEn : profile?.fullNameEs) || 'Profile'}
                             aspectRatio="1/1"
                             sx={{
                                 maxWidth: 400,

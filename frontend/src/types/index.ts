@@ -77,6 +77,8 @@ export interface Profile {
     aboutSummaryEs: string;
     aboutPhilosophyEn: string;
     aboutPhilosophyEs: string;
+    sentenceEn: string;
+    sentenceEs: string;
     // General
     cvUrl: string;
     fullNameEn: string;

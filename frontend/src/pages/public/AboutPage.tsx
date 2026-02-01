@@ -89,9 +89,10 @@ const AboutPage: React.FC = () => {
                                 variant="contained"
                                 size="large"
                                 startIcon={<DownloadIcon />}
-                                href={profile?.cvUrl || "https://drive.google.com/uc?export=download&id=1Xm8xf5GpKLoDaZqA9jBE9CDXNHLJrGtG"}
+                                href={profile?.cvUrl || "#"}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                disabled={!profile?.cvUrl}
                             >
                                 {t('home.resume', "Download CV")}
                             </Button>
@@ -111,6 +112,15 @@ const AboutPage: React.FC = () => {
                             <RichTextRenderer 
                                 text={profile ? getLocalizedText(profile.aboutPhilosophyEn, profile.aboutPhilosophyEs) : t('about.philosophy')} 
                             />
+                        </Box>
+
+                        <Box sx={{ mt: 4, mb: 2, p: 3, bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)', borderRadius: 2, borderLeft: `4px solid ${theme.palette.primary.main}` }}>
+                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom color="primary">
+                                {t('about.sentenceTitle', "A sentence that defines me")}
+                            </Typography>
+                            <Typography variant="body1" sx={{ fontStyle: 'italic', fontSize: '1.1rem' }}>
+                                "{profile ? getLocalizedText(profile.sentenceEn, profile.sentenceEs) : ""}"
+                            </Typography>
                         </Box>
 
                         <Divider sx={{ my: 4 }} />
@@ -185,12 +195,9 @@ const AboutPage: React.FC = () => {
                                         />
                                     ))
                                 ) : (
-                                    // Fallback to static if failed or loading
-                                    <>
-                                        <Chip label={t('common.spanish', "Spanish (Native)")} color="default" sx={{ fontWeight: 500 }} />
-                                        <Chip label={t('common.catalan', "Catalan (Intermediate)")} color="default" variant="outlined" />
-                                        <Chip label={t('common.english', "English (Basic)")} color="default" variant="outlined" />
-                                    </>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {t('common.loading', "Loading...")}
+                                    </Typography>
                                 )}
                             </Stack>
                         </Box>

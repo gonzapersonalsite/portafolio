@@ -92,20 +92,22 @@ public class DataSeeder implements CommandLineRunner {
                 .greetingEs("HOLA MUNDO")
                 .titleEn("Professional Portfolio")
                 .titleEs("Portfolio Profesional")
-                .subtitleEn("Full Stack Developer")
-                .subtitleEs("Desarrollador Full Stack")
-                .descriptionEn("I build exceptional digital experiences that are fast, accessible, responsive, and visually appealing. Specialized in React and Spring Boot.")
-                .descriptionEs("Construyo experiencias digitales excepcionales: rápidas, accesibles, adaptables y visualmente atractivas. Especializado en React y Spring Boot.")
+                .subtitleEn("Junior Full Stack Developer")
+                .subtitleEs("Desarrollador Full Stack junior")
+                .descriptionEn("Junior Full Stack Developer. I learn quickly, adapt to new technologies, and enjoy creating useful, maintainable web solutions.")
+                .descriptionEs("Desarrollador Full Stack junior. Aprendo rápido, me adapto a nuevas tecnologías y disfruto creando soluciones web útiles y mantenibles.")
                 
                 // About Section
-                .aboutTitleEn("Passionate about developing scalable and maintainable applications")
-                .aboutTitleEs("Apasionado por desarrollar aplicaciones escalables y mantenibles")
-                .aboutIntroTitleEn("Web Application Developer based in Palma de Mallorca, Spain")
-                .aboutIntroTitleEs("Desarrollador de Aplicaciones Web en Palma de Mallorca, España")
-                .aboutSummaryEn("My journey began with a strong interest in how systems work, leading me to complete a degree in Microcomputer Systems and Networks. This gave me a solid foundation in hardware, Linux/Windows administration, and networking. I then specialized in software, obtaining a Higher Degree in Web Application Development.")
-                .aboutSummaryEs("Mi trayectoria comenzó con un fuerte interés en cómo funcionan los sistemas, lo que me llevó a completar el Grado Técnico en Sistemas Microinformáticos y Redes. Esto me dio una base sólida en hardware, administración Linux/Windows y redes. Luego me especialicé en software, obteniendo el Grado Superior en Desarrollo de Aplicaciones Web.")
-                .aboutPhilosophyEn("During my training and internships, I have worked with Java Spring Boot, React, and Vue in microservices environments. I combine my systems background with modern development skills to build robust, maintainable solutions.")
-                .aboutPhilosophyEs("Durante mi formación y prácticas, he trabajado con Java Spring Boot, React y Vue en entornos de microservicios. Combino mi experiencia en sistemas con habilidades modernas de desarrollo para construir soluciones robustas y mantenibles.")
+                .aboutTitleEn("Junior Full Stack Developer")
+                .aboutTitleEs("Desarrollador Full Stack junior")
+                .aboutIntroTitleEn("Versatile profile with a systems background and a focus on web development.")
+                .aboutIntroTitleEs("Perfil versátil con base en sistemas y enfoque en desarrollo web.")
+                .aboutSummaryEn("My journey started with a strong interest in understanding how systems work, which led me to complete a diploma in Microcomputer Systems and Networks. Later, I specialized in Web Application Development and discovered that what I enjoy most is building complete applications, from the front end to the back end.\nI am now looking for my first opportunity as a junior Full Stack developer, open to learning new technologies, adding value to the team, and growing step by step in frontend, backend, or full stack roles.")
+                .aboutSummaryEs("Mi trayectoria empezó con un fuerte interés por entender cómo funcionan los sistemas, lo que me llevó a completar un grado en Sistemas Microinformáticos y Redes. Después me especialicé en Desarrollo de Aplicaciones Web y descubrí que lo que más disfruto es construir aplicaciones completas, desde el front‑end hasta el back‑end.\nHoy busco mi primera oportunidad como desarrollador Full Stack junior, abierto a aprender nuevas tecnologías, aportar valor al equipo y crecer paso a paso, ya sea en roles de frontend, backend o full stack.")
+                .aboutPhilosophyEn("I like writing clear code, understanding the reasons behind things, and leaving every project slightly better than I found it. I prefer simple solutions, honest feedback, and teams where you can learn out loud without being afraid of making mistakes.")
+                .aboutPhilosophyEs("Me gusta escribir código claro, entender el porqué de las cosas y dejar cada proyecto un poco mejor de lo que estaba. Prefiero soluciones sencillas, feedback honesto y equipos donde se pueda aprender en voz alta sin miedo a equivocarse.")
+                .sentenceEn("I’m the kind of person who checks twice if the fridge is properly closed; I like making sure everything is in place before I call something done.")
+                .sentenceEs("Soy la persona que revisa dos veces si ha cerrado bien la nevera; me gusta asegurarme de que todo queda en su sitio antes de dar algo por terminado.")
                 
                 // CV
                 .cvUrl("https://drive.google.com/uc?export=download&id=1Xm8xf5GpKLoDaZqA9jBE9CDXNHLJrGtG")
@@ -118,7 +120,7 @@ public class DataSeeder implements CommandLineRunner {
                 .locationEn("Palma de Mallorca, Spain")
                 .locationEs("Palma de Mallorca, España")
                 .logoText("GONZALO.DEV")
-                .imageUrl("https://images.unsplash.com/photo-1544717305-2782549b5136?ixid=M3w1MjM0fDB8MXxzZWFyY2h8NHx8ZGV2ZWxvcGVyJTIwcG9ydHJhaXR8ZW58MHx8fHwxNzA2Njc0NTAyfDA&ixlib=rb-4.0.3&q=80&w=1000")
+                .imageUrl("https://i.postimg.cc/mgDv4QzJ/foto_carnet_original.jpg")
                 .build();
 
         profileRepository.save(profile);

@@ -71,7 +71,7 @@ const Navbar: React.FC = () => {
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
             <Typography variant="h6" sx={{ my: 2, fontWeight: 'bold' }}>
-                {profile?.logoText?.split('.')[0] || "GM"}
+                {profile?.logoText?.split('.')[0]}
             </Typography>
             <List>
                 {navItems.map((item) => (
@@ -128,14 +128,10 @@ const Navbar: React.FC = () => {
                                     textDecoration: 'none',
                                 }}
                             >
-                                {profile?.logoText ? (
+                                {profile?.logoText && (
                                     <>
                                         {profile.logoText.split('.')[0]}
                                         <Box component="span" sx={{ color: 'primary.main' }}>.{profile.logoText.split('.')[1] || 'DEV'}</Box>
-                                    </>
-                                ) : (
-                                    <>
-                                        GONZALO<Box component="span" sx={{ color: 'primary.main' }}>.DEV</Box>
                                     </>
                                 )}
                             </Typography>

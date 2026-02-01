@@ -151,6 +151,13 @@ const ProfileManagement: React.FC = () => {
                                     <Grid size={12}>
                                         <TextField name="aboutPhilosophyEs" label={`${t('admin.philosophy')} (ES)`} value={profile.aboutPhilosophyEs} onChange={handleChange} fullWidth multiline rows={3} />
                                     </Grid>
+
+                                    <Grid size={12}>
+                                        <TextField name="sentenceEn" label={`${t('admin.sentence')} (EN)`} value={profile.sentenceEn || ''} onChange={handleChange} fullWidth multiline rows={2} />
+                                    </Grid>
+                                    <Grid size={12}>
+                                        <TextField name="sentenceEs" label={`${t('admin.sentence')} (ES)`} value={profile.sentenceEs || ''} onChange={handleChange} fullWidth multiline rows={2} />
+                                    </Grid>
                                 </Grid>
                             )}
 

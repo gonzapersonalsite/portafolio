@@ -93,7 +93,6 @@ const ContactPage: React.FC = () => {
                                         </Typography>
                                         <Typography variant="body1" fontWeight="500">
                                             {language === 'en' ? profile?.locationEn : profile?.locationEs}
-                                            {!(profile?.locationEn) && t('contact.address', "Palma de Mallorca, Spain")}
                                         </Typography>
                                     </Box>
                                 </Box>

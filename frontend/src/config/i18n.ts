@@ -34,7 +34,8 @@ const resources = {
                 philosophy: 'I believe in the importance of clean code and continuous improvement. Every project is an opportunity to learn and grow professionally.',
                 skills: 'Core Competencies',
                 languages: 'Languages',
-                more: 'More About Me'
+                more: 'More About Me',
+                sentenceTitle: 'A sentence that defines me'
             },
             skills: {
                 title: 'My Skills',
@@ -122,6 +123,7 @@ const resources = {
                 logoText: 'Navbar Logo Text',
                 cvUrl: 'CV File URL (PDF)',
                 philosophy: 'Philosophy',
+                sentence: 'Sentence that defines me',
                 linkedinUrl: 'LinkedIn URL',
                 backend: 'Backend',
                 frontend: 'Frontend',
@@ -231,7 +233,8 @@ const resources = {
                 philosophy: 'Creo en la importancia del código limpio y la mejora continua. Cada proyecto es una oportunidad para aprender y crecer profesionalmente.',
                 skills: 'Competencias Principales',
                 languages: 'Idiomas',
-                more: 'Más Sobre Mí'
+                more: 'Más Sobre Mí',
+                sentenceTitle: 'Una frase que me define'
             },
             skills: {
                 title: 'Mis Habilidades',
@@ -298,6 +301,7 @@ const resources = {
                 // Form Labels
                 name: 'Nombre',
                 title: 'Título',
+                sentence: 'Frase que me define',
                 subtitle: 'Subtítulo',
                 description: 'Descripción',
                 company: 'Empresa',

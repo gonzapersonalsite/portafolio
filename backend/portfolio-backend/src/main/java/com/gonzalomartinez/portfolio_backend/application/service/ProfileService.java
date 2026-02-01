@@ -43,6 +43,8 @@ public class ProfileService {
         profile.setAboutSummaryEs(profileDetails.getAboutSummaryEs());
         profile.setAboutPhilosophyEn(profileDetails.getAboutPhilosophyEn());
         profile.setAboutPhilosophyEs(profileDetails.getAboutPhilosophyEs());
+        profile.setSentenceEn(profileDetails.getSentenceEn());
+        profile.setSentenceEs(profileDetails.getSentenceEs());
         
         // General
         if (profileDetails.getCvUrl() != null) {

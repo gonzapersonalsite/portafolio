@@ -83,6 +83,13 @@ public class Profile {
     @Column(columnDefinition = "TEXT")
     private String aboutPhilosophyEs;
 
+    // --- SENTENCE THAT DEFINES ME ---
+    @Column(columnDefinition = "TEXT")
+    private String sentenceEn;
+
+    @Column(columnDefinition = "TEXT")
+    private String sentenceEs;
+
     // --- CV / GENERAL ---
     
     @Size(max = 255)

@@ -65,31 +65,37 @@ const Footer: React.FC = () => {
                     </Box>
 
                     <Box sx={{ display: 'flex', gap: 1 }}>
-                        <IconButton
-                            href={socialLinks.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="GitHub"
-                            color="inherit"
-                        >
-                            <GitHubIcon />
-                        </IconButton>
-                        <IconButton
-                            href={socialLinks.linkedin}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="LinkedIn"
-                            color="inherit"
-                        >
-                            <LinkedInIcon />
-                        </IconButton>
-                        <IconButton
-                            href={socialLinks.email}
-                            aria-label="Email"
-                            color="inherit"
-                        >
-                            <EmailIcon />
-                        </IconButton>
+                        {socialLinks.github && (
+                            <IconButton
+                                href={socialLinks.github}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="GitHub"
+                                color="inherit"
+                            >
+                                <GitHubIcon />
+                            </IconButton>
+                        )}
+                        {socialLinks.linkedin && (
+                            <IconButton
+                                href={socialLinks.linkedin}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="LinkedIn"
+                                color="inherit"
+                            >
+                                <LinkedInIcon />
+                            </IconButton>
+                        )}
+                        {socialLinks.email && (
+                            <IconButton
+                                href={socialLinks.email}
+                                aria-label="Email"
+                                color="inherit"
+                            >
+                                <EmailIcon />
+                            </IconButton>
+                        )}
                     </Box>
 
                     <Typography variant="body2" color="text.secondary" align="center">
