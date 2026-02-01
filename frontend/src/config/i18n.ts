@@ -89,6 +89,7 @@ const resources = {
                 projects: 'Projects Management',
                 languages: 'Languages Management',
                 externalResources: 'External Resources',
+                externalResourcesDescription: 'Quick access to external tools and services connected to this portfolio.',
                 add: 'Add New',
                 edit: 'Edit',
                 delete: 'Delete',

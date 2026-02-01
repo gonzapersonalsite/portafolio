@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import {
     Box, Button, Paper, IconButton, Typography, Dialog,
     DialogTitle, DialogContent, DialogActions, TextField,
-    Chip, Grid, Snackbar, Alert, useMediaQuery, Card, CardContent, CardActions
+    Chip, Grid, Snackbar, Alert
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot, TimelineOppositeContent } from '@mui/lab';
+import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot, TimelineOppositeContent, timelineOppositeContentClasses } from '@mui/lab';
+import BusinessIcon from '@mui/icons-material/Business';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { adminService } from '@/services/adminService';
 import type { Experience } from '@/types';
 import { useForm, Controller } from 'react-hook-form';
@@ -28,7 +30,6 @@ const ExperiencesManagement: React.FC = () => {
     const [saving, setSaving] = useState(false);
     const { t } = useTranslation();
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     const { control, register, handleSubmit, reset, setValue } = useForm<Experience>();
 
@@ -137,85 +138,90 @@ const ExperiencesManagement: React.FC = () => {
                 </Button>
             </Box>
 
-            {isMobile ? (
-                <Box>
-                    {experiences.map((exp) => (
-                        <Card key={exp.id} sx={{ mb: 2 }}>
-                            <CardContent>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                    <Box>
-                                        <Typography variant="h6" component="div">
-                                            {exp.companyEn}
-                                        </Typography>
-                                        <Typography color="text.secondary" gutterBottom>
-                                            {exp.positionEn}
-                                        </Typography>
-                                    </Box>
-                                    <Chip 
-                                        label={`${exp.startDate} - ${exp.endDate || t('common.present')}`} 
-                                        size="small" 
-                                        variant="outlined" 
-                                        color="primary"
-                                    />
+            <Paper sx={{ p: { xs: 2, md: 3 }, mt: 2 }}>
+                <Timeline
+                    position="right"
+                    sx={{
+                        [`& .${timelineOppositeContentClasses.root}`]: {
+                            flex: 0.3,
+                        },
+                        p: 0
+                    }}
+                >
+                    {experiences.map((exp, index) => (
+                        <TimelineItem key={exp.id}>
+                            <TimelineOppositeContent color="text.secondary" sx={{ py: '12px', px: 2, display: { xs: 'none', md: 'block' } }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
+                                    <CalendarMonthIcon fontSize="small" />
+                                    <Typography variant="body2" fontWeight="bold" sx={{ whiteSpace: 'nowrap' }}>
+                                        {exp.startDate} — {exp.endDate || t('common.present')}
+                                    </Typography>
                                 </Box>
-                                
-                                <Box sx={{ mt: 1 }}>
-                                    <ScrollableContent maxHeight="150px" sx={{ bgcolor: 'action.hover', p: 1 }}>
-                                        <RichTextRenderer text={exp.descriptionEn} variant="body2" />
-                                    </ScrollableContent>
-                                </Box>
-                                
-                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 1 }}>
-                                    {exp.technologies?.map((tech) => (
-                                        <Chip key={tech} label={tech} size="small" />
-                                    ))}
-                                </Box>
-                            </CardContent>
-                            <CardActions sx={{ justifyContent: 'flex-end' }}>
-                                <IconButton color="primary" onClick={() => handleOpen(exp)}>
-                                    <EditIcon />
-                                </IconButton>
-                                <IconButton color="error" onClick={() => handleDeleteClick(exp.id)}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </CardActions>
-                        </Card>
-                    ))}
-                </Box>
-            ) : (
-                <Paper sx={{ p: 2 }}>
-                    <Timeline position="alternate">
-                        {experiences.map((exp) => (
-                            <TimelineItem key={exp.id}>
-                                <TimelineOppositeContent color="text.secondary">
-                                    {exp.startDate} - {exp.endDate || t('common.present')}
-                                </TimelineOppositeContent>
-                                <TimelineSeparator>
-                                    <TimelineDot color="primary" />
-                                    <TimelineConnector />
-                                </TimelineSeparator>
-                                <TimelineContent>
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <Typography variant="h6" component="span" fontWeight="bold">
-                                            {exp.companyEn}
-                                        </Typography>
+                            </TimelineOppositeContent>
+
+                            <TimelineSeparator>
+                                <TimelineDot color={index === 0 ? "primary" : "grey"} variant={index === 0 ? "filled" : "outlined"}>
+                                    <BusinessIcon />
+                                </TimelineDot>
+                                {index < experiences.length - 1 && <TimelineConnector />}
+                            </TimelineSeparator>
+
+                            <TimelineContent sx={{ py: '12px', px: 2 }}>
+                                <Paper
+                                    elevation={0}
+                                    sx={{
+                                        p: 3,
+                                        mb: 4,
+                                        width: '100%',
+                                        bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : 'grey.50',
+                                        border: `1px solid ${theme.palette.divider}`,
+                                        borderRadius: 2
+                                    }}
+                                >
+                                    {/* Header Row: Mobile Date + Actions */}
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                                        <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', gap: 1, color: 'text.secondary' }}>
+                                            <CalendarMonthIcon fontSize="small" />
+                                            <Typography variant="caption" fontWeight="bold">
+                                                {exp.startDate} — {exp.endDate || t('common.present')}
+                                            </Typography>
+                                        </Box>
+                                        <Box sx={{ display: { xs: 'none', md: 'block' } }} />
+
                                         <Box>
-                                            <IconButton size="small" color="primary" onClick={() => handleOpen(exp)}><EditIcon fontSize="small" /></IconButton>
-                                            <IconButton size="small" color="error" onClick={() => handleDeleteClick(exp.id)}><DeleteIcon fontSize="small" /></IconButton>
+                                            <IconButton color="primary" onClick={() => handleOpen(exp)} size="small">
+                                                <EditIcon />
+                                            </IconButton>
+                                            <IconButton color="error" onClick={() => handleDeleteClick(exp.id)} size="small">
+                                                <DeleteIcon />
+                                            </IconButton>
                                         </Box>
                                     </Box>
-                                    <Typography color="text.secondary">{exp.positionEn}</Typography>
-                                    <Box sx={{ mt: 1 }}>
-                                        {exp.technologies?.map((tech) => (
-                                            <Chip key={tech} label={tech} size="small" sx={{ mr: 0.5, mb: 0.5 }} />
+
+                                    <Typography variant="h6" component="h3" fontWeight="bold" color="primary">
+                                        {exp.positionEn}
+                                    </Typography>
+                                    <Typography variant="subtitle1" fontWeight="500" gutterBottom>
+                                        @{exp.companyEn}
+                                    </Typography>
+                                    
+                                    <Box sx={{ mt: 2, mb: 2 }}>
+                                        <ScrollableContent maxHeight="200px">
+                                            <RichTextRenderer text={exp.descriptionEn} variant="body2" />
+                                        </ScrollableContent>
+                                    </Box>
+                                    
+                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
+                                        {exp.technologies.map(tech => (
+                                            <Chip key={tech} label={tech} size="small" variant="outlined" />
                                         ))}
                                     </Box>
-                                </TimelineContent>
-                            </TimelineItem>
-                        ))}
-                    </Timeline>
-                </Paper>
-            )}
+                                </Paper>
+                            </TimelineContent>
+                        </TimelineItem>
+                    ))}
+                </Timeline>
+            </Paper>
 
             <ConfirmDialog
                 open={deleteDialogOpen}
