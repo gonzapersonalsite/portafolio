@@ -3,7 +3,7 @@ import { Container, Paper, Typography, TextField, Button, Box, Alert } from '@mu
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/context/AuthStore';
-import apiClient from '@/services/apiClient';
+import { authService } from '@/services/authService';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '@/components/common/LanguageSelector';
 
@@ -24,8 +24,8 @@ const LoginPage: React.FC = () => {
         try {
             setLoading(true);
             setError(null);
-            const response = await apiClient.post('/auth/login', data);
-            login(response.data);
+            const responseData = await authService.login(data);
+            login(responseData);
             navigate('/admin');
         } catch (err: any) {
             if (err.response && err.response.status === 401) {

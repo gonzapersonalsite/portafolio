@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import apiClient from '../services/apiClient';
+import { authService } from '../services/authService';
 import type { AuthResponse, Profile } from '../types';
 import { publicService } from '../services/publicService';
 
@@ -47,8 +47,7 @@ export const useAuthStore = create<AuthState>()(
                 if (!token) return false;
 
                 try {
-                    const response = await apiClient.get<boolean>('/auth/validate');
-                    const isValid = response.data;
+                    const isValid = await authService.validateToken();
 
                     if (!isValid) {
                         get().logout();
