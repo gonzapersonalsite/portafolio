@@ -134,3 +134,33 @@ export const PageHeaderSkeleton: React.FC = () => (
         <Skeleton animation="wave" width="300px" height={60} />
     </Box>
 );
+
+export const ContactSkeleton: React.FC = () => (
+    <Grid container spacing={6}>
+        <Grid size={{ xs: 12, md: 5 }}>
+            <Skeleton animation="wave" width="60%" height={40} sx={{ mb: 2 }} />
+            <Skeleton animation="wave" width="100%" height={80} sx={{ mb: 4 }} />
+            
+            <Stack spacing={3} sx={{ mb: 6 }}>
+                {[1, 2].map((i) => (
+                    <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Skeleton animation="wave" variant="circular" width={40} height={40} />
+                        <Box>
+                            <Skeleton animation="wave" width={60} height={16} sx={{ mb: 0.5 }} />
+                            <Skeleton animation="wave" width={150} height={24} />
+                        </Box>
+                    </Box>
+                ))}
+            </Stack>
+
+            <Skeleton animation="wave" width="40%" height={32} sx={{ mb: 2 }} />
+            <Stack direction="row" spacing={2}>
+                <Skeleton animation="wave" variant="circular" width={40} height={40} />
+                <Skeleton animation="wave" variant="circular" width={40} height={40} />
+            </Stack>
+        </Grid>
+        <Grid size={{ xs: 12, md: 7 }}>
+            <Skeleton animation="wave" variant="rectangular" width="100%" height={500} sx={{ borderRadius: 4 }} />
+        </Grid>
+    </Grid>
+);

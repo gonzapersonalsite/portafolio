@@ -9,14 +9,14 @@ import ContactForm from '@/components/layout/ContactForm';
 import { publicService } from '@/services/publicService';
 import { useLanguage } from '@/context/LanguageContext';
 import type { Profile } from '@/types';
-// Assuming ContactForm is in components/layout or components/common. 
-// Based on previous step, I placed it in components/layout.
+import { ContactSkeleton, PageHeaderSkeleton } from '@/components/common/SkeletonLoaders';
 
 const ContactPage: React.FC = () => {
     const { language } = useLanguage();
     const { t } = useTranslation();
     const theme = useTheme();
     const [profile, setProfile] = useState<Profile | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -25,10 +25,23 @@ const ContactPage: React.FC = () => {
                 setProfile(data);
             } catch (err) {
                 console.error("Failed to fetch profile in contact page:", err);
+            } finally {
+                setLoading(false);
             }
         };
         fetchProfile();
     }, []);
+
+    if (loading) {
+        return (
+            <Box sx={{ py: 8 }}>
+                <Container maxWidth="lg">
+                    <PageHeaderSkeleton />
+                    <ContactSkeleton />
+                </Container>
+            </Box>
+        );
+    }
 
     const socialLinks = [
         { icon: <GitHubIcon fontSize="large" />, url: profile?.githubUrl || "https://github.com/gonzapersonalsite", label: "GitHub" },

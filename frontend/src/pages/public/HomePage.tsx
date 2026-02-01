@@ -72,6 +72,23 @@ const HomePage: React.FC = () => {
                         </Grid>
                     </Container>
                 </Box>
+                <Box sx={{ py: 10 }}>
+                    <Container maxWidth="lg">
+                        <Grid container spacing={6} alignItems="center">
+                            <Grid size={{ xs: 12, md: 6 }}>
+                                <Skeleton animation="wave" variant="rectangular" width="80%" sx={{ pt: '100%', borderRadius: 4, mx: 'auto' }} />
+                            </Grid>
+                            <Grid size={{ xs: 12, md: 6 }}>
+                                <Skeleton animation="wave" width="100px" height={20} sx={{ mb: 2 }} />
+                                <Skeleton animation="wave" width="80%" height={50} sx={{ mb: 3 }} />
+                                <Skeleton animation="wave" width="100%" height={20} sx={{ mb: 1 }} />
+                                <Skeleton animation="wave" width="100%" height={20} sx={{ mb: 1 }} />
+                                <Skeleton animation="wave" width="90%" height={20} sx={{ mb: 4 }} />
+                                <Skeleton animation="wave" width="150px" height={48} sx={{ borderRadius: 1 }} />
+                            </Grid>
+                        </Grid>
+                    </Container>
+                </Box>
             </Box>
         );
     }
