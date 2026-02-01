@@ -8,8 +8,8 @@ COPY gradle gradle
 COPY build.gradle .
 COPY settings.gradle .
 
-# Give execution permission to gradlew
-RUN chmod +x gradlew
+# Fix windows line endings and give execution permission
+RUN sed -i 's/\r$//' gradlew && chmod +x gradlew
 
 # Download dependencies (cache layer)
 RUN ./gradlew dependencies --no-daemon
@@ -18,7 +18,7 @@ RUN ./gradlew dependencies --no-daemon
 COPY src src
 
 # Build application
-RUN ./gradlew build -x test --no-daemon
+RUN ./gradlew build -x test --no-daemon && rm -f build/libs/*-plain.jar
 
 # Run stage
 FROM eclipse-temurin:21-jre-jammy

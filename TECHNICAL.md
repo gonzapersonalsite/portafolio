@@ -72,8 +72,37 @@ Debes configurarlas en el panel de Vercel (Settings -> Environment Variables):
 *   `VITE_EMAILJS_TEMPLATE_ID`: Tu ID de plantilla de EmailJS.
 *   `VITE_EMAILJS_PUBLIC_KEY`: Tu clave pública de EmailJS.
 
-### 2. Backend (Render / Railway)
-*Requiere Dockerfile o configuración de Java/Maven.*
-*   **Build Command:** `./mvnw clean package -DskipTests`
-*   **Start Command:** `java -jar target/*.jar`
-*   **Variables:** `SPRING_DATASOURCE_URL`, `JWT_SECRET`, etc.
+### 2. Backend (Koyeb + Neon)
+*Opción "Forever Free" recomendada: Neon (DB) + Koyeb (Backend)*
+
+Para evitar la expiración de servicios gratuitos como Render o el crédito limitado de Railway, utilizamos esta combinación robusta:
+
+1.  **Base de Datos (Neon.tech):**
+    *   PostgreSQL serverless gratuito (0.5GB).
+    *   Región recomendada: **Europe (Frankfurt)**.
+    *   No caduca ni borra datos por inactividad.
+
+2.  **Backend (Koyeb):**
+    *   PaaS similar a Render/Heroku.
+    *   **Plan Free:** 1 Servicio Web (Nano Instance) en **Frankfurt**.
+    *   Despliegue via **GitHub** (detecta el `Dockerfile` automáticamente).
+
+**Pasos de Configuración:**
+
+1.  **Base de Datos:** Crear proyecto en Neon -> Copiar Connection String.
+2.  **Koyeb:**
+    *   Crear App -> Web Service -> GitHub -> Seleccionar repositorio.
+    *   **Builder:** Dockerfile.
+    *   **Work Directory:** `backend/portfolio-backend`.
+    *   **Variables de Entorno:**
+        *   `SPRING_DATASOURCE_URL`: La URL de Neon (añadir `?sslmode=require`).
+        *   `SPRING_DATASOURCE_USERNAME`: Usuario de Neon.
+        *   `SPRING_DATASOURCE_PASSWORD`: Contraseña de Neon.
+        *   `JWT_SECRET`: Tu secreto generado.
+        *   `ADMIN_PASSWORD`: Tu contraseña de admin.
+        *   `CORS_ORIGINS`: `https://mi-portafolio-gonzalo.vercel.app`
+
+### Comandos de Construcción (Referencia Local)
+El proyecto usa **Gradle** (no Maven).
+*   **Build:** `./gradlew build -x test`
+*   **Run:** `java -jar build/libs/*.jar`
