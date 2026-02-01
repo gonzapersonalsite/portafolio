@@ -28,21 +28,27 @@ const RichTextRenderer: React.FC<RichTextRendererProps> = ({ text, variant = 'bo
     const elements: React.ReactNode[] = [];
     let currentList: string[] = [];
 
+    // Calculate bullet margin based on text variant
+    const isSmallText = variant === 'body2' || variant === 'caption' || variant === 'subtitle2';
+    const bulletMt = isSmallText ? '7px' : '10px';
+
     const flushList = (keyIndex: number) => {
         if (currentList.length > 0) {
             elements.push(
-                <List key={`list-${keyIndex}`} dense sx={{ py: 0, my: 1 }}>
+                <List key={`list-${keyIndex}`} dense sx={{ py: 0, my: 1, pl: 2 }}>
                     {currentList.map((item, i) => (
-                        <ListItem key={i} alignItems="flex-start" sx={{ py: 0.5, pl: 0 }}>
-                             <ListItemIcon sx={{ minWidth: 20, mt: 0.5 }}>
+                        <ListItem key={i} alignItems="flex-start" sx={{ py: 0, pl: 0 }}>
+                             <ListItemIcon sx={{ minWidth: 24, mt: bulletMt }}>
                                 <CircleIcon sx={{ fontSize: 6, color: 'text.secondary' }} />
                              </ListItemIcon>
                              <ListItemText 
                                 primary={item} 
-                                primaryTypographyProps={{ 
-                                    variant: variant, 
-                                    color: 'text.secondary',
-                                    sx: { lineHeight: 1.6 }
+                                slotProps={{ 
+                                    primary: { 
+                                        variant: variant, 
+                                        color: 'text.secondary',
+                                        sx: { lineHeight: 1.6 }
+                                    }
                                 }}
                                 sx={{ m: 0 }}
                             />
