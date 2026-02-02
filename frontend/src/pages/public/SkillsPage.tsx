@@ -104,6 +104,7 @@ const SkillsPage: React.FC = () => {
                                                 <LinearProgress
                                                     variant="determinate"
                                                     value={skill.level}
+                                                    aria-label={language === 'en' ? skill.nameEn : skill.nameEs}
                                                     sx={{
                                                         height: 8,
                                                         borderRadius: 4,

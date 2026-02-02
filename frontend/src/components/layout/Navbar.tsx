@@ -70,7 +70,7 @@ const Navbar: React.FC = () => {
 
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-            <Typography variant="h6" sx={{ my: 2, fontWeight: 'bold' }}>
+            <Typography variant="h6" component="div" sx={{ my: 2, fontWeight: 'bold' }}>
                 {profile?.logoText?.split('.')[0]}
             </Typography>
             <List>
@@ -97,7 +97,7 @@ const Navbar: React.FC = () => {
             <HideOnScroll>
                 <AppBar position="fixed" color="default" elevation={0} sx={{
                     backdropFilter: 'blur(20px)',
-                    backgroundColor: mode === 'dark' ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.7)',
+                    backgroundColor: mode === 'dark' ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.9)',
                     borderBottom: '1px solid',
                     borderColor: 'divider'
                 }}>
@@ -122,6 +122,7 @@ const Navbar: React.FC = () => {
                                 sx={{
                                     flexGrow: 1,
                                     display: 'flex',
+                                    alignItems: 'center',
                                     fontWeight: 700,
                                     letterSpacing: '.1rem',
                                     color: 'inherit',
@@ -182,7 +183,12 @@ const Navbar: React.FC = () => {
                                     </Button>
                                 )}
                                 <LanguageSelector />
-                                <IconButton onClick={toggleColorMode} color="inherit" size="small">
+                                <IconButton 
+                                    onClick={toggleColorMode} 
+                                    color="inherit" 
+                                    size="small"
+                                    aria-label={mode === 'dark' ? "Switch to light mode" : "Switch to dark mode"}
+                                >
                                     {mode === 'dark' ? <Brightness7Icon fontSize="small" /> : <Brightness4Icon fontSize="small" />}
                                 </IconButton>
                             </Box>

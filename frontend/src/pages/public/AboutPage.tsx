@@ -99,7 +99,7 @@ const AboutPage: React.FC = () => {
                     </Grid>
 
                     <Grid size={{ xs: 12, md: 7 }}>
-                        <Typography variant="h5" gutterBottom fontWeight="bold">
+                        <Typography variant="h5" component="h2" gutterBottom fontWeight="bold">
                             {profile ? getLocalizedText(profile.aboutIntroTitleEn, profile.aboutIntroTitleEs) : t('about.introTitle')}
                         </Typography>
                         
@@ -114,7 +114,7 @@ const AboutPage: React.FC = () => {
                         </Box>
 
                         <Box sx={{ mt: 4, mb: 2, p: 3, bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)', borderRadius: 2, borderLeft: `4px solid ${theme.palette.primary.main}` }}>
-                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom color="primary">
+                            <Typography variant="subtitle1" component="h3" fontWeight="bold" gutterBottom color="primary">
                                 {t('about.sentenceTitle', "A sentence that defines me")}
                             </Typography>
                             <Typography variant="body1" sx={{ fontStyle: 'italic', fontSize: '1.1rem' }}>
@@ -130,7 +130,7 @@ const AboutPage: React.FC = () => {
                                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                         <CodeIcon color="primary" sx={{ mr: 2, fontSize: 32 }} />
                                         <Box>
-                                            <Typography variant="h6" fontWeight="bold">Frontend</Typography>
+                                            <Typography variant="h6" component="h3" fontWeight="bold">Frontend</Typography>
                                             <Typography variant="body2" color="text.secondary">
                                                 {competencies
                                                     .filter(s => s.category.toLowerCase() === 'frontend')
@@ -147,7 +147,7 @@ const AboutPage: React.FC = () => {
                                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                         <WorkIcon color="secondary" sx={{ mr: 2, fontSize: 32 }} />
                                         <Box>
-                                            <Typography variant="h6" fontWeight="bold">Backend</Typography>
+                                            <Typography variant="h6" component="h3" fontWeight="bold">Backend</Typography>
                                             <Typography variant="body2" color="text.secondary">
                                                 {competencies
                                                     .filter(s => s.category.toLowerCase() === 'backend' || s.category.toLowerCase() === 'database')
@@ -179,7 +179,7 @@ const AboutPage: React.FC = () => {
                         </Box>
 
                         <Box sx={{ mt: 4 }}>
-                            <Typography variant="h6" gutterBottom fontWeight="bold" sx={{ mt: 2 }}>
+                            <Typography variant="h6" component="h2" gutterBottom fontWeight="bold" sx={{ mt: 2 }}>
                                 {t('about.languages', "Languages")}
                             </Typography>
                             <Stack direction="row" spacing={2} sx={{ mt: 1 }}>

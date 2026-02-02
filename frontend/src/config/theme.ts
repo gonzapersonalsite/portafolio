@@ -4,9 +4,9 @@ const getThemeOptions = (mode: 'light' | 'dark'): ThemeOptions => ({
     palette: {
         mode,
         primary: {
-            main: mode === 'light' ? '#1976d2' : '#90caf9',
+            main: mode === 'light' ? '#1565c0' : '#90caf9', // Darker blue for better contrast
             light: mode === 'light' ? '#42a5f5' : '#e3f2fd',
-            dark: mode === 'light' ? '#1565c0' : '#42a5f5',
+            dark: mode === 'light' ? '#0d47a1' : '#42a5f5',
         },
         secondary: {
             main: mode === 'light' ? '#dc004e' : '#f48fb1',

@@ -132,7 +132,7 @@ const HomePage: React.FC = () => {
                             >
                                 {language === 'en' ? profile?.fullNameEn : profile?.fullNameEs}
                             </Typography>
-                            <Typography variant="h4" color="text.secondary" gutterBottom sx={{ mb: 4 }}>
+                            <Typography variant="h4" component="p" color="text.secondary" gutterBottom sx={{ mb: 4 }}>
                                 {profile ? getLocalizedText(profile.subtitleEn, profile.subtitleEs) : ""}
                             </Typography>
                             
