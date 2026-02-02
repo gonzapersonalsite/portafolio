@@ -1,14 +1,23 @@
 import React, { Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, Container } from '@mui/material';
+import {
+  HeroSkeleton,
+  PageHeaderSkeleton,
+  SkillsSkeleton,
+  ExperienceSkeleton,
+  ProjectGridSkeleton,
+  AboutSkeleton,
+  ContactSkeleton
+} from '@/components/common/SkeletonLoaders';
 
 // Public Pages
-import HomePage from '@/pages/public/HomePage';
-import AboutPage from '@/pages/public/AboutPage';
-import SkillsPage from '@/pages/public/SkillsPage';
-import ExperiencePage from '@/pages/public/ExperiencePage';
-import ProjectsPage from '@/pages/public/ProjectsPage';
-import ContactPage from '@/pages/public/ContactPage';
+const HomePage = React.lazy(() => import('@/pages/public/HomePage'));
+const AboutPage = React.lazy(() => import('@/pages/public/AboutPage'));
+const SkillsPage = React.lazy(() => import('@/pages/public/SkillsPage'));
+const ExperiencePage = React.lazy(() => import('@/pages/public/ExperiencePage'));
+const ProjectsPage = React.lazy(() => import('@/pages/public/ProjectsPage'));
+const ContactPage = React.lazy(() => import('@/pages/public/ContactPage'));
 
 // Admin Pages
 const LoginPage = React.lazy(() => import('@/pages/admin/LoginPage'));
@@ -35,17 +44,50 @@ const LoadingFallback = () => (
   </Box>
 );
 
+const PageLoader = ({ children }: { children: React.ReactNode }) => (
+  <Box sx={{ py: 8 }}>
+    <Container maxWidth="lg">
+      <PageHeaderSkeleton />
+      {children}
+    </Container>
+  </Box>
+);
+
 function App() {
   return (
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<PublicLayout />}>
-        <Route index element={<HomePage />} />
-        <Route path="about" element={<AboutPage />} />
-        <Route path="skills" element={<SkillsPage />} />
-        <Route path="experience" element={<ExperiencePage />} />
-        <Route path="projects" element={<ProjectsPage />} />
-        <Route path="contact" element={<ContactPage />} />
+        <Route index element={
+          <Suspense fallback={<HeroSkeleton />}>
+            <HomePage />
+          </Suspense>
+        } />
+        <Route path="about" element={
+          <Suspense fallback={<PageLoader><AboutSkeleton /></PageLoader>}>
+            <AboutPage />
+          </Suspense>
+        } />
+        <Route path="skills" element={
+          <Suspense fallback={<PageLoader><SkillsSkeleton /></PageLoader>}>
+            <SkillsPage />
+          </Suspense>
+        } />
+        <Route path="experience" element={
+          <Suspense fallback={<PageLoader><ExperienceSkeleton /></PageLoader>}>
+            <ExperiencePage />
+          </Suspense>
+        } />
+        <Route path="projects" element={
+          <Suspense fallback={<PageLoader><ProjectGridSkeleton /></PageLoader>}>
+            <ProjectsPage />
+          </Suspense>
+        } />
+        <Route path="contact" element={
+          <Suspense fallback={<PageLoader><ContactSkeleton /></PageLoader>}>
+            <ContactPage />
+          </Suspense>
+        } />
       </Route>
 
       {/* Admin Routes */}
