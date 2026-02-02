@@ -83,7 +83,7 @@ export const AboutSkeleton: React.FC = () => (
 
 export const SkillsSkeleton: React.FC = () => (
     <Grid container spacing={4}>
-        {[1, 2].map((i) => (
+        {[1, 2, 3, 4].map((i) => (
             <Grid size={{ xs: 12, md: 6 }} key={i}>
                 <Box sx={{ p: 4, borderRadius: 4, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', height: '100%' }}>
                     <Skeleton animation="wave" width="40%" height={32} sx={{ mb: 3 }} />
