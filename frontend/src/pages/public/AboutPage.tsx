@@ -75,7 +75,6 @@ const AboutPage: React.FC = () => {
                             src={formatImageUrl(profile?.imageUrl)}
                             alt={language === 'en' ? profile?.fullNameEn || "Profile" : profile?.fullNameEs || "Perfil"}
                             type="profile"
-                            aspectRatio="1/1"
                             sx={{
                                 maxWidth: 400,
                                 margin: '0 auto',

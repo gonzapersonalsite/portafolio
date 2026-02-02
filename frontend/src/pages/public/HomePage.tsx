@@ -264,7 +264,6 @@ const HomePage: React.FC = () => {
                         <ImageWithFallback
                             src={formatImageUrl(profile?.imageUrl)}
                             alt={(language === 'en' ? profile?.fullNameEn : profile?.fullNameEs) || 'Profile'}
-                            aspectRatio="1/1"
                             loading="lazy"
                             sx={{
                                 maxWidth: 400,

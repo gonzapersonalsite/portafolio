@@ -8,6 +8,7 @@ interface ImageWithFallbackProps extends BoxProps<'img'> {
     fallbackSrc?: string;
     type?: 'profile' | 'project' | 'general';
     aspectRatio?: string;
+    objectPosition?: string;
 }
 
 const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
@@ -16,6 +17,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
     fallbackSrc,
     type = 'general',
     aspectRatio,
+    objectPosition = 'center',
     sx,
     ...props
 }) => {
@@ -100,6 +102,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
                         width: '100%',
                         height: '100%',
                         objectFit: 'cover',
+                        objectPosition,
                         opacity: isLoading ? 0 : 1,
                         transition: 'opacity 0.3s ease-in-out',
                     }}
@@ -142,6 +145,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
                     width: '100%',
                     height: 'auto',
                     objectFit: 'cover',
+                    objectPosition,
                     opacity: isLoading ? 0 : 1,
                     transition: 'opacity 0.3s ease-in-out',
                 }}
