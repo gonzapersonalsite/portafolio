@@ -3,10 +3,14 @@ import {
     Box, Button, Typography, Dialog,
     DialogTitle, DialogContent, DialogActions, TextField,
     Card, CardContent, CardActions, Checkbox, FormControlLabel, Grid,
-    Snackbar, Alert, Chip
+    Snackbar, Alert, Chip, MenuItem, Select, FormControl, InputLabel
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import StarIcon from '@mui/icons-material/Star';
+import LanguageIcon from '@mui/icons-material/Language';
+import DesktopWindowsIcon from '@mui/icons-material/DesktopWindows';
+import SmartphoneIcon from '@mui/icons-material/Smartphone';
+import CodeIcon from '@mui/icons-material/Code';
 import { adminService } from '@/services/adminService';
 import type { Project } from '@/types';
 import { useForm, Controller } from 'react-hook-form';
@@ -28,7 +32,8 @@ const ProjectsManagement: React.FC = () => {
     const [saving, setSaving] = useState(false);
     const { t } = useTranslation();
 
-    const { control, register, handleSubmit, reset, setValue } = useForm<Project>();
+    const { control, register, handleSubmit, reset, setValue, watch } = useForm<Project>();
+    const projectType = watch('type');
 
     const fetchData = async () => {
         try {
@@ -55,6 +60,7 @@ const ProjectsManagement: React.FC = () => {
             setValue('technologies', proj.technologies);
             setValue('githubUrl', proj.githubUrl);
             setValue('liveUrl', proj.liveUrl);
+            setValue('type', proj.type);
             setValue('featured', proj.featured);
             setValue('order', proj.order);
         } else {
@@ -62,6 +68,7 @@ const ProjectsManagement: React.FC = () => {
             reset({
                 technologies: [],
                 imageUrl: '',
+                type: 'WEB',
                 featured: false,
                 order: projects.length + 1
             });
@@ -105,6 +112,15 @@ const ProjectsManagement: React.FC = () => {
     const handleDeleteClick = (id: string) => {
         setProjectToDelete(id);
         setDeleteDialogOpen(true);
+    };
+
+    const getTypeIcon = (type: string) => {
+        switch (type) {
+            case 'WEB': return <LanguageIcon fontSize="small" />;
+            case 'DESKTOP': return <DesktopWindowsIcon fontSize="small" />;
+            case 'MOBILE': return <SmartphoneIcon fontSize="small" />;
+            default: return <CodeIcon fontSize="small" />;
+        }
     };
 
     const confirmDelete = async () => {
@@ -160,8 +176,25 @@ const ProjectsManagement: React.FC = () => {
                                     // @ts-ignore
                                     referrerPolicy="no-referrer"
                                 />
+                                <Chip
+                                    label={proj.type || 'WEB'}
+                                    icon={getTypeIcon(proj.type || 'WEB')}
+                                    size="small"
+                                    sx={{
+                                        position: 'absolute',
+                                        top: 8,
+                                        right: 8,
+                                        bgcolor: 'background.paper',
+                                        color: 'text.primary',
+                                        fontWeight: 'bold',
+                                        boxShadow: 2,
+                                        '& .MuiChip-icon': {
+                                            color: 'primary.main'
+                                        }
+                                    }}
+                                />
                                 {proj.featured && (
-                                    <Box sx={{ position: 'absolute', top: 8, right: 8, bgcolor: 'background.paper', borderRadius: '50%', p: 0.5, display: 'flex', boxShadow: 2, zIndex: 1 }}>
+                                    <Box sx={{ position: 'absolute', top: 8, left: 8, bgcolor: 'background.paper', borderRadius: '50%', p: 0.5, display: 'flex', boxShadow: 2, zIndex: 1 }}>
                                         <StarIcon color="warning" />
                                     </Box>
                                 )}
@@ -247,10 +280,31 @@ const ProjectsManagement: React.FC = () => {
                                 />
                             </Grid>
                             <Grid size={{ xs: 12, md: 6 }}>
+                                <FormControl fullWidth>
+                                    <InputLabel>{t('admin.projectType')}</InputLabel>
+                                    <Controller
+                                        name="type"
+                                        control={control}
+                                        defaultValue="WEB"
+                                        render={({ field }) => (
+                                            <Select
+                                                {...field}
+                                                label={t('admin.projectType')}
+                                            >
+                                                <MenuItem value="WEB">WEB</MenuItem>
+                                                <MenuItem value="DESKTOP">DESKTOP</MenuItem>
+                                                <MenuItem value="MOBILE">MOBILE</MenuItem>
+                                                <MenuItem value="OTHER">OTHER</MenuItem>
+                                            </Select>
+                                        )}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid size={{ xs: 12, md: 6 }}>
                                 <TextField fullWidth label={t('admin.githubUrl')} {...register('githubUrl')} />
                             </Grid>
                             <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField fullWidth label={t('admin.liveUrl')} {...register('liveUrl')} />
+                                <TextField fullWidth label={projectType === 'DESKTOP' ? `${t('projects.download')} URL` : t('admin.liveUrl')} {...register('liveUrl')} />
                             </Grid>
                             <Grid size={{ xs: 12, md: 6 }}>
                                 <FormControlLabel

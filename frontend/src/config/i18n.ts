@@ -58,6 +58,13 @@ const resources = {
                 features: 'Features',
                 viewCode: 'View Code',
                 viewLive: 'View Live',
+                download: 'Download',
+                types: {
+                    WEB: 'Web App',
+                    DESKTOP: 'Desktop App',
+                    MOBILE: 'Mobile App',
+                    OTHER: 'Other'
+                }
             },
             contact: {
                 title: 'Get In Touch',
@@ -118,6 +125,7 @@ const resources = {
                 imageUrl: 'Image URL',
                 githubUrl: 'GitHub URL',
                 liveUrl: 'Live URL',
+                projectType: 'Project Type',
                 email: 'Contact Email',
                 location: 'Location',
                 fullName: 'Full Name',
@@ -258,6 +266,13 @@ const resources = {
                 features: 'Características',
                 viewCode: 'Ver Código',
                 viewLive: 'Ver Demo',
+                download: 'Descargar',
+                types: {
+                    WEB: 'App Web',
+                    DESKTOP: 'App de Escritorio',
+                    MOBILE: 'App Móvil',
+                    OTHER: 'Otro'
+                }
             },
             contact: {
                 title: 'Contáctame',
@@ -320,6 +335,7 @@ const resources = {
                 imageUrlHint: 'Introduce la URL completa de tu foto profesional (PostImages, ImgBB, etc).',
                 githubUrl: 'URL de GitHub',
                 liveUrl: 'URL de Demo',
+                projectType: 'Tipo de Proyecto',
                 email: 'Correo de Contacto',
                 location: 'Ubicación',
                 fullName: 'Nombre Completo',

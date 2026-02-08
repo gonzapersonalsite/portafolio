@@ -43,6 +43,7 @@ export interface Project {
     imageUrl?: string;
     githubUrl?: string;
     liveUrl?: string;
+    type: 'WEB' | 'DESKTOP' | 'MOBILE' | 'OTHER';
     featured: boolean;
     order: number;
 }

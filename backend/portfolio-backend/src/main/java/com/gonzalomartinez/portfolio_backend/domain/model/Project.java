@@ -57,6 +57,11 @@ public class Project {
     @Size(max = 500, message = "Live URL must not exceed 500 characters")
     @Column(length = 500)
     private String liveUrl;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    @Builder.Default
+    private ProjectType type = ProjectType.WEB;
     
     @Column(nullable = false)
     @Builder.Default

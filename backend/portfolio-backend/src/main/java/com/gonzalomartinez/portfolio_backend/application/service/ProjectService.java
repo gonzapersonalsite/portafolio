@@ -72,6 +72,7 @@ public class ProjectService {
         existingProject.setTechnologies(dto.getTechnologies());
         existingProject.setGithubUrl(inputSanitizer.sanitizeUrl(dto.getGithubUrl()));
         existingProject.setLiveUrl(inputSanitizer.sanitizeUrl(dto.getLiveUrl()));
+        existingProject.setType(dto.getType());
         existingProject.setFeatured(dto.getFeatured());
         existingProject.setOrder(dto.getOrder());
         
@@ -102,6 +103,7 @@ public class ProjectService {
                 .technologies(project.getTechnologies())
                 .githubUrl(project.getGithubUrl())
                 .liveUrl(project.getLiveUrl())
+                .type(project.getType())
                 .featured(project.getFeatured())
                 .order(project.getOrder())
                 .createdAt(project.getCreatedAt())
@@ -118,6 +120,7 @@ public class ProjectService {
                 .technologies(dto.getTechnologies())
                 .githubUrl(inputSanitizer.sanitizeUrl(dto.getGithubUrl()))
                 .liveUrl(inputSanitizer.sanitizeUrl(dto.getLiveUrl()))
+                .type(dto.getType())
                 .featured(dto.getFeatured())
                 .order(dto.getOrder())
                 .build();
