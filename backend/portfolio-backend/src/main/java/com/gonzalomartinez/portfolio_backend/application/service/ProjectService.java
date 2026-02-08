@@ -3,6 +3,7 @@ package com.gonzalomartinez.portfolio_backend.application.service;
 import com.gonzalomartinez.portfolio_backend.application.dto.ProjectDto;
 import com.gonzalomartinez.portfolio_backend.domain.exception.ResourceNotFoundException;
 import com.gonzalomartinez.portfolio_backend.domain.model.Project;
+import com.gonzalomartinez.portfolio_backend.domain.model.ProjectType;
 import com.gonzalomartinez.portfolio_backend.domain.repository.ProjectRepository;
 import com.gonzalomartinez.portfolio_backend.infrastructure.security.InputSanitizer;
 import lombok.RequiredArgsConstructor;
@@ -72,7 +73,11 @@ public class ProjectService {
         existingProject.setTechnologies(dto.getTechnologies());
         existingProject.setGithubUrl(inputSanitizer.sanitizeUrl(dto.getGithubUrl()));
         existingProject.setLiveUrl(inputSanitizer.sanitizeUrl(dto.getLiveUrl()));
-        existingProject.setType(dto.getType());
+        
+        if (dto.getType() != null) {
+            existingProject.setType(dto.getType());
+        }
+
         existingProject.setFeatured(dto.getFeatured());
         existingProject.setOrder(dto.getOrder());
         
@@ -120,7 +125,7 @@ public class ProjectService {
                 .technologies(dto.getTechnologies())
                 .githubUrl(inputSanitizer.sanitizeUrl(dto.getGithubUrl()))
                 .liveUrl(inputSanitizer.sanitizeUrl(dto.getLiveUrl()))
-                .type(dto.getType())
+                .type(dto.getType() != null ? dto.getType() : ProjectType.WEB)
                 .featured(dto.getFeatured())
                 .order(dto.getOrder())
                 .build();

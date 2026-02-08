@@ -182,8 +182,8 @@ const ProjectsManagement: React.FC = () => {
                                     size="small"
                                     sx={{
                                         position: 'absolute',
-                                        top: 8,
-                                        right: 8,
+                                        top: 10,
+                                        right: 10,
                                         bgcolor: 'background.paper',
                                         color: 'text.primary',
                                         fontWeight: 'bold',

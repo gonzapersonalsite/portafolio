@@ -1,6 +1,7 @@
 package com.gonzalomartinez.portfolio_backend.application.dto;
 
 import com.gonzalomartinez.portfolio_backend.domain.model.ProjectType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -44,8 +45,8 @@ public class ProjectDto {
     @Size(max = 500, message = "Live URL must not exceed 500 characters")
     private String liveUrl;
 
-    @Builder.Default
-    private ProjectType type = ProjectType.WEB;
+    @JsonProperty("type")
+    private ProjectType type;
     
     @Builder.Default
     private Boolean featured = false;
