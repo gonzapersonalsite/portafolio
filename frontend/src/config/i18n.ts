@@ -160,9 +160,9 @@ const resources = {
                         description: 'Manage the serverless PostgreSQL database. View connection strings, tables, and data.',
                         action: 'Go to Neon Console'
                     },
-                    koyeb: {
+                    render: {
                         description: 'Manage backend deployments, logs, and environment variables for the Spring Boot application.',
-                        action: 'Go to Koyeb'
+                        action: 'Go to Render'
                     }
                 },
                 emptyState: {
@@ -363,9 +363,9 @@ const resources = {
                         description: 'Gestiona la base de datos PostgreSQL serverless. Ver cadenas de conexión, tablas y datos.',
                         action: 'Ir a Consola Neon'
                     },
-                    koyeb: {
+                    render: {
                         description: 'Gestiona los despliegues del backend, registros y variables de entorno para la aplicación Spring Boot.',
-                        action: 'Ir a Koyeb'
+                        action: 'Ir a Render'
                     }
                 },
                 emptyState: {

@@ -49,12 +49,12 @@ const ExternalResources: React.FC = () => {
             actionText: t('admin.resources.neon.action')
         },
         {
-            title: 'Koyeb Dashboard',
-            url: 'https://app.koyeb.com/services',
+            title: 'Render Dashboard',
+            url: 'https://dashboard.render.com/web/srv-d63tv84hg0os73cpsvn0',
             icon: <DnsIcon sx={{ fontSize: 40, color: 'text.secondary' }} />,
-            description: t('admin.resources.koyeb.description'),
+            description: t('admin.resources.render.description'),
             tags: ['Backend', 'Deployment', 'PaaS'],
-            actionText: t('admin.resources.koyeb.action')
+            actionText: t('admin.resources.render.action')
         }
     ];
 
