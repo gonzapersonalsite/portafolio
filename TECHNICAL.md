@@ -35,11 +35,11 @@ Este documento detalla la arquitectura, tecnologías y procedimientos de desplie
 ### 3. Frontend (Vercel)
 *   **Plataforma:** Vercel.
 *   **Conexión con Backend:**
-    1.  Obtener la **Public URL** del servicio en Render (ej: `https://portafolio-9uab.onrender.com`).
+    1.  Obtener la **Public URL** del servicio en Render (ej: `https://portafolio-9uob.onrender.com`).
     2.  Ir a Vercel -> Project Settings -> Environment Variables.
     3.  Añadir/Actualizar:
         *   **Key:** `VITE_API_BASE_URL`
-        *   **Value:** `https://portafolio-9uab.onrender.com/api` (Asegúrate de incluir `/api` al final).
+        *   **Value:** `https://portafolio-9uob.onrender.com/api` (Asegúrate de incluir `/api` al final).
     4.  Redesplegar el Frontend en Vercel (Redeploy).
 
 ## Flujo de Actualizaciones (CI/CD)
@@ -71,6 +71,6 @@ El proyecto está configurado con **Despliegue Continuo**. Esto significa que:
 ## Enlaces Útiles (Producción)
 
 *   **Frontend:** `https://mi-portafolio-gonzalo.vercel.app`
-*   **API Base:** `https://portafolio-9uab.onrender.com/api`
-*   **Documentación API (Swagger):** `https://portafolio-9uab.onrender.com/swagger-ui/index.html`
+*   **API Base:** `https://portafolio-9uob.onrender.com/api`
+*   **Documentación API (Swagger):** `https://portafolio-9uob.onrender.com/swagger-ui/index.html`
 *   **Panel Admin:** `https://mi-portafolio-gonzalo.vercel.app/admin/login`
