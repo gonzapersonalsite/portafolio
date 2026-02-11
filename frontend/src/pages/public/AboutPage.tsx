@@ -66,14 +66,14 @@ const AboutPage: React.FC = () => {
                     {t('nav.about', "ABOUT ME")}
                 </Typography>
                 <Typography variant="h2" component="h1" fontWeight="800" gutterBottom>
-                    {getLocalizedText(profile?.aboutTitleEn || "", profile?.aboutTitleEs || "")}
+                    {getLocalizedText(profile?.aboutTitleEn || "", profile?.aboutTitleEs || "") || t('about.title')}
                 </Typography>
 
                 <Grid container spacing={6} sx={{ mt: 2 }}>
                     <Grid size={{ xs: 12, md: 5 }}>
                         <ImageWithFallback
                             src={formatImageUrl(profile?.imageUrl)}
-                            alt={language === 'en' ? profile?.fullNameEn || "" : profile?.fullNameEs || ""}
+                            alt={language === 'en' ? profile?.fullNameEn || t('home.name') : profile?.fullNameEs || t('home.name')}
                             type="profile"
                             sx={{
                                 maxWidth: 400,
@@ -100,16 +100,16 @@ const AboutPage: React.FC = () => {
 
                     <Grid size={{ xs: 12, md: 7 }}>
                         <Typography variant="h5" component="h2" gutterBottom fontWeight="bold">
-                            {getLocalizedText(profile?.aboutIntroTitleEn || "", profile?.aboutIntroTitleEs || "")}
+                            {getLocalizedText(profile?.aboutIntroTitleEn || "", profile?.aboutIntroTitleEs || "") || t('about.jobTitle')}
                         </Typography>
                         
                         <RichTextRenderer 
-                            text={getLocalizedText(profile?.aboutSummaryEn || "", profile?.aboutSummaryEs || "")} 
+                            text={getLocalizedText(profile?.aboutSummaryEn || "", profile?.aboutSummaryEs || "") || t('about.summary')} 
                         />
 
                         <Box sx={{ mt: 2 }}>
                             <RichTextRenderer 
-                                text={getLocalizedText(profile?.aboutPhilosophyEn || "", profile?.aboutPhilosophyEs || "")} 
+                                text={getLocalizedText(profile?.aboutPhilosophyEn || "", profile?.aboutPhilosophyEs || "") || t('about.philosophy')} 
                             />
                         </Box>
 
@@ -118,7 +118,7 @@ const AboutPage: React.FC = () => {
                                 {t('about.sentenceTitle')}
                             </Typography>
                             <Typography variant="body1" sx={{ fontStyle: 'italic', fontSize: '1.1rem' }}>
-                                "{getLocalizedText(profile?.sentenceEn || "", profile?.sentenceEs || "")}"
+                                "{getLocalizedText(profile?.sentenceEn || "", profile?.sentenceEs || "") || t('about.sentence')}"
                             </Typography>
                         </Box>
 

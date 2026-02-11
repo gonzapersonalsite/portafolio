@@ -131,15 +131,15 @@ const HomePage: React.FC = () => {
                                     WebkitTextFillColor: 'transparent',
                                 }}
                             >
-                                {language === 'en' ? profile?.fullNameEn || "" : profile?.fullNameEs || ""}
+                                {language === 'en' ? profile?.fullNameEn || t('home.name') : profile?.fullNameEs || t('home.name')}
                             </Typography>
                             <Typography variant="h4" component="p" color="text.secondary" gutterBottom sx={{ mb: 4 }}>
-                                {getLocalizedText(profile?.subtitleEn || "", profile?.subtitleEs || "")}
+                                {getLocalizedText(profile?.subtitleEn || "", profile?.subtitleEs || "") || t('home.jobTitle')}
                             </Typography>
                             
                             <Box sx={{ maxWidth: 600, mb: 4 }}>
                                 <RichTextRenderer 
-                                    text={getLocalizedText(profile?.descriptionEn || "", profile?.descriptionEs || "")}
+                                    text={getLocalizedText(profile?.descriptionEn || "", profile?.descriptionEs || "") || t('home.description')}
                                 />
                             </Box>
 
@@ -283,11 +283,11 @@ const HomePage: React.FC = () => {
                             {t('about.subtitle', "WHO I AM")}
                         </Typography>
                         <Typography variant="h3" component="h2" gutterBottom fontWeight="bold" sx={{ mb: 3 }}>
-                            {profile ? getLocalizedText(profile.aboutTitleEn, profile.aboutTitleEs) : t('about.title')}
+                            {getLocalizedText(profile?.aboutTitleEn || "", profile?.aboutTitleEs || "") || t('about.title')}
                         </Typography>
                         <Box sx={{ mb: 3, '& p': { fontSize: '1.1rem' } }}>
                             <RichTextRenderer 
-                                text={profile ? getLocalizedText(profile.aboutSummaryEn, profile.aboutSummaryEs) : t('about.summary')}
+                                text={getLocalizedText(profile?.aboutSummaryEn || "", profile?.aboutSummaryEs || "") || t('about.summary')}
                             />
                         </Box>
                         <Button

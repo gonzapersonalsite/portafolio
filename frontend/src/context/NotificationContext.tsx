@@ -27,7 +27,10 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         const unsubscribe = notificationEvents.subscribe(({ message, severity }) => {
             showNotification(message, severity);
         });
-        return unsubscribe;
+        
+        return () => {
+            unsubscribe();
+        };
     }, [showNotification]);
 
     const handleClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {

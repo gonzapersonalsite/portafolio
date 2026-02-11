@@ -2,7 +2,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Box, CssBaseline } from '@mui/material';
 import { Outlet } from 'react-router-dom';
-import { useNotification } from '@/context/NotificationContext';
 import Navbar from './Navbar';
 import Footer from './Footer';
 

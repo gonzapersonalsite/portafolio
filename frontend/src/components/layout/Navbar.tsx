@@ -16,8 +16,6 @@ import {
     Slide,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useColorMode } from '@/context/ThemeContext';
@@ -43,7 +41,7 @@ function HideOnScroll(props: Props) {
 const Navbar: React.FC = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const { t } = useTranslation();
-    const { mode, toggleColorMode } = useColorMode();
+    const { mode } = useColorMode();
     const location = useLocation();
     
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
