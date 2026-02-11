@@ -42,7 +42,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
         if (fallbackSrc) return fallbackSrc;
         
         if (type === 'profile') {
-            return "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png";
+            return "/profile-fallback.jpg";
         }
         return "https://placehold.co/600x400?text=Project+Image";
     };
