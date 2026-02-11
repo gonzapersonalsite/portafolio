@@ -1,5 +1,5 @@
 import React, { useMemo, useState, createContext, useContext, useEffect } from 'react';
-import { ThemeProvider as MuiThemeProvider, CssBaseline, useMediaQuery } from '@mui/material';
+import { ThemeProvider as MuiThemeProvider, CssBaseline } from '@mui/material';
 import createAppTheme from '../config/theme';
 
 type ColorMode = 'light' | 'dark';
@@ -17,10 +17,17 @@ const ColorModeContext = createContext<ColorModeContextType>({
 export const useColorMode = () => useContext(ColorModeContext);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const [mode, setMode] = useState<ColorMode>(() => {
         const savedMode = localStorage.getItem('themeMode');
-        return (savedMode as ColorMode) || (prefersDarkMode ? 'dark' : 'light');
+        if (savedMode) return savedMode as ColorMode;
+
+        // Detect system preference or fallback to dark
+        if (typeof window !== 'undefined' && window.matchMedia) {
+            const isLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+            return isLight ? 'light' : 'dark';
+        }
+        
+        return 'dark';
     });
 
     useEffect(() => {

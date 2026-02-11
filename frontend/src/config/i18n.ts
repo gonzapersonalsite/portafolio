@@ -202,7 +202,12 @@ const resources = {
                 sending: 'Sending...',
                 skipToContent: 'Skip to main content',
                 returnToTop: 'Return to top',
-                actions: 'Actions'
+                actions: 'Actions',
+                theme: {
+                    light: 'Light',
+                    dark: 'Dark'
+                },
+                coldStartNotice: 'Welcome! As this project is on a free plan, the first load may take a few seconds while the server wakes up. Thanks for your patience! 🙇'
             },
             footer: {
                 rights: 'All rights reserved.',
@@ -413,7 +418,12 @@ const resources = {
                 sending: 'Enviando...',
                 skipToContent: 'Saltar al contenido',
                 returnToTop: 'Volver arriba',
-                actions: 'Acciones'
+                actions: 'Acciones',
+                theme: {
+                    light: 'Claro',
+                    dark: 'Oscuro'
+                },
+                coldStartNotice: '¡Bienvenido! Como este proyecto está en un plan gratuito, la primera carga puede tardar unos segundos mientras el servidor se activa. ¡Gracias por tu paciencia! 🙇'
             },
             footer: {
                 rights: 'Todos los derechos reservados.',
@@ -424,11 +434,20 @@ const resources = {
     },
 };
 
+// Detect user language
+const getInitialLanguage = () => {
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage) return savedLanguage;
+
+    const systemLang = navigator.language.split('-')[0]; // 'en-US' -> 'en'
+    return ['en', 'es'].includes(systemLang) ? systemLang : 'en';
+};
+
 i18n
     .use(initReactI18next)
     .init({
         resources,
-        lng: localStorage.getItem('language') || 'en',
+        lng: getInitialLanguage(),
         fallbackLng: 'en',
         interpolation: {
             escapeValue: false,

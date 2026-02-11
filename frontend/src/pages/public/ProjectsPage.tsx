@@ -12,7 +12,6 @@ const ProjectsPage: React.FC = () => {
     const { t } = useTranslation();
     const [projects, setProjects] = React.useState<Project[]>([]);
     const [loading, setLoading] = React.useState(true);
-    const [error, setError] = React.useState<string | null>(null);
 
     React.useEffect(() => {
         const fetchProjects = async () => {
@@ -21,7 +20,6 @@ const ProjectsPage: React.FC = () => {
                 setProjects(data);
             } catch (err) {
                 console.error("Failed to fetch projects", err);
-                setError("Failed to load projects");
             } finally {
                 setLoading(false);
             }
@@ -37,14 +35,6 @@ const ProjectsPage: React.FC = () => {
                     <PageHeaderSkeleton />
                     <ProjectGridSkeleton />
                 </Container>
-            </Box>
-        );
-    }
-
-    if (error) {
-        return (
-            <Box sx={{ py: 8, textAlign: 'center' }}>
-                <Typography color="error">{t('common.error')}</Typography>
             </Box>
         );
     }

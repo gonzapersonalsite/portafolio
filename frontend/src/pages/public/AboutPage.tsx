@@ -66,14 +66,14 @@ const AboutPage: React.FC = () => {
                     {t('nav.about', "ABOUT ME")}
                 </Typography>
                 <Typography variant="h2" component="h1" fontWeight="800" gutterBottom>
-                    {profile ? getLocalizedText(profile.aboutTitleEn, profile.aboutTitleEs) : t('about.heading', "My Story")}
+                    {getLocalizedText(profile?.aboutTitleEn || "", profile?.aboutTitleEs || "")}
                 </Typography>
 
                 <Grid container spacing={6} sx={{ mt: 2 }}>
                     <Grid size={{ xs: 12, md: 5 }}>
                         <ImageWithFallback
                             src={formatImageUrl(profile?.imageUrl)}
-                            alt={language === 'en' ? profile?.fullNameEn || "Profile" : profile?.fullNameEs || "Perfil"}
+                            alt={language === 'en' ? profile?.fullNameEn || "" : profile?.fullNameEs || ""}
                             type="profile"
                             sx={{
                                 maxWidth: 400,
@@ -93,32 +93,32 @@ const AboutPage: React.FC = () => {
                                 rel="noopener noreferrer"
                                 disabled={!profile?.cvUrl}
                             >
-                                {t('home.resume', "Download CV")}
+                                {t('home.resume')}
                             </Button>
                         </Stack>
                     </Grid>
 
                     <Grid size={{ xs: 12, md: 7 }}>
                         <Typography variant="h5" component="h2" gutterBottom fontWeight="bold">
-                            {profile ? getLocalizedText(profile.aboutIntroTitleEn, profile.aboutIntroTitleEs) : t('about.introTitle')}
+                            {getLocalizedText(profile?.aboutIntroTitleEn || "", profile?.aboutIntroTitleEs || "")}
                         </Typography>
                         
                         <RichTextRenderer 
-                            text={profile ? getLocalizedText(profile.aboutSummaryEn, profile.aboutSummaryEs) : t('about.summary')} 
+                            text={getLocalizedText(profile?.aboutSummaryEn || "", profile?.aboutSummaryEs || "")} 
                         />
 
                         <Box sx={{ mt: 2 }}>
                             <RichTextRenderer 
-                                text={profile ? getLocalizedText(profile.aboutPhilosophyEn, profile.aboutPhilosophyEs) : t('about.philosophy')} 
+                                text={getLocalizedText(profile?.aboutPhilosophyEn || "", profile?.aboutPhilosophyEs || "")} 
                             />
                         </Box>
 
                         <Box sx={{ mt: 4, mb: 2, p: 3, bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)', borderRadius: 2, borderLeft: `4px solid ${theme.palette.primary.main}` }}>
                             <Typography variant="subtitle1" component="h3" fontWeight="bold" gutterBottom color="primary">
-                                {t('about.sentenceTitle', "A sentence that defines me")}
+                                {t('about.sentenceTitle')}
                             </Typography>
                             <Typography variant="body1" sx={{ fontStyle: 'italic', fontSize: '1.1rem' }}>
-                                "{profile ? getLocalizedText(profile.sentenceEn, profile.sentenceEs) : ""}"
+                                "{getLocalizedText(profile?.sentenceEn || "", profile?.sentenceEs || "")}"
                             </Typography>
                         </Box>
 

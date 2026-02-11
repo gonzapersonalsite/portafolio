@@ -13,9 +13,15 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { i18n } = useTranslation();
-    const [language, setLanguage] = useState<Language>(
-        (localStorage.getItem('language') as Language) || 'en'
-    );
+    
+    // Initialize state with the language already set in i18n (which uses our detection logic)
+    const [language, setLanguage] = useState<Language>(() => {
+        const currentLang = i18n.language?.split('-')[0];
+        if (currentLang === 'en' || currentLang === 'es') {
+            return currentLang as Language;
+        }
+        return (localStorage.getItem('language') as Language) || 'en';
+    });
 
     useEffect(() => {
         i18n.changeLanguage(language);

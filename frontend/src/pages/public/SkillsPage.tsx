@@ -14,7 +14,6 @@ const SkillsPage: React.FC = () => {
     const theme = useTheme();
     const [skills, setSkills] = React.useState<Skill[]>([]);
     const [loading, setLoading] = React.useState(true);
-    const [error, setError] = React.useState<string | null>(null);
 
     React.useEffect(() => {
         const fetchSkills = async () => {
@@ -23,7 +22,6 @@ const SkillsPage: React.FC = () => {
                 setSkills(data);
             } catch (err) {
                 console.error("Failed to fetch skills", err);
-                setError("Failed to load skills");
             } finally {
                 setLoading(false);
             }
@@ -51,14 +49,6 @@ const SkillsPage: React.FC = () => {
                     <PageHeaderSkeleton />
                     <SkillsSkeleton />
                 </Container>
-            </Box>
-        );
-    }
-
-    if (error) {
-        return (
-            <Box sx={{ py: 8, textAlign: 'center' }}>
-                <Typography color="error">{t('common.error')}</Typography>
             </Box>
         );
     }

@@ -22,6 +22,7 @@ import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useColorMode } from '@/context/ThemeContext';
 import LanguageSelector from '../common/LanguageSelector';
+import ThemeSelector from '../common/ThemeSelector';
 import { useAuthStore } from '@/context/AuthStore';
 
 interface Props {
@@ -183,14 +184,7 @@ const Navbar: React.FC = () => {
                                     </Button>
                                 )}
                                 <LanguageSelector />
-                                <IconButton 
-                                    onClick={toggleColorMode} 
-                                    color="inherit" 
-                                    size="small"
-                                    aria-label={mode === 'dark' ? "Switch to light mode" : "Switch to dark mode"}
-                                >
-                                    {mode === 'dark' ? <Brightness7Icon fontSize="small" /> : <Brightness4Icon fontSize="small" />}
-                                </IconButton>
+                                <ThemeSelector />
                             </Box>
                         </Toolbar>
                     </Container>

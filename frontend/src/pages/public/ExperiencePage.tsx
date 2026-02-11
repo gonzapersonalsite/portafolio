@@ -19,7 +19,6 @@ const ExperiencePage: React.FC = () => {
     const theme = useTheme();
     const [experiences, setExperiences] = React.useState<Experience[]>([]);
     const [loading, setLoading] = React.useState(true);
-    const [error, setError] = React.useState<string | null>(null);
 
     React.useEffect(() => {
         const fetchExperiences = async () => {
@@ -29,7 +28,6 @@ const ExperiencePage: React.FC = () => {
                 setExperiences(data);
             } catch (err) {
                 console.error("Failed to fetch experiences", err);
-                setError("Failed to load experiences");
             } finally {
                 setLoading(false);
             }
@@ -45,14 +43,6 @@ const ExperiencePage: React.FC = () => {
                     <PageHeaderSkeleton />
                     <ExperienceSkeleton />
                 </Container>
-            </Box>
-        );
-    }
-
-    if (error) {
-        return (
-            <Box sx={{ py: 8, textAlign: 'center' }}>
-                <Typography color="error">{t('common.error')}</Typography>
             </Box>
         );
     }

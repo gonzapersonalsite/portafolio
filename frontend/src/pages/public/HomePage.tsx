@@ -35,6 +35,7 @@ const HomePage: React.FC = () => {
 
     React.useEffect(() => {
         const fetchHomeData = async () => {
+            setLoading(true);
             try {
                 const [projectsData, profileData] = await Promise.all([
                     publicService.getFeaturedProjects(),
@@ -115,7 +116,7 @@ const HomePage: React.FC = () => {
                                 color="text.primary"
                                 sx={{ letterSpacing: 2, fontWeight: 'bold' }}
                             >
-                                {profile ? getLocalizedText(profile.greetingEn, profile.greetingEs) : t('home.greeting')}
+                                {getLocalizedText(profile?.greetingEn || "", profile?.greetingEs || "")}
                             </Typography>
                             <Typography
                                 variant="h2"
@@ -130,15 +131,15 @@ const HomePage: React.FC = () => {
                                     WebkitTextFillColor: 'transparent',
                                 }}
                             >
-                                {language === 'en' ? profile?.fullNameEn : profile?.fullNameEs}
+                                {language === 'en' ? profile?.fullNameEn || "" : profile?.fullNameEs || ""}
                             </Typography>
                             <Typography variant="h4" component="p" color="text.secondary" gutterBottom sx={{ mb: 4 }}>
-                                {profile ? getLocalizedText(profile.subtitleEn, profile.subtitleEs) : ""}
+                                {getLocalizedText(profile?.subtitleEn || "", profile?.subtitleEs || "")}
                             </Typography>
                             
                             <Box sx={{ maxWidth: 600, mb: 4 }}>
                                 <RichTextRenderer 
-                                    text={profile ? getLocalizedText(profile.descriptionEn, profile.descriptionEs) : t('home.description')}
+                                    text={getLocalizedText(profile?.descriptionEn || "", profile?.descriptionEs || "")}
                                 />
                             </Box>
 
@@ -150,7 +151,7 @@ const HomePage: React.FC = () => {
                                     component={RouterLink}
                                     to="/projects"
                                 >
-                                    {t('home.cta', "View Projects")}
+                                    {t('home.cta')}
                                 </Button>
                                 <Button
                                     variant="outlined"
@@ -161,7 +162,7 @@ const HomePage: React.FC = () => {
                                     rel="noopener noreferrer"
                                     disabled={!profile?.cvUrl}
                                 >
-                                    {t('home.resume', "Download CV")}
+                                    {t('home.resume')}
                                 </Button>
                             </Stack>
                         </Grid>
@@ -183,12 +184,12 @@ const HomePage: React.FC = () => {
                                     position: 'relative'
                                 }}>
                                     <Stack spacing={2}>
-                                        <Chip icon={<CodeIcon />} label={t('home.chips.frontend', "Frontend Developer")} color="primary" variant="outlined" />
-                                        <Chip icon={<StorageIcon />} label={t('home.chips.backend', "Backend Architect")} color="secondary" variant="outlined" />
-                                        <Chip icon={<WebIcon />} label={t('home.chips.uiux', "UI/UX Enthusiast")} color="success" variant="outlined" />
+                                        <Chip icon={<CodeIcon />} label={t('home.chips.frontend')} color="primary" variant="outlined" />
+                                        <Chip icon={<StorageIcon />} label={t('home.chips.backend')} color="secondary" variant="outlined" />
+                                        <Chip icon={<WebIcon />} label={t('home.chips.uiux')} color="success" variant="outlined" />
                                     </Stack>
                                     <Typography variant="caption" display="block" sx={{ mt: 2, fontFamily: 'monospace' }}>
-                                        {t('home.chips.passion', "<Code /> with passion")}
+                                        {t('home.chips.passion')}
                                     </Typography>
                                 </Box>
 
@@ -227,7 +228,7 @@ const HomePage: React.FC = () => {
                 <Container maxWidth="lg">
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 6 }}>
                         <Typography variant="h3" component="h2" fontWeight="800">
-                            {t('projects.featured', "Featured Projects")}
+                            {t('projects.featured')}
                         </Typography>
                         <Button
                             endIcon={<ArrowForwardIcon />}
@@ -235,7 +236,7 @@ const HomePage: React.FC = () => {
                             to="/projects"
                             size="large"
                         >
-                            {t('projects.viewAll', "View All")}
+                            {t('projects.viewAll')}
                         </Button>
                     </Box>
                     <Grid container spacing={4}>
