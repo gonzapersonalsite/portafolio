@@ -22,6 +22,7 @@ import { useColorMode } from '@/context/ThemeContext';
 import LanguageSelector from '../common/LanguageSelector';
 import ThemeSelector from '../common/ThemeSelector';
 import { useAuthStore } from '@/context/AuthStore';
+import { glassEffects } from '@/styles/glassStyles';
 
 interface Props {
     children: React.ReactElement;
@@ -43,6 +44,8 @@ const Navbar: React.FC = () => {
     const { t } = useTranslation();
     const { mode } = useColorMode();
     const location = useLocation();
+    const isGlass = mode === 'glass';
+    const textColor = isGlass ? '#0b0a1c' : 'inherit';
     
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const profile = useAuthStore((state) => state.profile);
@@ -95,10 +98,13 @@ const Navbar: React.FC = () => {
         <Box sx={{ flexGrow: 1 }}>
             <HideOnScroll>
                 <AppBar position="fixed" color="default" elevation={0} sx={{
-                    backdropFilter: 'blur(20px)',
-                    backgroundColor: mode === 'dark' ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.9)',
-                    borderBottom: '1px solid',
-                    borderColor: 'divider'
+                    backdropFilter: isGlass ? glassEffects.blur : 'blur(20px)',
+                    backgroundColor: isGlass 
+                        ? 'rgba(255, 255, 255, 0.4)' 
+                        : (mode === 'dark' ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.9)'),
+                    borderBottom: isGlass ? glassEffects.border : '1px solid',
+                    borderColor: 'divider',
+                    color: textColor
                 }}>
                     <Container maxWidth="lg">
                         <Toolbar disableGutters>
@@ -124,7 +130,7 @@ const Navbar: React.FC = () => {
                                     alignItems: 'center',
                                     fontWeight: 700,
                                     letterSpacing: '.1rem',
-                                    color: 'inherit',
+                                    color: textColor,
                                     textDecoration: 'none',
                                 }}
                             >
@@ -144,7 +150,9 @@ const Navbar: React.FC = () => {
                                         component={RouterLink}
                                         to={item.path}
                                         sx={{
-                                            color: location.pathname === item.path ? 'primary.main' : 'text.primary',
+                                            color: location.pathname === item.path 
+                                                ? 'primary.main' 
+                                                : textColor,
                                             fontWeight: location.pathname === item.path ? 700 : 500,
                                             fontSize: '0.95rem',
                                             textTransform: 'none',
@@ -175,7 +183,9 @@ const Navbar: React.FC = () => {
                                             px: 2,
                                             py: 0.5,
                                             minHeight: 32,
-                                            whiteSpace: 'nowrap'
+                                            whiteSpace: 'nowrap',
+                                            borderColor: isGlass ? 'primary.main' : undefined,
+                                            color: isGlass ? 'primary.main' : undefined
                                         }}
                                     >
                                         {t('admin.dashboard')}

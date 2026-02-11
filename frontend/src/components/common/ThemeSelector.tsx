@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Menu, MenuItem, Typography, Box } from '@mui/material';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { useColorMode } from '@/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 
@@ -18,11 +19,16 @@ const ThemeSelector: React.FC = () => {
         setAnchorEl(null);
     };
 
-    const handleThemeChange = (selectedMode: 'light' | 'dark') => {
+    const handleThemeChange = (selectedMode: 'light' | 'dark' | 'glass') => {
         if (mode !== selectedMode) {
-            toggleColorMode();
+            toggleColorMode(selectedMode);
         }
         handleClose();
+    };
+
+    const getIcon = () => {
+        if (mode === 'glass') return <AutoAwesomeIcon fontSize="small" />;
+        return mode === 'dark' ? <DarkModeIcon fontSize="small" /> : <LightModeIcon fontSize="small" />;
     };
 
     return (
@@ -30,7 +36,7 @@ const ThemeSelector: React.FC = () => {
             <Button
                 onClick={handleOpen}
                 color="inherit"
-                startIcon={mode === 'dark' ? <DarkModeIcon fontSize="small" /> : <LightModeIcon fontSize="small" />}
+                startIcon={getIcon()}
                 sx={{ minWidth: 'auto', px: 1 }}
             >
                 <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
@@ -58,6 +64,15 @@ const ThemeSelector: React.FC = () => {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <DarkModeIcon fontSize="small" />
                         {t('common.theme.dark')}
+                    </Box>
+                </MenuItem>
+                <MenuItem
+                    onClick={() => handleThemeChange('glass')}
+                    selected={mode === 'glass'}
+                >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <AutoAwesomeIcon fontSize="small" />
+                        {t('common.theme.glass', 'Liquid Glass')}
                     </Box>
                 </MenuItem>
             </Menu>

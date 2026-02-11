@@ -2,11 +2,11 @@ import React, { useMemo, useState, createContext, useContext, useEffect } from '
 import { ThemeProvider as MuiThemeProvider, CssBaseline } from '@mui/material';
 import createAppTheme from '../config/theme';
 
-type ColorMode = 'light' | 'dark';
+type ColorMode = 'light' | 'dark' | 'glass';
 
 interface ColorModeContextType {
     mode: ColorMode;
-    toggleColorMode: () => void;
+    toggleColorMode: (newMode?: ColorMode) => void;
 }
 
 const ColorModeContext = createContext<ColorModeContextType>({
@@ -18,8 +18,12 @@ export const useColorMode = () => useContext(ColorModeContext);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [mode, setMode] = useState<ColorMode>(() => {
-        const savedMode = localStorage.getItem('themeMode');
-        if (savedMode) return savedMode as ColorMode;
+        const savedMode = localStorage.getItem('themeMode') as ColorMode;
+        const validModes: ColorMode[] = ['light', 'dark', 'glass'];
+        
+        if (savedMode && validModes.includes(savedMode)) {
+            return savedMode;
+        }
 
         // Detect system preference or fallback to dark
         if (typeof window !== 'undefined' && window.matchMedia) {
@@ -37,8 +41,16 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const colorMode = useMemo(
         () => ({
             mode,
-            toggleColorMode: () => {
-                setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+            toggleColorMode: (newMode?: ColorMode) => {
+                if (newMode) {
+                    setMode(newMode);
+                } else {
+                    setMode((prevMode) => {
+                        if (prevMode === 'light') return 'dark';
+                        if (prevMode === 'dark') return 'glass';
+                        return 'light';
+                    });
+                }
             },
         }),
         [mode]

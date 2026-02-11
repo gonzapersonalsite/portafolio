@@ -5,14 +5,18 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import EmailIcon from '@mui/icons-material/Email';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/context/LanguageContext';
+import { useColorMode } from '@/context/ThemeContext';
 import { publicService } from '@/services/publicService';
+import { glassColors, glassEffects } from '@/styles/glassStyles';
 import type { Profile } from '@/types';
 
 const Footer: React.FC = () => {
     const { t } = useTranslation();
     const { language } = useLanguage();
+    const { mode } = useColorMode();
     const theme = useTheme();
     const currentYear = new Date().getFullYear();
+    const isGlass = mode === 'glass';
 
     const [profile, setProfile] = useState<Profile | null>(null);
 
@@ -34,6 +38,9 @@ const Footer: React.FC = () => {
         email: `mailto:${profile?.email || "gonzalomartinezg2001@gmail.com"}`
     };
 
+    const textColor = isGlass ? glassColors.text.primary : 'text.primary';
+    const secondaryTextColor = isGlass ? glassColors.text.secondary : 'text.secondary';
+
     return (
         <Box
             component="footer"
@@ -41,8 +48,13 @@ const Footer: React.FC = () => {
                 py: 6,
                 px: 2,
                 mt: 'auto',
-                backgroundColor: theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900],
-                borderTop: `1px solid ${theme.palette.divider}`
+                backgroundColor: isGlass 
+                    ? 'rgba(12, 20, 35, 0.4)' 
+                    : (theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900]),
+                backdropFilter: isGlass ? glassEffects.blur : 'none',
+                borderTop: isGlass ? glassEffects.border : `1px solid ${theme.palette.divider}`,
+                boxShadow: isGlass ? `inset 0 1px 0 0 rgba(255,255,255,0.05), ${glassEffects.innerBoxShadow}` : 'none',
+                color: textColor
             }}
         >
             <Container maxWidth="lg">
@@ -52,19 +64,19 @@ const Footer: React.FC = () => {
                         flexDirection: { xs: 'column', md: 'row' },
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        gap: 2
+                        gap: 4
                     }}
                 >
                     <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
-                        <Typography variant="h6" color="text.primary" fontWeight="bold">
+                        <Typography variant="h6" sx={{ color: textColor, fontWeight: 'bold' }}>
                             {language === 'en' ? profile?.fullNameEn : profile?.fullNameEs}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{ color: secondaryTextColor }}>
                             Full Stack Developer
                         </Typography>
                     </Box>
 
-                    <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Box sx={{ display: 'flex', gap: 2 }}>
                         {socialLinks.github && (
                             <IconButton
                                 href={socialLinks.github}
@@ -72,6 +84,14 @@ const Footer: React.FC = () => {
                                 rel="noopener noreferrer"
                                 aria-label="GitHub"
                                 color="inherit"
+                                sx={{ 
+                                    transition: 'all 0.3s ease',
+                                    '&:hover': isGlass ? { 
+                                        color: glassColors.neon.turquoise,
+                                        transform: 'translateY(-3px)',
+                                        filter: `drop-shadow(0 0 8px ${glassColors.neon.turquoise})`
+                                    } : {}
+                                }}
                             >
                                 <GitHubIcon />
                             </IconButton>
@@ -83,6 +103,14 @@ const Footer: React.FC = () => {
                                 rel="noopener noreferrer"
                                 aria-label="LinkedIn"
                                 color="inherit"
+                                sx={{ 
+                                    transition: 'all 0.3s ease',
+                                    '&:hover': isGlass ? { 
+                                        color: glassColors.neon.violet,
+                                        transform: 'translateY(-3px)',
+                                        filter: `drop-shadow(0 0 8px ${glassColors.neon.violet})`
+                                    } : {}
+                                }}
                             >
                                 <LinkedInIcon />
                             </IconButton>
@@ -92,13 +120,21 @@ const Footer: React.FC = () => {
                                 href={socialLinks.email}
                                 aria-label="Email"
                                 color="inherit"
+                                sx={{ 
+                                    transition: 'all 0.3s ease',
+                                    '&:hover': isGlass ? { 
+                                        color: glassColors.neon.pink,
+                                        transform: 'translateY(-3px)',
+                                        filter: `drop-shadow(0 0 8px ${glassColors.neon.pink})`
+                                    } : {}
+                                }}
                             >
                                 <EmailIcon />
                             </IconButton>
                         )}
                     </Box>
 
-                    <Typography variant="body2" color="text.secondary" align="center">
+                    <Typography variant="body2" sx={{ color: secondaryTextColor, textAlign: 'center' }}>
                         © {currentYear} {language === 'en' ? profile?.fullNameEn : profile?.fullNameEs}. {t('footer.rights', 'All rights reserved.')}
                     </Typography>
                 </Box>

@@ -210,7 +210,8 @@ const resources = {
                 actions: 'Actions',
                 theme: {
                     light: 'Light',
-                    dark: 'Dark'
+                    dark: 'Dark',
+                    glass: 'Liquid Glass'
                 },
                 coldStartNotice: 'Welcome! As this project is on a free plan, the first load may take a few seconds while the server wakes up. Thanks for your patience! 🙇'
             },
@@ -431,7 +432,8 @@ const resources = {
                 actions: 'Acciones',
                 theme: {
                     light: 'Claro',
-                    dark: 'Oscuro'
+                    dark: 'Oscuro',
+                    glass: 'Liquid Glass'
                 },
                 coldStartNotice: '¡Bienvenido! Como este proyecto está en un plan gratuito, la primera carga puede tardar unos segundos mientras el servidor se activa. ¡Gracias por tu paciencia! 🙇'
             },

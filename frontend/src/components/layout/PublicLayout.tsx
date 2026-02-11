@@ -4,13 +4,17 @@ import { Box, CssBaseline } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import { useColorMode } from '@/context/ThemeContext';
 
 const PublicLayout: React.FC = () => {
     const { t } = useTranslation();
+    const { mode } = useColorMode();
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', position: 'relative' }}>
             <CssBaseline />
+            {mode === 'glass' && <div className="liquid-glass-bg" />}
+            
             {/* Skip to Content Link */}
             <a href="#main-content" className="skip-link">
                 {t('common.skipToContent', 'Skip to main content')}
