@@ -304,7 +304,7 @@ const ProjectsManagement: React.FC = () => {
                                 <TextField fullWidth label={t('admin.githubUrl')} {...register('githubUrl')} />
                             </Grid>
                             <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField fullWidth label={projectType === 'DESKTOP' ? `${t('projects.download')} URL` : t('admin.liveUrl')} {...register('liveUrl')} />
+                                <TextField fullWidth label={t('admin.liveUrl')} {...register('liveUrl')} />
                             </Grid>
                             <Grid size={{ xs: 12, md: 6 }}>
                                 <FormControlLabel

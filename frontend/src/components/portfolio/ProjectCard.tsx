@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LaunchIcon from '@mui/icons-material/Launch';
-import DownloadIcon from '@mui/icons-material/Download';
 import StarIcon from '@mui/icons-material/Star';
 import LanguageIcon from '@mui/icons-material/Language';
 import DesktopWindowsIcon from '@mui/icons-material/DesktopWindows';
@@ -142,14 +141,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                 {project.liveUrl && (
                     <Button
                         size="small"
-                        startIcon={project.type === 'DESKTOP' ? <DownloadIcon /> : <LaunchIcon />}
+                        startIcon={<LaunchIcon />}
                         href={project.liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         variant="contained"
                         sx={{ fontWeight: 600, px: 2 }}
                     >
-                        {project.type === 'DESKTOP' ? t('projects.download') : t('projects.viewLive')}
+                        {t('projects.viewLive')}
                     </Button>
                 )}
             </CardActions>
