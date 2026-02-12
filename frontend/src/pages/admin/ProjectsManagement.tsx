@@ -34,8 +34,7 @@ const ProjectsManagement: React.FC = () => {
     const { t } = useTranslation();
     const { language } = useLanguage();
 
-    const { control, register, handleSubmit, reset, setValue, watch } = useForm<Project>();
-    const projectType = watch('type');
+    const { control, register, handleSubmit, reset, setValue } = useForm<Project>();
 
     const fetchData = async () => {
         try {
