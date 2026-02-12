@@ -137,6 +137,8 @@ const resources = {
                 logoText: 'Navbar Logo Text',
                 cvUrl: 'CV File URL (PDF)',
                 philosophy: 'Philosophy',
+                generalCv: 'General / CV',
+                personalSocial: 'Personal / Social',
                 sentence: 'Sentence that defines me',
                 linkedinUrl: 'LinkedIn URL',
                 backend: 'Backend',
@@ -212,6 +214,10 @@ const resources = {
                     light: 'Light',
                     dark: 'Dark',
                     glass: 'Liquid Glass'
+                },
+                languages: {
+                    en: 'English',
+                    es: 'Spanish'
                 },
                 coldStartNotice: 'Welcome! As this project is on a free plan, the first load may take a few seconds while the server wakes up. Thanks for your patience! 🙇'
             },
@@ -434,6 +440,10 @@ const resources = {
                     light: 'Claro',
                     dark: 'Oscuro',
                     glass: 'Liquid Glass'
+                },
+                languages: {
+                    en: 'Inglés',
+                    es: 'Español'
                 },
                 coldStartNotice: '¡Bienvenido! Como este proyecto está en un plan gratuito, la primera carga puede tardar unos segundos mientras el servidor se activa. ¡Gracias por tu paciencia! 🙇'
             },

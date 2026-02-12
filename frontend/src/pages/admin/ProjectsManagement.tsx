@@ -15,6 +15,7 @@ import { adminService } from '@/services/adminService';
 import type { Project } from '@/types';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useLanguage } from '@/context/LanguageContext';
 import { formatImageUrl } from '@/utils/imageUtils';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
 import ConfirmDialog from '@/components/common/ConfirmDialog';
@@ -31,6 +32,7 @@ const ProjectsManagement: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [saving, setSaving] = useState(false);
     const { t } = useTranslation();
+    const { language } = useLanguage();
 
     const { control, register, handleSubmit, reset, setValue, watch } = useForm<Project>();
     const projectType = watch('type');
@@ -166,7 +168,7 @@ const ProjectsManagement: React.FC = () => {
                             <Box sx={{ position: 'relative' }}>
                                 <ImageWithFallback
                                     src={formatImageUrl(proj.imageUrl)}
-                                    alt={proj.titleEn}
+                                    alt={language === 'en' ? proj.titleEn : proj.titleEs}
                                     type="project"
                                     aspectRatio="16/9"
                                     sx={{
@@ -177,7 +179,7 @@ const ProjectsManagement: React.FC = () => {
                                     referrerPolicy="no-referrer"
                                 />
                                 <Chip
-                                    label={proj.type || 'WEB'}
+                                    label={t(`projects.types.${proj.type || 'WEB'}`)}
                                     icon={getTypeIcon(proj.type || 'WEB')}
                                     size="small"
                                     sx={{
@@ -201,11 +203,11 @@ const ProjectsManagement: React.FC = () => {
                             </Box>
                             <CardContent sx={{ flexGrow: 1 }}>
                                 <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
-                                    {proj.titleEn}
+                                    {language === 'en' ? proj.titleEn : proj.titleEs}
                                 </Typography>
                                 <Box sx={{ mb: 1 }}>
                                     <ScrollableContent maxHeight="100px" sx={{ bgcolor: 'action.hover', p: 1 }}>
-                                        <RichTextRenderer text={proj.descriptionEn} variant="body2" />
+                                        <RichTextRenderer text={language === 'en' ? proj.descriptionEn : proj.descriptionEs} variant="body2" />
                                     </ScrollableContent>
                                 </Box>
                                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>

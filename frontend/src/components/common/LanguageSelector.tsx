@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Button, Menu, MenuItem, Typography } from '@mui/material';
 import TranslateIcon from '@mui/icons-material/Translate';
 import { useLanguage } from '@/context/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 const LanguageSelector: React.FC = () => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const { language, setLanguage } = useLanguage();
+    const { t } = useTranslation();
 
     const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -41,13 +43,13 @@ const LanguageSelector: React.FC = () => {
                     onClick={() => handleLanguageChange('en')}
                     selected={language === 'en'}
                 >
-                    English
+                    {t('common.languages.en')}
                 </MenuItem>
                 <MenuItem
                     onClick={() => handleLanguageChange('es')}
                     selected={language === 'es'}
                 >
-                    Español
+                    {t('common.languages.es')}
                 </MenuItem>
             </Menu>
         </>

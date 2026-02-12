@@ -14,6 +14,7 @@ import { adminService } from '@/services/adminService';
 import type { Skill } from '@/types';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useLanguage } from '@/context/LanguageContext';
 import ConfirmDialog from '@/components/common/ConfirmDialog';
 
 const SkillsManagement: React.FC = () => {
@@ -26,6 +27,7 @@ const SkillsManagement: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [saving, setSaving] = useState(false);
     const { t } = useTranslation();
+    const { language } = useLanguage();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const { control, register, handleSubmit, reset, setValue, watch } = useForm<Skill>();
@@ -135,10 +137,7 @@ const SkillsManagement: React.FC = () => {
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                                     <Box>
                                         <Typography variant="h6" component="div">
-                                            {skill.nameEn}
-                                        </Typography>
-                                        <Typography color="text.secondary" variant="body2">
-                                            {skill.nameEs}
+                                            {language === 'en' ? skill.nameEn : skill.nameEs}
                                         </Typography>
                                     </Box>
                                     <Chip 
@@ -183,8 +182,7 @@ const SkillsManagement: React.FC = () => {
                     <Table sx={{ minWidth: 650 }}>
                         <TableHead>
                             <TableRow>
-                                <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.name')} (EN)</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.name')} (ES)</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.name')}</TableCell>
                                 <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.category')}</TableCell>
                                 <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.level')}</TableCell>
                                 <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.order')}</TableCell>
@@ -194,8 +192,7 @@ const SkillsManagement: React.FC = () => {
                         <TableBody>
                             {skills.map((skill) => (
                                 <TableRow key={skill.id} hover>
-                                    <TableCell>{skill.nameEn}</TableCell>
-                                    <TableCell>{skill.nameEs}</TableCell>
+                                    <TableCell>{language === 'en' ? skill.nameEn : skill.nameEs}</TableCell>
                                     <TableCell>
                                         <Typography variant="body2" sx={{ bgcolor: 'action.hover', px: 1, borderRadius: 1, display: 'inline-block' }}>
                                             {skill.category}

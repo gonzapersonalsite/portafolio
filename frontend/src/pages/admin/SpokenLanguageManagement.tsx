@@ -10,12 +10,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { useTranslation } from 'react-i18next';
+import { useLanguage } from '@/context/LanguageContext';
 import { adminService } from '@/services/adminService';
 import type { SpokenLanguage } from '@/types';
 import ConfirmDialog from '@/components/common/ConfirmDialog';
 
 const SpokenLanguageManagement: React.FC = () => {
     const { t } = useTranslation();
+    const { language } = useLanguage();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const [languages, setLanguages] = useState<SpokenLanguage[]>([]);
@@ -153,10 +155,10 @@ const SpokenLanguageManagement: React.FC = () => {
                         <Card key={lang.id} sx={{ mb: 2 }}>
                             <CardContent>
                                 <Typography variant="h6" component="div">
-                                    {lang.nameEn} / {lang.nameEs}
+                                    {language === 'en' ? lang.nameEn : lang.nameEs}
                                 </Typography>
                                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                    {lang.levelEn} / {lang.levelEs}
+                                    {language === 'en' ? lang.levelEn : lang.levelEs}
                                 </Typography>
                                 <Box sx={{ mb: 1 }}>
                                     <Typography variant="body2" component="span" fontWeight="bold">
@@ -191,8 +193,8 @@ const SpokenLanguageManagement: React.FC = () => {
                     <Table sx={{ minWidth: 650 }}>
                         <TableHead>
                             <TableRow>
-                                <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.name')} (EN/ES)</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.level')} (EN/ES)</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.name')}</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.level')}</TableCell>
                                 <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.proficiency')}</TableCell>
                                 <TableCell sx={{ fontWeight: 'bold' }}>{t('admin.order')}</TableCell>
                                 <TableCell align="right" sx={{ fontWeight: 'bold' }}>{t('common.actions')}</TableCell>
@@ -201,8 +203,8 @@ const SpokenLanguageManagement: React.FC = () => {
                         <TableBody>
                             {languages.map((lang) => (
                                 <TableRow key={lang.id} hover>
-                                    <TableCell>{lang.nameEn} / {lang.nameEs}</TableCell>
-                                    <TableCell>{lang.levelEn} / {lang.levelEs}</TableCell>
+                                    <TableCell>{language === 'en' ? lang.nameEn : lang.nameEs}</TableCell>
+                                    <TableCell>{language === 'en' ? lang.levelEn : lang.levelEs}</TableCell>
                                     <TableCell>{lang.proficiency}%</TableCell>
                                     <TableCell>{lang.order}</TableCell>
                                     <TableCell align="right">

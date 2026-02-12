@@ -15,6 +15,7 @@ import { adminService } from '@/services/adminService';
 import type { Experience } from '@/types';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useLanguage } from '@/context/LanguageContext';
 import ConfirmDialog from '@/components/common/ConfirmDialog';
 import RichTextRenderer from '@/components/common/RichTextRenderer';
 import ScrollableContent from '@/components/common/ScrollableContent';
@@ -29,6 +30,7 @@ const ExperiencesManagement: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [saving, setSaving] = useState(false);
     const { t } = useTranslation();
+    const { language } = useLanguage();
     const theme = useTheme();
 
     const { control, register, handleSubmit, reset, setValue } = useForm<Experience>();
@@ -199,15 +201,15 @@ const ExperiencesManagement: React.FC = () => {
                                     </Box>
 
                                     <Typography variant="h6" component="h3" fontWeight="bold" color="primary">
-                                        {exp.positionEn}
+                                        {language === 'en' ? exp.positionEn : exp.positionEs}
                                     </Typography>
                                     <Typography variant="subtitle1" fontWeight="500" gutterBottom>
-                                        @{exp.companyEn}
+                                        @{language === 'en' ? exp.companyEn : exp.companyEs}
                                     </Typography>
                                     
                                     <Box sx={{ mt: 2, mb: 2 }}>
                                         <ScrollableContent maxHeight="200px">
-                                            <RichTextRenderer text={exp.descriptionEn} variant="body2" />
+                                            <RichTextRenderer text={language === 'en' ? exp.descriptionEn : exp.descriptionEs} variant="body2" />
                                         </ScrollableContent>
                                     </Box>
                                     

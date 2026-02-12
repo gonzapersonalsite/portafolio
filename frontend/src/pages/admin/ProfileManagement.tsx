@@ -80,8 +80,8 @@ const ProfileManagement: React.FC = () => {
                 <Tabs value={tabValue} onChange={(_, val) => setTabValue(val)} centered>
                     <Tab label={t('nav.home')} />
                     <Tab label={t('nav.about')} />
-                    <Tab label="General / CV" />
-                    <Tab label="Personal / Social" />
+                    <Tab label={t('admin.generalCv')} />
+                    <Tab label={t('admin.personalSocial')} />
                 </Tabs>
 
                 <Box sx={{ p: 4 }}>
