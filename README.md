@@ -50,12 +50,15 @@
 
 ## 🏗️ Architecture & Principles
 
-The project follows a modern **Full Stack Architecture**, prioritizing scalability, security, and maintainability. For a detailed analysis of patterns and operations, please refer to the [Architecture & Operations](file:///c:/Users/Gonzalo/Desktop/my-personal-projects/portafolio/ARCHITECTURE.md) document.
+The project follows a modern **Full Stack Architecture**, prioritizing scalability, security, and maintainability.
 
 - **Clean Layered Backend:** Controller-Service-Repository pattern for clear business logic separation.
 - **Component-Driven Frontend:** Highly reusable UI components with centralized state management.
 - **Automated CI/CD:** Continuous deployment pipeline using Vercel (Frontend) and Render (Backend).
 - **Data Persistence:** Robust schema management with Spring Data JPA and PostgreSQL.
+
+📖 **[Architecture Guide](ARCHITECTURE.md)** — Patterns, design decisions, and API documentation.
+🛠️ **[Operations Guide](OPERATIONS.md)** — Deployment, CI/CD, environment variables, and local setup.
 
 ---
 
