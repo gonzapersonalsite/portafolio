@@ -13,18 +13,26 @@ import ScrollableContent from '@/components/common/ScrollableContent';
 import EmptyState from '@/components/common/EmptyState';
 import ExploreIcon from '@mui/icons-material/Explore';
 
+import { requestCache } from '@/utils/requestCache';
+import i18n from '@/config/i18n';
+
 const ExperiencePage: React.FC = () => {
     const { t } = useTranslation();
     const { language } = useLanguage();
     const theme = useTheme();
-    const [experiences, setExperiences] = React.useState<Experience[]>([]);
-    const [loading, setLoading] = React.useState(true);
+    
+    // Intentar obtener de caché inmediatamente
+    const cacheKey = `/public/experiences?&lang=${i18n.language}`;
+    const cachedExps = requestCache.get<Experience[]>(cacheKey);
+    
+    const [experiences, setExperiences] = React.useState<Experience[]>(cachedExps || []);
+    const [loading, setLoading] = React.useState(!cachedExps);
 
     React.useEffect(() => {
         const fetchExperiences = async () => {
             try {
+                if (!cachedExps) setLoading(true);
                 const data = await publicService.getAllExperiences();
-                // Optionally sort by order if backend doesn't
                 setExperiences(data);
             } catch (err) {
                 console.error("Failed to fetch experiences", err);
@@ -34,7 +42,7 @@ const ExperiencePage: React.FC = () => {
         };
 
         fetchExperiences();
-    }, []);
+    }, [language]);
 
     if (loading) {
         return (

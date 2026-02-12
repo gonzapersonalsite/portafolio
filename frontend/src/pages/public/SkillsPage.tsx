@@ -8,16 +8,27 @@ import { SkillsSkeleton, PageHeaderSkeleton } from '@/components/common/Skeleton
 import EmptyState from '@/components/common/EmptyState';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 
+import { requestCache } from '@/utils/requestCache';
+import i18n from '@/config/i18n';
+
 const SkillsPage: React.FC = () => {
     const { t } = useTranslation();
     const { language } = useLanguage();
     const theme = useTheme();
-    const [skills, setSkills] = React.useState<Skill[]>([]);
-    const [loading, setLoading] = React.useState(true);
+    
+    // Intentar obtener datos de caché inmediatamente para evitar skeletons innecesarios
+    const cacheKey = `/public/skills?&lang=${i18n.language}`;
+    const cachedSkills = requestCache.get<Skill[]>(cacheKey);
+    
+    const [skills, setSkills] = React.useState<Skill[]>(cachedSkills || []);
+    const [loading, setLoading] = React.useState(!cachedSkills);
 
     React.useEffect(() => {
         const fetchSkills = async () => {
             try {
+                // Si no hay caché, mostramos loading
+                if (!cachedSkills) setLoading(true);
+                
                 const data = await publicService.getAllSkills();
                 setSkills(data);
             } catch (err) {
@@ -28,7 +39,7 @@ const SkillsPage: React.FC = () => {
         };
 
         fetchSkills();
-    }, []);
+    }, [language]); // Recargar si cambia el idioma
 
     // Group skills by category
     const skillsByCategory = useMemo(() => {

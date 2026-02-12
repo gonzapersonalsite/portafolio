@@ -13,18 +13,35 @@ import ImageWithFallback from '@/components/common/ImageWithFallback';
 import RichTextRenderer from '@/components/common/RichTextRenderer';
 import type { Skill, Profile, SpokenLanguage } from '@/types';
 
+import { requestCache } from '@/utils/requestCache';
+import i18n from '@/config/i18n';
+
 const AboutPage: React.FC = () => {
     const { t } = useTranslation();
     const { language } = useLanguage();
     const theme = useTheme();
-    const [competencies, setCompetencies] = React.useState<Skill[]>([]);
-    const [spokenLanguages, setSpokenLanguages] = React.useState<SpokenLanguage[]>([]);
-    const [profile, setProfile] = React.useState<Profile | null>(null);
-    const [loading, setLoading] = React.useState(true);
+
+    // Cache keys
+    const skillsCacheKey = `/public/skills?&lang=${i18n.language}`;
+    const languagesCacheKey = `/public/spoken-languages?&lang=${i18n.language}`;
+    const profileCacheKey = `/public/profile?&lang=${i18n.language}`;
+    
+    const cachedSkills = requestCache.get<Skill[]>(skillsCacheKey);
+    const cachedLanguages = requestCache.get<SpokenLanguage[]>(languagesCacheKey);
+    const cachedProfile = requestCache.get<Profile>(profileCacheKey);
+
+    const [competencies, setCompetencies] = React.useState<Skill[]>(
+        cachedSkills ? cachedSkills.filter(s => s.level >= 70) : []
+    );
+    const [spokenLanguages, setSpokenLanguages] = React.useState<SpokenLanguage[]>(cachedLanguages || []);
+    const [profile, setProfile] = React.useState<Profile | null>(cachedProfile || null);
+    const [loading, setLoading] = React.useState(!cachedSkills || !cachedLanguages || !cachedProfile);
 
     React.useEffect(() => {
         const fetchData = async () => {
             try {
+                if (!cachedSkills || !cachedLanguages || !cachedProfile) setLoading(true);
+                
                 const [skillsData, languagesData, profileData] = await Promise.all([
                     publicService.getAllSkills(),
                     publicService.getAllSpokenLanguages(),
@@ -41,7 +58,7 @@ const AboutPage: React.FC = () => {
             }
         };
         fetchData();
-    }, []);
+    }, [language]);
 
     // Helper to get localized text
     const getLocalizedText = (en: string, es: string) => {

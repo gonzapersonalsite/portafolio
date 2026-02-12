@@ -25,18 +25,30 @@ const float = keyframes`
   100% { transform: translateY(0px); }
 `;
 
+import { requestCache } from '@/utils/requestCache';
+import i18n from '@/config/i18n';
+
 const HomePage: React.FC = () => {
     const { t } = useTranslation();
     const { language } = useLanguage();
     const theme = useTheme();
-    const [featuredProjects, setFeaturedProjects] = React.useState<Project[]>([]);
-    const [profile, setProfile] = React.useState<ProfileType | null>(null);
-    const [loading, setLoading] = React.useState(true);
+
+    // Cache keys
+    const profileCacheKey = `/public/profile?&lang=${i18n.language}`;
+    const projectsCacheKey = `/public/projects/featured?&lang=${i18n.language}`;
+    
+    const cachedProfile = requestCache.get<ProfileType>(profileCacheKey);
+    const cachedProjects = requestCache.get<Project[]>(projectsCacheKey);
+
+    const [featuredProjects, setFeaturedProjects] = React.useState<Project[]>(cachedProjects || []);
+    const [profile, setProfile] = React.useState<ProfileType | null>(cachedProfile || null);
+    const [loading, setLoading] = React.useState(!cachedProfile || !cachedProjects);
 
     React.useEffect(() => {
         const fetchHomeData = async () => {
-            setLoading(true);
             try {
+                if (!cachedProfile || !cachedProjects) setLoading(true);
+                
                 const [projectsData, profileData] = await Promise.all([
                     publicService.getFeaturedProjects(),
                     publicService.getProfile()
@@ -50,7 +62,7 @@ const HomePage: React.FC = () => {
             }
         };
         fetchHomeData();
-    }, []);
+    }, [language]);
 
     // Helper to get localized text
     const getLocalizedText = (en: string, es: string) => {

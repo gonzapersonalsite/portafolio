@@ -8,14 +8,25 @@ import { ProjectGridSkeleton, PageHeaderSkeleton } from '@/components/common/Ske
 import EmptyState from '@/components/common/EmptyState';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
+import { requestCache } from '@/utils/requestCache';
+import i18n from '@/config/i18n';
+import { useLanguage } from '@/context/LanguageContext';
+
 const ProjectsPage: React.FC = () => {
     const { t } = useTranslation();
-    const [projects, setProjects] = React.useState<Project[]>([]);
-    const [loading, setLoading] = React.useState(true);
+    const { language } = useLanguage();
+    
+    // Intentar obtener de caché inmediatamente
+    const cacheKey = `/public/projects?&lang=${i18n.language}`;
+    const cachedProjects = requestCache.get<Project[]>(cacheKey);
+    
+    const [projects, setProjects] = React.useState<Project[]>(cachedProjects || []);
+    const [loading, setLoading] = React.useState(!cachedProjects);
 
     React.useEffect(() => {
         const fetchProjects = async () => {
             try {
+                if (!cachedProjects) setLoading(true);
                 const data = await publicService.getAllProjects();
                 setProjects(data);
             } catch (err) {
@@ -26,7 +37,7 @@ const ProjectsPage: React.FC = () => {
         };
 
         fetchProjects();
-    }, []);
+    }, [language]);
 
     if (loading) {
         return (
