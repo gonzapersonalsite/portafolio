@@ -29,3 +29,13 @@ The project follows a decoupled **Full Stack** architecture, ensuring high perfo
 The backend automatically generates interactive documentation using **Swagger/OpenAPI**.
 - **Endpoint:** `/swagger-ui/index.html`
 - **Specification:** `/v3/api-docs`
+
+---
+
+## 🚫 Legal Notice
+
+**© 2026 Gonzalo Martínez García. All rights reserved.**
+
+This architectural design and implementation is **proprietary information**.
+- **Unauthorized copying**, reproduction, or use of this documentation or the associated software is strictly prohibited.
+- See the `LICENSE` file for full terms and conditions.
