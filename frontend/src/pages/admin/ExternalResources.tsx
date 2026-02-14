@@ -11,6 +11,7 @@ import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import StorageIcon from '@mui/icons-material/Storage';
 import DnsIcon from '@mui/icons-material/Dns';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 
 const ExternalResources: React.FC = () => {
     const { t } = useTranslation();
@@ -64,6 +65,14 @@ const ExternalResources: React.FC = () => {
             description: t('admin.resources.uptimeRobot.description'),
             tags: ['Monitoring', 'Health Check', 'Uptime'],
             actionText: t('admin.resources.uptimeRobot.action')
+        },
+        {
+            title: 'MediaFire',
+            url: 'https://app.mediafire.com/folder/myfiles',
+            icon: <CloudDownloadIcon sx={{ fontSize: 40, color: '#129dff' }} />,
+            description: t('admin.resources.mediaFire.description'),
+            tags: ['Storage', 'Downloads', 'Hosting'],
+            actionText: t('admin.resources.mediaFire.action')
         }
     ];
 

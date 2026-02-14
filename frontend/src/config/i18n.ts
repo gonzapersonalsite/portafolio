@@ -182,6 +182,10 @@ const resources = {
                     uptimeRobot: {
                         description: 'Monitor backend availability and uptime statistics. Keeps the backend awake.',
                         action: 'Go to UptimeRobot'
+                    },
+                    mediaFire: {
+                        description: 'Used to upload downloadable projects like .exe and similar files.',
+                        action: 'Go to MediaFire'
                     }
                 },
                 emptyState: {
@@ -412,6 +416,10 @@ const resources = {
                     uptimeRobot: {
                         description: 'Monitoriza la disponibilidad y estadísticas del backend. Mantiene el backend despierto.',
                         action: 'Ir a UptimeRobot'
+                    },
+                    mediaFire: {
+                        description: 'Lo uso para subir los proyectos descargables en plan .exe y similares.',
+                        action: 'Ir a MediaFire'
                     }
                 },
                 emptyState: {

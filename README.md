@@ -8,7 +8,7 @@
 [![Swagger](https://img.shields.io/badge/Swagger-OpenAPI_3.0-yellow?logo=swagger)](https://swagger.io/)
 [![Status](https://img.shields.io/badge/Status-Proprietary-red.svg)](#-license)
 
-**🇺🇸 English** | [🇪🇸 Español](docs/es/README.md)
+🇺🇸 **English** | [🇪🇸 Español](docs/es/README.md)
 
 **Professional Portfolio** is a comprehensive software solution designed for dynamic content management and professional career showcasing. This Full Stack application allows developers to manage their professional profile, projects, and skills through a secure administrative interface while providing an immersive experience for visitors.
 

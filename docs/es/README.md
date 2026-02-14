@@ -8,7 +8,7 @@
 [![Swagger](https://img.shields.io/badge/Swagger-OpenAPI_3.0-yellow?logo=swagger)](https://swagger.io/)
 [![Status](https://img.shields.io/badge/Status-Proprietario-red.svg)](#-licencia)
 
-[🇺🇸 English](../../README.md) | **🇪🇸 Español**
+[🇺🇸 English](../../README.md) | 🇪🇸 **Español**
 
 **Portafolio Profesional** es una solución de software integral diseñada para la gestión dinámica de contenido y la presentación profesional. Esta aplicación Full Stack permite a los desarrolladores gestionar su perfil profesional, proyectos y habilidades a través de una interfaz administrativa segura, mientras ofrece una experiencia inmersiva a los visitantes.
 

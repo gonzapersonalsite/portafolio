@@ -1,6 +1,6 @@
 # 🏗️ Guía de Arquitectura
 
-[🇺🇸 English](../../ARCHITECTURE.md) | **🇪🇸 Español**
+[🇺🇸 English](../../ARCHITECTURE.md) | 🇪🇸 **Español**
 
 Este documento proporciona un análisis detallado de los patrones arquitectónicos, principios de diseño y decisiones tecnológicas para el proyecto Portfolio. Para despliegue, infraestructura y configuración de entorno, ver la [Guía de Operaciones](OPERATIONS.md).
 

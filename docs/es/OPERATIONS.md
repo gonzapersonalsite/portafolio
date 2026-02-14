@@ -1,6 +1,6 @@
 # 🛠️ Guía de Operaciones
 
-[🇺🇸 English](../../OPERATIONS.md) | **🇪🇸 Español**
+[🇺🇸 English](../../OPERATIONS.md) | 🇪🇸 **Español**
 
 Este documento cubre la infraestructura, el pipeline de despliegue, la configuración del entorno y la configuración para el desarrollo local del proyecto Portfolio.
 

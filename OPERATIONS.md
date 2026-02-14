@@ -1,6 +1,6 @@
 # 🛠️ Operations Guide
 
-**🇺🇸 English** | [🇪🇸 Español](docs/es/OPERATIONS.md)
+🇺🇸 **English** | [🇪🇸 Español](docs/es/OPERATIONS.md)
 
 This document covers the infrastructure, deployment pipeline, environment configuration, and local development setup for the Portfolio project.
 

@@ -1,6 +1,6 @@
 # 🏗️ Architecture Guide
 
-**🇺🇸 English** | [🇪🇸 Español](docs/es/ARCHITECTURE.md)
+🇺🇸 **English** | [🇪🇸 Español](docs/es/ARCHITECTURE.md)
 
 This document provides a detailed analysis of the architectural patterns, design principles, and technology decisions for the Portfolio project. For deployment, infrastructure, and environment configuration, see the [Operations Guide](OPERATIONS.md).
 
