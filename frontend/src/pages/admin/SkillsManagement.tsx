@@ -3,7 +3,7 @@ import {
     Box, Button, Paper, Table, TableBody, TableCell, TableContainer,
     TableHead, TableRow, IconButton, Typography, Dialog,
     DialogTitle, DialogContent, DialogActions, TextField, Slider,
-    Select, MenuItem, InputLabel, FormControl, Grid, Snackbar, Alert,
+    Select, MenuItem, InputLabel, FormControl, Grid,
     useMediaQuery, Card, CardContent, CardActions, Chip
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -15,6 +15,7 @@ import type { Skill } from '@/types';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/context/LanguageContext';
+import { useNotification } from '@/context/NotificationContext';
 import ConfirmDialog from '@/components/common/ConfirmDialog';
 
 const SkillsManagement: React.FC = () => {
@@ -23,11 +24,10 @@ const SkillsManagement: React.FC = () => {
     const [editingSkill, setEditingSkill] = useState<Skill | null>(null);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [skillToDelete, setSkillToDelete] = useState<string | null>(null);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const [error, setError] = useState<string | null>(null);
     const [saving, setSaving] = useState(false);
     const { t } = useTranslation();
     const { language } = useLanguage();
+    const { showNotification } = useNotification();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const { control, register, handleSubmit, reset, setValue, watch } = useForm<Skill>();
@@ -38,7 +38,7 @@ const SkillsManagement: React.FC = () => {
             const data = await adminService.getSkills();
             setSkills(data);
         } catch (err) {
-            setError(t('admin.fetchError'));
+            showNotification(t('admin.fetchError'), 'error', 6000);
             console.error('Error fetching skills:', err);
         }
     };
@@ -77,11 +77,11 @@ const SkillsManagement: React.FC = () => {
             } else {
                 await adminService.createSkill(data);
             }
-            setSuccessMessage(t('admin.saveSuccess'));
+            showNotification(t('admin.saveSuccess'), 'success', 6000);
             fetchSkills();
             handleClose();
         } catch (err) {
-            setError(t('admin.saveError'));
+            showNotification(t('admin.saveError'), 'error', 6000);
             console.error('Error saving skill:', err);
         } finally {
             setSaving(false);
@@ -97,10 +97,10 @@ const SkillsManagement: React.FC = () => {
         if (skillToDelete) {
             try {
                 await adminService.deleteSkill(skillToDelete);
-                setSuccessMessage(t('admin.deleteSuccess'));
+                showNotification(t('admin.deleteSuccess'), 'success', 6000);
                 fetchSkills();
             } catch (err) {
-                setError(t('admin.deleteError'));
+                showNotification(t('admin.deleteError'), 'error', 6000);
                 console.error('Error deleting skill:', err);
             } finally {
                 setDeleteDialogOpen(false);
@@ -312,17 +312,6 @@ const SkillsManagement: React.FC = () => {
                     </DialogActions>
                 </form>
             </Dialog>
-
-            <Snackbar open={!!successMessage} autoHideDuration={6000} onClose={() => setSuccessMessage(null)}>
-                <Alert onClose={() => setSuccessMessage(null)} severity="success" sx={{ width: '100%' }}>
-                    {successMessage}
-                </Alert>
-            </Snackbar>
-            <Snackbar open={!!error} autoHideDuration={6000} onClose={() => setError(null)}>
-                <Alert onClose={() => setError(null)} severity="error" sx={{ width: '100%' }}>
-                    {error}
-                </Alert>
-            </Snackbar>
         </Box>
     );
 };

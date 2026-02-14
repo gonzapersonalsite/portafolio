@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
     Box, Button, Paper, IconButton, Typography, Dialog,
     DialogTitle, DialogContent, DialogActions, TextField,
-    Chip, Grid, Snackbar, Alert
+    Chip, Grid
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
@@ -16,6 +16,7 @@ import type { Experience } from '@/types';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/context/LanguageContext';
+import { useNotification } from '@/context/NotificationContext';
 import ConfirmDialog from '@/components/common/ConfirmDialog';
 import RichTextRenderer from '@/components/common/RichTextRenderer';
 import ScrollableContent from '@/components/common/ScrollableContent';
@@ -26,11 +27,10 @@ const ExperiencesManagement: React.FC = () => {
     const [editingExp, setEditingExp] = useState<Experience | null>(null);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [experienceToDelete, setExperienceToDelete] = useState<string | null>(null);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const [error, setError] = useState<string | null>(null);
     const [saving, setSaving] = useState(false);
     const { t } = useTranslation();
     const { language } = useLanguage();
+    const { showNotification } = useNotification();
     const theme = useTheme();
 
     const { control, register, handleSubmit, reset, setValue } = useForm<Experience>();
@@ -40,7 +40,7 @@ const ExperiencesManagement: React.FC = () => {
             const data = await adminService.getExperiences();
             setExperiences(data);
         } catch (err) {
-            setError(t('admin.fetchError'));
+            showNotification(t('admin.fetchError'), 'error', 6000);
             console.error('Error fetching experiences:', err);
         }
     };
@@ -88,11 +88,11 @@ const ExperiencesManagement: React.FC = () => {
             } else {
                 await adminService.createExperience(data);
             }
-            setSuccessMessage(t('admin.saveSuccess'));
+            showNotification(t('admin.saveSuccess'), 'success', 6000);
             fetchData();
             handleClose();
         } catch (err) {
-            setError(t('admin.saveError'));
+            showNotification(t('admin.saveError'), 'error', 6000);
             console.error('Error saving experience:', err);
         } finally {
             setSaving(false);
@@ -108,10 +108,10 @@ const ExperiencesManagement: React.FC = () => {
         if (experienceToDelete) {
             try {
                 await adminService.deleteExperience(experienceToDelete);
-                setSuccessMessage(t('admin.deleteSuccess'));
+                showNotification(t('admin.deleteSuccess'), 'success', 6000);
                 fetchData();
             } catch (err) {
-                setError(t('admin.deleteError'));
+                showNotification(t('admin.deleteError'), 'error', 6000);
                 console.error('Error deleting experience:', err);
             } finally {
                 setDeleteDialogOpen(false);
@@ -297,17 +297,6 @@ const ExperiencesManagement: React.FC = () => {
                     </DialogActions>
                 </form>
             </Dialog>
-
-            <Snackbar open={!!successMessage} autoHideDuration={6000} onClose={() => setSuccessMessage(null)}>
-                <Alert onClose={() => setSuccessMessage(null)} severity="success" sx={{ width: '100%' }}>
-                    {successMessage}
-                </Alert>
-            </Snackbar>
-            <Snackbar open={!!error} autoHideDuration={6000} onClose={() => setError(null)}>
-                <Alert onClose={() => setError(null)} severity="error" sx={{ width: '100%' }}>
-                    {error}
-                </Alert>
-            </Snackbar>
         </Box>
     );
 };

@@ -3,7 +3,7 @@ import {
     Box, Button, Typography, Dialog,
     DialogTitle, DialogContent, DialogActions, TextField,
     Card, CardContent, CardActions, Checkbox, FormControlLabel, Grid,
-    Snackbar, Alert, Chip, MenuItem, Select, FormControl, InputLabel
+    Chip, MenuItem, Select, FormControl, InputLabel
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import StarIcon from '@mui/icons-material/Star';
@@ -16,6 +16,7 @@ import type { Project } from '@/types';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/context/LanguageContext';
+import { useNotification } from '@/context/NotificationContext';
 import { formatImageUrl } from '@/utils/imageUtils';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
 import ConfirmDialog from '@/components/common/ConfirmDialog';
@@ -28,11 +29,10 @@ const ProjectsManagement: React.FC = () => {
     const [editingProj, setEditingProj] = useState<Project | null>(null);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [projectToDelete, setProjectToDelete] = useState<string | null>(null);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const [error, setError] = useState<string | null>(null);
     const [saving, setSaving] = useState(false);
     const { t } = useTranslation();
     const { language } = useLanguage();
+    const { showNotification } = useNotification();
 
     const { control, register, handleSubmit, reset, setValue } = useForm<Project>();
 
@@ -41,7 +41,7 @@ const ProjectsManagement: React.FC = () => {
             const data = await adminService.getProjects();
             setProjects(data);
         } catch (error) {
-            setError(t('admin.fetchError'));
+            showNotification(t('admin.fetchError'), 'error', 6000);
             console.error('Error fetching projects:', error);
         }
     };
@@ -99,11 +99,11 @@ const ProjectsManagement: React.FC = () => {
             } else {
                 await adminService.createProject(data);
             }
-            setSuccessMessage(t('admin.saveSuccess'));
+            showNotification(t('admin.saveSuccess'), 'success', 6000);
             fetchData();
             handleClose();
         } catch (error) {
-            setError(t('admin.saveError'));
+            showNotification(t('admin.saveError'), 'error', 6000);
             console.error('Error saving project:', error);
         } finally {
             setSaving(false);
@@ -128,10 +128,10 @@ const ProjectsManagement: React.FC = () => {
         if (projectToDelete) {
             try {
                 await adminService.deleteProject(projectToDelete);
-                setSuccessMessage(t('admin.deleteSuccess'));
+                showNotification(t('admin.deleteSuccess'), 'success', 6000);
                 fetchData();
             } catch (error) {
-                setError(t('admin.deleteError'));
+                showNotification(t('admin.deleteError'), 'error', 6000);
                 console.error('Error deleting project:', error);
             } finally {
                 setDeleteDialogOpen(false);
@@ -339,18 +339,6 @@ const ProjectsManagement: React.FC = () => {
                     </DialogActions>
                 </form>
             </Dialog>
-
-            {/* Snackbars for notifications */}
-            <Snackbar open={!!successMessage} autoHideDuration={6000} onClose={() => setSuccessMessage(null)}>
-                <Alert onClose={() => setSuccessMessage(null)} severity="success" sx={{ width: '100%' }}>
-                    {successMessage}
-                </Alert>
-            </Snackbar>
-            <Snackbar open={!!error} autoHideDuration={6000} onClose={() => setError(null)}>
-                <Alert onClose={() => setError(null)} severity="error" sx={{ width: '100%' }}>
-                    {error}
-                </Alert>
-            </Snackbar>
         </Box>
     );
 };

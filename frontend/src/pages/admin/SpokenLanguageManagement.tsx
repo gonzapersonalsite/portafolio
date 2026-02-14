@@ -3,7 +3,7 @@ import {
     Box, Typography, Button, Paper, Table, TableBody, TableCell,
     TableContainer, TableHead, TableRow, IconButton, Dialog,
     DialogTitle, DialogContent, DialogActions, TextField,
-    CircularProgress, Alert, Slider, Snackbar, useMediaQuery, Card, CardContent
+    CircularProgress, Slider, useMediaQuery, Card, CardContent
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
@@ -13,17 +13,17 @@ import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/context/LanguageContext';
 import { adminService } from '@/services/adminService';
 import type { SpokenLanguage } from '@/types';
+import { useNotification } from '@/context/NotificationContext';
 import ConfirmDialog from '@/components/common/ConfirmDialog';
 
 const SpokenLanguageManagement: React.FC = () => {
     const { t } = useTranslation();
     const { language } = useLanguage();
+    const { showNotification } = useNotification();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const [languages, setLanguages] = useState<SpokenLanguage[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [saving, setSaving] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
     const [editingLanguage, setEditingLanguage] = useState<SpokenLanguage | null>(null);
@@ -43,9 +43,8 @@ const SpokenLanguageManagement: React.FC = () => {
             setLoading(true);
             const data = await adminService.getSpokenLanguages();
             setLanguages(data);
-            setError(null);
         } catch (err) {
-            setError(t('admin.fetchError'));
+            showNotification(t('admin.fetchError'), 'error', 6000);
             console.error(err);
         } finally {
             setLoading(false);
@@ -99,11 +98,11 @@ const SpokenLanguageManagement: React.FC = () => {
             } else {
                 await adminService.createSpokenLanguage(formData);
             }
-            setSuccessMessage(t('admin.saveSuccess'));
+            showNotification(t('admin.saveSuccess'), 'success', 6000);
             handleCloseDialog();
             fetchLanguages();
         } catch (err) {
-            setError(t('admin.saveError'));
+            showNotification(t('admin.saveError'), 'error', 6000);
             console.error('Failed to save language', err);
         } finally {
             setSaving(false);
@@ -119,10 +118,10 @@ const SpokenLanguageManagement: React.FC = () => {
         if (languageToDelete) {
             try {
                 await adminService.deleteSpokenLanguage(languageToDelete);
-                setSuccessMessage(t('admin.deleteSuccess'));
+                showNotification(t('admin.deleteSuccess'), 'success', 6000);
                 fetchLanguages();
             } catch (err) {
-                setError(t('admin.deleteError'));
+                showNotification(t('admin.deleteError'), 'error', 6000);
                 console.error('Failed to delete language', err);
             } finally {
                 setDeleteDialogOpen(false);
@@ -259,17 +258,6 @@ const SpokenLanguageManagement: React.FC = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-
-            <Snackbar open={!!successMessage} autoHideDuration={6000} onClose={() => setSuccessMessage(null)}>
-                <Alert onClose={() => setSuccessMessage(null)} severity="success" sx={{ width: '100%' }}>
-                    {successMessage}
-                </Alert>
-            </Snackbar>
-            <Snackbar open={!!error} autoHideDuration={6000} onClose={() => setError(null)}>
-                <Alert onClose={() => setError(null)} severity="error" sx={{ width: '100%' }}>
-                    {error}
-                </Alert>
-            </Snackbar>
         </Box>
     );
 };

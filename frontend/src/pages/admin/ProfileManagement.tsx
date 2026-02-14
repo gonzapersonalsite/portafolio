@@ -1,30 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import {
     Box, Typography, Button, Paper, Grid, TextField,
-    CircularProgress, Alert, Tab, Tabs
+    CircularProgress, Tab, Tabs
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { useTranslation } from 'react-i18next';
+import { useNotification } from '@/context/NotificationContext';
 import { adminService } from '@/services/adminService';
 import type { Profile } from '@/types';
 
 const ProfileManagement: React.FC = () => {
     const { t } = useTranslation();
+    const { showNotification } = useNotification();
     const [profile, setProfile] = useState<Profile | null>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
     const [tabValue, setTabValue] = useState(0);
     const [saving, setSaving] = useState(false);
-    const [success, setSuccess] = useState(false);
 
     const fetchProfile = async () => {
         try {
             setLoading(true);
             const data = await adminService.getProfile();
             setProfile(data);
-            setError(null);
         } catch (err) {
-            setError(t('admin.fetchError'));
+            showNotification(t('admin.fetchError'), 'error', 6000);
             console.error(err);
         } finally {
             setLoading(false);
@@ -39,7 +38,6 @@ const ProfileManagement: React.FC = () => {
         if (!profile) return;
         const { name, value } = e.target;
         setProfile({ ...profile, [name]: value });
-        setSuccess(false);
     };
 
     const handleSave = async () => {
@@ -47,10 +45,9 @@ const ProfileManagement: React.FC = () => {
         try {
             setSaving(true);
             await adminService.updateProfile(profile);
-            setSuccess(true);
-            setError(null);
+            showNotification(t('admin.saveSuccess'), 'success', 6000);
         } catch (err) {
-            setError(t('admin.saveError'));
+            showNotification(t('admin.saveError'), 'error', 6000);
             console.error(err);
         } finally {
             setSaving(false);
@@ -72,9 +69,6 @@ const ProfileManagement: React.FC = () => {
                     {saving ? t('admin.saving') : t('admin.save')}
                 </Button>
             </Box>
-
-            {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-            {success && <Alert severity="success" sx={{ mb: 2 }}>{t('admin.saveSuccess')}</Alert>}
 
             <Paper sx={{ width: '100%', mb: 4 }}>
                 <Tabs value={tabValue} onChange={(_, val) => setTabValue(val)} centered>

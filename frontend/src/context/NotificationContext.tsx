@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { notificationEvents } from '@/utils/notificationEvents';
 
 interface NotificationContextType {
-    showNotification: (message: string, severity?: AlertColor) => void;
+    showNotification: (message: string, severity?: AlertColor, duration?: number) => void;
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
@@ -15,10 +15,12 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const [open, setOpen] = useState(false);
     const [messageKey, setMessageKey] = useState('');
     const [severity, setSeverity] = useState<AlertColor>('info');
+    const [duration, setDuration] = useState(10000);
 
-    const showNotification = useCallback((msg: string, sev: AlertColor = 'info') => {
+    const showNotification = useCallback((msg: string, sev: AlertColor = 'info', dur: number = 10000) => {
         setMessageKey(msg);
         setSeverity(sev);
+        setDuration(dur);
         setOpen(true);
     }, []);
 
@@ -45,7 +47,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
             {children}
             <Snackbar
                 open={open}
-                autoHideDuration={10000}
+                autoHideDuration={duration}
                 onClose={handleClose}
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                 sx={{ 
