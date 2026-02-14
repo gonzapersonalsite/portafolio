@@ -3,6 +3,7 @@ import type { AxiosAdapter } from 'axios';
 import { requestCache } from '@/utils/requestCache';
 import { notificationEvents } from '@/utils/notificationEvents';
 import i18n from '@/config/i18n';
+import { useAuthStore } from '@/context/AuthStore';
 
 const MAX_RETRIES = 2; // Reducido de 3 a 2 para evitar esperas eternas
 const RETRY_DELAY = 1000;
@@ -11,6 +12,7 @@ const REQUEST_TIMEOUT = 60000; // Reducido a 60s (suficiente para cold start)
 
 // Almacén para deduplicación de peticiones en vuelo
 const pendingRequests = new Map<string, Promise<any>>();
+let handlingUnauthorized = false;
 
 const apiClient = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api',
@@ -161,9 +163,18 @@ apiClient.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response && error.response.status === 401) {
-            // If unauthorized, maybe redirect to login or clear token?
-            // For now, just let the component handle it or clear if needed
-            // localStorage.removeItem('token'); 
+            const path = window.location.pathname || '';
+            const onAdmin = path.startsWith('/admin');
+            const isLogin = path === '/admin/login';
+            if (onAdmin && !isLogin && !handlingUnauthorized) {
+                handlingUnauthorized = true;
+                try {
+                    useAuthStore.getState().logout();
+                } finally {
+                    localStorage.removeItem('token');
+                    window.location.replace('/admin/login');
+                }
+            }
         }
         return Promise.reject(error);
     }
