@@ -41,6 +41,9 @@ const DashboardLayout: React.FC = () => {
     const drawer = (
         <div>
             <Toolbar />
+            <Typography variant="h6" sx={{ px: 2, pt: 2, pb: 2, fontWeight: 'bold', textAlign: 'center', display: { lg: 'none' } }}>
+                {t('admin.dashboard')}
+            </Typography>
             <List>
                 {menuItems.map((item) => (
                     <ListItem
@@ -70,17 +73,36 @@ const DashboardLayout: React.FC = () => {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
+                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, fontWeight: 'bold', display: { xs: 'none', lg: 'block' } }}>
                         {t('admin.dashboard')}
                     </Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Box sx={{ mr: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1 }, ml: 'auto' }}>
+                        <Box sx={{ mr: { xs: 0.5, sm: 1 } }}>
                             <LanguageSelector />
                         </Box>
-                        <Button color="inherit" onClick={() => navigate('/')} sx={{ whiteSpace: 'nowrap', display: { xs: 'none', sm: 'inline-flex' } }}>
+                        <Button 
+                            color="inherit" 
+                            onClick={() => navigate('/')} 
+                            size="small"
+                            sx={{ 
+                                whiteSpace: 'nowrap', 
+                                fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                                px: { xs: 1, sm: 2 },
+                                display: { xs: 'none', sm: 'inline-flex' }
+                            }}
+                        >
                             {t('admin.backToPublic')}
                         </Button>
-                        <Button color="inherit" onClick={handleLogout} sx={{ whiteSpace: 'nowrap' }}>
+                        <Button 
+                            color="inherit" 
+                            onClick={handleLogout} 
+                            size="small"
+                            sx={{ 
+                                whiteSpace: 'nowrap', 
+                                fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                                px: { xs: 1, sm: 2 }
+                            }}
+                        >
                             {t('admin.logout')}
                         </Button>
                     </Box>
