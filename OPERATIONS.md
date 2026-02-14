@@ -1,5 +1,7 @@
 # 🛠️ Operations Guide
 
+**🇺🇸 English** | [🇪🇸 Español](docs/es/OPERATIONS.md)
+
 This document covers the infrastructure, deployment pipeline, environment configuration, and local development setup for the Portfolio project.
 
 ---
@@ -43,22 +45,13 @@ Key variables required for production:
 
 ---
 
-## 🛠️ Development Setup
+## 🛠️ Local Development
 
-### Prerequisites
-- **Node.js:** v18 or higher.
-- **Java JDK:** 21 (Temurin recommended).
-- **Build Tools:** Gradle (via `./gradlew`).
+### Quick Start
+The easiest way to run the database, backend, and frontend locally is via Docker Compose:
 
-### Local Execution
-1. **Backend:**
-   ```bash
-   cd backend/portfolio-backend
-   ./gradlew bootRun
-   ```
-2. **Frontend:**
-   ```bash
-   cd frontend
-   npm install
-   npm run dev
-   ```
+```bash
+docker compose up -d
+```
+
+Ensure your `.env` file is properly configured with the variables listed above.

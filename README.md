@@ -6,7 +6,8 @@
 [![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk)](https://openjdk.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)](https://www.postgresql.org/)
 [![Swagger](https://img.shields.io/badge/Swagger-OpenAPI_3.0-yellow?logo=swagger)](https://swagger.io/)
-[![License-MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+**🇺🇸 English** | [🇪🇸 Español](docs/es/README.md)
 
 **Professional Portfolio** is a comprehensive software solution designed for dynamic content management and professional career showcasing. This Full Stack application allows developers to manage their professional profile, projects, and skills through a secure administrative interface while providing an immersive experience for visitors.
 
@@ -62,18 +63,16 @@ The project follows a modern **Full Stack Architecture**, prioritizing scalabili
 
 ---
 
-## 🚀 Installation & Execution
+## 🚀 Running Locally
+
+This project is containerized for easy deployment and local development.
 
 ### Prerequisites
-- Docker & Docker Compose
-- Node.js v18+ (optional, for frontend dev)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
+- `.env` file configured with necessary environment variables (see `OPERATIONS.md`).
 
-### Quick Start (Development)
-
-**Single command to run everything locally:**
+### Start Application
 ```bash
-git clone https://github.com/gonzapersonalsite/portafolio.git
-cd portafolio
 docker compose up -d
 ```
 
@@ -86,7 +85,7 @@ docker compose up -d
 
 ## 📝 License
 
-This project is licensed under the MIT License. See the `LICENSE` file for details.
+This project is proprietary software. All rights reserved. See the `LICENSE` file for details.
 
 ---
 

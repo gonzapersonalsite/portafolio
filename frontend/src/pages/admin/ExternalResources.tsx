@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    Box, Paper, Typography, Grid, Card, CardContent, CardActions, 
+    Box, Paper, Typography, Grid, Card, CardContent, CardActions,
     Button, Chip, Divider, useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import StorageIcon from '@mui/icons-material/Storage';
 import DnsIcon from '@mui/icons-material/Dns';
+import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 
 const ExternalResources: React.FC = () => {
     const { t } = useTranslation();
@@ -55,6 +56,14 @@ const ExternalResources: React.FC = () => {
             description: t('admin.resources.render.description'),
             tags: ['Backend', 'Deployment', 'PaaS'],
             actionText: t('admin.resources.render.action')
+        },
+        {
+            title: 'UptimeRobot',
+            url: 'https://dashboard.uptimerobot.com/monitors',
+            icon: <MonitorHeartIcon sx={{ fontSize: 40, color: '#3bd671' }} />,
+            description: t('admin.resources.uptimeRobot.description'),
+            tags: ['Monitoring', 'Health Check', 'Uptime'],
+            actionText: t('admin.resources.uptimeRobot.action')
         }
     ];
 
@@ -72,10 +81,10 @@ const ExternalResources: React.FC = () => {
             <Grid container spacing={3}>
                 {resources.map((resource) => (
                     <Grid size={{ xs: 12, md: 6 }} key={resource.title}>
-                        <Card 
-                            sx={{ 
-                                height: '100%', 
-                                display: 'flex', 
+                        <Card
+                            sx={{
+                                height: '100%',
+                                display: 'flex',
                                 flexDirection: 'column',
                                 transition: 'transform 0.2s, box-shadow 0.2s',
                                 '&:hover': {
@@ -93,13 +102,13 @@ const ExternalResources: React.FC = () => {
                                         {resource.title}
                                     </Typography>
                                 </Box>
-                                
+
                                 <Divider sx={{ mb: 2 }} />
-                                
+
                                 <Typography variant="body1" paragraph>
                                     {resource.description}
                                 </Typography>
-                                
+
                                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
                                     {resource.tags.map(tag => (
                                         <Chip key={tag} label={tag} size="small" variant="outlined" />
@@ -107,11 +116,11 @@ const ExternalResources: React.FC = () => {
                                 </Box>
                             </CardContent>
                             <CardActions sx={{ p: 2, pt: 0 }}>
-                                <Button 
-                                    variant="contained" 
-                                    endIcon={<LaunchIcon />} 
-                                    href={resource.url} 
-                                    target="_blank" 
+                                <Button
+                                    variant="contained"
+                                    endIcon={<LaunchIcon />}
+                                    href={resource.url}
+                                    target="_blank"
                                     rel="noopener noreferrer"
                                     fullWidth
                                 >

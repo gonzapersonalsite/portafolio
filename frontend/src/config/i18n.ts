@@ -178,6 +178,10 @@ const resources = {
                     render: {
                         description: 'Manage backend deployments, logs, and environment variables for the Spring Boot application.',
                         action: 'Go to Render'
+                    },
+                    uptimeRobot: {
+                        description: 'Monitor backend availability and uptime statistics. Keeps the backend awake.',
+                        action: 'Go to UptimeRobot'
                     }
                 },
                 emptyState: {
@@ -404,6 +408,10 @@ const resources = {
                     render: {
                         description: 'Gestiona los despliegues del backend, registros y variables de entorno para la aplicación Spring Boot.',
                         action: 'Ir a Render'
+                    },
+                    uptimeRobot: {
+                        description: 'Monitoriza la disponibilidad y estadísticas del backend. Mantiene el backend despierto.',
+                        action: 'Ir a UptimeRobot'
                     }
                 },
                 emptyState: {
