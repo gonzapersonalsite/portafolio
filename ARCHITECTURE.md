@@ -1,5 +1,13 @@
 # 🏗️ Architecture Guide
 
+[![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react)](https://react.dev/)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.2-6DB33F?logo=springboot)](https://spring.io/projects/spring-boot)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+[![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk)](https://openjdk.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)](https://www.postgresql.org/)
+[![Swagger](https://img.shields.io/badge/Swagger-OpenAPI_3.0-yellow?logo=swagger)](https://swagger.io/)
+[![Status](https://img.shields.io/badge/Status-Proprietary-red.svg)](#-license)
+
 🇺🇸 **English** | [🇪🇸 Español](docs/es/ARCHITECTURE.md)
 
 This document provides a detailed analysis of the architectural patterns, design principles, and technology decisions for the Portfolio project. For deployment, infrastructure, and environment configuration, see the [Operations Guide](OPERATIONS.md).
@@ -45,8 +53,9 @@ The backend automatically generates interactive documentation using **Swagger/Op
 
 **© 2026 Gonzalo Martínez García. All rights reserved.**
 
-This architectural design and implementation is **proprietary information**.
-- **Unauthorized copying**, reproduction, or use of this documentation or the associated software is strictly prohibited.
+This software is **proprietary** and is provided for **evaluation purposes only**.
+- **Unauthorized copying**, modification, distribution, or use of this software, via any medium, is strictly prohibited.
+- **Personal use for other portfolios is not allowed.**
 - See the [LICENSE](LICENSE) file for full terms and conditions.
 
 ---
