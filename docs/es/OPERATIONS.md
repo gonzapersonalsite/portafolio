@@ -6,7 +6,7 @@
 [![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk)](https://openjdk.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)](https://www.postgresql.org/)
 [![Swagger](https://img.shields.io/badge/Swagger-OpenAPI_3.0-yellow?logo=swagger)](https://swagger.io/)
-[![Status](https://img.shields.io/badge/Status-Proprietario-red.svg)](#-licencia)
+[![License: Evaluation Only](https://img.shields.io/badge/License-Evaluation--Only-red)](../../LICENSE)
 
 [🇺🇸 English](../../OPERATIONS.md) | 🇪🇸 **Español**
 
