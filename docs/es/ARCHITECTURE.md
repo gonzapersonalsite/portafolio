@@ -48,3 +48,8 @@ El backend genera automáticamente documentación interactiva usando **Swagger/O
 Este diseño arquitectónico e implementación es **información propietaria**.
 - **Queda estrictamente prohibida la copia**, reproducción o uso no autorizado de esta documentación o el software asociado.
 - Ver el archivo [LICENSE](../../LICENSE) para los términos y condiciones completos.
+
+---
+
+**Desarrollado por Gonzalo Martínez García**  
+*Full Stack Developer | Software Engineering & Innovation*

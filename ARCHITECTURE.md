@@ -48,3 +48,8 @@ The backend automatically generates interactive documentation using **Swagger/Op
 This architectural design and implementation is **proprietary information**.
 - **Unauthorized copying**, reproduction, or use of this documentation or the associated software is strictly prohibited.
 - See the [LICENSE](LICENSE) file for full terms and conditions.
+
+---
+
+**Developed by Gonzalo Martínez García**  
+*Full Stack Developer | Software Engineering & Innovation*

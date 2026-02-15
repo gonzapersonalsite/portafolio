@@ -66,3 +66,8 @@ Este software es **propietario** y se proporciona **exclusivamente para fines de
 - **Queda estrictamente prohibida la copia**, modificación, distribución o uso no autorizado de este software por cualquier medio.
 - **No se permite el uso personal para otros portafolios.**
 - Ver el archivo [LICENSE](../../LICENSE) para los términos y condiciones completos.
+
+---
+
+**Desarrollado por Gonzalo Martínez García**  
+*Full Stack Developer | Software Engineering & Innovation*

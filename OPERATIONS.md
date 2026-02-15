@@ -66,3 +66,8 @@ This software is **proprietary** and is provided for **evaluation purposes only*
 - **Unauthorized copying**, modification, distribution, or use of this software, via any medium, is strictly prohibited.
 - **Personal use for other portfolios is not allowed.**
 - See the [LICENSE](LICENSE) file for full terms and conditions.
+
+---
+
+**Developed by Gonzalo Martínez García**  
+*Full Stack Developer | Software Engineering & Innovation*
