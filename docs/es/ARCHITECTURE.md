@@ -2,7 +2,7 @@
 
 [🇺🇸 English](../../ARCHITECTURE.md) | 🇪🇸 **Español**
 
-Este documento proporciona un análisis detallado de los patrones arquitectónicos, principios de diseño y decisiones tecnológicas para el proyecto Portfolio. Para despliegue, infraestructura y configuración de entorno, ver la [Guía de Operaciones](OPERATIONS.md).
+Este documento proporciona un análisis detallado de los patrones arquitectónicos, principios de diseño y decisiones tecnológicas para el proyecto Portfolio. Para despliegue, infraestructura y configuración de entorno, ver la [Guía de Operaciones](../../OPERATIONS.md).
 
 ---
 
@@ -30,6 +30,15 @@ El backend genera automáticamente documentación interactiva usando **Swagger/O
 - **Endpoint:** `/swagger-ui/index.html`
 - **Especificación:** `/v3/api-docs`
 
+### Diseño de API REST
+- Rutas basadas en recursos bajo el prefijo `/api`, siguiendo convenciones **RESTful**.
+- Segmentación por responsabilidad:
+  - Público: `/api/public` — solo lectura mediante **GET**.
+  - Administración: `/api/admin` — **GET** (lectura), **POST** (creación, 201), **PUT** (actualización idempotente), **DELETE** (eliminación, 204).
+  - Autenticación: `/api/auth` — operaciones idempotentes y de sesión según el verbo (p. ej., `POST /login`, `GET /validate`).
+- Códigos de estado estándar: 200 en lecturas/actualizaciones exitosas, 201 en creaciones, 204 en eliminaciones.
+- La lista completa de endpoints puede evolucionar y se consulta siempre en Swagger. Esta guía no duplica endpoints específicos para evitar discrepancias.
+
 ---
 
 ## 🚫 Aviso Legal
@@ -38,4 +47,4 @@ El backend genera automáticamente documentación interactiva usando **Swagger/O
 
 Este diseño arquitectónico e implementación es **información propietaria**.
 - **Queda estrictamente prohibida la copia**, reproducción o uso no autorizado de esta documentación o el software asociado.
-- Ver el archivo `LICENSE` para los términos y condiciones completos.
+- Ver el archivo [LICENSE](../../LICENSE) para los términos y condiciones completos.

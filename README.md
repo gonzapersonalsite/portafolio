@@ -86,7 +86,7 @@ docker compose up -d
 
 ## 📝 License
 
-This project is proprietary software. All rights reserved. See the `LICENSE` file for details.
+This project is proprietary software. All rights reserved. See the [LICENSE](LICENSE) file for details.
 
 ---
 

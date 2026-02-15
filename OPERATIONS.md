@@ -65,4 +65,4 @@ Ensure your `.env` file is properly configured with the variables listed above.
 This software is **proprietary** and is provided for **evaluation purposes only**.
 - **Unauthorized copying**, modification, distribution, or use of this software, via any medium, is strictly prohibited.
 - **Personal use for other portfolios is not allowed.**
-- See the `LICENSE` file for full terms and conditions.
+- See the [LICENSE](LICENSE) file for full terms and conditions.

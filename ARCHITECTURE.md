@@ -30,6 +30,15 @@ The backend automatically generates interactive documentation using **Swagger/Op
 - **Endpoint:** `/swagger-ui/index.html`
 - **Specification:** `/v3/api-docs`
 
+### REST API Design
+- Resource-based routes under `/api`, adhering to **RESTful** conventions.
+- Responsibility split:
+  - Public: `/api/public` — read-only via **GET**.
+  - Admin: `/api/admin` — **GET** (read), **POST** (create, 201), **PUT** (idempotent update), **DELETE** (delete, 204).
+  - Auth: `/api/auth` — session and idempotent operations according to the HTTP verb (e.g., `POST /login`, `GET /validate`).
+- Standard status codes: 200 for successful reads/updates, 201 for creations, 204 for deletions.
+- The full set of endpoints evolves and is always sourced from Swagger. This guide intentionally avoids duplicating specific endpoint lists to prevent drift.
+
 ---
 
 ## 🚫 Legal Notice
@@ -38,4 +47,4 @@ The backend automatically generates interactive documentation using **Swagger/Op
 
 This architectural design and implementation is **proprietary information**.
 - **Unauthorized copying**, reproduction, or use of this documentation or the associated software is strictly prohibited.
-- See the `LICENSE` file for full terms and conditions.
+- See the [LICENSE](LICENSE) file for full terms and conditions.

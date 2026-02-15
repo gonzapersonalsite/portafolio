@@ -65,4 +65,4 @@ Asegúrate de que tu archivo `.env` esté configurado correctamente con las vari
 Este software es **propietario** y se proporciona **exclusivamente para fines de evaluación**.
 - **Queda estrictamente prohibida la copia**, modificación, distribución o uso no autorizado de este software por cualquier medio.
 - **No se permite el uso personal para otros portafolios.**
-- Ver el archivo `LICENSE` para los términos y condiciones completos.
+- Ver el archivo [LICENSE](../../LICENSE) para los términos y condiciones completos.

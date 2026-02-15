@@ -60,7 +60,7 @@ El proyecto sigue una **Arquitectura Full Stack** moderna, priorizando escalabil
 - **Persistencia de Datos:** Gestión robusta de esquemas con Spring Data JPA y PostgreSQL.
 
 📖 **[Guía de Arquitectura](ARCHITECTURE.md)** — Patrones, decisiones de diseño y documentación de API.
-🛠️ **[Guía de Operaciones](OPERATIONS.md)** — Despliegue, CI/CD, variables de entorno y configuración local.
+🛠️ **[Guía de Operaciones](../../OPERATIONS.md)** — Despliegue, CI/CD, variables de entorno y configuración local.
 
 ---
 
@@ -70,7 +70,7 @@ Este proyecto está contenerizado para facilitar el despliegue y desarrollo loca
 
 ### Prerrequisitos
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado y ejecutándose.
-- Archivo `.env` configurado con las variables de entorno necesarias (ver `OPERATIONS.md`).
+- Archivo `.env` configurado con las variables de entorno necesarias (ver `../../OPERATIONS.md`).
 
 ### Iniciar la Aplicación
 ```bash
@@ -86,7 +86,7 @@ docker compose up -d
 
 ## 📝 Licencia
 
-Este proyecto es software propietario. Todos los derechos reservados. Ver el archivo `LICENSE` para más detalles.
+Este proyecto es software propietario. Todos los derechos reservados. Ver el archivo [LICENSE](../../LICENSE) para más detalles.
 
 ---
 
