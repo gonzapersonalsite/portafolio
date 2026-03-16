@@ -31,6 +31,12 @@ public class SecurityConfig {
     
     @Value("${cors.allowed-origins}")
     private String allowedOrigins;
+    @Value("${cors.allowed-methods:GET,POST,PUT,DELETE,OPTIONS}")
+    private String allowedMethods;
+    @Value("${cors.allowed-headers:Authorization,Content-Type,Accept,Origin,X-Requested-With}")
+    private String allowedHeaders;
+    @Value("${cors.allow-credentials:true}")
+    private boolean allowCredentials;
     
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -71,9 +77,9 @@ public class SecurityConfig {
         
         List<String> origins = Arrays.asList(allowedOrigins.split(","));
         configuration.setAllowedOrigins(origins);
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowedMethods(Arrays.asList(allowedMethods.split(",")));
+        configuration.setAllowedHeaders(Arrays.asList(allowedHeaders.split(",")));
+        configuration.setAllowCredentials(allowCredentials);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

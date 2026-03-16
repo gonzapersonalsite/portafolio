@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { AxiosAdapter } from 'axios';
+import type { AxiosAdapter, AxiosResponse } from 'axios';
 import { requestCache } from '@/utils/requestCache';
 import { notificationEvents } from '@/utils/notificationEvents';
 import i18n from '@/config/i18n';
@@ -11,7 +11,7 @@ const SLOW_CONNECTION_THRESHOLD = 3000; // Aumentado a 3s para evitar avisos fal
 const REQUEST_TIMEOUT = 60000; // Reducido a 60s (suficiente para cold start)
 
 // Almacén para deduplicación de peticiones en vuelo
-const pendingRequests = new Map<string, Promise<any>>();
+const pendingRequests = new Map<string, Promise<unknown>>();
 let handlingUnauthorized = false;
 
 const apiClient = axios.create({
@@ -57,16 +57,16 @@ const cacheAdapter: AxiosAdapter = async (config) => {
                     config,
                     request: {}
                 };
-            } catch (error) {
+            } catch {
                 // Si la petición original falló, intentamos de nuevo aquí
             }
         }
     }
 
     // 3. Lógica de Petición Real con Reintentos
-    const executeRequest = async (): Promise<any> => {
-        let lastError;
-        let slowConnectionTimer: any = null;
+    const executeRequest = async (): Promise<AxiosResponse<unknown>> => {
+        let lastError: unknown;
+        let slowConnectionTimer: number | null = null;
 
         for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
             try {
@@ -99,13 +99,14 @@ const cacheAdapter: AxiosAdapter = async (config) => {
                 }
                 
                 return response;
-            } catch (error: any) {
+            } catch (error: unknown) {
                 if (slowConnectionTimer) clearTimeout(slowConnectionTimer);
                 lastError = error;
                 
-                const isNetworkError = !error.response;
-                const isTimeout = error.code === 'ECONNABORTED';
-                const isRetryableStatus = error.response && [502, 503, 504].includes(error.response.status);
+                const isAxios = axios.isAxiosError(error);
+                const isNetworkError = isAxios && !error.response;
+                const isTimeout = isAxios && error.code === 'ECONNABORTED';
+                const isRetryableStatus = isAxios && error.response && [502, 503, 504].includes(error.response.status);
 
                 if (!(isNetworkError || isTimeout || isRetryableStatus) || attempt === MAX_RETRIES) {
                     throw error;

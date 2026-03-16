@@ -1,4 +1,4 @@
-interface CacheItem<T = any> {
+interface CacheItem<T> {
     data: T;
     timestamp: number;
 }
@@ -62,7 +62,7 @@ export const requestCache = {
                 try {
                     const itemStr = localStorage.getItem(key);
                     if (itemStr) {
-                        const item: CacheItem = JSON.parse(itemStr);
+                        const item: CacheItem<unknown> = JSON.parse(itemStr);
                         if (now - item.timestamp > CACHE_DURATION) {
                             localStorage.removeItem(key);
                         }

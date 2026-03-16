@@ -174,7 +174,6 @@ const ProjectsManagement: React.FC = () => {
                                         width: '100%',
                                         objectFit: 'cover'
                                     }}
-                                    // @ts-ignore
                                     referrerPolicy="no-referrer"
                                 />
                                 <Chip

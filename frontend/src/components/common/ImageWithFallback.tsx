@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Box, Skeleton } from '@mui/material';
 import type { BoxProps } from '@mui/material';
 
@@ -9,6 +9,7 @@ interface ImageWithFallbackProps extends BoxProps<'img'> {
     type?: 'profile' | 'project' | 'general';
     aspectRatio?: string;
     objectPosition?: string;
+    referrerPolicy?: React.HTMLAttributeReferrerPolicy;
 }
 
 const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
@@ -19,22 +20,16 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
     aspectRatio,
     objectPosition = 'center',
     sx,
+    referrerPolicy,
     ...props
 }) => {
-    const [imgSrc, setImgSrc] = useState<string | undefined>(src);
     const [hasError, setHasError] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        setImgSrc(src);
-        setHasError(false);
-        setIsLoading(true);
-    }, [src]);
-
     // Check if image is already loaded in cache when component mounts or src changes
     const onImageRef = (img: HTMLImageElement | null) => {
-        if (img && img.complete) {
-            setIsLoading(false);
+        if (img) {
+            setIsLoading(!img.complete);
         }
     };
 
@@ -50,12 +45,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
     const handleError = () => {
         if (!hasError) {
             setHasError(true);
-            setImgSrc(getFallbackUrl());
-            // If error occurs, we consider it loaded (fallback loaded)
-            // But actually the fallback image needs to load too. 
-            // We'll let the onLoad handler of the new src handle it?
-            // Or just force loading false to show something.
-            setIsLoading(false); 
+            setIsLoading(false);
         }
     };
 
@@ -63,7 +53,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
         setIsLoading(false);
     };
 
-    const finalSrc = imgSrc || getFallbackUrl();
+    const finalSrc = hasError ? getFallbackUrl() : (src || getFallbackUrl());
 
     // If aspectRatio is provided, we use a container to reserve space
     if (aspectRatio) {
@@ -78,7 +68,6 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
                     },
                     ...(Array.isArray(sx) ? sx : [sx])
                 ]} 
-                {...(props as any)}
             >
                 {isLoading && (
                     <Skeleton
@@ -95,6 +84,8 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
                     onError={handleError}
                     onLoad={handleLoad}
                     ref={onImageRef}
+                    referrerPolicy={referrerPolicy}
+                    {...props}
                     sx={{
                         position: 'absolute',
                         top: 0,
@@ -123,8 +114,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
                     overflow: 'hidden' 
                 },
                 ...(Array.isArray(sx) ? sx : [sx])
-            ]} 
-            {...(props as any)}
+            ]}
         >
              {isLoading && (
                 <Skeleton
@@ -141,6 +131,8 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
                 onError={handleError}
                 onLoad={handleLoad}
                 ref={onImageRef}
+                referrerPolicy={referrerPolicy}
+                {...props}
                 sx={{
                     width: '100%',
                     height: 'auto',

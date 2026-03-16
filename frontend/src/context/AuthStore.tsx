@@ -54,7 +54,7 @@ export const useAuthStore = create<AuthState>()(
                     }
 
                     return isValid;
-                } catch (error) {
+                } catch {
                     get().logout();
                     return false;
                 }

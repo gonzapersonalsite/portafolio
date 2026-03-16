@@ -3,12 +3,13 @@ import { Container, Paper, Typography, TextField, Button, Box, Alert } from '@mu
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/context/AuthStore';
-import { authService } from '@/services/authService';
+import { authService, type LoginCredentials } from '@/services/authService';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '@/components/common/LanguageSelector';
+import axios from 'axios';
 
 const LoginPage: React.FC = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm<LoginCredentials>();
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const login = useAuthStore((state) => state.login);
@@ -20,15 +21,15 @@ const LoginPage: React.FC = () => {
         setError(null);
     }, [i18n.language]);
 
-    const onSubmit = async (data: any) => {
+    const onSubmit = async (data: LoginCredentials) => {
         try {
             setLoading(true);
             setError(null);
             const responseData = await authService.login(data);
             login(responseData);
             navigate('/admin');
-        } catch (err: any) {
-            if (err.response && err.response.status === 401) {
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err) && err.response && err.response.status === 401) {
                 setError(t('admin.invalidCredentials', 'Invalid credentials'));
             } else {
                 setError(t('common.error', 'An error occurred. Please try again.'));

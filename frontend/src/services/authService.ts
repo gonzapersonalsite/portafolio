@@ -1,8 +1,13 @@
 import apiClient from './apiClient';
 import type { AuthResponse } from '../types';
 
+export interface LoginCredentials {
+    username: string;
+    password: string;
+}
+
 export const authService = {
-    login: async (credentials: any): Promise<AuthResponse> => {
+    login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
         const response = await apiClient.post<AuthResponse>('/auth/login', credentials);
         return response.data;
     },

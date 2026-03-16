@@ -19,9 +19,8 @@ const RichTextRenderer: React.FC<RichTextRendererProps> = ({ text, variant = 'bo
     // Normalize newlines: handle \r\n, \n, and escaped \\n (common in JSON from backend)
     let normalizedText = text.replace(/\\n/g, '\n');
     
-    // Recovery for data with collapsed newlines (e.g. from aggressive sanitization)
-    // Looks for " ● " pattern in the middle of text and forces a newline before the bullet
-    normalizedText = normalizedText.replace(/([^\n])\s+([●•\-\*◦▪])/g, '$1\n$2');
+    // Recovery for data with collapsed newlines: insert newline before bullet markers found inline
+    normalizedText = normalizedText.replace(/([^\n])\s+([●•*◦▪-])/g, '$1\n$2');
 
     const lines = normalizedText.split(/\r?\n/);
     
@@ -62,9 +61,8 @@ const RichTextRenderer: React.FC<RichTextRendererProps> = ({ text, variant = 'bo
 
     lines.forEach((line, index) => {
         const trimmed = line.trim();
-        // Detect bullets: starts with ●, •, -, *, ◦, ▪ followed by optional space
-        // We capture the text content in group 2
-        const bulletMatch = trimmed.match(/^([●•\-\*◦▪])\s*(.*)/);
+        // Detect bullets: starts with ●, •, *, ◦, ▪, - followed by optional space; capture text in group 2
+        const bulletMatch = trimmed.match(/^([●•*◦▪-])\s*(.*)/);
         
         if (bulletMatch) {
             // Add clean text to current list
@@ -73,15 +71,7 @@ const RichTextRenderer: React.FC<RichTextRendererProps> = ({ text, variant = 'bo
             // Not a bullet
             flushList(index);
             
-            // If empty line, render a spacer or just ignore (HTML collapses whitespace)
-            // But if it's a paragraph break, we want some space.
             if (!trimmed) {
-                // Optional: add a spacer if strictly needed, or let margin handle it
-                // For now, ignore empty lines to avoid double spacing, 
-                // unless we want to preserve manual spacing.
-                // Let's preserve empty lines as <br /> equivalent if desired, 
-                // but usually stripping them is cleaner for "professional" look unless user double enters.
-                // If the user wants a paragraph break, they usually leave an empty line.
                 if (lines.length > 1 && index > 0 && lines[index-1].trim() !== '') {
                      elements.push(<Box key={`spacer-${index}`} sx={{ height: 8 }} />);
                 }

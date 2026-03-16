@@ -71,7 +71,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                         width: '100%',
                         backgroundColor: 'rgba(0,0,0,0.05)'
                     }}
-                    // @ts-ignore
                     referrerPolicy="no-referrer"
                 />
                 <Chip
