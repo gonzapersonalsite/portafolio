@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     paths:
       - 'backend/portfolio-backend/**'
+  workflow_dispatch:
 
 jobs:
   test_and_deploy:
