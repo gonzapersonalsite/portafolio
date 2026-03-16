@@ -24,9 +24,20 @@ El proyecto está diseñado para alta disponibilidad utilizando servicios modern
 - **Base de Datos:** [Neon](https://neon.tech) (PostgreSQL Serverless).
 
 ### 🚀 Pipeline CI/CD
-El despliegue está completamente automatizado vía integración con GitHub:
-1. **Frontend:** Construcción y despliegue automático en Vercel al hacer push a `main`.
-2. **Backend:** Render dispara una construcción Docker usando el `Dockerfile` proporcionado en cada actualización.
+Flujo actual de despliegue con control de calidad previo:
+- **Frontend:** Construcción y despliegue automático en Vercel al hacer push a `main`.
+- **Backend (renderizado mediante contenedor):**
+  - GitHub Actions ejecuta los tests de backend al hacer push a `main` en `backend/portfolio-backend/**`.
+  - Si los tests pasan, CI invoca el **Deploy Hook** privado de Render para iniciar el deploy.
+  - En Render, el servicio tiene **Auto‑Deploy desactivado**; solo se despliega cuando el hook es llamado.
+  - El `Dockerfile` de backend compila el artefacto con `./gradlew build -x test` para builds rápidos (los tests ya corren en CI).
+
+Detalles del pipeline:
+- Workflow: `.github/workflows/backend-ci.yml`
+- Secret requerido en GitHub: `RENDER_DEPLOY_HOOK_URL` (Deploy Hook del servicio en Render)
+- Configuración en Render:
+  - Settings → Build & Deploy → Auto‑Deploy = Off
+  - Deploy Hook: copiar y usar en el secret de GitHub
 
 ---
 
@@ -50,6 +61,16 @@ Variables clave requeridas para producción:
 - `CORS_ORIGINS`: Dominio frontend permitido.
 - `JWT_EXPIRATION`: Tiempo de expiración del token JWT (ms).
 - `RATE_LIMIT_ENABLED`: Habilitar/deshabilitar límite de tasa.
+- `SPRING_PROFILES_ACTIVE`: Debe ser `prod` en producción para desactivar el seeder.
+
+Seguridad y acceso:
+- Todas las rutas bajo `/api/admin/**` requieren rol `ADMIN`.
+- Autenticación basada en JWT; los tokens no se almacenan en servidor (stateless).
+- Los tests no incluyen secretos reales; cualquier clave en `src/test/resources` es solo de ámbito test.
+
+Seeder:
+- El seeder de datos está anotado con perfil `!prod`; no se ejecuta en producción.
+- En entornos de producción define `SPRING_PROFILES_ACTIVE=prod`.
 
 ---
 
@@ -63,6 +84,18 @@ docker compose up -d
 ```
 
 Asegúrate de que tu archivo `.env` esté configurado correctamente con las variables listadas arriba.
+
+### Tests locales (backend)
+- Ejecutar tests: `./gradlew test`
+- Ejecutar app: `./gradlew bootRun`
+- Generar JAR: `./gradlew build -x test`
+
+### Suite de seguridad (backend)
+- Ubicación: `backend/portfolio-backend/src/test/java/com/gonzalomartinez/portfolio_backend/infrastructure/web/admin/`
+- Cobertura mínima:
+  - 401 sin autenticación en `/api/admin/**`
+  - 403 con usuario autenticado sin rol `ADMIN`
+  - 2xx con `ADMIN` y verificación de invocación al servicio
 
 ---
 

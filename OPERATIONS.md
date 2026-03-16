@@ -24,9 +24,20 @@ The project is designed for high availability using modern cloud-native services
 - **Database:** [Neon](https://neon.tech) (Serverless PostgreSQL).
 
 ### 🚀 CI/CD Pipeline
-The deployment is fully automated via GitHub integration:
-1. **Frontend:** Automatic build and deployment on Vercel upon pushing to `main`.
-2. **Backend:** Render triggers a Docker build using the provided `Dockerfile` on every update.
+Current deployment flow with pre‑deployment quality gate:
+- **Frontend:** Automatic build and deploy on Vercel upon pushing to `main`.
+- **Backend (container on Render):**
+  - GitHub Actions runs backend tests on pushes to `main` within `backend/portfolio-backend/**`.
+  - If tests pass, CI invokes the private **Deploy Hook** for the Render service to start the deploy.
+  - In Render, the service has **Auto‑Deploy disabled**; it only deploys when the hook is called.
+  - The backend `Dockerfile` builds with `./gradlew build -x test` for fast builds (tests already run in CI).
+
+Pipeline details:
+- Workflow: `.github/workflows/backend-ci.yml`
+- Required GitHub secret: `RENDER_DEPLOY_HOOK_URL` (the service’s Deploy Hook from Render)
+- Render configuration:
+  - Settings → Build & Deploy → Auto‑Deploy = Off
+  - Deploy Hook: copy and store as a GitHub secret
 
 ---
 
@@ -50,6 +61,16 @@ Key variables required for production:
 - `CORS_ORIGINS`: Allowed frontend domain.
 - `JWT_EXPIRATION`: JWT token expiration time (ms).
 - `RATE_LIMIT_ENABLED`: Enable/disable rate limiting.
+- `SPRING_PROFILES_ACTIVE`: Must be `prod` in production to disable the seeder.
+
+Security and access:
+- All routes under `/api/admin/**` require role `ADMIN`.
+- Stateless JWT authentication; tokens are not stored on the server.
+- Tests do not include real secrets; any keys in `src/test/resources` are for test scope only.
+
+Seeder:
+- Data seeder is annotated with profile `!prod`; it will not run in production.
+- Set `SPRING_PROFILES_ACTIVE=prod` in production environments.
 
 ---
 
@@ -63,6 +84,18 @@ docker compose up -d
 ```
 
 Ensure your `.env` file is properly configured with the variables listed above.
+
+### Local tests (backend)
+- Run tests: `./gradlew test`
+- Run app: `./gradlew bootRun`
+- Build JAR: `./gradlew build -x test`
+
+### Security test suite (backend)
+- Location: `backend/portfolio-backend/src/test/java/com/gonzalomartinez/portfolio_backend/infrastructure/web/admin/`
+- Minimal coverage:
+  - 401 when unauthenticated for `/api/admin/**`
+  - 403 for authenticated user without `ADMIN` role
+  - 2xx with `ADMIN` role and service invocation verified
 
 ---
 
