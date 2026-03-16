@@ -13,7 +13,7 @@
 **Portafolio Profesional** es una solución de software integral diseñada para la gestión dinámica de contenido y la presentación profesional. Esta aplicación Full Stack permite a los desarrolladores gestionar su perfil profesional, proyectos y habilidades a través de una interfaz administrativa segura, mientras ofrece una experiencia inmersiva a los visitantes.
 
 **Demo en Vivo:** [https://mi-portafolio-gonzalo.vercel.app/](https://mi-portafolio-gonzalo.vercel.app/)  
-**Documentación API:** [https://portafolio-9uob.onrender.com/swagger-ui/index.html/](https://portafolio-9uob.onrender.com/swagger-ui/index.html/)
+**Documentación API:** [https://portafolio-9uob.onrender.com/swagger-ui/index.html](https://portafolio-9uob.onrender.com/swagger-ui/index.html)
 
 ---
 

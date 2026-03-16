@@ -13,7 +13,7 @@
 **Professional Portfolio** is a comprehensive software solution designed for dynamic content management and professional career showcasing. This Full Stack application allows developers to manage their professional profile, projects, and skills through a secure administrative interface while providing an immersive experience for visitors.
 
 **Live Demo:** [https://mi-portafolio-gonzalo.vercel.app/](https://mi-portafolio-gonzalo.vercel.app/)  
-**API Documentation:** [https://portafolio-9uob.onrender.com/swagger-ui/index.html/](https://portafolio-9uob.onrender.com/swagger-ui/index.html/)
+**API Documentation:** [https://portafolio-9uob.onrender.com/swagger-ui/index.html](https://portafolio-9uob.onrender.com/swagger-ui/index.html)
 
 ---
 
