@@ -7,6 +7,10 @@
 **/.idea
 **/.vscode
 
+# Database Dumps
+*.sql
+backup.sql
+
 # Environment Variables
 **/.env
 **/.env.*
