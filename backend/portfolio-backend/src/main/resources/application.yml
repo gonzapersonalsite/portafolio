@@ -79,3 +79,14 @@ management:
   endpoint:
     health:
       show-details: always
+      probes:
+        enabled: false
+  health:
+    db:
+      enabled: false
+    datasource:
+      enabled: false
+    livenessState:
+      enabled: false
+    readinessState:
+      enabled: false
