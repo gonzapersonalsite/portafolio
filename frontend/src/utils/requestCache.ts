@@ -4,8 +4,8 @@ interface CacheItem<T> {
 }
 
 const CACHE_PREFIX = 'api_cache_';
-// 7 days in milliseconds (7 * 24 * 60 * 60 * 1000)
-const CACHE_DURATION = 7 * 24 * 60 * 60 * 1000;
+// 24 hours in milliseconds (24 * 60 * 60 * 1000)
+const CACHE_DURATION = 24 * 60 * 60 * 1000;
 
 export const requestCache = {
     get: <T>(key: string): T | null => {
