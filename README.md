@@ -43,7 +43,7 @@
 - **UI Framework:** Material UI (MUI) with deep theme customization
 - **Backend:** Java 21 + Spring Boot 3.4
 - **Security:** Spring Security & JWT (JSON Web Tokens)
-- **Database:** PostgreSQL (Neon Serverless)
+- **Database:** PostgreSQL (Aiven)
 - **State Management:** Zustand
 - **API Documentation:** Swagger / OpenAPI 3.0
 - **Build Tools:** Gradle (Backend) & NPM (Frontend)

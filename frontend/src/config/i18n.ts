@@ -171,9 +171,9 @@ const resources = {
                         description: 'Manage frontend deployments, domains, and production environment variables.',
                         action: 'Go to Vercel'
                     },
-                    neon: {
-                        description: 'Manage the serverless PostgreSQL database. View connection strings, tables, and data.',
-                        action: 'Go to Neon Console'
+                    aiven: {
+                        description: 'Manage Aiven PostgreSQL database, users, and connection settings.',
+                        action: 'Go to Aiven Console'
                     },
                     render: {
                         description: 'Manage backend deployments, logs, and environment variables for the Spring Boot application.',
@@ -405,9 +405,9 @@ const resources = {
                         description: 'Gestiona los despliegues del frontend, dominios y variables de entorno de producción.',
                         action: 'Ir a Vercel'
                     },
-                    neon: {
-                        description: 'Gestiona la base de datos PostgreSQL serverless. Ver cadenas de conexión, tablas y datos.',
-                        action: 'Ir a Consola Neon'
+                    aiven: {
+                        description: 'Gestiona la base de datos PostgreSQL en Aiven, usuarios y configuración de conexión.',
+                        action: 'Ir a Consola Aiven'
                     },
                     render: {
                         description: 'Gestiona los despliegues del backend, registros y variables de entorno para la aplicación Spring Boot.',

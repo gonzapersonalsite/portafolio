@@ -21,7 +21,7 @@ El proyecto está diseñado para alta disponibilidad utilizando servicios modern
 ### Proveedores Cloud
 - **Hosting Frontend:** [Vercel](https://vercel.app) (Optimizado para aplicaciones React/Vite).
 - **Hosting Backend:** [Render](https://render.com) (Despliegue basado en contenedores).
-- **Base de Datos:** [Neon](https://neon.tech) (PostgreSQL Serverless).
+- **Base de Datos:** [Aiven](https://aiven.io/) (PostgreSQL).
 
 ### 🚀 Pipeline CI/CD
 Flujo actual de despliegue con control de calidad previo:
@@ -52,9 +52,9 @@ Variables clave requeridas para producción:
 - `VITE_EMAILJS_PUBLIC_KEY`: Clave pública de EmailJS.
 
 ### Backend
-- `SPRING_DATASOURCE_URL`: Cadena de conexión PostgreSQL de Neon.
-- `SPRING_DATASOURCE_USERNAME`: Usuario de base de datos Neon.
-- `SPRING_DATASOURCE_PASSWORD`: Contraseña de base de datos Neon.
+- `SPRING_DATASOURCE_URL`: Cadena de conexión PostgreSQL de Aiven.
+- `SPRING_DATASOURCE_USERNAME`: Usuario de base de datos Aiven.
+- `SPRING_DATASOURCE_PASSWORD`: Contraseña de base de datos Aiven.
 - `ADMIN_USERNAME`: Nombre de usuario administrador por defecto.
 - `ADMIN_PASSWORD`: Contraseña de administrador por defecto.
 - `JWT_SECRET`: Clave secreta para la generación segura de tokens.

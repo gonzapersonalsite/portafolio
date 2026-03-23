@@ -10,6 +10,7 @@
 # Database Dumps
 *.sql
 backup.sql
+backend/backups/*
 
 # Environment Variables
 **/.env

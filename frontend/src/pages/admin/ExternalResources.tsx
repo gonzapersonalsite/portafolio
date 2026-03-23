@@ -43,12 +43,12 @@ const ExternalResources: React.FC = () => {
             actionText: t('admin.resources.vercel.action')
         },
         {
-            title: 'Neon Database',
-            url: 'https://console.neon.tech/app/projects/green-star-02988068?database=neondb',
-            icon: <StorageIcon sx={{ fontSize: 40, color: '#00e599' }} />,
-            description: t('admin.resources.neon.description'),
-            tags: ['Database', 'PostgreSQL', 'Serverless'],
-            actionText: t('admin.resources.neon.action')
+            title: 'Aiven Database',
+            url: 'https://console.aiven.io/account/a5a16492ec6d/project/gonzalomartinezg2001-c53f',
+            icon: <StorageIcon sx={{ fontSize: 40, color: '#ff4b4b' }} />,
+            description: t('admin.resources.aiven.description'),
+            tags: ['Database', 'PostgreSQL', 'Cloud'],
+            actionText: t('admin.resources.aiven.action')
         },
         {
             title: 'Render Dashboard',
