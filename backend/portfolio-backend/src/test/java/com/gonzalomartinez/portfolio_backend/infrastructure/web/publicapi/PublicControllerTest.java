@@ -6,6 +6,7 @@ import com.gonzalomartinez.portfolio_backend.application.service.ExperienceServi
 import com.gonzalomartinez.portfolio_backend.application.service.ProjectService;
 import com.gonzalomartinez.portfolio_backend.application.service.SkillService;
 import com.gonzalomartinez.portfolio_backend.application.service.ProfileService;
+import com.gonzalomartinez.portfolio_backend.application.dto.ProfileDto;
 import com.gonzalomartinez.portfolio_backend.application.service.SpokenLanguageService;
 import com.gonzalomartinez.portfolio_backend.domain.exception.ResourceNotFoundException;
 import com.gonzalomartinez.portfolio_backend.domain.model.Profile;
@@ -14,7 +15,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -35,11 +36,11 @@ class PublicControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean private SkillService skillService;
-    @MockBean private ExperienceService experienceService;
-    @MockBean private ProjectService projectService;
-    @MockBean private ProfileService profileService;
-    @MockBean private SpokenLanguageService spokenLanguageService;
+    @MockitoBean private SkillService skillService;
+    @MockitoBean private ExperienceService experienceService;
+    @MockitoBean private ProjectService projectService;
+    @MockitoBean private ProfileService profileService;
+    @MockitoBean private SpokenLanguageService spokenLanguageService;
 
     @Test
     void getSkills_Returns200() throws Exception {
@@ -53,7 +54,7 @@ class PublicControllerTest {
 
     @Test
     void getProfile_Returns200() throws Exception {
-        Mockito.when(profileService.getProfile()).thenReturn(Profile.builder().titleEn("t").titleEs("t").build());
+        Mockito.when(profileService.getProfile()).thenReturn(ProfileDto.builder().titleEn("t").titleEs("t").build());
 
         mockMvc.perform(get("/api/public/profile")
                         .accept(MediaType.APPLICATION_JSON))

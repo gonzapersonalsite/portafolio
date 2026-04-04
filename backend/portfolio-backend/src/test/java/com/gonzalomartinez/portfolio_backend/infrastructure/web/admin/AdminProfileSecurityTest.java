@@ -2,6 +2,7 @@ package com.gonzalomartinez.portfolio_backend.infrastructure.web.admin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gonzalomartinez.portfolio_backend.application.service.ProfileService;
+import com.gonzalomartinez.portfolio_backend.application.dto.ProfileDto;
 import com.gonzalomartinez.portfolio_backend.domain.model.Profile;
 import com.gonzalomartinez.portfolio_backend.infrastructure.security.SecurityConfig;
 import org.junit.jupiter.api.DisplayName;
@@ -10,7 +11,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,11 +28,11 @@ class AdminProfileSecurityTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @MockitoBean
     private ProfileService profileService;
 
     private String minimalProfileJson() throws Exception {
-        Profile p = Profile.builder().titleEn("Title").titleEs("Título").build();
+        ProfileDto p = ProfileDto.builder().titleEn("Title").titleEs("Título").build();
         return objectMapper.writeValueAsString(p);
     }
 
@@ -62,7 +63,7 @@ class AdminProfileSecurityTest {
     @DisplayName("Update profile succeeds (200) for ADMIN and invokes service")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void updateProfile_AdminRole_Returns200_AndInvokesService() throws Exception {
-        Mockito.when(profileService.updateProfile(Mockito.any(Profile.class)))
+        Mockito.when(profileService.updateProfile(Mockito.any(ProfileDto.class)))
                 .thenAnswer(inv -> inv.getArgument(0));
 
         mockMvc.perform(put("/api/admin/profile")
@@ -70,6 +71,6 @@ class AdminProfileSecurityTest {
                         .content(minimalProfileJson()))
                 .andExpect(status().isOk());
 
-        Mockito.verify(profileService, Mockito.times(1)).updateProfile(Mockito.any(Profile.class));
+        Mockito.verify(profileService, Mockito.times(1)).updateProfile(Mockito.any(ProfileDto.class));
     }
 }
