@@ -67,9 +67,6 @@ const ProjectsManagement: React.FC = () => {
                 technologies: parseCommaSeparatedString(data.technologies),
                 imageUrls: parseUrlStringToArray(data.imageUrls)
             };
-            
-            // Log payload for debugging
-            console.log('Sending project payload to backend:', JSON.stringify(payload, null, 2));
 
             if (editingProj) {
                 await adminService.updateProject(editingProj.id, payload);
