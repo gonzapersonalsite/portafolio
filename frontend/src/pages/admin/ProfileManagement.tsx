@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Box, Typography, Button, Paper, Grid, TextField,
+    Box, Typography, Button, Paper,
     CircularProgress, Tab, Tabs
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
@@ -8,6 +8,10 @@ import { useTranslation } from 'react-i18next';
 import { useNotification } from '@/context/NotificationContext';
 import { adminService } from '@/services/adminService';
 import type { Profile } from '@/types';
+import { HomeTab } from '@/components/admin/profile/HomeTab';
+import { AboutTab } from '@/components/admin/profile/AboutTab';
+import { GeneralCvTab } from '@/components/admin/profile/GeneralCvTab';
+import { PersonalSocialTab } from '@/components/admin/profile/PersonalSocialTab';
 
 const ProfileManagement: React.FC = () => {
     const { t } = useTranslation();
@@ -81,116 +85,10 @@ const ProfileManagement: React.FC = () => {
                 <Box sx={{ p: 4 }}>
                     {profile && (
                         <>
-                            {tabValue === 0 && (
-                                <Grid container spacing={3}>
-                                    <Grid size={12}>
-                                        <TextField name="imageUrl" label={t('admin.imageUrl')} value={profile.imageUrl} onChange={handleChange} fullWidth placeholder="https://..." />
-                                        <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                                            {t('admin.imageUrlHint')}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField name="greetingEn" label={`${t('admin.name')} (EN)`} value={profile.greetingEn} onChange={handleChange} fullWidth />
-                                    </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField name="greetingEs" label={`${t('admin.name')} (ES)`} value={profile.greetingEs} onChange={handleChange} fullWidth />
-                                    </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField name="titleEn" label={`${t('admin.title')} (EN)`} value={profile.titleEn} onChange={handleChange} fullWidth />
-                                    </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField name="titleEs" label={`${t('admin.title')} (ES)`} value={profile.titleEs} onChange={handleChange} fullWidth />
-                                    </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField name="subtitleEn" label={`${t('admin.subtitle')} (EN)`} value={profile.subtitleEn} onChange={handleChange} fullWidth />
-                                    </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField name="subtitleEs" label={`${t('admin.subtitle')} (ES)`} value={profile.subtitleEs} onChange={handleChange} fullWidth />
-                                    </Grid>
-                                    <Grid size={12}>
-                                        <TextField name="descriptionEn" label={`${t('admin.description')} (EN)`} value={profile.descriptionEn} onChange={handleChange} fullWidth multiline rows={3} />
-                                    </Grid>
-                                    <Grid size={12}>
-                                        <TextField name="descriptionEs" label={`${t('admin.description')} (ES)`} value={profile.descriptionEs} onChange={handleChange} fullWidth multiline rows={3} />
-                                    </Grid>
-                                </Grid>
-                            )}
-
-                            {tabValue === 1 && (
-                                <Grid container spacing={3}>
-                                    <Grid size={12}>
-                                        <TextField name="imageUrl" label={t('admin.imageUrl')} value={profile.imageUrl} onChange={handleChange} fullWidth placeholder="https://..." />
-                                    </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField name="aboutTitleEn" label={`${t('admin.title')} (EN)`} value={profile.aboutTitleEn} onChange={handleChange} fullWidth />
-                                    </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField name="aboutTitleEs" label={`${t('admin.title')} (ES)`} value={profile.aboutTitleEs} onChange={handleChange} fullWidth />
-                                    </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField name="aboutIntroTitleEn" label={`${t('admin.subtitle')} (EN)`} value={profile.aboutIntroTitleEn} onChange={handleChange} fullWidth />
-                                    </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField name="aboutIntroTitleEs" label={`${t('admin.subtitle')} (ES)`} value={profile.aboutIntroTitleEs} onChange={handleChange} fullWidth />
-                                    </Grid>
-                                    <Grid size={12}>
-                                        <TextField name="aboutSummaryEn" label={`${t('admin.description')} (EN)`} value={profile.aboutSummaryEn} onChange={handleChange} fullWidth multiline rows={4} />
-                                    </Grid>
-                                    <Grid size={12}>
-                                        <TextField name="aboutSummaryEs" label={`${t('admin.description')} (ES)`} value={profile.aboutSummaryEs} onChange={handleChange} fullWidth multiline rows={4} />
-                                    </Grid>
-                                    <Grid size={12}>
-                                        <TextField name="aboutPhilosophyEn" label={`${t('admin.philosophy')} (EN)`} value={profile.aboutPhilosophyEn} onChange={handleChange} fullWidth multiline rows={3} />
-                                    </Grid>
-                                    <Grid size={12}>
-                                        <TextField name="aboutPhilosophyEs" label={`${t('admin.philosophy')} (ES)`} value={profile.aboutPhilosophyEs} onChange={handleChange} fullWidth multiline rows={3} />
-                                    </Grid>
-
-                                    <Grid size={12}>
-                                        <TextField name="sentenceEn" label={`${t('admin.sentence')} (EN)`} value={profile.sentenceEn || ''} onChange={handleChange} fullWidth multiline rows={2} />
-                                    </Grid>
-                                    <Grid size={12}>
-                                        <TextField name="sentenceEs" label={`${t('admin.sentence')} (ES)`} value={profile.sentenceEs || ''} onChange={handleChange} fullWidth multiline rows={2} />
-                                    </Grid>
-                                </Grid>
-                            )}
-
-                            {tabValue === 2 && (
-                                <Grid container spacing={3}>
-                                    <Grid size={12}>
-                                        <TextField name="cvUrl" label={t('admin.cvUrl')} value={profile.cvUrl} onChange={handleChange} fullWidth placeholder="https://..." />
-                                    </Grid>
-                                </Grid>
-                            )}
-
-                            {tabValue === 3 && (
-                                <Grid container spacing={3}>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField name="fullNameEn" label={`${t('admin.fullName')} (EN)`} value={profile.fullNameEn} onChange={handleChange} fullWidth />
-                                    </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField name="fullNameEs" label={`${t('admin.fullName')} (ES)`} value={profile.fullNameEs} onChange={handleChange} fullWidth />
-                                    </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField name="logoText" label={t('admin.logoText')} value={profile.logoText} onChange={handleChange} fullWidth placeholder="GONZALO.DEV" />
-                                    </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField name="email" label={t('admin.email')} value={profile.email} onChange={handleChange} fullWidth />
-                                    </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField name="githubUrl" label={t('admin.githubUrl')} value={profile.githubUrl} onChange={handleChange} fullWidth />
-                                    </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField name="linkedinUrl" label={t('admin.linkedinUrl')} value={profile.linkedinUrl} onChange={handleChange} fullWidth />
-                                    </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField name="locationEn" label={`${t('admin.location')} (EN)`} value={profile.locationEn} onChange={handleChange} fullWidth />
-                                    </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField name="locationEs" label={`${t('admin.location')} (ES)`} value={profile.locationEs} onChange={handleChange} fullWidth />
-                                    </Grid>
-                                </Grid>
-                            )}
+                            {tabValue === 0 && <HomeTab profile={profile} onChange={handleChange} />}
+                            {tabValue === 1 && <AboutTab profile={profile} onChange={handleChange} />}
+                            {tabValue === 2 && <GeneralCvTab profile={profile} onChange={handleChange} />}
+                            {tabValue === 3 && <PersonalSocialTab profile={profile} onChange={handleChange} />}
                         </>
                     )}
                 </Box>

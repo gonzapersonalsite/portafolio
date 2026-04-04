@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Box, Button, Typography, Dialog,
-    DialogTitle, DialogContent, DialogActions, TextField,
-    Card, CardContent, CardActions, Checkbox, FormControlLabel, Grid,
-    Chip, MenuItem, Select, FormControl, InputLabel
+    Box, Button, Typography,
+    Card, CardContent, CardActions, Grid,
+    Chip
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import StarIcon from '@mui/icons-material/Star';
@@ -13,7 +12,6 @@ import SmartphoneIcon from '@mui/icons-material/Smartphone';
 import CodeIcon from '@mui/icons-material/Code';
 import { adminService } from '@/services/adminService';
 import type { Project } from '@/types';
-import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/context/LanguageContext';
 import { useNotification } from '@/context/NotificationContext';
@@ -22,6 +20,9 @@ import ImageWithFallback from '@/components/common/ImageWithFallback';
 import ConfirmDialog from '@/components/common/ConfirmDialog';
 import RichTextRenderer from '@/components/common/RichTextRenderer';
 import ScrollableContent from '@/components/common/ScrollableContent';
+import ProjectFormDialog from '@/components/admin/ProjectFormDialog';
+import type { ProjectPayload } from '@/components/admin/ProjectFormDialog';
+import { parseUrlStringToArray, parseCommaSeparatedString } from '@/utils/sanitizers';
 
 const ProjectsManagement: React.FC = () => {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -33,8 +34,6 @@ const ProjectsManagement: React.FC = () => {
     const { t } = useTranslation();
     const { language } = useLanguage();
     const { showNotification } = useNotification();
-
-    const { control, register, handleSubmit, reset, setValue } = useForm<Project>();
 
     const fetchData = async () => {
         try {
@@ -51,70 +50,23 @@ const ProjectsManagement: React.FC = () => {
     }, []);
 
     const handleOpen = (proj?: Project) => {
-        if (proj) {
-            setEditingProj(proj);
-            setValue('titleEn', proj.titleEn);
-            setValue('titleEs', proj.titleEs);
-            setValue('descriptionEn', proj.descriptionEn);
-            setValue('descriptionEs', proj.descriptionEs);
-            setValue('imageUrls', Array.isArray(proj.imageUrls) ? proj.imageUrls : []);
-            setValue('technologies', proj.technologies);
-            setValue('githubUrl', proj.githubUrl);
-            setValue('liveUrl', proj.liveUrl);
-            setValue('type', proj.type);
-            setValue('featured', proj.featured);
-            setValue('order', proj.order);
-        } else {
-            setEditingProj(null);
-            reset({
-                titleEn: '',
-                titleEs: '',
-                descriptionEn: '',
-                descriptionEs: '',
-                imageUrls: [],
-                technologies: [],
-                githubUrl: '',
-                liveUrl: '',
-                type: 'WEB',
-                featured: false,
-                order: projects.length > 0 ? Math.max(...projects.map(p => p.order || 0)) + 1 : 1
-            });
-        }
+        setEditingProj(proj || null);
         setOpen(true);
     };
 
     const handleClose = () => {
         setOpen(false);
         setEditingProj(null);
-        reset();
     };
 
-    const onSubmit = async (data: any) => {
+    const onSubmit = async (data: ProjectPayload) => {
         try {
             setSaving(true);
-            const payload: any = { ...data };
-
-            if (typeof payload.technologies === 'string') {
-                payload.technologies = (payload.technologies as string).split(',').map((t: string) => t.trim());
-            }
-
-            // Always ensure imageUrls is correctly formatted as an array of strings before sending
-            if (typeof payload.imageUrls === 'string') {
-                payload.imageUrls = (payload.imageUrls as string)
-                    .split('\n')
-                    .map((u: string) => u.replace(/^[`'"]+|[`'"]+$/g, '').trim())
-                    .filter(Boolean);
-            } else if (Array.isArray(payload.imageUrls)) {
-                // If it's already an array, just sanitize it
-                payload.imageUrls = payload.imageUrls
-                    .map((u: any) => {
-                        let cleanU = typeof u === 'string' ? u.trim() : String(u);
-                        return cleanU.replace(/^[`'"]+|[`'"]+$/g, '').trim();
-                    })
-                    .filter(Boolean);
-            } else {
-                payload.imageUrls = [];
-            }
+            const payload = { 
+                ...data,
+                technologies: parseCommaSeparatedString(data.technologies),
+                imageUrls: parseUrlStringToArray(data.imageUrls)
+            };
             
             // Log payload for debugging
             console.log('Sending project payload to backend:', JSON.stringify(payload, null, 2));
@@ -261,126 +213,16 @@ const ProjectsManagement: React.FC = () => {
                 disableEnforceFocus
             />
 
-            <Dialog 
-                open={open} 
-                onClose={handleClose} 
-                maxWidth="md" 
-                fullWidth
-                disableEnforceFocus
-            >
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <DialogTitle>
-                        {editingProj ? `${t('admin.edit')} ${t('projects.title')}` : `${t('admin.add')} ${t('projects.title')}`}
-                    </DialogTitle>
-                    <DialogContent>
-                        <Grid container spacing={2} sx={{ mt: 1 }}>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField fullWidth label={`${t('admin.title')} (EN)`} {...register('titleEn', { required: true })} />
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField fullWidth label={`${t('admin.title')} (ES)`} {...register('titleEs', { required: true })} />
-                            </Grid>
-                            <Grid size={12}>
-                                <TextField fullWidth multiline rows={3} label={`${t('admin.description')} (EN)`} {...register('descriptionEn')} />
-                            </Grid>
-                            <Grid size={12}>
-                                <TextField fullWidth multiline rows={3} label={`${t('admin.description')} (ES)`} {...register('descriptionEs')} />
-                            </Grid>
-                            <Grid size={12}>
-                                <Controller
-                                    name="imageUrls"
-                                    control={control}
-                                    defaultValue={[]}
-                                    render={({ field }) => (
-                                        <TextField
-                                            {...field}
-                                            fullWidth
-                                            multiline
-                                            rows={3}
-                                            label={t('admin.imageUrls')}
-                                            placeholder="https://..."
-                                            value={Array.isArray(field.value) ? field.value.join('\n') : (field.value || '')}
-                                            onChange={(e) => field.onChange(e.target.value)}
-                                        />
-                                    )}
-                                />
-                            </Grid>
-                            <Grid size={12}>
-                                <Controller
-                                    name="technologies"
-                                    control={control}
-                                    defaultValue={[]}
-                                    render={({ field }) => (
-                                        <TextField
-                                            {...field}
-                                            fullWidth
-                                            label={t('admin.technologies')}
-                                            placeholder="React, Java, AWS"
-                                            value={Array.isArray(field.value) ? field.value.join(', ') : field.value}
-                                            onChange={(e) => field.onChange(e.target.value.split(',').map(s => s.trim()))}
-                                        />
-                                    )}
-                                />
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <FormControl fullWidth>
-                                    <InputLabel>{t('admin.projectType')}</InputLabel>
-                                    <Controller
-                                        name="type"
-                                        control={control}
-                                        defaultValue="WEB"
-                                        render={({ field }) => (
-                                            <Select
-                                                {...field}
-                                                label={t('admin.projectType')}
-                                            >
-                                                <MenuItem value="WEB">WEB</MenuItem>
-                                                <MenuItem value="DESKTOP">DESKTOP</MenuItem>
-                                                <MenuItem value="MOBILE">MOBILE</MenuItem>
-                                                <MenuItem value="OTHER">OTHER</MenuItem>
-                                            </Select>
-                                        )}
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField fullWidth label={t('admin.githubUrl')} {...register('githubUrl')} />
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField fullWidth label={t('admin.liveUrl')} {...register('liveUrl')} />
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <FormControlLabel
-                                    control={
-                                        <Controller
-                                            name="featured"
-                                            control={control}
-                                            defaultValue={false}
-                                            render={({ field }) => (
-                                                <Checkbox
-                                                    {...field}
-                                                    checked={!!field.value}
-                                                    onChange={(e) => field.onChange(e.target.checked)}
-                                                />
-                                            )}
-                                        />
-                                    }
-                                    label={t('admin.featured')}
-                                />
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField fullWidth type="number" label={t('admin.order')} {...register('order', { valueAsNumber: true })} />
-                            </Grid>
-                        </Grid>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleClose}>{t('admin.cancel')}</Button>
-                        <Button type="submit" variant="contained" disabled={saving}>
-                            {saving ? t('admin.saving') : t('admin.save')}
-                        </Button>
-                    </DialogActions>
-                </form>
-            </Dialog>
+            {/* Project Form Dialog */}
+            {open && (
+                <ProjectFormDialog
+                    open={open}
+                    editingProj={editingProj}
+                    onClose={handleClose}
+                    onSubmit={onSubmit}
+                    saving={saving}
+                />
+            )}
         </Box>
     );
 };

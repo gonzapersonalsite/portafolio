@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
     Box, Button, Paper, Table, TableBody, TableCell, TableContainer,
-    TableHead, TableRow, IconButton, Typography, Dialog,
-    DialogTitle, DialogContent, DialogActions, TextField, Slider,
-    Select, MenuItem, InputLabel, FormControl, Grid,
+    TableHead, TableRow, IconButton, Typography,
     useMediaQuery, Card, CardContent, CardActions, Chip
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -12,11 +10,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { adminService } from '@/services/adminService';
 import type { Skill } from '@/types';
-import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/context/LanguageContext';
 import { useNotification } from '@/context/NotificationContext';
 import ConfirmDialog from '@/components/common/ConfirmDialog';
+import SkillFormDialog from '@/components/admin/SkillFormDialog';
 
 const SkillsManagement: React.FC = () => {
     const [skills, setSkills] = useState<Skill[]>([]);
@@ -30,8 +28,6 @@ const SkillsManagement: React.FC = () => {
     const { showNotification } = useNotification();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-    const { control, register, handleSubmit, reset, setValue, watch } = useForm<Skill>();
-    const currentLevel = watch('level');
 
     const fetchSkills = async () => {
         try {
@@ -48,25 +44,13 @@ const SkillsManagement: React.FC = () => {
     }, []);
 
     const handleOpen = (skill?: Skill) => {
-        if (skill) {
-            setEditingSkill(skill);
-            setValue('nameEn', skill.nameEn);
-            setValue('nameEs', skill.nameEs);
-            setValue('level', skill.level);
-            setValue('category', skill.category);
-            setValue('iconUrl', skill.iconUrl);
-            setValue('order', skill.order);
-        } else {
-            setEditingSkill(null);
-            reset({ level: 50, order: skills.length + 1 });
-        }
+        setEditingSkill(skill || null);
         setOpen(true);
     };
 
     const handleClose = () => {
         setOpen(false);
         setEditingSkill(null);
-        reset();
     };
 
     const onSubmit = async (data: Skill) => {
@@ -226,92 +210,16 @@ const SkillsManagement: React.FC = () => {
                 }}
             />
 
-            <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <DialogTitle>
-                        {editingSkill ? `${t('admin.edit')} ${t('nav.skills')}` : `${t('admin.add')} ${t('nav.skills')}`}
-                    </DialogTitle>
-                    <DialogContent>
-                        <Grid container spacing={2} sx={{ mt: 1 }}>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField
-                                    fullWidth
-                                    label={`${t('admin.name')} (EN)`}
-                                    {...register('nameEn', { required: true })}
-                                />
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField
-                                    fullWidth
-                                    label={`${t('admin.name')} (ES)`}
-                                    {...register('nameEs', { required: true })}
-                                />
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <FormControl fullWidth>
-                                    <InputLabel>{t('admin.category')}</InputLabel>
-                                    <Controller
-                                        name="category"
-                                        control={control}
-                                        defaultValue="Backend"
-                                        render={({ field }) => (
-                                            <Select {...field} label={t('admin.category')}>
-                                                <MenuItem value="Backend">{t('admin.backend')}</MenuItem>
-                                                <MenuItem value="Frontend">{t('admin.frontend')}</MenuItem>
-                                                <MenuItem value="Database">{t('admin.database')}</MenuItem>
-                                                <MenuItem value="Tools">{t('admin.tools')}</MenuItem>
-                                                <MenuItem value="Other">{t('admin.other')}</MenuItem>
-                                            </Select>
-                                        )}
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField
-                                    fullWidth
-                                    type="number"
-                                    label={t('admin.order')}
-                                    {...register('order', { required: true, valueAsNumber: true })}
-                                />
-                            </Grid>
-                            <Grid size={12}>
-                                <Typography gutterBottom>
-                                    {t('admin.level')}: {currentLevel ?? editingSkill?.level ?? 50}%
-                                </Typography>
-                                <Controller
-                                    name="level"
-                                    control={control}
-                                    defaultValue={50}
-                                    render={({ field }) => (
-                                        <Slider
-                                            {...field}
-                                            valueLabelDisplay="auto"
-                                            step={5}
-                                            marks
-                                            min={0}
-                                            max={100}
-                                        />
-                                    )}
-                                />
-                            </Grid>
-                            <Grid size={12}>
-                                <TextField
-                                    fullWidth
-                                    label={t('admin.iconUrl')}
-                                    {...register('iconUrl')}
-                                    placeholder="https://..."
-                                />
-                            </Grid>
-                        </Grid>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleClose}>{t('admin.cancel')}</Button>
-                        <Button type="submit" variant="contained" disabled={saving}>
-                            {saving ? t('admin.saving') : t('admin.save')}
-                        </Button>
-                    </DialogActions>
-                </form>
-            </Dialog>
+            {open && (
+                <SkillFormDialog
+                    open={open}
+                    editingSkill={editingSkill}
+                    onClose={handleClose}
+                    onSubmit={onSubmit}
+                    saving={saving}
+                    defaultOrder={skills.length + 1}
+                />
+            )}
         </Box>
     );
 };

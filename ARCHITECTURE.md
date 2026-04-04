@@ -20,12 +20,13 @@ The project follows a decoupled **Full Stack** architecture, ensuring high perfo
 
 ### 🏛️ Backend Architecture
 - **Layered Design:** Strict separation of concerns using the **Controller-Service-Repository** pattern.
+- **Domain Protection:** Use of Data Transfer Objects (DTOs) to isolate domain entities from the web layer.
 - **RESTful API:** Stateless communication protocol for all frontend-backend interactions.
-- **Security First:** Implementation of **Spring Security** with **JWT (JSON Web Tokens)** for stateless authentication.
+- **Security First:** Implementation of **Spring Security** with **JWT (JSON Web Tokens)** for stateless authentication, and strict input sanitization to prevent XSS.
 - **Data Integrity:** Transaction management via Spring Data JPA and automated schema handling.
 
 ### ⚛️ Frontend Architecture
-- **Modular Components:** UI built with reusable React components and Material UI (MUI).
+- **Modular Components:** UI built with reusable React components and Material UI (MUI), strictly adhering to the Single Responsibility Principle (SRP).
 - **State Management:** Lightweight global state using **Zustand**.
 - **Context API:** Used for cross-cutting concerns like Theme, Language, and Notifications.
 - **Dynamic Localization:** Centralized i18next system for real-time interface translation.

@@ -27,6 +27,7 @@
 
 ### 🎨 Immersive User Experience (UX)
 - **Liquid Glass Interface:** Cutting-edge visual style inspired by visionOS, featuring advanced glassmorphism and neon accents.
+- **Interactive Project Gallery:** Full-screen multi-image showcases with native zoom capabilities.
 - **Theme Engine:** Centralized system supporting Light, Dark, and the exclusive Liquid Glass mode.
 - **Dynamic Localization:** Full bilingual support (Spanish/English) with instant interface and content translation.
 

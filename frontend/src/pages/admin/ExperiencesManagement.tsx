@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Box, Button, Paper, IconButton, Typography, Dialog,
-    DialogTitle, DialogContent, DialogActions, TextField,
-    Chip, Grid
+    Box, Button, Paper, IconButton, Typography,
+    Chip
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
@@ -13,13 +12,15 @@ import BusinessIcon from '@mui/icons-material/Business';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { adminService } from '@/services/adminService';
 import type { Experience } from '@/types';
-import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/context/LanguageContext';
 import { useNotification } from '@/context/NotificationContext';
 import ConfirmDialog from '@/components/common/ConfirmDialog';
 import RichTextRenderer from '@/components/common/RichTextRenderer';
 import ScrollableContent from '@/components/common/ScrollableContent';
+import ExperienceFormDialog from '@/components/admin/ExperienceFormDialog';
+import type { ExperiencePayload } from '@/components/admin/ExperienceFormDialog';
+import { parseCommaSeparatedString } from '@/utils/sanitizers';
 
 const ExperiencesManagement: React.FC = () => {
     const [experiences, setExperiences] = useState<Experience[]>([]);
@@ -32,8 +33,6 @@ const ExperiencesManagement: React.FC = () => {
     const { language } = useLanguage();
     const { showNotification } = useNotification();
     const theme = useTheme();
-
-    const { control, register, handleSubmit, reset, setValue } = useForm<Experience>();
 
     const fetchData = async () => {
         try {
@@ -50,43 +49,27 @@ const ExperiencesManagement: React.FC = () => {
     }, []);
 
     const handleOpen = (exp?: Experience) => {
-        if (exp) {
-            setEditingExp(exp);
-            setValue('companyEn', exp.companyEn);
-            setValue('companyEs', exp.companyEs);
-            setValue('positionEn', exp.positionEn);
-            setValue('positionEs', exp.positionEs);
-            setValue('descriptionEn', exp.descriptionEn);
-            setValue('descriptionEs', exp.descriptionEs);
-            setValue('startDate', exp.startDate);
-            setValue('endDate', exp.endDate);
-            setValue('technologies', exp.technologies);
-            setValue('order', exp.order);
-        } else {
-            setEditingExp(null);
-            reset({ technologies: [], order: experiences.length + 1 });
-        }
+        setEditingExp(exp || null);
         setOpen(true);
     };
 
     const handleClose = () => {
         setOpen(false);
         setEditingExp(null);
-        reset();
     };
 
-    const onSubmit = async (data: Experience) => {
+    const onSubmit = async (data: ExperiencePayload) => {
         try {
             setSaving(true);
-            // Ensure technologies is an array if edited manually
-            if (typeof data.technologies === 'string') {
-                data.technologies = (data.technologies as string).split(',').map((t: string) => t.trim());
-            }
+            const payload = {
+                ...data,
+                technologies: parseCommaSeparatedString(data.technologies)
+            };
 
             if (editingExp) {
-                await adminService.updateExperience(editingExp.id, data);
+                await adminService.updateExperience(editingExp.id, payload);
             } else {
-                await adminService.createExperience(data);
+                await adminService.createExperience(payload as Experience);
             }
             showNotification(t('admin.saveSuccess'), 'success', 6000);
             fetchData();
@@ -236,67 +219,16 @@ const ExperiencesManagement: React.FC = () => {
                 }}
             />
 
-            <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <DialogTitle>
-                        {editingExp ? `${t('admin.edit')} ${t('nav.experience')}` : `${t('admin.add')} ${t('nav.experience')}`}
-                    </DialogTitle>
-                    <DialogContent>
-                        <Grid container spacing={2} sx={{ mt: 1 }}>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField fullWidth label={`${t('admin.company')} (EN)`} {...register('companyEn', { required: true })} />
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField fullWidth label={`${t('admin.company')} (ES)`} {...register('companyEs', { required: true })} />
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField fullWidth label={`${t('admin.position')} (EN)`} {...register('positionEn', { required: true })} />
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField fullWidth label={`${t('admin.position')} (ES)`} {...register('positionEs', { required: true })} />
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField fullWidth type="date" label={t('admin.startDate')} InputLabelProps={{ shrink: true }} {...register('startDate', { required: true })} />
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField fullWidth type="date" label={t('admin.endDate')} InputLabelProps={{ shrink: true }} {...register('endDate')} />
-                            </Grid>
-                            <Grid size={12}>
-                                <TextField fullWidth multiline rows={3} label={`${t('admin.description')} (EN)`} {...register('descriptionEn')} />
-                            </Grid>
-                            <Grid size={12}>
-                                <TextField fullWidth multiline rows={3} label={`${t('admin.description')} (ES)`} {...register('descriptionEs')} />
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 8 }}>
-                                <Controller
-                                    name="technologies"
-                                    control={control}
-                                    defaultValue={[]}
-                                    render={({ field }) => (
-                                        <TextField
-                                            {...field}
-                                            fullWidth
-                                            label={t('admin.technologies')}
-                                            placeholder="Java, React, SQL"
-                                            value={Array.isArray(field.value) ? field.value.join(', ') : field.value}
-                                            onChange={(e) => field.onChange(e.target.value.split(',').map(s => s.trim()))}
-                                        />
-                                    )}
-                                />
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 4 }}>
-                                <TextField fullWidth type="number" label={t('admin.order')} {...register('order', { valueAsNumber: true })} />
-                            </Grid>
-                        </Grid>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleClose}>{t('admin.cancel')}</Button>
-                        <Button type="submit" variant="contained" disabled={saving}>
-                            {saving ? t('admin.saving') : t('admin.save')}
-                        </Button>
-                    </DialogActions>
-                </form>
-            </Dialog>
+            {open && (
+                <ExperienceFormDialog
+                    open={open}
+                    editingExp={editingExp}
+                    onClose={handleClose}
+                    onSubmit={onSubmit}
+                    saving={saving}
+                    defaultOrder={experiences.length + 1}
+                />
+            )}
         </Box>
     );
 };

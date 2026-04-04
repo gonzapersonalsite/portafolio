@@ -1,6 +1,7 @@
 package com.gonzalomartinez.portfolio_backend.infrastructure.web;
 
 import com.gonzalomartinez.portfolio_backend.application.dto.ExperienceDto;
+import com.gonzalomartinez.portfolio_backend.application.dto.ProfileDto;
 import com.gonzalomartinez.portfolio_backend.application.dto.ProjectDto;
 import com.gonzalomartinez.portfolio_backend.application.dto.SkillDto;
 import com.gonzalomartinez.portfolio_backend.application.service.ExperienceService;
@@ -8,7 +9,6 @@ import com.gonzalomartinez.portfolio_backend.application.service.ProjectService;
 import com.gonzalomartinez.portfolio_backend.application.service.SkillService;
 import com.gonzalomartinez.portfolio_backend.application.service.ProfileService;
 import com.gonzalomartinez.portfolio_backend.application.service.SpokenLanguageService;
-import com.gonzalomartinez.portfolio_backend.domain.model.Profile;
 import com.gonzalomartinez.portfolio_backend.domain.model.SpokenLanguage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +30,7 @@ public class PublicController {
     private final SpokenLanguageService spokenLanguageService;
     
     @GetMapping("/profile")
-    public ResponseEntity<Profile> getProfile() {
+    public ResponseEntity<ProfileDto> getProfile() {
         return ResponseEntity.ok(profileService.getProfile());
     }
 

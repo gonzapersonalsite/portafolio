@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
     Box, Typography, Button, Paper, Table, TableBody, TableCell,
-    TableContainer, TableHead, TableRow, IconButton, Dialog,
-    DialogTitle, DialogContent, DialogActions, TextField,
-    CircularProgress, Slider, useMediaQuery, Card, CardContent
+    TableContainer, TableHead, TableRow, IconButton,
+    CircularProgress, useMediaQuery, Card, CardContent
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,6 +14,7 @@ import { adminService } from '@/services/adminService';
 import type { SpokenLanguage } from '@/types';
 import { useNotification } from '@/context/NotificationContext';
 import ConfirmDialog from '@/components/common/ConfirmDialog';
+import SpokenLanguageFormDialog from '@/components/admin/SpokenLanguageFormDialog';
 
 const SpokenLanguageManagement: React.FC = () => {
     const { t } = useTranslation();
@@ -29,14 +29,6 @@ const SpokenLanguageManagement: React.FC = () => {
     const [editingLanguage, setEditingLanguage] = useState<SpokenLanguage | null>(null);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [languageToDelete, setLanguageToDelete] = useState<string | null>(null);
-    const [formData, setFormData] = useState<Omit<SpokenLanguage, 'id'>>({
-        nameEn: '',
-        nameEs: '',
-        levelEn: '',
-        levelEs: '',
-        proficiency: 100,
-        order: 0
-    });
 
     const fetchLanguages = async () => {
         try {
@@ -56,27 +48,7 @@ const SpokenLanguageManagement: React.FC = () => {
     }, []);
 
     const handleOpenDialog = (lang?: SpokenLanguage) => {
-        if (lang) {
-            setEditingLanguage(lang);
-            setFormData({
-                nameEn: lang.nameEn,
-                nameEs: lang.nameEs,
-                levelEn: lang.levelEn,
-                levelEs: lang.levelEs,
-                proficiency: lang.proficiency,
-                order: lang.order
-            });
-        } else {
-            setEditingLanguage(null);
-            setFormData({
-                nameEn: '',
-                nameEs: '',
-                levelEn: '',
-                levelEs: '',
-                proficiency: 100,
-                order: languages.length + 1
-            });
-        }
+        setEditingLanguage(lang || null);
         setOpenDialog(true);
     };
 
@@ -85,12 +57,7 @@ const SpokenLanguageManagement: React.FC = () => {
         setEditingLanguage(null);
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: name === 'order' ? parseInt(value) || 0 : value }));
-    };
-
-    const handleSubmit = async () => {
+    const onSubmit = async (formData: Omit<SpokenLanguage, 'id'>) => {
         try {
             setSaving(true);
             if (editingLanguage) {
@@ -228,36 +195,16 @@ const SpokenLanguageManagement: React.FC = () => {
                 }}
             />
 
-            <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
-                <DialogTitle>
-                    {editingLanguage ? `${t('admin.edit')} ${t('nav.languages')}` : `${t('admin.add')} ${t('nav.languages')}`}
-                </DialogTitle>
-                <DialogContent>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
-                        <TextField name="nameEn" label={`${t('admin.name')} (EN)`} value={formData.nameEn} onChange={handleInputChange} fullWidth />
-                        <TextField name="nameEs" label={`${t('admin.name')} (ES)`} value={formData.nameEs} onChange={handleInputChange} fullWidth />
-                        <TextField name="levelEn" label={`${t('admin.level')} (EN)`} value={formData.levelEn} onChange={handleInputChange} fullWidth />
-                        <TextField name="levelEs" label={`${t('admin.level')} (ES)`} value={formData.levelEs} onChange={handleInputChange} fullWidth />
-                        <Box>
-                            <Typography gutterBottom>{t('admin.proficiency')} ({formData.proficiency}%)</Typography>
-                            <Slider
-                                value={formData.proficiency}
-                                onChange={(_, val) => setFormData(prev => ({ ...prev, proficiency: val as number }))}
-                                valueLabelDisplay="auto"
-                                min={0}
-                                max={100}
-                            />
-                        </Box>
-                        <TextField name="order" label={t('admin.order')} type="number" value={formData.order} onChange={handleInputChange} fullWidth />
-                    </Box>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseDialog}>{t('admin.cancel')}</Button>
-                    <Button onClick={handleSubmit} variant="contained" disabled={saving}>
-                        {saving ? t('admin.saving') : t('admin.save')}
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            {openDialog && (
+                <SpokenLanguageFormDialog
+                    open={openDialog}
+                    editingLanguage={editingLanguage}
+                    onClose={handleCloseDialog}
+                    onSubmit={onSubmit}
+                    saving={saving}
+                    defaultOrder={languages.length + 1}
+                />
+            )}
         </Box>
     );
 };

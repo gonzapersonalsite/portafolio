@@ -144,7 +144,7 @@ apiClient.defaults.adapter = cacheAdapter;
 // Add a request interceptor to include the JWT token and language if available
 apiClient.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token');
+        const token = useAuthStore.getState().token;
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -172,7 +172,6 @@ apiClient.interceptors.response.use(
                 try {
                     useAuthStore.getState().logout();
                 } finally {
-                    localStorage.removeItem('token');
                     window.location.replace('/admin/login');
                 }
             }

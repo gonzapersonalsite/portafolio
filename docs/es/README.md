@@ -27,6 +27,7 @@
 
 ### 🎨 Experiencia de Usuario Inmersiva (UX)
 - **Interfaz Liquid Glass:** Estilo visual de vanguardia inspirado en visionOS, con glassmorphism avanzado y acentos neón.
+- **Galería Interactiva de Proyectos:** Escaparate de múltiples imágenes a pantalla completa con capacidad de zoom nativo.
 - **Motor de Temas:** Sistema centralizado que soporta modos Claro, Oscuro y el exclusivo Liquid Glass.
 - **Localización Dinámica:** Soporte bilingüe completo (Español/Inglés) con traducción instantánea de interfaz y contenido.
 

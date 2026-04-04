@@ -20,12 +20,13 @@ El proyecto sigue una arquitectura **Full Stack** desacoplada, asegurando alto r
 
 ### 🏛️ Arquitectura Backend
 - **Diseño en Capas:** Separación estricta de preocupaciones usando el patrón **Controlador-Servicio-Repositorio**.
+- **Protección del Dominio:** Uso de Data Transfer Objects (DTOs) para aislar las entidades de dominio de la capa web.
 - **API RESTful:** Protocolo de comunicación sin estado para todas las interacciones frontend-backend.
-- **Seguridad Primero:** Implementación de **Spring Security** con **JWT (JSON Web Tokens)** para autenticación sin estado.
+- **Seguridad Primero:** Implementación de **Spring Security** con **JWT (JSON Web Tokens)** para autenticación sin estado, y estricta sanitización de entradas para prevenir XSS.
 - **Integridad de Datos:** Gestión de transacciones vía Spring Data JPA y manejo automatizado de esquemas.
 
 ### ⚛️ Arquitectura Frontend
-- **Componentes Modulares:** UI construida con componentes React reutilizables y Material UI (MUI).
+- **Componentes Modulares:** UI construida con componentes React reutilizables y Material UI (MUI), adhiriéndose estrictamente al Principio de Responsabilidad Única (SRP).
 - **Gestión de Estado:** Estado global ligero usando **Zustand**.
 - **Context API:** Usado para preocupaciones transversales como Tema, Idioma y Notificaciones.
 - **Localización Dinámica:** Sistema centralizado i18next para traducción de interfaz en tiempo real.
