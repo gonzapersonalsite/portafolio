@@ -4,12 +4,12 @@ import com.gonzalomartinez.portfolio_backend.application.dto.ExperienceDto;
 import com.gonzalomartinez.portfolio_backend.application.dto.ProfileDto;
 import com.gonzalomartinez.portfolio_backend.application.dto.ProjectDto;
 import com.gonzalomartinez.portfolio_backend.application.dto.SkillDto;
+import com.gonzalomartinez.portfolio_backend.application.dto.SpokenLanguageDto;
 import com.gonzalomartinez.portfolio_backend.application.service.ExperienceService;
 import com.gonzalomartinez.portfolio_backend.application.service.ProjectService;
 import com.gonzalomartinez.portfolio_backend.application.service.SkillService;
 import com.gonzalomartinez.portfolio_backend.application.service.ProfileService;
 import com.gonzalomartinez.portfolio_backend.application.service.SpokenLanguageService;
-import com.gonzalomartinez.portfolio_backend.domain.model.SpokenLanguage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +35,7 @@ public class PublicController {
     }
 
     @GetMapping("/spoken-languages")
-    public ResponseEntity<List<SpokenLanguage>> getAllSpokenLanguages() {
+    public ResponseEntity<List<SpokenLanguageDto>> getAllSpokenLanguages() {
         return ResponseEntity.ok(spokenLanguageService.getAllSpokenLanguages());
     }
     
