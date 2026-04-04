@@ -34,7 +34,8 @@ public class ProjectDto {
     
     private String descriptionEs;
     
-    private String imageUrl;
+    @Builder.Default
+    private List<String> imageUrls = new ArrayList<>();
     
     @Builder.Default
     private List<String> technologies = new ArrayList<>();

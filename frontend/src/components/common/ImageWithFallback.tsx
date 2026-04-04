@@ -39,7 +39,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
         if (type === 'profile') {
             return "/profile-fallback.jpg";
         }
-        return "https://placehold.co/600x400?text=Project+Image";
+        return "https://placehold.co/600x400?text=No+Image";
     };
 
     const handleError = () => {
@@ -53,7 +53,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
         setIsLoading(false);
     };
 
-    const finalSrc = hasError ? getFallbackUrl() : (src || getFallbackUrl());
+    const finalSrc = hasError || !src ? getFallbackUrl() : src;
 
     // If aspectRatio is provided, we use a container to reserve space
     if (aspectRatio) {

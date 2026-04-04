@@ -69,7 +69,7 @@ public class ProjectService {
         existingProject.setTitleEs(inputSanitizer.sanitize(dto.getTitleEs()));
         existingProject.setDescriptionEn(inputSanitizer.sanitize(dto.getDescriptionEn()));
         existingProject.setDescriptionEs(inputSanitizer.sanitize(dto.getDescriptionEs()));
-        existingProject.setImageUrl(inputSanitizer.sanitizeUrl(dto.getImageUrl()));
+        existingProject.setImageUrls(sanitizeUrls(dto.getImageUrls()));
         existingProject.setTechnologies(dto.getTechnologies());
         existingProject.setGithubUrl(inputSanitizer.sanitizeUrl(dto.getGithubUrl()));
         existingProject.setLiveUrl(inputSanitizer.sanitizeUrl(dto.getLiveUrl()));
@@ -104,7 +104,7 @@ public class ProjectService {
                 .titleEs(project.getTitleEs())
                 .descriptionEn(project.getDescriptionEn())
                 .descriptionEs(project.getDescriptionEs())
-                .imageUrl(project.getImageUrl())
+                .imageUrls(project.getImageUrls())
                 .technologies(project.getTechnologies())
                 .githubUrl(project.getGithubUrl())
                 .liveUrl(project.getLiveUrl())
@@ -121,7 +121,7 @@ public class ProjectService {
                 .titleEs(inputSanitizer.sanitize(dto.getTitleEs()))
                 .descriptionEn(inputSanitizer.sanitize(dto.getDescriptionEn()))
                 .descriptionEs(inputSanitizer.sanitize(dto.getDescriptionEs()))
-                .imageUrl(inputSanitizer.sanitizeUrl(dto.getImageUrl()))
+                .imageUrls(sanitizeUrls(dto.getImageUrls()))
                 .technologies(dto.getTechnologies())
                 .githubUrl(inputSanitizer.sanitizeUrl(dto.getGithubUrl()))
                 .liveUrl(inputSanitizer.sanitizeUrl(dto.getLiveUrl()))

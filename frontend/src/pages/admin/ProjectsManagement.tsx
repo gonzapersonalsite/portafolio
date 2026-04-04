@@ -57,7 +57,7 @@ const ProjectsManagement: React.FC = () => {
             setValue('titleEs', proj.titleEs);
             setValue('descriptionEn', proj.descriptionEn);
             setValue('descriptionEs', proj.descriptionEs);
-            setValue('imageUrl', proj.imageUrl);
+            setValue('imageUrls', Array.isArray(proj.imageUrls) ? proj.imageUrls : []);
             setValue('technologies', proj.technologies);
             setValue('githubUrl', proj.githubUrl);
             setValue('liveUrl', proj.liveUrl);
@@ -67,11 +67,17 @@ const ProjectsManagement: React.FC = () => {
         } else {
             setEditingProj(null);
             reset({
+                titleEn: '',
+                titleEs: '',
+                descriptionEn: '',
+                descriptionEs: '',
+                imageUrls: [],
                 technologies: [],
-                imageUrl: '',
+                githubUrl: '',
+                liveUrl: '',
                 type: 'WEB',
                 featured: false,
-                order: projects.length + 1
+                order: projects.length > 0 ? Math.max(...projects.map(p => p.order || 0)) + 1 : 1
             });
         }
         setOpen(true);
@@ -83,21 +89,40 @@ const ProjectsManagement: React.FC = () => {
         reset();
     };
 
-    const onSubmit = async (data: Project) => {
+    const onSubmit = async (data: any) => {
         try {
             setSaving(true);
-            // Fix array inputs from text fields
-            if (typeof data.technologies === 'string') {
-                data.technologies = (data.technologies as string).split(',').map((t: string) => t.trim());
-            }
-            if (typeof data.imageUrl === 'string' && (data.imageUrl as string).includes(',')) {
-                data.imageUrl = (data.imageUrl as string).split(',')[0].trim();
+            const payload: any = { ...data };
+
+            if (typeof payload.technologies === 'string') {
+                payload.technologies = (payload.technologies as string).split(',').map((t: string) => t.trim());
             }
 
-            if (editingProj) {
-                await adminService.updateProject(editingProj.id, data);
+            // Always ensure imageUrls is correctly formatted as an array of strings before sending
+            if (typeof payload.imageUrls === 'string') {
+                payload.imageUrls = (payload.imageUrls as string)
+                    .split('\n')
+                    .map((u: string) => u.replace(/^[`'"]+|[`'"]+$/g, '').trim())
+                    .filter(Boolean);
+            } else if (Array.isArray(payload.imageUrls)) {
+                // If it's already an array, just sanitize it
+                payload.imageUrls = payload.imageUrls
+                    .map((u: any) => {
+                        let cleanU = typeof u === 'string' ? u.trim() : String(u);
+                        return cleanU.replace(/^[`'"]+|[`'"]+$/g, '').trim();
+                    })
+                    .filter(Boolean);
             } else {
-                await adminService.createProject(data);
+                payload.imageUrls = [];
+            }
+            
+            // Log payload for debugging
+            console.log('Sending project payload to backend:', JSON.stringify(payload, null, 2));
+
+            if (editingProj) {
+                await adminService.updateProject(editingProj.id, payload);
+            } else {
+                await adminService.createProject(payload);
             }
             showNotification(t('admin.saveSuccess'), 'success', 6000);
             fetchData();
@@ -166,7 +191,7 @@ const ProjectsManagement: React.FC = () => {
                         <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                             <Box sx={{ position: 'relative' }}>
                                 <ImageWithFallback
-                                    src={formatImageUrl(proj.imageUrl)}
+                                    src={Array.isArray(proj.imageUrls) && proj.imageUrls.length > 0 && proj.imageUrls[0] ? formatImageUrl(proj.imageUrls[0]) : ''}
                                     alt={language === 'en' ? proj.titleEn : proj.titleEs}
                                     type="project"
                                     aspectRatio="16/9"
@@ -233,9 +258,16 @@ const ProjectsManagement: React.FC = () => {
                     setDeleteDialogOpen(false);
                     setProjectToDelete(null);
                 }}
+                disableEnforceFocus
             />
 
-            <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+            <Dialog 
+                open={open} 
+                onClose={handleClose} 
+                maxWidth="md" 
+                fullWidth
+                disableEnforceFocus
+            >
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <DialogTitle>
                         {editingProj ? `${t('admin.edit')} ${t('projects.title')}` : `${t('admin.add')} ${t('projects.title')}`}
@@ -255,11 +287,22 @@ const ProjectsManagement: React.FC = () => {
                                 <TextField fullWidth multiline rows={3} label={`${t('admin.description')} (ES)`} {...register('descriptionEs')} />
                             </Grid>
                             <Grid size={12}>
-                                <TextField
-                                    fullWidth
-                                    label={t('admin.imageUrl')}
-                                    {...register('imageUrl')}
-                                    placeholder="https://..."
+                                <Controller
+                                    name="imageUrls"
+                                    control={control}
+                                    defaultValue={[]}
+                                    render={({ field }) => (
+                                        <TextField
+                                            {...field}
+                                            fullWidth
+                                            multiline
+                                            rows={3}
+                                            label={t('admin.imageUrls')}
+                                            placeholder="https://..."
+                                            value={Array.isArray(field.value) ? field.value.join('\n') : (field.value || '')}
+                                            onChange={(e) => field.onChange(e.target.value)}
+                                        />
+                                    )}
                                 />
                             </Grid>
                             <Grid size={12}>

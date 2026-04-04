@@ -16,6 +16,7 @@ interface ConfirmDialogProps {
     onConfirm: () => void;
     onCancel: () => void;
     confirmColor?: 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning';
+    disableEnforceFocus?: boolean;
 }
 
 const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
@@ -24,7 +25,8 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     message,
     onConfirm,
     onCancel,
-    confirmColor = 'error'
+    confirmColor = 'error',
+    disableEnforceFocus = false
 }) => {
     const { t } = useTranslation();
 
@@ -34,6 +36,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             onClose={onCancel}
             aria-labelledby="confirm-dialog-title"
             aria-describedby="confirm-dialog-description"
+            disableEnforceFocus={disableEnforceFocus}
         >
             <DialogTitle id="confirm-dialog-title">
                 {title}

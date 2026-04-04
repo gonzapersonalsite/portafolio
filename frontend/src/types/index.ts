@@ -40,7 +40,7 @@ export interface Project {
     descriptionEn: string;
     descriptionEs: string;
     technologies: string[];
-    imageUrl?: string;
+    imageUrls: string[];
     githubUrl?: string;
     liveUrl?: string;
     type: 'WEB' | 'DESKTOP' | 'MOBILE' | 'OTHER';

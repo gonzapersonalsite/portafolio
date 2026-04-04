@@ -41,10 +41,14 @@ public class Project {
     @Column(columnDefinition = "TEXT")
     private String descriptionEs;
     
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "project_images", joinColumns = @JoinColumn(name = "project_id"))
     @Column(name = "image_url", length = 500)
-    private String imageUrl;
+    @OrderColumn(name = "image_order")
+    @Builder.Default
+    private List<String> imageUrls = new ArrayList<>();
     
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "project_technologies", joinColumns = @JoinColumn(name = "project_id"))
     @Column(name = "technology")
     @Builder.Default
