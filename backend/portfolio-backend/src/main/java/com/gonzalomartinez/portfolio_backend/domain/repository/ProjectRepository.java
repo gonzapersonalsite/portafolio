@@ -11,4 +11,7 @@ import java.util.UUID;
 public interface ProjectRepository extends JpaRepository<Project, UUID> {
     List<Project> findAllByOrderByOrderAsc();
     List<Project> findByFeaturedTrueOrderByOrderAsc();
+
+    @org.springframework.data.jpa.repository.Query("SELECT MAX(p.order) FROM Project p")
+    Integer findMaxOrder();
 }

@@ -142,10 +142,7 @@ public class ProjectService {
     }
     
     private Integer getNextOrder() {
-        List<Project> projects = projectRepository.findAll();
-        return projects.stream()
-                .map(Project::getOrder)
-                .max(Integer::compareTo)
-                .orElse(0) + 1;
+        Integer maxOrder = projectRepository.findMaxOrder();
+        return (maxOrder != null ? maxOrder : 0) + 1;
     }
 }
