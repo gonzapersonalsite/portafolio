@@ -11,11 +11,9 @@ import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
 import { requestCache } from '@/utils/requestCache';
 import i18n from '@/config/i18n';
-import { useLanguage } from '@/context/LanguageContext';
 
 const ProjectsPage: React.FC = () => {
     const { t } = useTranslation();
-    const { language } = useLanguage();
     
     // Intentar obtener de caché inmediatamente
     const cacheKey = `/public/projects?&lang=${i18n.language}`;
