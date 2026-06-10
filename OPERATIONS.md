@@ -1,9 +1,9 @@
 # 🛠️ Operations Guide
 
 [![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react)](https://react.dev/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.2-6DB33F?logo=springboot)](https://spring.io/projects/spring-boot)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0-6DB33F?logo=springboot)](https://spring.io/projects/spring-boot)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)](https://www.typescriptlang.org/)
-[![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk)](https://openjdk.org/)
+[![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk)](https://openjdk.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)](https://www.postgresql.org/)
 [![Swagger](https://img.shields.io/badge/Swagger-OpenAPI_3.0-yellow?logo=swagger)](https://swagger.io/)
 [![License: Evaluation Only](https://img.shields.io/badge/License-Evaluation--Only-red)](LICENSE)
@@ -25,7 +25,11 @@ The project is designed for high availability using modern cloud-native services
 
 ### 🚀 CI/CD Pipeline
 Current deployment flow with pre‑deployment quality gate:
-- **Frontend:** Automatic build and deploy on Vercel upon pushing to `main`.
+- **Frontend (Vercel):**
+  - GitHub Actions runs typecheck + lint on pushes/PRs touching `frontend/**`.
+  - Vercel auto‑detects pnpm via `packageManager` field and builds from `frontend/`.
+  - Vercel → Settings → Git → "Wait for CI checks" must be enabled so deploys only proceed after `frontend-ci` passes.
+  - Required Vercel env var: `PNPM_APPROVE_BUILDS=true` (pnpm v11 security requirement).
 - **Backend (container on Render):**
   - GitHub Actions runs backend tests on pushes to `main` within `backend/portfolio-backend/**`.
   - If tests pass, CI invokes the private **Deploy Hook** for the Render service to start the deploy.
@@ -33,8 +37,9 @@ Current deployment flow with pre‑deployment quality gate:
   - The backend `Dockerfile` builds with `./gradlew build -x test` for fast builds (tests already run in CI).
 
 Pipeline details:
-- Workflow: `.github/workflows/backend-ci.yml`
-- Required GitHub secret: `RENDER_DEPLOY_HOOK_URL` (the service’s Deploy Hook from Render)
+- Backend workflow: `.github/workflows/backend-ci.yml`
+- Frontend workflow: `.github/workflows/frontend-ci.yml`
+- Required GitHub secret: `RENDER_DEPLOY_HOOK_URL` (the service's Deploy Hook from Render)
 - Render configuration:
   - Settings → Build & Deploy → Auto‑Deploy = Off
   - Deploy Hook: copy and store as a GitHub secret
@@ -50,6 +55,7 @@ Key variables required for production:
 - `VITE_EMAILJS_SERVICE_ID`: EmailJS service identifier.
 - `VITE_EMAILJS_TEMPLATE_ID`: EmailJS template identifier.
 - `VITE_EMAILJS_PUBLIC_KEY`: EmailJS public key.
+- `PNPM_APPROVE_BUILDS`: Set to `true` in Vercel to allow esbuild build scripts (pnpm v11+ requirement).
 
 ### Backend
 - `SPRING_DATASOURCE_URL`: Aiven PostgreSQL connection string.
@@ -60,7 +66,9 @@ Key variables required for production:
 - `JWT_SECRET`: Secret key for secure token generation.
 - `CORS_ORIGINS`: Allowed frontend domain.
 - `JWT_EXPIRATION`: JWT token expiration time (ms).
-- `RATE_LIMIT_ENABLED`: Enable/disable rate limiting.
+- `JPA_DDL_AUTO`: Schema management strategy (`validate` for prod, `update` for local dev).
+- `FLYWAY_ENABLED`: Enable Flyway migrations (default `true`).
+- `RATE_LIMIT_ENABLED`: Enable/disable rate limiting on public and admin endpoints.
 - `SPRING_PROFILES_ACTIVE`: Must be `prod` in production to disable the seeder.
 
 Security and access:
@@ -90,12 +98,11 @@ Ensure your `.env` file is properly configured with the variables listed above.
 - Run app: `./gradlew bootRun`
 - Build JAR: `./gradlew build -x test`
 
-### Security test suite (backend)
-- Location: `backend/portfolio-backend/src/test/java/com/gonzalomartinez/portfolio_backend/infrastructure/web/admin/`
-- Minimal coverage:
-  - 401 when unauthenticated for `/api/admin/**`
-  - 403 for authenticated user without `ADMIN` role
-  - 2xx with `ADMIN` role and service invocation verified
+### Tests (backend)
+Unit and integration tests covering service layer and security components:
+- **Service tests:** `src/test/java/.../application/service/` — Authentication, Experience, Profile, Project, Skill, SpokenLanguage services.
+- **Security tests:** `src/test/java/.../infrastructure/security/` — InputSanitizer, TokenBucketRateLimiter.
+- Run with: `./gradlew test`
 
 ---
 
