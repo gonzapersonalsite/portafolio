@@ -25,15 +25,21 @@ El proyecto está diseñado para alta disponibilidad utilizando servicios modern
 
 ### 🚀 Pipeline CI/CD
 Flujo actual de despliegue con control de calidad previo:
-- **Frontend:** Construcción y despliegue automático en Vercel al hacer push a `main`.
-- **Backend (renderizado mediante contenedor):**
+- **Frontend (Vercel):**
+  - Vercel despliega automáticamente en cada push a `main` desde el directorio `frontend/`.
+  - Vercel detecta automáticamente pnpm mediante el campo `packageManager` en `package.json`.
+  - GitHub Actions ejecuta typecheck + lint en pushes/PRs que afecten a `frontend/**` como verificación de alerta temprana.
+  - Variable de entorno requerida en Vercel: `PNPM_APPROVE_BUILDS=true` (requisito de seguridad de pnpm v11).
+  - Panel de Vercel: configura el comando de instalación como `pnpm install` y el comando de compilación como `pnpm run build`.
+- **Backend (contenedor en Render):**
   - GitHub Actions ejecuta los tests de backend al hacer push a `main` en `backend/portfolio-backend/**`.
   - Si los tests pasan, CI invoca el **Deploy Hook** privado de Render para iniciar el deploy.
   - En Render, el servicio tiene **Auto‑Deploy desactivado**; solo se despliega cuando el hook es llamado.
   - El `Dockerfile` de backend compila el artefacto con `./gradlew build -x test` para builds rápidos (los tests ya corren en CI).
 
 Detalles del pipeline:
-- Workflow: `.github/workflows/backend-ci.yml`
+- Workflow backend: `.github/workflows/backend-ci.yml`
+- Workflow frontend: `.github/workflows/frontend-ci.yml`
 - Secret requerido en GitHub: `RENDER_DEPLOY_HOOK_URL` (Deploy Hook del servicio en Render)
 - Configuración en Render:
   - Settings → Build & Deploy → Auto‑Deploy = Off
@@ -50,6 +56,7 @@ Variables clave requeridas para producción:
 - `VITE_EMAILJS_SERVICE_ID`: Identificador del servicio EmailJS.
 - `VITE_EMAILJS_TEMPLATE_ID`: Identificador de la plantilla EmailJS.
 - `VITE_EMAILJS_PUBLIC_KEY`: Clave pública de EmailJS.
+- `PNPM_APPROVE_BUILDS`: Configurar como `true` en Vercel para permitir scripts de compilación de esbuild (requisito de pnpm v11+).
 
 ### Backend
 - `SPRING_DATASOURCE_URL`: Cadena de conexión PostgreSQL de Aiven.
@@ -60,6 +67,8 @@ Variables clave requeridas para producción:
 - `JWT_SECRET`: Clave secreta para la generación segura de tokens.
 - `CORS_ORIGINS`: Dominio frontend permitido.
 - `JWT_EXPIRATION`: Tiempo de expiración del token JWT (ms).
+- `JPA_DDL_AUTO`: Estrategia de gestión del esquema (`validate` para prod, `update` para desarrollo local).
+- `FLYWAY_ENABLED`: Habilitar migraciones Flyway (por defecto `true`).
 - `RATE_LIMIT_ENABLED`: Habilitar/deshabilitar límite de tasa.
 - `SPRING_PROFILES_ACTIVE`: Debe ser `prod` en producción para desactivar el seeder.
 
@@ -85,17 +94,15 @@ docker compose up -d
 
 Asegúrate de que tu archivo `.env` esté configurado correctamente con las variables listadas arriba.
 
-### Tests locales (backend)
+### Tests (backend)
+Tests unitarios que cubren la capa de servicio y los componentes de seguridad:
+- **Tests de servicio:** `src/test/java/.../application/service/` — Servicios Authentication, Experience, Profile, Project, Skill, SpokenLanguage.
+- **Tests de seguridad:** `src/test/java/.../infrastructure/security/` — InputSanitizer, TokenBucketRateLimiter.
+
+Comandos Gradle:
 - Ejecutar tests: `./gradlew test`
 - Ejecutar app: `./gradlew bootRun`
 - Generar JAR: `./gradlew build -x test`
-
-### Suite de seguridad (backend)
-- Ubicación: `backend/portfolio-backend/src/test/java/com/gonzalomartinez/portfolio_backend/infrastructure/web/admin/`
-- Cobertura mínima:
-  - 401 sin autenticación en `/api/admin/**`
-  - 403 con usuario autenticado sin rol `ADMIN`
-  - 2xx con `ADMIN` y verificación de invocación al servicio
 
 ---
 

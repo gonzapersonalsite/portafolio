@@ -26,10 +26,11 @@ The project is designed for high availability using modern cloud-native services
 ### 🚀 CI/CD Pipeline
 Current deployment flow with pre‑deployment quality gate:
 - **Frontend (Vercel):**
-  - GitHub Actions runs typecheck + lint on pushes/PRs touching `frontend/**`.
-  - Vercel auto‑detects pnpm via `packageManager` field and builds from `frontend/`.
-  - Vercel → Settings → Git → "Wait for CI checks" must be enabled so deploys only proceed after `frontend-ci` passes.
+  - Vercel auto‑deploys on every push to `main` from the `frontend/` directory.
+  - Vercel auto‑detects pnpm via the `packageManager` field in `package.json`.
+  - GitHub Actions runs typecheck + lint on pushes/PRs touching `frontend/**` as an early warning gate.
   - Required Vercel env var: `PNPM_APPROVE_BUILDS=true` (pnpm v11 security requirement).
+  - Vercel dashboard: set Install Command to `pnpm install` and Build Command to `pnpm run build`.
 - **Backend (container on Render):**
   - GitHub Actions runs backend tests on pushes to `main` within `backend/portfolio-backend/**`.
   - If tests pass, CI invokes the private **Deploy Hook** for the Render service to start the deploy.
@@ -93,16 +94,15 @@ docker compose up -d
 
 Ensure your `.env` file is properly configured with the variables listed above.
 
-### Local tests (backend)
+### Tests (backend)
+Unit tests covering service layer and security components:
+- **Service tests:** `src/test/java/.../application/service/` — Authentication, Experience, Profile, Project, Skill, SpokenLanguage services.
+- **Security tests:** `src/test/java/.../infrastructure/security/` — InputSanitizer, TokenBucketRateLimiter.
+
+Gradle commands:
 - Run tests: `./gradlew test`
 - Run app: `./gradlew bootRun`
 - Build JAR: `./gradlew build -x test`
-
-### Tests (backend)
-Unit and integration tests covering service layer and security components:
-- **Service tests:** `src/test/java/.../application/service/` — Authentication, Experience, Profile, Project, Skill, SpokenLanguage services.
-- **Security tests:** `src/test/java/.../infrastructure/security/` — InputSanitizer, TokenBucketRateLimiter.
-- Run with: `./gradlew test`
 
 ---
 
