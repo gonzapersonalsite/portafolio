@@ -247,7 +247,11 @@ const resources = {
                     en: 'English',
                     es: 'Spanish'
                 },
-                coldStartNotice: 'Welcome! As this project is on a free plan, the first load may take a few seconds while the server wakes up. Thanks for your patience! 🙇'
+                coldStartNotice: 'Welcome! As this project is on a free plan, the first load may take a few seconds while the server wakes up. Thanks for your patience! 🙇',
+                retry: 'Retry',
+                errorBoundaryTitle: 'Something went wrong',
+                errorBoundaryDescription: 'An unexpected error occurred. Please try refreshing the page.',
+                errorBoundaryRefresh: 'Refresh Page'
             },
             footer: {
                 rights: 'All rights reserved.',
@@ -501,7 +505,11 @@ const resources = {
                     en: 'Inglés',
                     es: 'Español'
                 },
-                coldStartNotice: '¡Bienvenido! Como este proyecto está en un plan gratuito, la primera carga puede tardar unos segundos mientras el servidor se activa. ¡Gracias por tu paciencia! 🙇'
+                coldStartNotice: '¡Bienvenido! Como este proyecto está en un plan gratuito, la primera carga puede tardar unos segundos mientras el servidor se activa. ¡Gracias por tu paciencia! 🙇',
+                retry: 'Reintentar',
+                errorBoundaryTitle: 'Algo salió mal',
+                errorBoundaryDescription: 'Ocurrió un error inesperado. Por favor, intenta recargar la página.',
+                errorBoundaryRefresh: 'Recargar Página'
             },
             footer: {
                 rights: 'Todos los derechos reservados.',

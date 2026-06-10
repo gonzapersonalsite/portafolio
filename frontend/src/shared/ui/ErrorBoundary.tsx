@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography, Button, Container } from '@mui/material';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { i18n } from '@/shared/config';
 
 interface Props {
     children: React.ReactNode;
@@ -44,10 +45,10 @@ class ErrorBoundary extends React.Component<Props, State> {
                     >
                         <ErrorOutlineIcon sx={{ fontSize: 80, color: 'error.main' }} />
                         <Typography variant="h4" fontWeight="bold">
-                            Something went wrong
+                            {i18n.t('common.errorBoundaryTitle')}
                         </Typography>
                         <Typography variant="body1" color="text.secondary">
-                            An unexpected error occurred. Please try refreshing the page.
+                            {i18n.t('common.errorBoundaryDescription')}
                         </Typography>
                         <Button
                             variant="contained"
@@ -55,7 +56,7 @@ class ErrorBoundary extends React.Component<Props, State> {
                             size="large"
                             onClick={() => window.location.reload()}
                         >
-                            Refresh Page
+                            {i18n.t('common.errorBoundaryRefresh')}
                         </Button>
                     </Box>
                 </Container>
