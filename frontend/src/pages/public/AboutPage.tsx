@@ -11,10 +11,6 @@ import { formatImageUrl } from '@/utils/imageUtils';
 import { AboutSkeleton, PageHeaderSkeleton } from '@/components/common/SkeletonLoaders';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
 import RichTextRenderer from '@/components/common/RichTextRenderer';
-import EmptyState from '@/components/common/EmptyState';
-import ErrorState from '@/components/common/ErrorState';
-import PsychologyIcon from '@mui/icons-material/Psychology';
-import TranslateIcon from '@mui/icons-material/Translate';
 import type { Skill, Profile, SpokenLanguage } from '@/types';
 
 import { requestCache } from '@/utils/requestCache';
