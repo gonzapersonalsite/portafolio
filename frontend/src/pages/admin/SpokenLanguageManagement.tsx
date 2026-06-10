@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     Box, Typography, Button, Paper, Table, TableBody, TableCell,
     TableContainer, TableHead, TableRow, IconButton,
@@ -30,7 +30,7 @@ const SpokenLanguageManagement: React.FC = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [languageToDelete, setLanguageToDelete] = useState<string | null>(null);
 
-    const fetchLanguages = async () => {
+    const fetchLanguages = useCallback(async () => {
         try {
             setLoading(true);
             const data = await adminService.getSpokenLanguages();
@@ -41,13 +41,13 @@ const SpokenLanguageManagement: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [showNotification, t]);
 
-    // fetchLanguages is async — setState occurs after await, not synchronously
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
         fetchLanguages();
     }, [fetchLanguages]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     const handleOpenDialog = (lang?: SpokenLanguage) => {
         setEditingLanguage(lang || null);

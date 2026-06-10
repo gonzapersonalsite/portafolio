@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     Box, Typography, Button, Paper,
     CircularProgress, Tab, Tabs
@@ -21,7 +21,7 @@ const ProfileManagement: React.FC = () => {
     const [tabValue, setTabValue] = useState(0);
     const [saving, setSaving] = useState(false);
 
-    const fetchProfile = async () => {
+    const fetchProfile = useCallback(async () => {
         try {
             setLoading(true);
             const data = await adminService.getProfile();
@@ -32,13 +32,13 @@ const ProfileManagement: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [showNotification, t]);
 
-    // fetchProfile is async — setState occurs after await, not synchronously
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
         fetchProfile();
     }, [fetchProfile]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!profile) return;

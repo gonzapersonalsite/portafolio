@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
     Box, Button, CircularProgress, Paper, Table, TableBody, TableCell, TableContainer,
     TableHead, TableRow, IconButton, Typography,
@@ -30,7 +30,7 @@ const SkillsManagement: React.FC = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-    const fetchSkills = async () => {
+    const fetchSkills = useCallback(async () => {
         try {
             setLoading(true);
             const data = await adminService.getSkills();
@@ -41,13 +41,13 @@ const SkillsManagement: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [showNotification, t]);
 
-    // fetchSkills is async — setState occurs after await, not synchronously
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
         fetchSkills();
     }, [fetchSkills]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     const handleOpen = (skill?: Skill) => {
         setEditingSkill(skill || null);

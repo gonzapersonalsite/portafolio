@@ -19,14 +19,14 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [zoomLevel, setZoomLevel] = useState(1);
 
-    // Reset state when gallery opens — open is a React state trigger, not a data fetch
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
         if (open) {
             setCurrentImageIndex(0);
             setZoomLevel(1);
         }
     }, [open]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     const handleCloseGallery = () => {
         onClose();

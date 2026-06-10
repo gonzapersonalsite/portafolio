@@ -37,13 +37,13 @@ const ProjectsPage: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    }, [language, cachedProjects]);
+    }, [cachedProjects]);
 
-    // fetchProjects is async — setState occurs after await, not synchronously
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
         fetchProjects();
     }, [fetchProjects]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     if (loading) {
         return (

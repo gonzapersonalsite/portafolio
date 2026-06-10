@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
     Box, Button, CircularProgress, Typography,
     Card, CardContent, CardActions, Grid,
@@ -36,7 +36,7 @@ const ProjectsManagement: React.FC = () => {
     const { language } = useLanguage();
     const { showNotification } = useNotification();
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             setLoading(true);
             const data = await adminService.getProjects();
@@ -47,13 +47,13 @@ const ProjectsManagement: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [showNotification, t]);
 
-    // fetchData is async — setState occurs after await, not synchronously
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
         fetchData();
     }, [fetchData]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     const handleOpen = (proj?: Project) => {
         setEditingProj(proj || null);

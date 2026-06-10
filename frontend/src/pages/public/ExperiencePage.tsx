@@ -42,13 +42,13 @@ const ExperiencePage: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    }, [language, cachedExps]);
+    }, [cachedExps]);
 
-    // fetchExperiences is async — setState occurs after await, not synchronously
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
         fetchExperiences();
     }, [fetchExperiences]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     if (loading) {
         return (

@@ -27,11 +27,11 @@ export function useProfile() {
         }
     }, []);
 
-    // fetchProfile is async — setState occurs after await, not synchronously
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
         fetchProfile();
     }, [fetchProfile]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     return { profile, loading, error, refetch: fetchProfile };
 }
