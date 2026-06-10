@@ -1,6 +1,6 @@
 # Plan de Migración FSD — Portafolio Frontend
 
-**Versión**: 1.0  
+**Versión**: 1.1  
 **Fecha**: 2026-06-10  
 **Rama**: `main` — trabajo local, sin operaciones git automáticas. Los commits y push los hace el desarrollador manualmente.  
 **Template origen**: `templates/frontend/react-fsd-template`
@@ -39,12 +39,19 @@ La migración es estructural: se reorganizan ~59 archivos fuente (~7100 líneas)
 ### Objetivo
 Asegurar baseline funcional antes de iniciar la migración.
 
+### Precondiciones (ya realizadas)
+- `vercel.json`: ya tiene el proxy rewrite `/api/(.*)` → Render. Se conserva tal cual.
+- `apiClient.ts`: ya usa `baseURL: '/api'` (ruta relativa). Se conserva y se refactoriza en Fase 2.
+- `.npmrc` con `ignore-scripts=true` operativo.
+- `pnpm-workspace.yaml` con `onlyBuiltDependencies: [esbuild]` operativo.
+
 ### Acciones
 1. Verificar que `docker compose up` funcione correctamente (baseline).
-2. Crear directorio `frontend/docs/` si no existe.
+2. Verificar que los tests existen y pasan: `pnpm test` (ver Anexo D).
 
 ### Verificación
 - [ ] `docker compose up` — navegación completa sin errores.
+- [ ] `pnpm test` — todos los tests en verde (baseline pre-migración).
 - [ ] Este documento existe en `frontend/docs/PLAN_MIGRACION_FSD.md`.
 
 ---
@@ -419,6 +426,22 @@ export * from './ui';
 - [ ] `npx tsc --noEmit` muestra errores solo por imports cross-layer aún no migrados (esperado).
 - [ ] Todos los archivos en `shared/` solo importan de dentro de `shared/` o de dependencias externas.
 
+### Tests a actualizar en esta fase
+Los siguientes tests se romperán al mover los archivos fuente. Actualizar sus imports para que usen los nuevos paths `@/shared/...`:
+
+| Test | Archivo origen → nuevo | Acción |
+|---|---|---|
+| `requestCache.test.ts` | `@/utils/requestCache` → `@/shared/lib/requestCache` | Actualizar import |
+| `sanitizers.test.ts` | `@/utils/sanitizers` → `@/shared/lib/sanitizers` | Actualizar import |
+| `imageUtils.test.ts` | `@/utils/imageUtils` → `@/shared/lib/imageUtils` | Actualizar import |
+| `notificationEvents.test.ts` | `@/utils/notificationEvents` → `@/shared/lib/notificationEvents` | Actualizar import |
+| `theme.test.ts` | `@/config/theme` → `@/shared/config/theme` | Actualizar import |
+| `apiClient` (nuevo test) | — | Crear test para `shared/api/client.ts` |
+
+Los tests de servicios (`publicService.test.ts`, `adminService.test.ts`, `authService.test.ts`) no requieren cambios en esta fase — se actualizarán en Fase 3 cuando se dividan por entidad.
+
+- [ ] `pnpm test` — los tests de `shared/` pasan.
+
 ---
 
 ## Fase 3 — Capa `entities/`
@@ -530,6 +553,19 @@ export type { SpokenLanguage } from './model/types';
 - [ ] Ningún archivo en `entities/` importa de `features/`, `widgets/`, `pages/`, o `app/`.
 - [ ] Los segmentos `model/` solo contienen archivos `.ts`.
 - [ ] Los segmentos `ui/` contienen `.tsx` y opcionalmente `.css` co-localizado.
+
+### Tests a actualizar en esta fase
+Los servicios se dividen por entidad. Actualizar los tests en consecuencia:
+
+| Test | Cambio necesario |
+|---|---|
+| `AuthStore.test.ts` | Mover a `entities/user/`. Reemplazar mock de `../services/authService` → `@/entities/user/api/authApi`. |
+| `useProfile.test.ts` | Mover a `entities/profile/`. Reemplazar mock de `@/services/publicService` → `@/entities/profile/api/profileApi`. |
+| `publicService.test.ts` | **Dividir** en `skillApi.test.ts`, `experienceApi.test.ts`, `projectApi.test.ts`, `profileApi.test.ts`, `languageApi.test.ts` en sus respectivos `entities/<entity>/api/`. |
+| `adminService.test.ts` | Ídem, las funciones CRUD se fusionan en los mismos archivos de API por entidad. |
+| `authService.test.ts` | Mover a `entities/user/api/authApi.test.ts`. |
+
+- [ ] `pnpm test` — los tests de `entities/` pasan con los nuevos paths.
 
 ---
 
@@ -668,6 +704,17 @@ export { PersonalSocialTab } from './ui/PersonalSocialTab';
 - [ ] Ningún feature importa de otro feature al mismo nivel (cross-slice dependency).
 - [ ] Segmentos `model/` solo `.ts`. Segmentos `ui/` solo `.tsx` (+ `.css`).
 
+### Tests a actualizar en esta fase
+Los contextos se dividen en `model/` (.ts) + `ui/` (.tsx) y se mueven a la capa `features/`:
+
+| Test | Cambio necesario |
+|---|---|
+| `ThemeContext.test.tsx` | Mover a `features/theme-switch/`. Actualizar imports para `useColorMode` y `ThemeProvider` desde las nuevas ubicaciones. |
+| `LanguageContext.test.tsx` | Mover a `features/language-switch/`. Actualizar imports para `useLanguage` y `LanguageProvider`. |
+| `NotificationContext.test.tsx` | Mover a `features/notifications/`. Actualizar imports para `useNotification` y `NotificationProvider`. |
+
+- [ ] `pnpm test` — los tests de `features/` pasan.
+
 ---
 
 ## Fase 5 — Capa `widgets/`
@@ -705,6 +752,9 @@ export { default as Navbar } from './ui/Navbar';
 - [ ] `npx eslint src/widgets/` pasa.
 - [ ] Ningún widget importa de `pages/` o `app/`.
 - [ ] Los widgets solo importan de `features/`, `entities/`, `shared/`.
+
+### Tests en esta fase
+Los widgets no tienen tests unitarios propios (son componentes de composición). Los tests de las capas inferiores ya deberían pasar. Verificar que `pnpm test` sigue en verde.
 
 ---
 
@@ -789,6 +839,9 @@ Mismo patrón para `ForgotPasswordPage` y `ResetPasswordPage`.
 - [ ] `npx tsc --noEmit` — 0 errores (para este punto, todos los imports deberían resolverse).
 - [ ] Cada página exporta `default` vía `React.lazy()` compatible.
 - [ ] Las páginas admin importan `useNotification` de `@/features/notifications`, `useLanguage` de `@/features/language-switch`.
+
+### Tests en esta fase
+Las páginas no tienen tests unitarios propios. Verificar que `pnpm test` sigue en verde. El build `tsc --noEmit` debe dar 0 errores — esto valida que todos los imports cross-layer están correctos.
 
 ---
 
@@ -930,6 +983,11 @@ export { default as AppRouter } from './routing/AppRouter';
 - [ ] `npx eslint .` — 0 errores, 0 warnings (las 5 reglas FSD pasan).
 - [ ] `pnpm run build` — build exitoso.
 
+### Tests en esta fase
+Todos los tests deben pasar sin modificaciones adicionales. Esta fase solo compone capas ya migradas (app/ importa de pages/, pages/ importa de widgets/, etc.).
+
+- [ ] `pnpm test` — todos los tests en verde (confirmación final de no regresión).
+
 ---
 
 ## Fase 8 — Limpieza, verificación y testing
@@ -1060,6 +1118,64 @@ Ninguna. `shared/` es autónomo.
 | Regresión funcional durante migración | Alto | Media | Checklist exhaustivo en Fase 8. No se hace push hasta verificación completa. |
 | Páginas admin actualmente contienen lógica + formulario | Medio | Alta | Se extrae formulario a feature manteniendo página como wrapper. |
 | Pérdida de code-splitting | Medio | Baja | `React.lazy()` se mantiene en `AppRouter` apuntando a las nuevas rutas. |
+
+---
+
+## Anexo D — Inventario de tests unitarios (pre-migración)
+
+14 archivos de test creados, cubriendo toda la lógica del frontend. Todos siguen el mismo patrón: `describe`/`it`, mocks con `vi.mock`, `@testing-library/react` para hooks.
+
+### D.1 Utilidades (`src/utils/`) — 4 tests
+
+| Test | Cobertura | Mock |
+|---|---|---|
+| `requestCache.test.ts` | `get`, `set`, `clear`, `remove`, `prune`, expiración TTL, datos corruptos, prefijo `api_cache_` | `localStorage` |
+| `sanitizers.test.ts` | `parseUrlStringToArray` (multilínea, backticks, comillas, arrays), `parseCommaSeparatedString` | Ninguno (funciones puras) |
+| `imageUtils.test.ts` | `formatImageUrl` (Google Drive `/d/` y `?id=`, URLs normales, input falsy) | Ninguno |
+| `notificationEvents.test.ts` | `subscribe`, `emit`, `unsubscribe`, múltiples listeners, throw en listener | Ninguno |
+
+### D.2 Configuración (`src/config/`) — 1 test
+
+| Test | Cobertura | Mock |
+|---|---|---|
+| `theme.test.ts` | `createAppTheme` para `light`, `dark`, `glass` (paleta, tipografía, overrides) | Ninguno |
+
+### D.3 Servicios (`src/services/`) — 3 tests
+
+| Test | Cobertura | Mock |
+|---|---|---|
+| `publicService.test.ts` | 6 métodos: `getAllSkills`, `getAllExperiences`, `getAllProjects`, `getAllSpokenLanguages`, `getProfile`, `getFeaturedProjects` | `apiClient` |
+| `adminService.test.ts` | CRUD completo para Skills, Experiences, Projects, Profile, SpokenLanguages | `apiClient` |
+| `authService.test.ts` | `login`, `validateToken`, `forgotPassword`, `resetPassword` | `apiClient` |
+
+### D.4 Estado global (`src/context/`) — 4 tests
+
+| Test | Cobertura | Mock |
+|---|---|---|
+| `AuthStore.test.ts` | Zustand: `login`, `logout`, `validateToken` (válido, inválido, sin token, error red) | `authService` |
+| `ThemeContext.test.tsx` | `useColorMode` + `ThemeProvider`: toggle cíclico, set explícito, persistencia localStorage | `localStorage`, `matchMedia` |
+| `LanguageContext.test.tsx` | `useLanguage` + `LanguageProvider`: toggle en↔es, set explícito, persistencia, error fuera de provider | `react-i18next` |
+| `NotificationContext.test.tsx` | `useNotification` + `NotificationProvider`: suscripción a eventos, error fuera de provider | `notificationEvents` |
+
+### D.5 Hooks (`src/hooks/`) — 1 test
+
+| Test | Cobertura | Mock |
+|---|---|---|
+| `useProfile.test.ts` | `useProfile`: fetch exitoso, datos cacheados, error de red, `refetch` | `publicService`, `requestCache`, `i18n` |
+
+### D.6 Ejecución
+
+```bash
+pnpm test          # Ejecutar todos los tests una vez
+pnpm test:watch    # Modo watch para desarrollo
+```
+
+### D.7 Convenciones de testing
+
+- **Co-localización**: cada test está junto al archivo que prueba (`src/utils/requestCache.test.ts` junto a `src/utils/requestCache.ts`)
+- **Nombrado**: `describe('modulo', () => { describe('funcion', () => { it('comportamiento', ...) }) })`
+- **Mocks en la cima**: `vi.mock` antes de los imports, para que el módulo mockeado esté disponible al cargar las dependencias
+- **Sin acoplamiento a implementación**: los tests comprueban entradas/salidas, no detalles internos
 
 ---
 
