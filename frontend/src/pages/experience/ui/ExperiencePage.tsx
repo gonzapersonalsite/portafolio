@@ -1,70 +1,24 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Box, Container, Typography, Paper, Chip, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot, TimelineOppositeContent, timelineOppositeContentClasses } from '@mui/lab';
 import BusinessIcon from '@mui/icons-material/Business';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { getAllExperiences } from '@/entities/experience';
-import type { Experience } from '@/entities/experience';
 import { useLanguage } from '@/features/language-switch';
 import { ExperienceSkeleton, PageHeaderSkeleton, RichTextRenderer, ScrollableContent, EmptyState, ErrorState } from '@/shared/ui';
 import ExploreIcon from '@mui/icons-material/Explore';
-import { requestCache } from '@/shared/lib';
-import { i18n } from '@/shared/config';
+import { useApiData } from '@/shared/lib';
 
 const ExperiencePage: React.FC = () => {
     const { t } = useTranslation();
     const { language } = useLanguage();
     const theme = useTheme();
-    
-    // Intentar obtener de caché inmediatamente
-    const cacheKey = `/public/experiences?&lang=${i18n.language}`;
-    const cachedExps = requestCache.get<Experience[]>(cacheKey);
-    const fetchedRef = React.useRef(!!cachedExps);
-    
-    const [experiences, setExperiences] = React.useState<Experience[]>(cachedExps || []);
-    const [loading, setLoading] = React.useState(!cachedExps);
-    const [error, setError] = React.useState<string | null>(null);
 
-    React.useEffect(() => {
-        let cancelled = false;
-        const hadCache = fetchedRef.current;
-
-        (async () => {
-            try {
-                setError(null);
-                if (!hadCache) setLoading(true);
-                const data = await getAllExperiences();
-                if (!cancelled) {
-                    setExperiences(data);
-                    setLoading(false);
-                    fetchedRef.current = true;
-                }
-            } catch (err) {
-                if (!cancelled) {
-                    console.error("Failed to fetch experiences", err);
-                    setError("Failed to load experiences");
-                    setLoading(false);
-                }
-            }
-        })();
-
-        return () => { cancelled = true; };
-    }, [language]);
-
-    const refetch = useCallback(async () => {
-        setLoading(true);
-        try {
-            const data = await getAllExperiences();
-            setExperiences(data);
-            setError(null);
-        } catch (err) {
-            console.error("Failed to fetch experiences", err);
-            setError("Failed to load experiences");
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+    const { data: experiences, loading, error, refetch } = useApiData(
+        () => getAllExperiences(),
+        '/public/experiences'
+    );
 
     if (loading) {
         return (
@@ -97,17 +51,17 @@ const ExperiencePage: React.FC = () => {
                     {t('experience.heading', "Work History")}
                 </Typography>
 
-                {experiences.length > 0 ? (
+                {(experiences ?? []).length > 0 ? (
                     <Timeline
                         position="right"
                         sx={{
                             [`& .${timelineOppositeContentClasses.root}`]: {
-                                flex: 0.3, // Adjust opposite content width to prevent date wrapping
+                                flex: 0.3,
                             },
                             p: 0
                         }}
                     >
-                        {experiences.map((exp, index) => (
+                        {(experiences ?? []).map((exp, index) => (
                             <TimelineItem key={exp.id}>
                                 <TimelineOppositeContent color="text.secondary" sx={{ py: '12px', px: 2, display: { xs: 'none', md: 'block' } }}>
                                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
@@ -122,7 +76,7 @@ const ExperiencePage: React.FC = () => {
                                     <TimelineDot color={index === 0 ? "primary" : "grey"} variant={index === 0 ? "filled" : "outlined"}>
                                         <BusinessIcon />
                                     </TimelineDot>
-                                    {index < experiences.length - 1 && <TimelineConnector />}
+                                    {index < (experiences ?? []).length - 1 && <TimelineConnector />}
                                 </TimelineSeparator>
 
                                 <TimelineContent sx={{ py: '12px', px: 2 }}>

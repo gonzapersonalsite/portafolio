@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -10,6 +10,7 @@ import {
     Typography,
     Slider
 } from '@mui/material';
+import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import type { SpokenLanguage } from '@/entities/spoken-language';
 
@@ -31,67 +32,75 @@ const SpokenLanguageFormDialog: React.FC<SpokenLanguageFormDialogProps> = ({
     defaultOrder
 }) => {
     const { t } = useTranslation();
-    const [formData, setFormData] = useState<Omit<SpokenLanguage, 'id'>>(() => {
-        if (editingLanguage) {
-            return {
-                nameEn: editingLanguage.nameEn,
-                nameEs: editingLanguage.nameEs,
-                levelEn: editingLanguage.levelEn,
-                levelEs: editingLanguage.levelEs,
-                proficiency: editingLanguage.proficiency,
-                order: editingLanguage.order
-            };
+    const { control, register, handleSubmit, reset, watch } = useForm<Omit<SpokenLanguage, 'id'>>();
+    const currentProficiency = watch('proficiency');
+
+    useEffect(() => {
+        if (open) {
+            if (editingLanguage) {
+                reset({
+                    nameEn: editingLanguage.nameEn,
+                    nameEs: editingLanguage.nameEs,
+                    levelEn: editingLanguage.levelEn,
+                    levelEs: editingLanguage.levelEs,
+                    proficiency: editingLanguage.proficiency,
+                    order: editingLanguage.order
+                });
+            } else {
+                reset({
+                    nameEn: '',
+                    nameEs: '',
+                    levelEn: '',
+                    levelEs: '',
+                    proficiency: 100,
+                    order: defaultOrder
+                });
+            }
         }
-        return {
-            nameEn: '',
-            nameEs: '',
-            levelEn: '',
-            levelEs: '',
-            proficiency: 100,
-            order: defaultOrder
-        };
-    });
+    }, [open, editingLanguage, reset, defaultOrder]);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: name === 'order' ? parseInt(value) || 0 : value }));
-    };
-
-    const handleFormSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        await onSubmit(formData);
+    const handleFormSubmit = async (data: Omit<SpokenLanguage, 'id'>) => {
+        await onSubmit(data);
     };
 
     return (
-        <Dialog key={`${open}-${editingLanguage?.id ?? 'new'}`} open={open} onClose={onClose} maxWidth="sm" fullWidth disableEnforceFocus>
-            <DialogTitle>
-                {editingLanguage ? `${t('admin.edit')} ${t('nav.languages')}` : `${t('admin.add')} ${t('nav.languages')}`}
-            </DialogTitle>
-            <DialogContent>
-                <Box component="form" onSubmit={handleFormSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
-                    <TextField name="nameEn" label={`${t('admin.name')} (EN)`} value={formData.nameEn} onChange={handleInputChange} fullWidth />
-                    <TextField name="nameEs" label={`${t('admin.name')} (ES)`} value={formData.nameEs} onChange={handleInputChange} fullWidth />
-                    <TextField name="levelEn" label={`${t('admin.level')} (EN)`} value={formData.levelEn} onChange={handleInputChange} fullWidth />
-                    <TextField name="levelEs" label={`${t('admin.level')} (ES)`} value={formData.levelEs} onChange={handleInputChange} fullWidth />
-                    <Box>
-                        <Typography gutterBottom>{t('admin.proficiency')} ({formData.proficiency}%)</Typography>
-                        <Slider
-                            value={formData.proficiency}
-                            onChange={(_, val) => setFormData(prev => ({ ...prev, proficiency: val as number }))}
-                            valueLabelDisplay="auto"
-                            min={0}
-                            max={100}
-                        />
+        <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth disableEnforceFocus>
+            <form onSubmit={handleSubmit(handleFormSubmit)}>
+                <DialogTitle>
+                    {editingLanguage ? `${t('admin.edit')} ${t('nav.languages')}` : `${t('admin.add')} ${t('nav.languages')}`}
+                </DialogTitle>
+                <DialogContent>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
+                        <TextField label={`${t('admin.name')} (EN)`} {...register('nameEn', { required: true })} fullWidth />
+                        <TextField label={`${t('admin.name')} (ES)`} {...register('nameEs', { required: true })} fullWidth />
+                        <TextField label={`${t('admin.level')} (EN)`} {...register('levelEn', { required: true })} fullWidth />
+                        <TextField label={`${t('admin.level')} (ES)`} {...register('levelEs', { required: true })} fullWidth />
+                        <Box>
+                            <Typography gutterBottom>{t('admin.proficiency')} ({currentProficiency ?? editingLanguage?.proficiency ?? 100}%)</Typography>
+                            <Controller
+                                name="proficiency"
+                                control={control}
+                                defaultValue={100}
+                                render={({ field }) => (
+                                    <Slider
+                                        {...field}
+                                        valueLabelDisplay="auto"
+                                        min={0}
+                                        max={100}
+                                    />
+                                )}
+                            />
+                        </Box>
+                        <TextField label={t('admin.order')} type="number" {...register('order', { required: true, valueAsNumber: true })} fullWidth />
                     </Box>
-                    <TextField name="order" label={t('admin.order')} type="number" value={formData.order} onChange={handleInputChange} fullWidth />
-                </Box>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose}>{t('admin.cancel')}</Button>
-                <Button type="submit" form="sp-lang-form" variant="contained" disabled={saving} onClick={handleFormSubmit}>
-                    {saving ? t('admin.saving') : t('admin.save')}
-                </Button>
-            </DialogActions>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={onClose}>{t('admin.cancel')}</Button>
+                    <Button type="submit" variant="contained" disabled={saving}>
+                        {saving ? t('admin.saving') : t('admin.save')}
+                    </Button>
+                </DialogActions>
+            </form>
         </Dialog>
     );
 };

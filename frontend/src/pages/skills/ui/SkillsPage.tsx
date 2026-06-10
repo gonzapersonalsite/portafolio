@@ -1,56 +1,24 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo } from 'react';
 import { Box, Container, Typography, Grid, LinearProgress, Paper, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { getAllSkills } from '@/entities/skill';
-import type { Skill } from '@/entities/skill';
 import { useLanguage } from '@/features/language-switch';
 import { SkillsSkeleton, PageHeaderSkeleton, EmptyState, ErrorState } from '@/shared/ui';
 import PsychologyIcon from '@mui/icons-material/Psychology';
-import { requestCache } from '@/shared/lib';
-import { i18n } from '@/shared/config';
+import { useApiData } from '@/shared/lib';
 
 const SkillsPage: React.FC = () => {
     const { t } = useTranslation();
     const { language } = useLanguage();
     const theme = useTheme();
-    
-    // Intentar obtener datos de caché inmediatamente para evitar skeletons innecesarios
-    const cacheKey = `/public/skills?&lang=${i18n.language}`;
-    const cachedSkills = requestCache.get<Skill[]>(cacheKey);
-    const fetchedRef = React.useRef(!!cachedSkills);
 
-    const [skills, setSkills] = React.useState<Skill[]>(cachedSkills || []);
-    const [loading, setLoading] = React.useState(!cachedSkills);
-    const [error, setError] = React.useState<string | null>(null);
+    const { data: skills, loading, error, refetch } = useApiData(
+        () => getAllSkills(),
+        '/public/skills'
+    );
 
-    React.useEffect(() => {
-        let cancelled = false;
-        const hadCache = fetchedRef.current;
-
-        (async () => {
-            try {
-                setError(null);
-                if (!hadCache) setLoading(true);
-                const data = await getAllSkills();
-                if (!cancelled) {
-                    setSkills(data);
-                    setLoading(false);
-                    fetchedRef.current = true;
-                }
-            } catch (err) {
-                if (!cancelled) {
-                    console.error("Failed to fetch skills", err);
-                    setError("Failed to load skills");
-                    setLoading(false);
-                }
-            }
-        })();
-
-        return () => { cancelled = true; };
-    }, [language]);
-
-    // Group skills by category
     const skillsByCategory = useMemo(() => {
+        if (!skills) return {};
         const groups: { [key: string]: typeof skills } = {};
         skills.forEach(skill => {
             if (!groups[skill.category]) {
@@ -60,20 +28,6 @@ const SkillsPage: React.FC = () => {
         });
         return groups;
     }, [skills]);
-
-    const refetch = useCallback(async () => {
-        setLoading(true);
-        try {
-            const data = await getAllSkills();
-            setSkills(data);
-            setError(null);
-        } catch (err) {
-            console.error("Failed to fetch skills", err);
-            setError("Failed to load skills");
-        } finally {
-            setLoading(false);
-        }
-    }, []);
 
     if (loading) {
         return (
@@ -107,7 +61,7 @@ const SkillsPage: React.FC = () => {
                 </Typography>
 
                 <Grid container spacing={4}>
-                    {skills.length > 0 ? (
+                    {(skills ?? []).length > 0 ? (
                         Object.entries(skillsByCategory).map(([category, categorySkills]) => (
                             <Grid size={{ xs: 12, md: 6 }} key={category}>
                                 <Paper

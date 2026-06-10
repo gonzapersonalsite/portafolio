@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Box, Container, Typography, Button, Grid, useTheme, Chip, Stack, Skeleton } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -8,12 +8,10 @@ import StorageIcon from '@mui/icons-material/Storage';
 import WebIcon from '@mui/icons-material/Web';
 import { keyframes } from '@emotion/react';
 import { ProjectCard, getFeaturedProjects } from '@/entities/project';
-import type { Project } from '@/entities/project';
 import { getProfile } from '@/entities/profile';
-import type { Profile as ProfileType } from '@/entities/profile';
 import { useLanguage } from '@/features/language-switch';
 import { Link as RouterLink } from 'react-router-dom';
-import { formatImageUrl, requestCache } from '@/shared/lib';
+import { formatImageUrl, useApiData } from '@/shared/lib';
 import { HeroSkeleton, ProjectCardSkeleton, ImageWithFallback, RichTextRenderer, EmptyState, ErrorState } from '@/shared/ui';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
@@ -23,78 +21,30 @@ const float = keyframes`
   100% { transform: translateY(0px); }
 `;
 
-import { i18n } from '@/shared/config';
-
 const HomePage: React.FC = () => {
     const { t } = useTranslation();
     const { language } = useLanguage();
     const theme = useTheme();
 
-    // Cache keys
-    const profileCacheKey = `/public/profile?&lang=${i18n.language}`;
-    const projectsCacheKey = `/public/projects/featured?&lang=${i18n.language}`;
-    
-    const cachedProfile = requestCache.get<ProfileType>(profileCacheKey);
-    const cachedProjects = requestCache.get<Project[]>(projectsCacheKey);
-    const fetchedRef = React.useRef(!!cachedProfile && !!cachedProjects);
+    const { data: featuredProjects, loading: projectsLoading, error: projectsError, refetch: refetchProjects } = useApiData(
+        () => getFeaturedProjects(),
+        '/public/projects/featured'
+    );
+    const { data: profile, loading: profileLoading, error: profileError, refetch: refetchProfile } = useApiData(
+        () => getProfile(),
+        '/public/profile'
+    );
 
-    const [featuredProjects, setFeaturedProjects] = React.useState<Project[]>(cachedProjects || []);
-    const [profile, setProfile] = React.useState<ProfileType | null>(cachedProfile || null);
-    const [loading, setLoading] = React.useState(!cachedProfile || !cachedProjects);
-    const [error, setError] = React.useState<string | null>(null);
+    const loading = projectsLoading || profileLoading;
+    const error = projectsError || profileError;
+    const refetch = () => {
+        refetchProjects();
+        refetchProfile();
+    };
 
-    React.useEffect(() => {
-        let cancelled = false;
-        const hadCache = fetchedRef.current;
-
-        (async () => {
-            try {
-                setError(null);
-                if (!hadCache) setLoading(true);
-                const [projectsData, profileData] = await Promise.all([
-                    getFeaturedProjects(),
-                    getProfile()
-                ]);
-                if (!cancelled) {
-                    setFeaturedProjects(projectsData);
-                    setProfile(profileData);
-                    setLoading(false);
-                    fetchedRef.current = true;
-                }
-            } catch (error) {
-                if (!cancelled) {
-                    console.error("Failed to fetch home data", error);
-                    setError("Failed to load home page data");
-                    setLoading(false);
-                }
-            }
-        })();
-
-        return () => { cancelled = true; };
-    }, [language]);
-
-    // Helper to get localized text
     const getLocalizedText = (en: string, es: string) => {
         return language === 'en' ? (en || es) : (es || en);
     };
-
-    const refetch = useCallback(async () => {
-        setLoading(true);
-        try {
-            const [projectsData, profileData] = await Promise.all([
-                getFeaturedProjects(),
-                getProfile()
-            ]);
-            setFeaturedProjects(projectsData);
-            setProfile(profileData);
-            setError(null);
-        } catch (error) {
-            console.error("Failed to fetch home data", error);
-            setError("Failed to load home page data");
-        } finally {
-            setLoading(false);
-        }
-    }, []);
 
     if (loading) {
         return (
@@ -145,7 +95,6 @@ const HomePage: React.FC = () => {
 
     return (
         <Box sx={{ overflow: 'hidden' }}>
-            {/* Hero Section */}
             <Box
                 sx={{
                     minHeight: '90vh',
@@ -223,7 +172,6 @@ const HomePage: React.FC = () => {
                                     zIndex: 1
                                 }}
                             >
-                                {/* Abstract Code Card Visualization */}
                                 <Box sx={{
                                     p: 4,
                                     borderRadius: 4,
@@ -242,7 +190,6 @@ const HomePage: React.FC = () => {
                                     </Typography>
                                 </Box>
 
-                                {/* Decorative Circles */}
                                 <Box sx={{
                                     position: 'absolute',
                                     top: -40,
@@ -271,8 +218,6 @@ const HomePage: React.FC = () => {
                 </Container>
             </Box>
 
-
-            {/* Featured Projects Section */}
             <Box sx={{ py: 8, bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : 'grey.50' }}>
                 <Container maxWidth="lg">
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 6 }}>
@@ -289,12 +234,12 @@ const HomePage: React.FC = () => {
                         </Button>
                     </Box>
                     <Grid container spacing={4}>
-                        {featuredProjects.map((project) => (
+                        {(featuredProjects ?? []).map((project) => (
                             <Grid size={{ xs: 12, md: 6, lg: 4 }} key={project.id}>
                                 <ProjectCard project={project} />
                             </Grid>
                         ))}
-                        {featuredProjects.length === 0 && (
+                        {(!featuredProjects || featuredProjects.length === 0) && (
                             <Grid size={{ xs: 12 }}>
                                 <EmptyState
                                     title={t('admin.emptyState.featured.title', 'Highlights Coming Soon')}
@@ -307,7 +252,6 @@ const HomePage: React.FC = () => {
                 </Container>
             </Box>
 
-            {/* About Preview Section */}
             <Container sx={{ py: 10 }}>
                 <Grid container spacing={6} alignItems="center">
                     <Grid size={{ xs: 12, md: 6 }}>

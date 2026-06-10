@@ -4,7 +4,6 @@ import { Box, CircularProgress, Container } from '@mui/material';
 import { ProtectedRoute } from '@/features/auth';
 import { PublicLayout } from '@/app/layouts';
 import { DashboardLayout } from '@/widgets/dashboard-layout';
-import { ErrorBoundary } from '@/shared/ui';
 import {
     HeroSkeleton, PageHeaderSkeleton, SkillsSkeleton, ExperienceSkeleton,
     ProjectGridSkeleton, AboutSkeleton, ContactSkeleton
@@ -48,8 +47,7 @@ const PageLoader = ({ children }: { children: React.ReactNode }) => (
 
 export default function AppRouter() {
     return (
-        <ErrorBoundary>
-            <Routes>
+        <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<PublicLayout />}>
                     <Route index element={
@@ -100,6 +98,5 @@ export default function AppRouter() {
 
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-        </ErrorBoundary>
     );
 }

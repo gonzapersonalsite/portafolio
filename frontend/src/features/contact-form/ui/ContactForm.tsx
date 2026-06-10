@@ -37,7 +37,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onShowNotification: showNotif
 
         if (!serviceId || serviceId === 'your_service_id' || !serviceId.startsWith('service_')) {
             setLoading(false);
-            showNotification("EmailJS not configured correctly in .env.local (Service ID missing)", 'error', 6000);
+            showNotification(t('contact.form.emailJsNotConfigured'), 'error', 6000);
             return;
         }
 

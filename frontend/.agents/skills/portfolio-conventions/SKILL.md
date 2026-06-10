@@ -56,43 +56,34 @@ This skill documents project-specific decisions for the Portfolio application. I
 - **Languages**: English (`en`), Spanish (`es`)
 - **Detection**: localStorage → navigator.language → fallback `en`
 - **Translation files**: Inline in `shared/config/i18n.ts`
-- **Cache key pattern**: All cache keys include `lang` parameter: `/public/skills?&lang=${i18n.language}`
+- **No lang in cache keys**: API returns bilingual data (En/Es fields), so cache keys do NOT include language. Language switch only re-renders, never refetches.
 
 ## Data Fetching Pattern
 
-All public pages follow the same pattern (established after fixing infinite re-render bug):
+All public pages use the `useApiData` hook (`shared/lib/useApiData.ts`) for fetching, caching, loading, and error states:
 
 ```tsx
-const cacheKey = `/public/<resource>?&lang=${i18n.language}`;
-const cached = requestCache.get<T>(cacheKey);
-const fetchedRef = useRef(!!cached);
-const [data, setData] = useState<T>(cached || fallback);
-const [loading, setLoading] = useState(!cached);
-const [error, setError] = useState<string | null>(null);
+import { useApiData } from '@/shared/lib';
 
-useEffect(() => {
-  let cancelled = false;
-  const hadCache = fetchedRef.current;
-  (async () => {
-    try {
-      if (!hadCache) setLoading(true);
-      const fresh = await api.fetch();
-      if (!cancelled) { setData(fresh); setLoading(false); fetchedRef.current = true; }
-    } catch (err) {
-      if (!cancelled) { setError('...'); setLoading(false); }
-    }
-  })();
-  return () => { cancelled = true; };
-}, [language]);
-
-const refetch = useCallback(async () => { /* force-refresh logic */ }, []);
+const { data, loading, error, refetch } = useApiData(
+    () => getAllProjects(),      // stable fetcher function
+    '/public/projects'           // cache key (without lang)
+);
 ```
 
-- `fetchedRef` starts as `useRef(!!cached)` and is updated to `true` after first successful fetch
-- Never updated during render (React 19 `react-hooks/refs` lint rule)
-- `useEffect` depends only on `[language]` for re-fetch on language change
-- `cancelled` flag prevents state updates on unmounted components
-- `refetch` is a stable `useCallback([])` for error retry buttons
+### Contract
+
+- `data`: `T | null` — cached data on mount, then fresh data after fetch
+- `loading`: `boolean` — `true` only on first fetch when no cache exists
+- `error`: `string | null` — human-readable error message on failure
+- `refetch`: `() => Promise<void>` — force refetch ignoring cache
+
+### Behavior
+
+- **Cache-first**: Returns cached data (24h TTL via `requestCache` in localStorage) on mount, avoiding skeleton flash
+- **Single fetch**: Fetches once on mount. Does NOT refetch on language change (data is bilingual)
+- **Cancellation**: Sets `cancelledRef` on unmount to prevent state updates on unmounted components
+- **Stable fetcher**: Stores `fetcher` in a ref updated via `useEffect` to handle inline arrow functions without infinite re-renders
 
 ## Forms
 

@@ -85,7 +85,8 @@ const resources = {
                     email: 'Email',
                     message: 'Message',
                     submit: 'Send Message',
-                    success: 'Message sent successfully!'
+                    success: 'Message sent successfully!',
+                    emailJsNotConfigured: 'EmailJS not configured correctly. Please check your environment variables.'
                 }
             },
             admin: {
@@ -337,7 +338,8 @@ const resources = {
                     email: 'Correo',
                     message: 'Mensaje',
                     submit: 'Enviar Mensaje',
-                    success: '¡Mensaje enviado con éxito!'
+                    success: '¡Mensaje enviado con éxito!',
+                    emailJsNotConfigured: 'EmailJS no está configurado correctamente. Por favor, revisa tus variables de entorno.'
                 }
             },
             admin: {

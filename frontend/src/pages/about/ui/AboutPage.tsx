@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Box, Container, Typography, Grid, Button, Stack, Chip, Divider, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -7,68 +7,36 @@ import CodeIcon from '@mui/icons-material/Code';
 
 import { useLanguage } from '@/features/language-switch';
 import { getAllSkills } from '@/entities/skill';
-import type { Skill } from '@/entities/skill';
 import { getAllSpokenLanguages } from '@/entities/spoken-language';
-import type { SpokenLanguage } from '@/entities/spoken-language';
 import { getProfile } from '@/entities/profile';
-import type { Profile } from '@/entities/profile';
-import { formatImageUrl, requestCache } from '@/shared/lib';
+import { formatImageUrl, useApiData } from '@/shared/lib';
 import { AboutSkeleton, PageHeaderSkeleton, ImageWithFallback, RichTextRenderer } from '@/shared/ui';
-import { i18n } from '@/shared/config';
 
 const AboutPage: React.FC = () => {
     const { t } = useTranslation();
     const { language } = useLanguage();
     const theme = useTheme();
 
-    // Cache keys
-    const skillsCacheKey = `/public/skills?&lang=${i18n.language}`;
-    const languagesCacheKey = `/public/spoken-languages?&lang=${i18n.language}`;
-    const profileCacheKey = `/public/profile?&lang=${i18n.language}`;
-    
-    const cachedSkills = requestCache.get<Skill[]>(skillsCacheKey);
-    const cachedLanguages = requestCache.get<SpokenLanguage[]>(languagesCacheKey);
-    const cachedProfile = requestCache.get<Profile>(profileCacheKey);
-    const fetchedRef = React.useRef(!!cachedSkills && !!cachedLanguages && !!cachedProfile);
-
-    const [competencies, setCompetencies] = React.useState<Skill[]>(
-        cachedSkills ? cachedSkills.filter(s => s.level >= 70) : []
+    const { data: skills, loading: skillsLoading } = useApiData(
+        () => getAllSkills(),
+        '/public/skills'
     );
-    const [spokenLanguages, setSpokenLanguages] = React.useState<SpokenLanguage[]>(cachedLanguages || []);
-    const [profile, setProfile] = React.useState<Profile | null>(cachedProfile || null);
-    const [loading, setLoading] = React.useState(!cachedSkills || !cachedLanguages || !cachedProfile);
+    const { data: spokenLanguages, loading: languagesLoading } = useApiData(
+        () => getAllSpokenLanguages(),
+        '/public/spoken-languages'
+    );
+    const { data: profile, loading: profileLoading } = useApiData(
+        () => getProfile(),
+        '/public/profile'
+    );
 
-    React.useEffect(() => {
-        let cancelled = false;
-        const hadCache = fetchedRef.current;
+    const loading = skillsLoading || languagesLoading || profileLoading;
 
-        (async () => {
-            try {
-                if (!hadCache) setLoading(true);
-                const [skillsData, languagesData, profileData] = await Promise.all([
-                    getAllSkills(),
-                    getAllSpokenLanguages(),
-                    getProfile()
-                ]);
-                if (!cancelled) {
-                    setCompetencies(skillsData.filter((s: Skill) => s.level >= 70));
-                    setSpokenLanguages(languagesData);
-                    setProfile(profileData);
-                    setLoading(false);
-                    fetchedRef.current = true;
-                }
-            } catch (error) {
-                if (!cancelled) {
-                    console.error("Failed to fetch about data", error);
-                    setLoading(false);
-                }
-            }
-        })();
+    const competencies = useMemo(() =>
+        skills ? skills.filter(s => s.level >= 70) : [],
+        [skills]
+    );
 
-        return () => { cancelled = true; };
-    }, [language]);
-
-    // Helper to get localized text
     const getLocalizedText = (en: string, es: string) => {
         return language === 'en' ? (en || es) : (es || en);
     };
@@ -208,8 +176,8 @@ const AboutPage: React.FC = () => {
                                 {t('about.languages', "Languages")}
                             </Typography>
                             <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
-                                {spokenLanguages.length > 0 ? (
-                                    spokenLanguages.map((lang) => (
+                                {(spokenLanguages ?? []).length > 0 ? (
+                                    (spokenLanguages ?? []).map((lang) => (
                                         <Chip
                                             key={lang.id}
                                             label={`${language === 'en' ? lang.nameEn : lang.nameEs} (${language === 'en' ? lang.levelEn : lang.levelEs})`}
