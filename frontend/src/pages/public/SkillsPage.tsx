@@ -40,6 +40,8 @@ const SkillsPage: React.FC = () => {
         }
     }, [language, cachedSkills]);
 
+    // fetchSkills is async — setState occurs after await, not synchronously
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     React.useEffect(() => {
         fetchSkills();
     }, [fetchSkills]);

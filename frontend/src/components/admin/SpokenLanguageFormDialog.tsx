@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -31,38 +31,26 @@ const SpokenLanguageFormDialog: React.FC<SpokenLanguageFormDialogProps> = ({
     defaultOrder
 }) => {
     const { t } = useTranslation();
-    const [formData, setFormData] = useState<Omit<SpokenLanguage, 'id'>>({
-        nameEn: '',
-        nameEs: '',
-        levelEn: '',
-        levelEs: '',
-        proficiency: 100,
-        order: 0
-    });
-
-    useEffect(() => {
-        if (open) {
-            if (editingLanguage) {
-                setFormData({
-                    nameEn: editingLanguage.nameEn,
-                    nameEs: editingLanguage.nameEs,
-                    levelEn: editingLanguage.levelEn,
-                    levelEs: editingLanguage.levelEs,
-                    proficiency: editingLanguage.proficiency,
-                    order: editingLanguage.order
-                });
-            } else {
-                setFormData({
-                    nameEn: '',
-                    nameEs: '',
-                    levelEn: '',
-                    levelEs: '',
-                    proficiency: 100,
-                    order: defaultOrder
-                });
-            }
+    const [formData, setFormData] = useState<Omit<SpokenLanguage, 'id'>>(() => {
+        if (editingLanguage) {
+            return {
+                nameEn: editingLanguage.nameEn,
+                nameEs: editingLanguage.nameEs,
+                levelEn: editingLanguage.levelEn,
+                levelEs: editingLanguage.levelEs,
+                proficiency: editingLanguage.proficiency,
+                order: editingLanguage.order
+            };
         }
-    }, [open, editingLanguage, defaultOrder]);
+        return {
+            nameEn: '',
+            nameEs: '',
+            levelEn: '',
+            levelEs: '',
+            proficiency: 100,
+            order: defaultOrder
+        };
+    });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -75,7 +63,7 @@ const SpokenLanguageFormDialog: React.FC<SpokenLanguageFormDialogProps> = ({
     };
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth disableEnforceFocus>
+        <Dialog key={`${open}-${editingLanguage?.id ?? 'new'}`} open={open} onClose={onClose} maxWidth="sm" fullWidth disableEnforceFocus>
             <DialogTitle>
                 {editingLanguage ? `${t('admin.edit')} ${t('nav.languages')}` : `${t('admin.add')} ${t('nav.languages')}`}
             </DialogTitle>

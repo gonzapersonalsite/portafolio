@@ -49,6 +49,8 @@ const ProjectsManagement: React.FC = () => {
         }
     };
 
+    // fetchData is async — setState occurs after await, not synchronously
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     useEffect(() => {
         fetchData();
     }, [fetchData]);

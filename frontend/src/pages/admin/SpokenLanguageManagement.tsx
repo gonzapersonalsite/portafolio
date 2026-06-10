@@ -43,6 +43,8 @@ const SpokenLanguageManagement: React.FC = () => {
         }
     };
 
+    // fetchLanguages is async — setState occurs after await, not synchronously
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     useEffect(() => {
         fetchLanguages();
     }, [fetchLanguages]);

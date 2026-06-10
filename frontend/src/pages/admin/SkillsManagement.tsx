@@ -43,6 +43,8 @@ const SkillsManagement: React.FC = () => {
         }
     };
 
+    // fetchSkills is async — setState occurs after await, not synchronously
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     useEffect(() => {
         fetchSkills();
     }, [fetchSkills]);

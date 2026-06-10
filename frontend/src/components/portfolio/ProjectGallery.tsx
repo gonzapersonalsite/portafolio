@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Box, Dialog, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
@@ -16,20 +16,35 @@ interface ProjectGalleryProps {
 }
 
 const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrls, title }) => {
+    if (!imageUrls || imageUrls.length === 0) {
+        return null;
+    }
+
+    return (
+        <Dialog 
+            open={open} 
+            onClose={onClose}
+            fullScreen
+            PaperProps={{
+                sx: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.95)',
+                    boxShadow: 'none',
+                    overflow: 'hidden',
+                    backdropFilter: 'blur(10px)'
+                }
+            }}
+        >
+            <GalleryContent key={String(open)} imageUrls={imageUrls} title={title} onClose={onClose} />
+        </Dialog>
+    );
+};
+
+const GalleryContent: React.FC<{ imageUrls: string[]; title: string; onClose: () => void }> = ({ imageUrls, title, onClose }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [zoomLevel, setZoomLevel] = useState(1);
 
-    // Resetear el estado de la galería cada vez que se abre con un proyecto nuevo
-    useEffect(() => {
-        if (open) {
-            setCurrentImageIndex(0);
-            setZoomLevel(1);
-        }
-    }, [open]);
-
     const handleCloseGallery = () => {
         onClose();
-        // Un pequeño delay para que la animación de cierre termine antes de resetear el zoom
         setTimeout(() => setZoomLevel(1), 300);
     };
 
@@ -47,25 +62,8 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
     const handleZoomOut = () => setZoomLevel(prev => Math.max(prev - 0.5, 1));
     const handleResetZoom = () => setZoomLevel(1);
 
-    if (!imageUrls || imageUrls.length === 0) {
-        return null;
-    }
-
     return (
-        <Dialog 
-            open={open} 
-            onClose={handleCloseGallery}
-            fullScreen
-            PaperProps={{
-                sx: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.95)',
-                    boxShadow: 'none',
-                    overflow: 'hidden',
-                    backdropFilter: 'blur(10px)'
-                }
-            }}
-        >
-            <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+        <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
                 
                 {/* Controles Top Right (Zoom y Cerrar) */}
                 <Box sx={{ 
@@ -216,7 +214,7 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
                     </Box>
                 )}
             </Box>
-        </Dialog>
+        </Box>
     );
 };
 

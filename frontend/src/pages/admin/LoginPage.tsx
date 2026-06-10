@@ -16,10 +16,8 @@ const LoginPage: React.FC = () => {
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
 
-    // Clear error when language changes
-    React.useEffect(() => {
-        setError(null);
-    }, [i18n.language]);
+    // Reset error when language changes by remounting the form
+    const formKey = `login-form-${i18n.language}`;
 
     const onSubmit = async (data: LoginCredentials) => {
         try {
@@ -55,7 +53,7 @@ const LoginPage: React.FC = () => {
 
                     {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
-                    <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
+                    <Box component="form" key={formKey} onSubmit={handleSubmit(onSubmit)} noValidate>
                         <TextField
                             margin="normal"
                             required

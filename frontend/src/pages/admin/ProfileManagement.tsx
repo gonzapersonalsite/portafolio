@@ -34,6 +34,8 @@ const ProfileManagement: React.FC = () => {
         }
     };
 
+    // fetchProfile is async — setState occurs after await, not synchronously
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     useEffect(() => {
         fetchProfile();
     }, [fetchProfile]);

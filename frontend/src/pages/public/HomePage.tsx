@@ -65,6 +65,8 @@ const HomePage: React.FC = () => {
         }
     }, [language, cachedProfile, cachedProjects]);
 
+    // fetchHomeData is async — setState occurs after await, not synchronously
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     React.useEffect(() => {
         fetchHomeData();
     }, [fetchHomeData]);
