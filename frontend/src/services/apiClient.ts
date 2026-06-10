@@ -15,7 +15,7 @@ const pendingRequests = new Map<string, Promise<unknown>>();
 let handlingUnauthorized = false;
 
 const apiClient = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api',
+    baseURL: '/api',
     timeout: REQUEST_TIMEOUT,
     headers: {
         'Content-Type': 'application/json',
