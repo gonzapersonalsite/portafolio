@@ -282,8 +282,17 @@ export default tseslint.config(
 | `.npmrc` | Conservar del portafolio (`ignore-scripts=true`) |
 | `index.html` | Conservar del portafolio (tiene SEO, OG tags, título custom) — solo actualizar `<script src="/src/main.tsx">` |
 | `pnpm-lock.yaml` | Eliminar. Se regenera con `pnpm install` |
-| `AGENTS.md` | Conservar de la plantilla |
-| `.agents/` | Conservar de la plantilla |
+| `AGENTS.md` | Copiar de la plantilla (13 KB). Define el contrato base FSD: stack, jerarquía de capas, anatomía de slices, reglas de imports, convenciones CSS, nombrado. **Inmutable — no modificar.** |
+| `.agents/skills/react-fsd-maintainer/` | Copiar de la plantilla (25 KB). Guía técnica detallada para agentes AI: árbol de decisión, 21 ejemplos, 6 anti-patrones, checklist de 7 pasos para crear slices, 5 reglas ESLint. **Inmutable — no modificar.** |
+| `.agents/skills/portfolio-conventions/` | **Nuevo** — creado específicamente para este proyecto. Documenta decisiones propias: React Router v7, Zustand, MUI v7, i18next, Axios custom, Vitest, Vercel, data fetching pattern, theming glass, seguridad. Ver `.agents/skills/portfolio-conventions/SKILL.md`. |
+
+**Flujo de herencia entre skills**:
+```
+AGENTS.md (contrato base, inmutable)
+  └─> react-fsd-maintainer/SKILL.md (guía FSD canónica, inmutable)
+        └─> portfolio-conventions/SKILL.md (decisiones específicas del portafolio)
+```
+Los agentes AI cargan los 3 archivos al inicio de cada sesión, garantizando consistencia arquitectónica.
 | `public/` | Consolidar: `favicon.svg` (plantilla), `profile-fallback.jpg` (portafolio), `vite.svg` (cualquiera) |
 | `vercel.json` | Conservar del portafolio |
 | `Dockerfile` | Conservar del portafolio |

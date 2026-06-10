@@ -1,0 +1,31 @@
+export interface Profile {
+    id: string;
+    greetingEn: string;
+    greetingEs: string;
+    titleEn: string;
+    titleEs: string;
+    subtitleEn: string;
+    subtitleEs: string;
+    descriptionEn: string;
+    descriptionEs: string;
+    aboutTitleEn: string;
+    aboutTitleEs: string;
+    aboutIntroTitleEn: string;
+    aboutIntroTitleEs: string;
+    aboutSummaryEn: string;
+    aboutSummaryEs: string;
+    aboutPhilosophyEn: string;
+    aboutPhilosophyEs: string;
+    sentenceEn: string;
+    sentenceEs: string;
+    cvUrl: string;
+    fullNameEn: string;
+    fullNameEs: string;
+    email: string;
+    githubUrl: string;
+    linkedinUrl: string;
+    locationEn: string;
+    locationEs: string;
+    logoText: string;
+    imageUrl: string;
+}

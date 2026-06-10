@@ -1,10 +1,12 @@
 FROM node:24-alpine
 
+ENV CI=true
+
 WORKDIR /app
 
 COPY package.json .npmrc pnpm-workspace.yaml ./
 
-RUN corepack enable && pnpm install --ignore-scripts && pnpm approve-builds esbuild && pnpm install
+RUN corepack enable && pnpm install --ignore-scripts && pnpm approve-builds esbuild && pnpm install --ignore-scripts
 
 COPY . .
 

@@ -1,0 +1,95 @@
+import React, { useState } from 'react';
+import { Paper, Typography, TextField, Button, Box, Alert, Link as MuiLink } from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useAuthStore } from '@/entities/user';
+import { authApi, type LoginCredentials } from '@/entities/user';
+import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+
+const LoginPage: React.FC = () => {
+    const { register, handleSubmit, formState: { errors } } = useForm<LoginCredentials>();
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+    const login = useAuthStore((state) => state.login);
+    const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
+
+    // Reset error when language changes by remounting the form
+    const formKey = `login-form-${i18n.language}`;
+
+    const onSubmit = async (data: LoginCredentials) => {
+        try {
+            setLoading(true);
+            setError(null);
+            const responseData = await authApi.login(data);
+            login(responseData);
+            navigate('/admin');
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err) && err.response && err.response.status === 401) {
+                setError(t('admin.invalidCredentials', 'Invalid credentials'));
+            } else {
+                setError(t('common.error', 'An error occurred. Please try again.'));
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Paper elevation={3} sx={{ p: 4, width: '100%', borderRadius: 2 }}>
+                    <Typography component="h1" variant="h4" align="center" gutterBottom fontWeight="bold">
+                        {t('admin.login')}
+                    </Typography>
+                    <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 3 }}>
+                        {t('admin.welcomeBack', 'Welcome back! Please enter your credentials.')}
+                    </Typography>
+
+                    {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+
+                    <Box component="form" key={formKey} onSubmit={handleSubmit(onSubmit)} noValidate>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="username"
+                            label={t('admin.username')}
+                            autoComplete="username"
+                            autoFocus
+                            {...register("username", { required: true })}
+                            error={!!errors.username}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            label={t('admin.password')}
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                            {...register("password", { required: true })}
+                            error={!!errors.password}
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            disabled={loading}
+                            sx={{ mt: 3, mb: 2, py: 1.2, fontWeight: 'bold' }}
+                        >
+                            {loading ? t('common.loading') : t('admin.login')}
+                        </Button>
+                    </Box>
+
+                    <Box sx={{ textAlign: 'center' }}>
+                        <MuiLink component={RouterLink} to="/admin/forgot-password" sx={{ fontSize: '0.875rem' }}>
+                            {t('admin.forgotPassword', 'Forgot password?')}
+                        </MuiLink>
+                    </Box>
+                </Paper>
+            </Box>
+    );
+};
+
+export default LoginPage;

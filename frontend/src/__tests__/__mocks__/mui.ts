@@ -12,10 +12,13 @@ export const useTheme = () => ({
 })
 
 // @mui/material/styles exports
-export const createTheme = (options: Record<string, unknown>) => ({
-  ...options,
-  palette: { mode: options?.palette?.mode ?? 'light', ...options?.palette },
-  typography: options?.typography ?? {},
-  components: options?.components ?? {},
-  shape: options?.shape ?? {},
+export const createTheme = (options: Record<string, unknown> = {}) => ({
+  palette: { mode: 'light', ...((options as Record<string, unknown>)?.palette as Record<string, unknown> || {}) },
+  typography: (options as Record<string, unknown>)?.typography as Record<string, unknown> ?? {},
+  components: (options as Record<string, unknown>)?.components as Record<string, unknown> ?? {},
+  shape: (options as Record<string, unknown>)?.shape as Record<string, unknown> ?? {},
 })
+
+// @mui/icons-material default export — all icons are empty components
+const MockIcon = () => null
+export default MockIcon

@@ -1,23 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App';
-import './index.css';
-import './config/i18n';
-import { LanguageProvider } from './context/LanguageContext';
-import { ThemeProvider } from './context/ThemeContext';
-import { NotificationProvider } from './context/NotificationContext';
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { AppProviders } from '@/app/providers'
+import AppRouter from '@/app/routing/AppRouter'
+import { ErrorBoundary } from '@/shared/ui'
+import '@/app/styles/index.css'
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <LanguageProvider>
-        <ThemeProvider>
-          <NotificationProvider>
-            <App />
-          </NotificationProvider>
-        </ThemeProvider>
-      </LanguageProvider>
-    </BrowserRouter>
-  </React.StrictMode>
-);
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <AppProviders>
+      <ErrorBoundary>
+        <AppRouter />
+      </ErrorBoundary>
+    </AppProviders>
+  </StrictMode>,
+)
