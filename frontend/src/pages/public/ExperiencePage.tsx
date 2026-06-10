@@ -25,31 +25,38 @@ const ExperiencePage: React.FC = () => {
     // Intentar obtener de caché inmediatamente
     const cacheKey = `/public/experiences?&lang=${i18n.language}`;
     const cachedExps = requestCache.get<Experience[]>(cacheKey);
-    const hadCachedExps = React.useRef(!!cachedExps);
+    const hadCachedRef = React.useRef(!!cachedExps);
+    hadCachedRef.current = !!cachedExps;
     
     const [experiences, setExperiences] = React.useState<Experience[]>(cachedExps || []);
     const [loading, setLoading] = React.useState(!cachedExps);
     const [error, setError] = React.useState<string | null>(null);
 
-    const fetchExperiences = React.useCallback(async () => {
-        try {
-            setError(null);
-            if (!hadCachedExps.current) setLoading(true);
-            const data = await publicService.getAllExperiences();
-            setExperiences(data);
-            hadCachedExps.current = true;
-        } catch (err) {
-            console.error("Failed to fetch experiences", err);
-            setError("Failed to load experiences");
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
     /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
-        fetchExperiences();
-    }, [fetchExperiences]);
+        let cancelled = false;
+        const hadCache = hadCachedRef.current;
+
+        (async () => {
+            try {
+                setError(null);
+                if (!hadCache) setLoading(true);
+                const data = await publicService.getAllExperiences();
+                if (!cancelled) {
+                    setExperiences(data);
+                    setLoading(false);
+                }
+            } catch (err) {
+                if (!cancelled) {
+                    console.error("Failed to fetch experiences", err);
+                    setError("Failed to load experiences");
+                    setLoading(false);
+                }
+            }
+        })();
+
+        return () => { cancelled = true; };
+    }, [language]);
     /* eslint-enable react-hooks/set-state-in-effect */
 
     if (loading) {

@@ -20,32 +20,38 @@ const SkillsPage: React.FC = () => {
     // Intentar obtener datos de caché inmediatamente para evitar skeletons innecesarios
     const cacheKey = `/public/skills?&lang=${i18n.language}`;
     const cachedSkills = requestCache.get<Skill[]>(cacheKey);
-    const hadCachedSkills = React.useRef(!!cachedSkills);
-    
+    const hadCachedRef = React.useRef(!!cachedSkills);
+    hadCachedRef.current = !!cachedSkills;
+
     const [skills, setSkills] = React.useState<Skill[]>(cachedSkills || []);
     const [loading, setLoading] = React.useState(!cachedSkills);
     const [error, setError] = React.useState<string | null>(null);
 
-    const fetchSkills = React.useCallback(async () => {
-        try {
-            setError(null);
-            if (!hadCachedSkills.current) setLoading(true);
-            
-            const data = await publicService.getAllSkills();
-            setSkills(data);
-            hadCachedSkills.current = true;
-        } catch (err) {
-            console.error("Failed to fetch skills", err);
-            setError("Failed to load skills");
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
     /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
-        fetchSkills();
-    }, [fetchSkills]);
+        let cancelled = false;
+        const hadCache = hadCachedRef.current;
+
+        (async () => {
+            try {
+                setError(null);
+                if (!hadCache) setLoading(true);
+                const data = await publicService.getAllSkills();
+                if (!cancelled) {
+                    setSkills(data);
+                    setLoading(false);
+                }
+            } catch (err) {
+                if (!cancelled) {
+                    console.error("Failed to fetch skills", err);
+                    setError("Failed to load skills");
+                    setLoading(false);
+                }
+            }
+        })();
+
+        return () => { cancelled = true; };
+    }, [language]);
     /* eslint-enable react-hooks/set-state-in-effect */
 
     // Group skills by category

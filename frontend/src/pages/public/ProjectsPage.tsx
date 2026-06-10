@@ -18,31 +18,38 @@ const ProjectsPage: React.FC = () => {
     // Intentar obtener de caché inmediatamente
     const cacheKey = `/public/projects?&lang=${i18n.language}`;
     const cachedProjects = requestCache.get<Project[]>(cacheKey);
-    const hadCachedProjects = React.useRef(!!cachedProjects);
+    const hadCachedRef = React.useRef(!!cachedProjects);
+    hadCachedRef.current = !!cachedProjects;
     
     const [projects, setProjects] = React.useState<Project[]>(cachedProjects || []);
     const [loading, setLoading] = React.useState(!cachedProjects);
     const [error, setError] = React.useState<string | null>(null);
 
-    const fetchProjects = React.useCallback(async () => {
-        try {
-            setError(null);
-            if (!hadCachedProjects.current) setLoading(true);
-            const data = await publicService.getAllProjects();
-            setProjects(data);
-            hadCachedProjects.current = true;
-        } catch (err) {
-            console.error("Failed to fetch projects", err);
-            setError("Failed to load projects");
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
     /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
-        fetchProjects();
-    }, [fetchProjects]);
+        let cancelled = false;
+        const hadCache = hadCachedRef.current;
+
+        (async () => {
+            try {
+                setError(null);
+                if (!hadCache) setLoading(true);
+                const data = await publicService.getAllProjects();
+                if (!cancelled) {
+                    setProjects(data);
+                    setLoading(false);
+                }
+            } catch (err) {
+                if (!cancelled) {
+                    console.error("Failed to fetch projects", err);
+                    setError("Failed to load projects");
+                    setLoading(false);
+                }
+            }
+        })();
+
+        return () => { cancelled = true; };
+    }, [language]);
     /* eslint-enable react-hooks/set-state-in-effect */
 
     if (loading) {

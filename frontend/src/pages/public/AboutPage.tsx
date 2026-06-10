@@ -29,7 +29,8 @@ const AboutPage: React.FC = () => {
     const cachedSkills = requestCache.get<Skill[]>(skillsCacheKey);
     const cachedLanguages = requestCache.get<SpokenLanguage[]>(languagesCacheKey);
     const cachedProfile = requestCache.get<Profile>(profileCacheKey);
-    const hadCachedData = React.useRef(!!cachedSkills && !!cachedLanguages && !!cachedProfile);
+    const hadCachedRef = React.useRef(!!cachedSkills && !!cachedLanguages && !!cachedProfile);
+    hadCachedRef.current = !!cachedSkills && !!cachedLanguages && !!cachedProfile;
 
     const [competencies, setCompetencies] = React.useState<Skill[]>(
         cachedSkills ? cachedSkills.filter(s => s.level >= 70) : []
@@ -38,31 +39,35 @@ const AboutPage: React.FC = () => {
     const [profile, setProfile] = React.useState<Profile | null>(cachedProfile || null);
     const [loading, setLoading] = React.useState(!cachedSkills || !cachedLanguages || !cachedProfile);
 
-    const fetchData = React.useCallback(async () => {
-        try {
-            if (!hadCachedData.current) setLoading(true);
-            
-            const [skillsData, languagesData, profileData] = await Promise.all([
-                publicService.getAllSkills(),
-                publicService.getAllSpokenLanguages(),
-                publicService.getProfile()
-            ]);
-
-            setCompetencies(skillsData.filter((s: Skill) => s.level >= 70));
-            setSpokenLanguages(languagesData);
-            setProfile(profileData);
-            hadCachedData.current = true;
-        } catch (error) {
-            console.error("Failed to fetch about data", error);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
     /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
-        fetchData();
-    }, [language, fetchData]);
+        let cancelled = false;
+        const hadCache = hadCachedRef.current;
+
+        (async () => {
+            try {
+                if (!hadCache) setLoading(true);
+                const [skillsData, languagesData, profileData] = await Promise.all([
+                    publicService.getAllSkills(),
+                    publicService.getAllSpokenLanguages(),
+                    publicService.getProfile()
+                ]);
+                if (!cancelled) {
+                    setCompetencies(skillsData.filter((s: Skill) => s.level >= 70));
+                    setSpokenLanguages(languagesData);
+                    setProfile(profileData);
+                    setLoading(false);
+                }
+            } catch (error) {
+                if (!cancelled) {
+                    console.error("Failed to fetch about data", error);
+                    setLoading(false);
+                }
+            }
+        })();
+
+        return () => { cancelled = true; };
+    }, [language]);
     /* eslint-enable react-hooks/set-state-in-effect */
 
     // Helper to get localized text

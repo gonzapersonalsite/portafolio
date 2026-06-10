@@ -40,37 +40,43 @@ const HomePage: React.FC = () => {
     
     const cachedProfile = requestCache.get<ProfileType>(profileCacheKey);
     const cachedProjects = requestCache.get<Project[]>(projectsCacheKey);
-    const hadCachedData = React.useRef(!!cachedProfile && !!cachedProjects);
+    const hadCachedRef = React.useRef(!!cachedProfile && !!cachedProjects);
+    hadCachedRef.current = !!cachedProfile && !!cachedProjects;
 
     const [featuredProjects, setFeaturedProjects] = React.useState<Project[]>(cachedProjects || []);
     const [profile, setProfile] = React.useState<ProfileType | null>(cachedProfile || null);
     const [loading, setLoading] = React.useState(!cachedProfile || !cachedProjects);
     const [error, setError] = React.useState<string | null>(null);
 
-    const fetchHomeData = React.useCallback(async () => {
-        try {
-            setError(null);
-            if (!hadCachedData.current) setLoading(true);
-            
-            const [projectsData, profileData] = await Promise.all([
-                publicService.getFeaturedProjects(),
-                publicService.getProfile()
-            ]);
-            setFeaturedProjects(projectsData);
-            setProfile(profileData);
-            hadCachedData.current = true;
-        } catch (error) {
-            console.error("Failed to fetch home data", error);
-            setError("Failed to load home page data");
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
     /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
-        fetchHomeData();
-    }, [fetchHomeData]);
+        let cancelled = false;
+        const hadCache = hadCachedRef.current;
+
+        (async () => {
+            try {
+                setError(null);
+                if (!hadCache) setLoading(true);
+                const [projectsData, profileData] = await Promise.all([
+                    publicService.getFeaturedProjects(),
+                    publicService.getProfile()
+                ]);
+                if (!cancelled) {
+                    setFeaturedProjects(projectsData);
+                    setProfile(profileData);
+                    setLoading(false);
+                }
+            } catch (error) {
+                if (!cancelled) {
+                    console.error("Failed to fetch home data", error);
+                    setError("Failed to load home page data");
+                    setLoading(false);
+                }
+            }
+        })();
+
+        return () => { cancelled = true; };
+    }, [language]);
     /* eslint-enable react-hooks/set-state-in-effect */
 
     // Helper to get localized text
