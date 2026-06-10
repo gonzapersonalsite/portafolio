@@ -25,6 +25,9 @@ spring:
   flyway:
     enabled: ${FLYWAY_ENABLED:true}
     baseline-on-migrate: ${FLYWAY_BASELINE_ON_MIGRATE:true}
+    baseline-version: ${FLYWAY_BASELINE_VERSION:1}
+    baseline-description: "${FLYWAY_BASELINE_DESCRIPTION:Existing Hibernate-managed schema}"
+    validate-on-migrate: true
     locations: classpath:db/migration
   
   security:
