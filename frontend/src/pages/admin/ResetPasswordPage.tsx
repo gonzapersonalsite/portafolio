@@ -111,7 +111,6 @@ const ResetPasswordPage: React.FC = () => {
                                 {...register('confirmPassword', {
                                     required: true,
                                     validate: (value) =>
-                                        // eslint-disable-next-line react-hooks/incompatible-library
                                         value === watch('newPassword') || t('admin.passwordsDoNotMatch', 'Passwords do not match')
                                 })}
                                 error={!!errors.confirmPassword}

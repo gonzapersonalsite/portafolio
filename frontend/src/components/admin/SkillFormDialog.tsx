@@ -37,7 +37,6 @@ const SkillFormDialog: React.FC<SkillFormDialogProps> = ({
 }) => {
     const { t } = useTranslation();
     const { control, register, handleSubmit, reset, watch } = useForm<Skill>();
-    // eslint-disable-next-line react-hooks/incompatible-library
     const currentLevel = watch('level');
 
     useEffect(() => {
