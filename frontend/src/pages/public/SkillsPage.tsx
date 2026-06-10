@@ -42,10 +42,11 @@ const SkillsPage: React.FC = () => {
         }
     }, []);
 
+    /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
         fetchSkills();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [fetchSkills]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     // Group skills by category
     const skillsByCategory = useMemo(() => {

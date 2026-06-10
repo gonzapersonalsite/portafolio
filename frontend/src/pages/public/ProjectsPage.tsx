@@ -39,10 +39,11 @@ const ProjectsPage: React.FC = () => {
         }
     }, []);
 
+    /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
         fetchProjects();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [fetchProjects]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     if (loading) {
         return (

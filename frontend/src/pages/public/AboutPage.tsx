@@ -59,9 +59,11 @@ const AboutPage: React.FC = () => {
         }
     }, []);
 
+    /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
         fetchData();
     }, [language, fetchData]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     // Helper to get localized text
     const getLocalizedText = (en: string, es: string) => {

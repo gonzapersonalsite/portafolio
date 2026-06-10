@@ -46,10 +46,11 @@ const ExperiencePage: React.FC = () => {
         }
     }, []);
 
+    /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
         fetchExperiences();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [fetchExperiences]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     if (loading) {
         return (

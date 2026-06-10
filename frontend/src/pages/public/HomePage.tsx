@@ -67,10 +67,11 @@ const HomePage: React.FC = () => {
         }
     }, []);
 
+    /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
         fetchHomeData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [fetchHomeData]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     // Helper to get localized text
     const getLocalizedText = (en: string, es: string) => {
