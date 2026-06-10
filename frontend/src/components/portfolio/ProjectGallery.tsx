@@ -19,7 +19,8 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [zoomLevel, setZoomLevel] = useState(1);
 
-    // Resetear el estado de la galería cada vez que se abre con un proyecto nuevo
+    // Reset state when gallery opens — open is a React state trigger, not a data fetch
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     useEffect(() => {
         if (open) {
             setCurrentImageIndex(0);
@@ -216,6 +217,7 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
                     </Box>
                 )}
         </Box>
+        </Dialog>
     );
 };
 
