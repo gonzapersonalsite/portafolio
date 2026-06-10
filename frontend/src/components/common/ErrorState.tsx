@@ -36,3 +36,4 @@ const ErrorState: React.FC<ErrorStateProps> = ({ message, onRetry }) => {
 };
 
 export default ErrorState;
+
