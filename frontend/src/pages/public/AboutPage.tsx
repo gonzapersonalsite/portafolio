@@ -29,8 +29,7 @@ const AboutPage: React.FC = () => {
     const cachedSkills = requestCache.get<Skill[]>(skillsCacheKey);
     const cachedLanguages = requestCache.get<SpokenLanguage[]>(languagesCacheKey);
     const cachedProfile = requestCache.get<Profile>(profileCacheKey);
-    const hadCachedRef = React.useRef(!!cachedSkills && !!cachedLanguages && !!cachedProfile);
-    hadCachedRef.current = !!cachedSkills && !!cachedLanguages && !!cachedProfile;
+    const fetchedRef = React.useRef(!!cachedSkills && !!cachedLanguages && !!cachedProfile);
 
     const [competencies, setCompetencies] = React.useState<Skill[]>(
         cachedSkills ? cachedSkills.filter(s => s.level >= 70) : []
@@ -39,10 +38,9 @@ const AboutPage: React.FC = () => {
     const [profile, setProfile] = React.useState<Profile | null>(cachedProfile || null);
     const [loading, setLoading] = React.useState(!cachedSkills || !cachedLanguages || !cachedProfile);
 
-    /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
         let cancelled = false;
-        const hadCache = hadCachedRef.current;
+        const hadCache = fetchedRef.current;
 
         (async () => {
             try {
@@ -57,6 +55,7 @@ const AboutPage: React.FC = () => {
                     setSpokenLanguages(languagesData);
                     setProfile(profileData);
                     setLoading(false);
+                    fetchedRef.current = true;
                 }
             } catch (error) {
                 if (!cancelled) {
@@ -68,7 +67,6 @@ const AboutPage: React.FC = () => {
 
         return () => { cancelled = true; };
     }, [language]);
-    /* eslint-enable react-hooks/set-state-in-effect */
 
     // Helper to get localized text
     const getLocalizedText = (en: string, es: string) => {

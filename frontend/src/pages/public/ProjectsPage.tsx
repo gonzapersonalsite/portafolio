@@ -20,17 +20,15 @@ const ProjectsPage: React.FC = () => {
     // Intentar obtener de caché inmediatamente
     const cacheKey = `/public/projects?&lang=${i18n.language}`;
     const cachedProjects = requestCache.get<Project[]>(cacheKey);
-    const hadCachedRef = React.useRef(!!cachedProjects);
-    hadCachedRef.current = !!cachedProjects;
+    const fetchedRef = React.useRef(!!cachedProjects);
     
     const [projects, setProjects] = React.useState<Project[]>(cachedProjects || []);
     const [loading, setLoading] = React.useState(!cachedProjects);
     const [error, setError] = React.useState<string | null>(null);
 
-    /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
         let cancelled = false;
-        const hadCache = hadCachedRef.current;
+        const hadCache = fetchedRef.current;
 
         (async () => {
             try {
@@ -40,6 +38,7 @@ const ProjectsPage: React.FC = () => {
                 if (!cancelled) {
                     setProjects(data);
                     setLoading(false);
+                    fetchedRef.current = true;
                 }
             } catch (err) {
                 if (!cancelled) {
@@ -52,7 +51,6 @@ const ProjectsPage: React.FC = () => {
 
         return () => { cancelled = true; };
     }, [language]);
-    /* eslint-enable react-hooks/set-state-in-effect */
 
     const refetch = useCallback(async () => {
         setLoading(true);

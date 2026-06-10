@@ -40,18 +40,16 @@ const HomePage: React.FC = () => {
     
     const cachedProfile = requestCache.get<ProfileType>(profileCacheKey);
     const cachedProjects = requestCache.get<Project[]>(projectsCacheKey);
-    const hadCachedRef = React.useRef(!!cachedProfile && !!cachedProjects);
-    hadCachedRef.current = !!cachedProfile && !!cachedProjects;
+    const fetchedRef = React.useRef(!!cachedProfile && !!cachedProjects);
 
     const [featuredProjects, setFeaturedProjects] = React.useState<Project[]>(cachedProjects || []);
     const [profile, setProfile] = React.useState<ProfileType | null>(cachedProfile || null);
     const [loading, setLoading] = React.useState(!cachedProfile || !cachedProjects);
     const [error, setError] = React.useState<string | null>(null);
 
-    /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
         let cancelled = false;
-        const hadCache = hadCachedRef.current;
+        const hadCache = fetchedRef.current;
 
         (async () => {
             try {
@@ -65,6 +63,7 @@ const HomePage: React.FC = () => {
                     setFeaturedProjects(projectsData);
                     setProfile(profileData);
                     setLoading(false);
+                    fetchedRef.current = true;
                 }
             } catch (error) {
                 if (!cancelled) {
@@ -77,7 +76,6 @@ const HomePage: React.FC = () => {
 
         return () => { cancelled = true; };
     }, [language]);
-    /* eslint-enable react-hooks/set-state-in-effect */
 
     // Helper to get localized text
     const getLocalizedText = (en: string, es: string) => {

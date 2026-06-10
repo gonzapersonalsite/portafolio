@@ -25,17 +25,15 @@ const ExperiencePage: React.FC = () => {
     // Intentar obtener de caché inmediatamente
     const cacheKey = `/public/experiences?&lang=${i18n.language}`;
     const cachedExps = requestCache.get<Experience[]>(cacheKey);
-    const hadCachedRef = React.useRef(!!cachedExps);
-    hadCachedRef.current = !!cachedExps;
+    const fetchedRef = React.useRef(!!cachedExps);
     
     const [experiences, setExperiences] = React.useState<Experience[]>(cachedExps || []);
     const [loading, setLoading] = React.useState(!cachedExps);
     const [error, setError] = React.useState<string | null>(null);
 
-    /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
         let cancelled = false;
-        const hadCache = hadCachedRef.current;
+        const hadCache = fetchedRef.current;
 
         (async () => {
             try {
@@ -45,6 +43,7 @@ const ExperiencePage: React.FC = () => {
                 if (!cancelled) {
                     setExperiences(data);
                     setLoading(false);
+                    fetchedRef.current = true;
                 }
             } catch (err) {
                 if (!cancelled) {
@@ -57,7 +56,6 @@ const ExperiencePage: React.FC = () => {
 
         return () => { cancelled = true; };
     }, [language]);
-    /* eslint-enable react-hooks/set-state-in-effect */
 
     const refetch = useCallback(async () => {
         setLoading(true);
