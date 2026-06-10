@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Box, Container, Typography, Paper, Chip, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot, TimelineOppositeContent, timelineOppositeContentClasses } from '@mui/lab';
@@ -59,6 +59,20 @@ const ExperiencePage: React.FC = () => {
     }, [language]);
     /* eslint-enable react-hooks/set-state-in-effect */
 
+    const refetch = useCallback(async () => {
+        setLoading(true);
+        try {
+            const data = await publicService.getAllExperiences();
+            setExperiences(data);
+            setError(null);
+        } catch (err) {
+            console.error("Failed to fetch experiences", err);
+            setError("Failed to load experiences");
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
     if (loading) {
         return (
             <Box sx={{ py: 8 }}>
@@ -74,7 +88,7 @@ const ExperiencePage: React.FC = () => {
         return (
             <Box sx={{ py: 8 }}>
                 <Container maxWidth="lg">
-                    <ErrorState message={error} onRetry={fetchExperiences} />
+                    <ErrorState message={error} onRetry={refetch} />
                 </Container>
             </Box>
         );

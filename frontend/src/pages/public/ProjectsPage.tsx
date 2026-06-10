@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Box, Container, Typography, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { publicService } from '@/services/publicService';
@@ -8,13 +8,15 @@ import { ProjectGridSkeleton, PageHeaderSkeleton } from '@/components/common/Ske
 import EmptyState from '@/components/common/EmptyState';
 import ErrorState from '@/components/common/ErrorState';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+import { useLanguage } from '@/context/LanguageContext';
 
 import { requestCache } from '@/utils/requestCache';
 import i18n from '@/config/i18n';
 
 const ProjectsPage: React.FC = () => {
     const { t } = useTranslation();
-    
+    const { language } = useLanguage();
+
     // Intentar obtener de caché inmediatamente
     const cacheKey = `/public/projects?&lang=${i18n.language}`;
     const cachedProjects = requestCache.get<Project[]>(cacheKey);
@@ -52,6 +54,20 @@ const ProjectsPage: React.FC = () => {
     }, [language]);
     /* eslint-enable react-hooks/set-state-in-effect */
 
+    const refetch = useCallback(async () => {
+        setLoading(true);
+        try {
+            const data = await publicService.getAllProjects();
+            setProjects(data);
+            setError(null);
+        } catch (err) {
+            console.error("Failed to fetch projects", err);
+            setError("Failed to load projects");
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
     if (loading) {
         return (
             <Box sx={{ py: 8 }}>
@@ -67,7 +83,7 @@ const ProjectsPage: React.FC = () => {
         return (
             <Box sx={{ py: 8 }}>
                 <Container maxWidth="lg">
-                    <ErrorState message={error} onRetry={fetchProjects} />
+                    <ErrorState message={error} onRetry={refetch} />
                 </Container>
             </Box>
         );

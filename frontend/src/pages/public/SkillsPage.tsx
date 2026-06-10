@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { Box, Container, Typography, Grid, LinearProgress, Paper, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { publicService } from '@/services/publicService';
@@ -66,6 +66,20 @@ const SkillsPage: React.FC = () => {
         return groups;
     }, [skills]);
 
+    const refetch = useCallback(async () => {
+        setLoading(true);
+        try {
+            const data = await publicService.getAllSkills();
+            setSkills(data);
+            setError(null);
+        } catch (err) {
+            console.error("Failed to fetch skills", err);
+            setError("Failed to load skills");
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
     if (loading) {
         return (
             <Box sx={{ py: 8 }}>
@@ -81,7 +95,7 @@ const SkillsPage: React.FC = () => {
         return (
             <Box sx={{ py: 8 }}>
                 <Container maxWidth="lg">
-                    <ErrorState message={error} onRetry={fetchSkills} />
+                    <ErrorState message={error} onRetry={refetch} />
                 </Container>
             </Box>
         );

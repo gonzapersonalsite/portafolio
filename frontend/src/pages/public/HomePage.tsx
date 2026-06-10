@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Box, Container, Typography, Button, Grid, useTheme, Chip, Stack, Skeleton } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -84,6 +84,24 @@ const HomePage: React.FC = () => {
         return language === 'en' ? (en || es) : (es || en);
     };
 
+    const refetch = useCallback(async () => {
+        setLoading(true);
+        try {
+            const [projectsData, profileData] = await Promise.all([
+                publicService.getFeaturedProjects(),
+                publicService.getProfile()
+            ]);
+            setFeaturedProjects(projectsData);
+            setProfile(profileData);
+            setError(null);
+        } catch (error) {
+            console.error("Failed to fetch home data", error);
+            setError("Failed to load home page data");
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
     if (loading) {
         return (
             <Box>
@@ -125,7 +143,7 @@ const HomePage: React.FC = () => {
         return (
             <Box sx={{ py: 8 }}>
                 <Container maxWidth="lg">
-                    <ErrorState message={error} onRetry={fetchHomeData} />
+                    <ErrorState message={error} onRetry={refetch} />
                 </Container>
             </Box>
         );
