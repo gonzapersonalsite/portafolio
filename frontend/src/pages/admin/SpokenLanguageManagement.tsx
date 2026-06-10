@@ -45,7 +45,7 @@ const SpokenLanguageManagement: React.FC = () => {
 
     useEffect(() => {
         fetchLanguages();
-    }, []);
+    }, [fetchLanguages]);
 
     const handleOpenDialog = (lang?: SpokenLanguage) => {
         setEditingLanguage(lang || null);

@@ -58,7 +58,7 @@ const AboutPage: React.FC = () => {
             }
         };
         fetchData();
-    }, [language]);
+    }, [language, cachedSkills, cachedLanguages, cachedProfile]);
 
     // Helper to get localized text
     const getLocalizedText = (en: string, es: string) => {

@@ -45,7 +45,7 @@ const SkillsManagement: React.FC = () => {
 
     useEffect(() => {
         fetchSkills();
-    }, []);
+    }, [fetchSkills]);
 
     const handleOpen = (skill?: Skill) => {
         setEditingSkill(skill || null);

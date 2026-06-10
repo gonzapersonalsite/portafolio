@@ -42,7 +42,7 @@ const ExperiencePage: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    }, [language]);
+    }, [language, cachedExps]);
 
     React.useEffect(() => {
         fetchExperiences();

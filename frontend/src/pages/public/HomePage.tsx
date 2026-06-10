@@ -63,7 +63,7 @@ const HomePage: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    }, [language]);
+    }, [language, cachedProfile, cachedProjects]);
 
     React.useEffect(() => {
         fetchHomeData();

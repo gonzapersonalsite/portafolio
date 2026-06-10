@@ -38,7 +38,7 @@ const SkillsPage: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    }, [language]);
+    }, [language, cachedSkills]);
 
     React.useEffect(() => {
         fetchSkills();

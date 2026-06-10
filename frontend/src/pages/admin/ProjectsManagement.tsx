@@ -51,7 +51,7 @@ const ProjectsManagement: React.FC = () => {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     const handleOpen = (proj?: Project) => {
         setEditingProj(proj || null);

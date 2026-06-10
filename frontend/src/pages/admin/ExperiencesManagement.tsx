@@ -50,7 +50,7 @@ const ExperiencesManagement: React.FC = () => {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     const handleOpen = (exp?: Experience) => {
         setEditingExp(exp || null);

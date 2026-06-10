@@ -36,7 +36,7 @@ const ProfileManagement: React.FC = () => {
 
     useEffect(() => {
         fetchProfile();
-    }, []);
+    }, [fetchProfile]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!profile) return;

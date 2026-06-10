@@ -37,7 +37,7 @@ const ProjectsPage: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    }, [language]);
+    }, [language, cachedProjects]);
 
     React.useEffect(() => {
         fetchProjects();
