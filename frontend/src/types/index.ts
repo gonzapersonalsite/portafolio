@@ -30,7 +30,6 @@ export interface Experience {
     descriptionEn: string;
     descriptionEs: string;
     technologies: string[];
-    order: number;
 }
 
 export interface Project {
@@ -91,6 +90,19 @@ export interface Profile {
     locationEs: string;
     logoText: string;
     imageUrl: string;
+}
+
+export interface MessageResponse {
+    message: string;
+}
+
+export interface ForgotPasswordRequest {
+    username: string;
+}
+
+export interface ResetPasswordRequest {
+    token: string;
+    newPassword: string;
 }
 
 export interface LoginResponse {

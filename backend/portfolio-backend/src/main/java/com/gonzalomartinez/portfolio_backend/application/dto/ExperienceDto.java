@@ -48,6 +48,4 @@ public class ExperienceDto {
     
     @Builder.Default
     private List<String> technologies = new ArrayList<>();
-    
-    private Integer order;
 }

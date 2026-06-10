@@ -23,7 +23,6 @@ interface ExperienceFormDialogProps {
     onClose: () => void;
     onSubmit: (data: ExperiencePayload) => Promise<void>;
     saving: boolean;
-    defaultOrder: number;
 }
 
 const ExperienceFormDialog: React.FC<ExperienceFormDialogProps> = ({
@@ -32,7 +31,6 @@ const ExperienceFormDialog: React.FC<ExperienceFormDialogProps> = ({
     onClose,
     onSubmit,
     saving,
-    defaultOrder
 }) => {
     const { t } = useTranslation();
     const { control, register, handleSubmit, reset } = useForm<ExperiencePayload>();
@@ -55,11 +53,10 @@ const ExperienceFormDialog: React.FC<ExperienceFormDialogProps> = ({
                     startDate: '',
                     endDate: '',
                     technologies: [],
-                    order: defaultOrder
                 });
             }
         }
-    }, [open, editingExp, reset, defaultOrder]);
+    }, [open, editingExp, reset]);
 
     const handleFormSubmit = async (data: ExperiencePayload) => {
         await onSubmit(data);
@@ -97,7 +94,7 @@ const ExperienceFormDialog: React.FC<ExperienceFormDialogProps> = ({
                         <Grid size={12}>
                             <TextField fullWidth multiline rows={3} label={`${t('admin.description')} (ES)`} {...register('descriptionEs')} />
                         </Grid>
-                        <Grid size={{ xs: 12, md: 8 }}>
+                        <Grid size={{ xs: 12 }}>
                             <Controller
                                 name="technologies"
                                 control={control}
@@ -113,9 +110,6 @@ const ExperienceFormDialog: React.FC<ExperienceFormDialogProps> = ({
                                     />
                                 )}
                             />
-                        </Grid>
-                        <Grid size={{ xs: 12, md: 4 }}>
-                            <TextField fullWidth type="number" label={t('admin.order')} {...register('order', { valueAsNumber: true })} />
                         </Grid>
                     </Grid>
                 </DialogContent>

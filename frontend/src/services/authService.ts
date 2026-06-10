@@ -1,5 +1,5 @@
 import apiClient from './apiClient';
-import type { AuthResponse } from '../types';
+import type { AuthResponse, ForgotPasswordRequest, MessageResponse, ResetPasswordRequest } from '../types';
 
 export interface LoginCredentials {
     username: string;
@@ -14,6 +14,16 @@ export const authService = {
 
     validateToken: async (): Promise<boolean> => {
         const response = await apiClient.get<boolean>('/auth/validate');
+        return response.data;
+    },
+
+    forgotPassword: async (data: ForgotPasswordRequest): Promise<MessageResponse> => {
+        const response = await apiClient.post<MessageResponse>('/auth/forgot-password', data);
+        return response.data;
+    },
+
+    resetPassword: async (data: ResetPasswordRequest): Promise<MessageResponse> => {
+        const response = await apiClient.post<MessageResponse>('/auth/reset-password', data);
         return response.data;
     }
 };

@@ -21,6 +21,8 @@ const ContactPage = React.lazy(() => import('@/pages/public/ContactPage'));
 
 // Admin Pages
 const LoginPage = React.lazy(() => import('@/pages/admin/LoginPage'));
+const ForgotPasswordPage = React.lazy(() => import('@/pages/admin/ForgotPasswordPage'));
+const ResetPasswordPage = React.lazy(() => import('@/pages/admin/ResetPasswordPage'));
 const DashboardLayout = React.lazy(() => import('@/components/admin/DashboardLayout'));
 import PublicLayout from '@/components/layout/PublicLayout';
 const SkillsManagement = React.lazy(() => import('@/pages/admin/SkillsManagement'));
@@ -94,6 +96,18 @@ function App() {
       <Route path="/admin/login" element={
         <Suspense fallback={<LoadingFallback />}>
           <LoginPage />
+        </Suspense>
+      } />
+
+      <Route path="/admin/forgot-password" element={
+        <Suspense fallback={<LoadingFallback />}>
+          <ForgotPasswordPage />
+        </Suspense>
+      } />
+
+      <Route path="/admin/reset-password" element={
+        <Suspense fallback={<LoadingFallback />}>
+          <ResetPasswordPage />
         </Suspense>
       } />
 

@@ -24,7 +24,7 @@ public class ExperienceService {
     
     @Transactional(readOnly = true)
     public List<ExperienceDto> getAllExperiences() {
-        return experienceRepository.findAllByOrderByOrderAsc()
+        return experienceRepository.findAllByOrderByEndDateDescStartDateDesc()
                 .stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -42,10 +42,6 @@ public class ExperienceService {
         validateDates(dto);
         
         Experience experience = convertToEntity(dto);
-        
-        if (experience.getOrder() == null) {
-            experience.setOrder(getNextOrder());
-        }
         
         Experience savedExperience = experienceRepository.save(experience);
         log.info("Created experience: {} at {} (ID: {})", 
@@ -70,7 +66,6 @@ public class ExperienceService {
         existingExperience.setDescriptionEn(inputSanitizer.sanitize(dto.getDescriptionEn()));
         existingExperience.setDescriptionEs(inputSanitizer.sanitize(dto.getDescriptionEs()));
         existingExperience.setTechnologies(dto.getTechnologies());
-        existingExperience.setOrder(dto.getOrder());
         
         Experience updatedExperience = experienceRepository.save(existingExperience);
         log.info("Updated experience: {} at {} (ID: {})", 
@@ -107,7 +102,6 @@ public class ExperienceService {
                 .descriptionEn(experience.getDescriptionEn())
                 .descriptionEs(experience.getDescriptionEs())
                 .technologies(experience.getTechnologies())
-                .order(experience.getOrder())
                 .build();
     }
     
@@ -122,15 +116,6 @@ public class ExperienceService {
                 .descriptionEn(inputSanitizer.sanitize(dto.getDescriptionEn()))
                 .descriptionEs(inputSanitizer.sanitize(dto.getDescriptionEs()))
                 .technologies(dto.getTechnologies())
-                .order(dto.getOrder())
                 .build();
-    }
-    
-    private Integer getNextOrder() {
-        List<Experience> experiences = experienceRepository.findAll();
-        return experiences.stream()
-                .map(Experience::getOrder)
-                .max(Integer::compareTo)
-                .orElse(0) + 1;
     }
 }

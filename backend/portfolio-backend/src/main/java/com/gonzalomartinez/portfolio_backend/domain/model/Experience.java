@@ -65,6 +65,4 @@ public class Experience {
     @Builder.Default
     private List<String> technologies = new ArrayList<>();
     
-    @Column(name = "display_order")
-    private Integer order;
 }

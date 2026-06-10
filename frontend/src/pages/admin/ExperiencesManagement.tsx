@@ -226,7 +226,6 @@ const ExperiencesManagement: React.FC = () => {
                     onClose={handleClose}
                     onSubmit={onSubmit}
                     saving={saving}
-                    defaultOrder={experiences.length + 1}
                 />
             )}
         </Box>

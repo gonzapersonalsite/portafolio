@@ -9,6 +9,7 @@
 
 # Database Dumps
 *.sql
+!**/db/migration/*.sql
 backup.sql
 backend/backups/*
 
