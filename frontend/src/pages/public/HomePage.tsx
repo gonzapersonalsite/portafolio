@@ -40,6 +40,7 @@ const HomePage: React.FC = () => {
     
     const cachedProfile = requestCache.get<ProfileType>(profileCacheKey);
     const cachedProjects = requestCache.get<Project[]>(projectsCacheKey);
+    const hadCachedData = React.useRef(!!cachedProfile && !!cachedProjects);
 
     const [featuredProjects, setFeaturedProjects] = React.useState<Project[]>(cachedProjects || []);
     const [profile, setProfile] = React.useState<ProfileType | null>(cachedProfile || null);
@@ -49,7 +50,7 @@ const HomePage: React.FC = () => {
     const fetchHomeData = React.useCallback(async () => {
         try {
             setError(null);
-            if (!cachedProfile || !cachedProjects) setLoading(true);
+            if (!hadCachedData.current) setLoading(true);
             
             const [projectsData, profileData] = await Promise.all([
                 publicService.getFeaturedProjects(),
@@ -57,19 +58,19 @@ const HomePage: React.FC = () => {
             ]);
             setFeaturedProjects(projectsData);
             setProfile(profileData);
+            hadCachedData.current = true;
         } catch (error) {
             console.error("Failed to fetch home data", error);
             setError("Failed to load home page data");
         } finally {
             setLoading(false);
         }
-    }, [cachedProfile, cachedProjects]);
+    }, []);
 
-    /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
         fetchHomeData();
-    }, [fetchHomeData]);
-    /* eslint-enable react-hooks/set-state-in-effect */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // Helper to get localized text
     const getLocalizedText = (en: string, es: string) => {

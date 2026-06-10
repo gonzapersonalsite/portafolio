@@ -25,6 +25,7 @@ const ExperiencePage: React.FC = () => {
     // Intentar obtener de caché inmediatamente
     const cacheKey = `/public/experiences?&lang=${i18n.language}`;
     const cachedExps = requestCache.get<Experience[]>(cacheKey);
+    const hadCachedExps = React.useRef(!!cachedExps);
     
     const [experiences, setExperiences] = React.useState<Experience[]>(cachedExps || []);
     const [loading, setLoading] = React.useState(!cachedExps);
@@ -33,22 +34,22 @@ const ExperiencePage: React.FC = () => {
     const fetchExperiences = React.useCallback(async () => {
         try {
             setError(null);
-            if (!cachedExps) setLoading(true);
+            if (!hadCachedExps.current) setLoading(true);
             const data = await publicService.getAllExperiences();
             setExperiences(data);
+            hadCachedExps.current = true;
         } catch (err) {
             console.error("Failed to fetch experiences", err);
             setError("Failed to load experiences");
         } finally {
             setLoading(false);
         }
-    }, [cachedExps]);
+    }, []);
 
-    /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
         fetchExperiences();
-    }, [fetchExperiences]);
-    /* eslint-enable react-hooks/set-state-in-effect */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (loading) {
         return (

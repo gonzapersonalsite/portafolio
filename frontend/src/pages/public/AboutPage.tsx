@@ -29,6 +29,7 @@ const AboutPage: React.FC = () => {
     const cachedSkills = requestCache.get<Skill[]>(skillsCacheKey);
     const cachedLanguages = requestCache.get<SpokenLanguage[]>(languagesCacheKey);
     const cachedProfile = requestCache.get<Profile>(profileCacheKey);
+    const hadCachedData = React.useRef(!!cachedSkills && !!cachedLanguages && !!cachedProfile);
 
     const [competencies, setCompetencies] = React.useState<Skill[]>(
         cachedSkills ? cachedSkills.filter(s => s.level >= 70) : []
@@ -37,28 +38,30 @@ const AboutPage: React.FC = () => {
     const [profile, setProfile] = React.useState<Profile | null>(cachedProfile || null);
     const [loading, setLoading] = React.useState(!cachedSkills || !cachedLanguages || !cachedProfile);
 
-    React.useEffect(() => {
-        const fetchData = async () => {
-            try {
-                if (!cachedSkills || !cachedLanguages || !cachedProfile) setLoading(true);
-                
-                const [skillsData, languagesData, profileData] = await Promise.all([
-                    publicService.getAllSkills(),
-                    publicService.getAllSpokenLanguages(),
-                    publicService.getProfile()
-                ]);
+    const fetchData = React.useCallback(async () => {
+        try {
+            if (!hadCachedData.current) setLoading(true);
+            
+            const [skillsData, languagesData, profileData] = await Promise.all([
+                publicService.getAllSkills(),
+                publicService.getAllSpokenLanguages(),
+                publicService.getProfile()
+            ]);
 
-                setCompetencies(skillsData.filter((s: Skill) => s.level >= 70));
-                setSpokenLanguages(languagesData);
-                setProfile(profileData);
-            } catch (error) {
-                console.error("Failed to fetch about data", error);
-            } finally {
-                setLoading(false);
-            }
-        };
+            setCompetencies(skillsData.filter((s: Skill) => s.level >= 70));
+            setSpokenLanguages(languagesData);
+            setProfile(profileData);
+            hadCachedData.current = true;
+        } catch (error) {
+            console.error("Failed to fetch about data", error);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    React.useEffect(() => {
         fetchData();
-    }, [language, cachedSkills, cachedLanguages, cachedProfile]);
+    }, [language, fetchData]);
 
     // Helper to get localized text
     const getLocalizedText = (en: string, es: string) => {

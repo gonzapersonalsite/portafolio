@@ -20,6 +20,7 @@ const SkillsPage: React.FC = () => {
     // Intentar obtener datos de caché inmediatamente para evitar skeletons innecesarios
     const cacheKey = `/public/skills?&lang=${i18n.language}`;
     const cachedSkills = requestCache.get<Skill[]>(cacheKey);
+    const hadCachedSkills = React.useRef(!!cachedSkills);
     
     const [skills, setSkills] = React.useState<Skill[]>(cachedSkills || []);
     const [loading, setLoading] = React.useState(!cachedSkills);
@@ -28,23 +29,23 @@ const SkillsPage: React.FC = () => {
     const fetchSkills = React.useCallback(async () => {
         try {
             setError(null);
-            if (!cachedSkills) setLoading(true);
+            if (!hadCachedSkills.current) setLoading(true);
             
             const data = await publicService.getAllSkills();
             setSkills(data);
+            hadCachedSkills.current = true;
         } catch (err) {
             console.error("Failed to fetch skills", err);
             setError("Failed to load skills");
         } finally {
             setLoading(false);
         }
-    }, [cachedSkills]);
+    }, []);
 
-    /* eslint-disable react-hooks/set-state-in-effect */
     React.useEffect(() => {
         fetchSkills();
-    }, [fetchSkills]);
-    /* eslint-enable react-hooks/set-state-in-effect */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // Group skills by category
     const skillsByCategory = useMemo(() => {
