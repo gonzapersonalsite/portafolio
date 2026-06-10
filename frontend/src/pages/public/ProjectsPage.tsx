@@ -6,6 +6,7 @@ import type { Project } from '@/types';
 import ProjectCard from '@/components/portfolio/ProjectCard';
 import { ProjectGridSkeleton, PageHeaderSkeleton } from '@/components/common/SkeletonLoaders';
 import EmptyState from '@/components/common/EmptyState';
+import ErrorState from '@/components/common/ErrorState';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
 import { requestCache } from '@/utils/requestCache';
@@ -22,22 +23,25 @@ const ProjectsPage: React.FC = () => {
     
     const [projects, setProjects] = React.useState<Project[]>(cachedProjects || []);
     const [loading, setLoading] = React.useState(!cachedProjects);
+    const [error, setError] = React.useState<string | null>(null);
+
+    const fetchProjects = React.useCallback(async () => {
+        try {
+            setError(null);
+            if (!cachedProjects) setLoading(true);
+            const data = await publicService.getAllProjects();
+            setProjects(data);
+        } catch (err) {
+            console.error("Failed to fetch projects", err);
+            setError("Failed to load projects");
+        } finally {
+            setLoading(false);
+        }
+    }, [language]);
 
     React.useEffect(() => {
-        const fetchProjects = async () => {
-            try {
-                if (!cachedProjects) setLoading(true);
-                const data = await publicService.getAllProjects();
-                setProjects(data);
-            } catch (err) {
-                console.error("Failed to fetch projects", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchProjects();
-    }, [language]);
+    }, [fetchProjects]);
 
     if (loading) {
         return (
@@ -45,6 +49,16 @@ const ProjectsPage: React.FC = () => {
                 <Container maxWidth="lg">
                     <PageHeaderSkeleton />
                     <ProjectGridSkeleton />
+                </Container>
+            </Box>
+        );
+    }
+
+    if (error) {
+        return (
+            <Box sx={{ py: 8 }}>
+                <Container maxWidth="lg">
+                    <ErrorState message={error} onRetry={fetchProjects} />
                 </Container>
             </Box>
         );

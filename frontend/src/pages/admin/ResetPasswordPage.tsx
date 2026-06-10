@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Container, Paper, Typography, TextField, Button, Box, Alert } from '@mui/material';
+import { Container, Paper, Typography, TextField, Button, Box, Alert, Link as MuiLink } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useSearchParams, useNavigate } from 'react-router-dom';
 import { authService } from '@/services/authService';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '@/components/common/LanguageSelector';
@@ -29,7 +29,7 @@ const ResetPasswordPage: React.FC = () => {
         try {
             setLoading(true);
             setError(null);
-            const response = await authService.resetPassword({
+            await authService.resetPassword({
                 token: token,
                 newPassword: data.newPassword
             });
@@ -56,9 +56,9 @@ const ResetPasswordPage: React.FC = () => {
                         {t('admin.invalidResetLink', 'Invalid reset link. No token provided.')}
                     </Alert>
                     <Box sx={{ textAlign: 'center', mt: 2 }}>
-                        <Link to="/admin/login" style={{ color: '#1976d2' }}>
+                        <MuiLink component={RouterLink} to="/admin/login">
                             {t('admin.backToLogin', 'Back to login')}
-                        </Link>
+                        </MuiLink>
                     </Box>
                 </Box>
             </Container>
@@ -129,9 +129,9 @@ const ResetPasswordPage: React.FC = () => {
                     )}
 
                     <Box sx={{ textAlign: 'center', mt: 2 }}>
-                        <Link to="/admin/login" style={{ color: '#1976d2' }}>
+                        <MuiLink component={RouterLink} to="/admin/login">
                             {t('admin.backToLogin', 'Back to login')}
-                        </Link>
+                        </MuiLink>
                     </Box>
                 </Paper>
             </Box>

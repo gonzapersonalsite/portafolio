@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Box, Button, Paper, IconButton, Typography,
+    Box, Button, CircularProgress, Paper, IconButton, Typography,
     Chip
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -29,6 +29,7 @@ const ExperiencesManagement: React.FC = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [experienceToDelete, setExperienceToDelete] = useState<string | null>(null);
     const [saving, setSaving] = useState(false);
+    const [loading, setLoading] = useState(true);
     const { t } = useTranslation();
     const { language } = useLanguage();
     const { showNotification } = useNotification();
@@ -36,11 +37,14 @@ const ExperiencesManagement: React.FC = () => {
 
     const fetchData = async () => {
         try {
+            setLoading(true);
             const data = await adminService.getExperiences();
             setExperiences(data);
         } catch (err) {
             showNotification(t('admin.fetchError'), 'error', 6000);
             console.error('Error fetching experiences:', err);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -123,6 +127,11 @@ const ExperiencesManagement: React.FC = () => {
                 </Button>
             </Box>
 
+            {loading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+                    <CircularProgress />
+                </Box>
+            ) : (<>
             <Paper sx={{ p: { xs: 2, md: 3 }, mt: 2 }}>
                 <Timeline
                     position="right"
@@ -218,6 +227,8 @@ const ExperiencesManagement: React.FC = () => {
                     setExperienceToDelete(null);
                 }}
             />
+
+            </>)}
 
             {open && (
                 <ExperienceFormDialog

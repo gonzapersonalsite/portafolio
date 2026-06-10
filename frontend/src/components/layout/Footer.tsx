@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Box, Container, Typography, IconButton, useTheme } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
@@ -6,9 +6,8 @@ import EmailIcon from '@mui/icons-material/Email';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/context/LanguageContext';
 import { useColorMode } from '@/context/ThemeContext';
-import { publicService } from '@/services/publicService';
+import { useProfile } from '@/hooks/useProfile';
 import { glassColors, glassEffects } from '@/styles/glassStyles';
-import type { Profile } from '@/types';
 
 const Footer: React.FC = () => {
     const { t } = useTranslation();
@@ -18,19 +17,7 @@ const Footer: React.FC = () => {
     const currentYear = new Date().getFullYear();
     const isGlass = mode === 'glass';
 
-    const [profile, setProfile] = useState<Profile | null>(null);
-
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const data = await publicService.getProfile();
-                setProfile(data);
-            } catch (err) {
-                console.error("Failed to fetch profile in footer:", err);
-            }
-        };
-        fetchProfile();
-    }, []);
+    const { profile } = useProfile();
 
     const socialLinks = {
         github: profile?.githubUrl || "https://github.com/gonzapersonalsite",

@@ -1,6 +1,7 @@
 package com.gonzalomartinez.portfolio_backend.application.service;
 
 import com.gonzalomartinez.portfolio_backend.application.dto.ProfileDto;
+import com.gonzalomartinez.portfolio_backend.domain.exception.ResourceNotFoundException;
 import com.gonzalomartinez.portfolio_backend.domain.model.Profile;
 import com.gonzalomartinez.portfolio_backend.domain.repository.ProfileRepository;
 import com.gonzalomartinez.portfolio_backend.infrastructure.security.InputSanitizer;
@@ -20,8 +21,10 @@ public class ProfileService {
     @Transactional(readOnly = true)
     public ProfileDto getProfile() {
         List<Profile> profiles = profileRepository.findAll();
-        Profile profile = profiles.isEmpty() ? profileRepository.save(new Profile()) : profiles.get(0);
-        return convertToDto(profile);
+        if (profiles.isEmpty()) {
+            throw new ResourceNotFoundException("Profile", "id", "any");
+        }
+        return convertToDto(profiles.get(0));
     }
 
     @Transactional

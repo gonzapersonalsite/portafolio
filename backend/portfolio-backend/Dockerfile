@@ -1,5 +1,5 @@
 # Build stage
-FROM eclipse-temurin:21-jdk-jammy AS build
+FROM eclipse-temurin:25-jdk-jammy AS build
 WORKDIR /app
 
 # Copy gradle wrapper and config files
@@ -21,7 +21,7 @@ COPY src src
 RUN ./gradlew build -x test --no-daemon && rm -f build/libs/*-plain.jar
 
 # Run stage
-FROM eclipse-temurin:21-jre-jammy
+FROM eclipse-temurin:25-jre-jammy
 WORKDIR /app
 
 # Copy the jar from build stage

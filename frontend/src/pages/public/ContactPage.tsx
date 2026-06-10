@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Box, Container, Typography, Grid, Paper, IconButton, Stack, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import EmailIcon from '@mui/icons-material/Email';
@@ -6,31 +6,16 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ContactForm from '@/components/layout/ContactForm';
-import { publicService } from '@/services/publicService';
 import { useLanguage } from '@/context/LanguageContext';
-import type { Profile } from '@/types';
+import { useProfile } from '@/hooks/useProfile';
 import { ContactSkeleton, PageHeaderSkeleton } from '@/components/common/SkeletonLoaders';
+import ErrorState from '@/components/common/ErrorState';
 
 const ContactPage: React.FC = () => {
     const { language } = useLanguage();
     const { t } = useTranslation();
     const theme = useTheme();
-    const [profile, setProfile] = useState<Profile | null>(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const data = await publicService.getProfile();
-                setProfile(data);
-            } catch (err) {
-                console.error("Failed to fetch profile in contact page:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchProfile();
-    }, []);
+    const { profile, loading, error, refetch } = useProfile();
 
     if (loading) {
         return (
@@ -38,6 +23,16 @@ const ContactPage: React.FC = () => {
                 <Container maxWidth="lg">
                     <PageHeaderSkeleton />
                     <ContactSkeleton />
+                </Container>
+            </Box>
+        );
+    }
+
+    if (error) {
+        return (
+            <Box sx={{ py: 8 }}>
+                <Container maxWidth="lg">
+                    <ErrorState message={error} onRetry={refetch} />
                 </Container>
             </Box>
         );

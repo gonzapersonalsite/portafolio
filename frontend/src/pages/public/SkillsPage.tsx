@@ -6,6 +6,7 @@ import type { Skill } from '@/types';
 import { useLanguage } from '@/context/LanguageContext';
 import { SkillsSkeleton, PageHeaderSkeleton } from '@/components/common/SkeletonLoaders';
 import EmptyState from '@/components/common/EmptyState';
+import ErrorState from '@/components/common/ErrorState';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 
 import { requestCache } from '@/utils/requestCache';
@@ -22,24 +23,26 @@ const SkillsPage: React.FC = () => {
     
     const [skills, setSkills] = React.useState<Skill[]>(cachedSkills || []);
     const [loading, setLoading] = React.useState(!cachedSkills);
+    const [error, setError] = React.useState<string | null>(null);
+
+    const fetchSkills = React.useCallback(async () => {
+        try {
+            setError(null);
+            if (!cachedSkills) setLoading(true);
+            
+            const data = await publicService.getAllSkills();
+            setSkills(data);
+        } catch (err) {
+            console.error("Failed to fetch skills", err);
+            setError("Failed to load skills");
+        } finally {
+            setLoading(false);
+        }
+    }, [language]);
 
     React.useEffect(() => {
-        const fetchSkills = async () => {
-            try {
-                // Si no hay caché, mostramos loading
-                if (!cachedSkills) setLoading(true);
-                
-                const data = await publicService.getAllSkills();
-                setSkills(data);
-            } catch (err) {
-                console.error("Failed to fetch skills", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchSkills();
-    }, [language]); // Recargar si cambia el idioma
+    }, [fetchSkills]);
 
     // Group skills by category
     const skillsByCategory = useMemo(() => {
@@ -59,6 +62,16 @@ const SkillsPage: React.FC = () => {
                 <Container maxWidth="lg">
                     <PageHeaderSkeleton />
                     <SkillsSkeleton />
+                </Container>
+            </Box>
+        );
+    }
+
+    if (error) {
+        return (
+            <Box sx={{ py: 8 }}>
+                <Container maxWidth="lg">
+                    <ErrorState message={error} onRetry={fetchSkills} />
                 </Container>
             </Box>
         );

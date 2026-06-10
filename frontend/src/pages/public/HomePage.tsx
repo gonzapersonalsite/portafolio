@@ -16,6 +16,7 @@ import { HeroSkeleton, ProjectCardSkeleton } from '@/components/common/SkeletonL
 import ImageWithFallback from '@/components/common/ImageWithFallback';
 import RichTextRenderer from '@/components/common/RichTextRenderer';
 import EmptyState from '@/components/common/EmptyState';
+import ErrorState from '@/components/common/ErrorState';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import type { Profile as ProfileType, Project } from '@/types';
 
@@ -43,26 +44,30 @@ const HomePage: React.FC = () => {
     const [featuredProjects, setFeaturedProjects] = React.useState<Project[]>(cachedProjects || []);
     const [profile, setProfile] = React.useState<ProfileType | null>(cachedProfile || null);
     const [loading, setLoading] = React.useState(!cachedProfile || !cachedProjects);
+    const [error, setError] = React.useState<string | null>(null);
+
+    const fetchHomeData = React.useCallback(async () => {
+        try {
+            setError(null);
+            if (!cachedProfile || !cachedProjects) setLoading(true);
+            
+            const [projectsData, profileData] = await Promise.all([
+                publicService.getFeaturedProjects(),
+                publicService.getProfile()
+            ]);
+            setFeaturedProjects(projectsData);
+            setProfile(profileData);
+        } catch (error) {
+            console.error("Failed to fetch home data", error);
+            setError("Failed to load home page data");
+        } finally {
+            setLoading(false);
+        }
+    }, [language]);
 
     React.useEffect(() => {
-        const fetchHomeData = async () => {
-            try {
-                if (!cachedProfile || !cachedProjects) setLoading(true);
-                
-                const [projectsData, profileData] = await Promise.all([
-                    publicService.getFeaturedProjects(),
-                    publicService.getProfile()
-                ]);
-                setFeaturedProjects(projectsData);
-                setProfile(profileData);
-            } catch (error) {
-                console.error("Failed to fetch home data", error);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchHomeData();
-    }, [language]);
+    }, [fetchHomeData]);
 
     // Helper to get localized text
     const getLocalizedText = (en: string, es: string) => {
@@ -102,6 +107,16 @@ const HomePage: React.FC = () => {
                         </Grid>
                     </Container>
                 </Box>
+            </Box>
+        );
+    }
+
+    if (error) {
+        return (
+            <Box sx={{ py: 8 }}>
+                <Container maxWidth="lg">
+                    <ErrorState message={error} onRetry={fetchHomeData} />
+                </Container>
             </Box>
         );
     }

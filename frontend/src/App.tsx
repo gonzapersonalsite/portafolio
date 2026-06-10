@@ -33,6 +33,7 @@ const SpokenLanguageManagement = React.lazy(() => import('@/pages/admin/SpokenLa
 const ExternalResources = React.lazy(() => import('@/pages/admin/ExternalResources'));
 
 import { useAuthStore } from '@/context/AuthStore';
+import ErrorBoundary from '@/components/common/ErrorBoundary';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -57,6 +58,7 @@ const PageLoader = ({ children }: { children: React.ReactNode }) => (
 
 function App() {
   return (
+    <ErrorBoundary>
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<PublicLayout />}>
@@ -130,6 +132,7 @@ function App() {
       {/* Catch all */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </ErrorBoundary>
   );
 }
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Container, Paper, Typography, TextField, Button, Box, Alert } from '@mui/material';
+import { Container, Paper, Typography, TextField, Button, Box, Alert, Link as MuiLink } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { useAuthStore } from '@/context/AuthStore';
 import { authService, type LoginCredentials } from '@/services/authService';
 import { useTranslation } from 'react-i18next';
@@ -90,9 +90,9 @@ const LoginPage: React.FC = () => {
                     </Box>
 
                     <Box sx={{ textAlign: 'center' }}>
-                        <Link to="/admin/forgot-password" style={{ color: '#1976d2', fontSize: '0.875rem' }}>
+                        <MuiLink component={RouterLink} to="/admin/forgot-password" sx={{ fontSize: '0.875rem' }}>
                             {t('admin.forgotPassword', 'Forgot password?')}
-                        </Link>
+                        </MuiLink>
                     </Box>
                 </Paper>
             </Box>

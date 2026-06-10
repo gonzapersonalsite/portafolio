@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Box, Button, Typography,
+    Box, Button, CircularProgress, Typography,
     Card, CardContent, CardActions, Grid,
     Chip
 } from '@mui/material';
@@ -31,17 +31,21 @@ const ProjectsManagement: React.FC = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [projectToDelete, setProjectToDelete] = useState<string | null>(null);
     const [saving, setSaving] = useState(false);
+    const [loading, setLoading] = useState(true);
     const { t } = useTranslation();
     const { language } = useLanguage();
     const { showNotification } = useNotification();
 
     const fetchData = async () => {
         try {
+            setLoading(true);
             const data = await adminService.getProjects();
             setProjects(data);
         } catch (error) {
             showNotification(t('admin.fetchError'), 'error', 6000);
             console.error('Error fetching projects:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -134,6 +138,11 @@ const ProjectsManagement: React.FC = () => {
                 </Button>
             </Box>
 
+            {loading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+                    <CircularProgress />
+                </Box>
+            ) : (<>
             <Grid container spacing={3}>
                 {projects.map((proj) => (
                     <Grid size={{ xs: 12, md: 6, lg: 4 }} key={proj.id}>
@@ -211,6 +220,8 @@ const ProjectsManagement: React.FC = () => {
             />
 
             {/* Project Form Dialog */}
+            </>)}
+
             {open && (
                 <ProjectFormDialog
                     open={open}

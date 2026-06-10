@@ -69,7 +69,8 @@ const SpokenLanguageFormDialog: React.FC<SpokenLanguageFormDialogProps> = ({
         setFormData(prev => ({ ...prev, [name]: name === 'order' ? parseInt(value) || 0 : value }));
     };
 
-    const handleFormSubmit = async () => {
+    const handleFormSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
         await onSubmit(formData);
     };
 
@@ -79,7 +80,7 @@ const SpokenLanguageFormDialog: React.FC<SpokenLanguageFormDialogProps> = ({
                 {editingLanguage ? `${t('admin.edit')} ${t('nav.languages')}` : `${t('admin.add')} ${t('nav.languages')}`}
             </DialogTitle>
             <DialogContent>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
+                <Box component="form" onSubmit={handleFormSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
                     <TextField name="nameEn" label={`${t('admin.name')} (EN)`} value={formData.nameEn} onChange={handleInputChange} fullWidth />
                     <TextField name="nameEs" label={`${t('admin.name')} (ES)`} value={formData.nameEs} onChange={handleInputChange} fullWidth />
                     <TextField name="levelEn" label={`${t('admin.level')} (EN)`} value={formData.levelEn} onChange={handleInputChange} fullWidth />
@@ -99,7 +100,7 @@ const SpokenLanguageFormDialog: React.FC<SpokenLanguageFormDialogProps> = ({
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>{t('admin.cancel')}</Button>
-                <Button onClick={handleFormSubmit} variant="contained" disabled={saving}>
+                <Button type="submit" form="sp-lang-form" variant="contained" disabled={saving} onClick={handleFormSubmit}>
                     {saving ? t('admin.saving') : t('admin.save')}
                 </Button>
             </DialogActions>

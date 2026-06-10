@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Box, Button, Paper, Table, TableBody, TableCell, TableContainer,
+    Box, Button, CircularProgress, Paper, Table, TableBody, TableCell, TableContainer,
     TableHead, TableRow, IconButton, Typography,
     useMediaQuery, Card, CardContent, CardActions, Chip
 } from '@mui/material';
@@ -23,6 +23,7 @@ const SkillsManagement: React.FC = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [skillToDelete, setSkillToDelete] = useState<string | null>(null);
     const [saving, setSaving] = useState(false);
+    const [loading, setLoading] = useState(true);
     const { t } = useTranslation();
     const { language } = useLanguage();
     const { showNotification } = useNotification();
@@ -31,11 +32,14 @@ const SkillsManagement: React.FC = () => {
 
     const fetchSkills = async () => {
         try {
+            setLoading(true);
             const data = await adminService.getSkills();
             setSkills(data);
         } catch (err) {
             showNotification(t('admin.fetchError'), 'error', 6000);
             console.error('Error fetching skills:', err);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -113,6 +117,11 @@ const SkillsManagement: React.FC = () => {
                 </Button>
             </Box>
 
+            {loading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+                    <CircularProgress />
+                </Box>
+            ) : (<>
             {isMobile ? (
                 <Box>
                     {skills.map((skill) => (
@@ -209,6 +218,8 @@ const SkillsManagement: React.FC = () => {
                     setSkillToDelete(null);
                 }}
             />
+
+            </>)}
 
             {open && (
                 <SkillFormDialog

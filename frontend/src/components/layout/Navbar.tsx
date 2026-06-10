@@ -22,6 +22,7 @@ import { useColorMode } from '@/context/ThemeContext';
 import LanguageSelector from '../common/LanguageSelector';
 import ThemeSelector from '../common/ThemeSelector';
 import { useAuthStore } from '@/context/AuthStore';
+import { useProfile } from '@/hooks/useProfile';
 import { glassEffects } from '@/styles/glassStyles';
 
 interface Props {
@@ -48,12 +49,7 @@ const Navbar: React.FC = () => {
     const textColor = isGlass ? '#0b0a1c' : 'inherit';
     
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-    const profile = useAuthStore((state) => state.profile);
-    const fetchProfile = useAuthStore((state) => state.fetchProfile);
-
-    useEffect(() => {
-        fetchProfile();
-    }, [fetchProfile]);
+    const { profile } = useProfile();
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);

@@ -10,7 +10,7 @@ public class InputSanitizer {
     private static final Pattern HTML_PATTERN = Pattern.compile("<[^>]*>");
     private static final Pattern SCRIPT_PATTERN = Pattern.compile("<script[^>]*>.*?</script>", Pattern.CASE_INSENSITIVE);
     private static final Pattern SQL_INJECTION_PATTERN = Pattern.compile(
-            "('.*(--|;|/\\*|\\*/|xp_|sp_|exec|execute|select|insert|update|delete|drop|create|alter|union).*')",
+            "'[^']*(--|;|/\\*|\\*/|xp_|sp_|exec|execute|select|insert|update|delete|drop|create|alter|union)",
             Pattern.CASE_INSENSITIVE
     );
     

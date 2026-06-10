@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { Box, AppBar, Toolbar, Typography, Button, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Box, AppBar, Toolbar, Typography, Button, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText, CircularProgress } from '@mui/material';
 import CodeIcon from '@mui/icons-material/Code';
 import WorkIcon from '@mui/icons-material/Work';
 import BuildIcon from '@mui/icons-material/Build';
@@ -142,7 +142,9 @@ const DashboardLayout: React.FC = () => {
                 sx={{ flexGrow: 1, p: 3, width: { lg: `calc(100% - ${drawerWidth}px)` } }}
             >
                 <Toolbar />
-                <Outlet />
+                <Suspense fallback={<CircularProgress sx={{ display: 'block', mx: 'auto', mt: 4 }} />}>
+                    <Outlet />
+                </Suspense>
             </Box>
         </Box>
     );

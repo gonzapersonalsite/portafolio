@@ -11,6 +11,7 @@ import { ExperienceSkeleton, PageHeaderSkeleton } from '@/components/common/Skel
 import RichTextRenderer from '@/components/common/RichTextRenderer';
 import ScrollableContent from '@/components/common/ScrollableContent';
 import EmptyState from '@/components/common/EmptyState';
+import ErrorState from '@/components/common/ErrorState';
 import ExploreIcon from '@mui/icons-material/Explore';
 
 import { requestCache } from '@/utils/requestCache';
@@ -27,22 +28,25 @@ const ExperiencePage: React.FC = () => {
     
     const [experiences, setExperiences] = React.useState<Experience[]>(cachedExps || []);
     const [loading, setLoading] = React.useState(!cachedExps);
+    const [error, setError] = React.useState<string | null>(null);
+
+    const fetchExperiences = React.useCallback(async () => {
+        try {
+            setError(null);
+            if (!cachedExps) setLoading(true);
+            const data = await publicService.getAllExperiences();
+            setExperiences(data);
+        } catch (err) {
+            console.error("Failed to fetch experiences", err);
+            setError("Failed to load experiences");
+        } finally {
+            setLoading(false);
+        }
+    }, [language]);
 
     React.useEffect(() => {
-        const fetchExperiences = async () => {
-            try {
-                if (!cachedExps) setLoading(true);
-                const data = await publicService.getAllExperiences();
-                setExperiences(data);
-            } catch (err) {
-                console.error("Failed to fetch experiences", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchExperiences();
-    }, [language]);
+    }, [fetchExperiences]);
 
     if (loading) {
         return (
@@ -50,6 +54,16 @@ const ExperiencePage: React.FC = () => {
                 <Container maxWidth="lg">
                     <PageHeaderSkeleton />
                     <ExperienceSkeleton />
+                </Container>
+            </Box>
+        );
+    }
+
+    if (error) {
+        return (
+            <Box sx={{ py: 8 }}>
+                <Container maxWidth="lg">
+                    <ErrorState message={error} onRetry={fetchExperiences} />
                 </Container>
             </Box>
         );

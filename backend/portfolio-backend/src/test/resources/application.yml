@@ -27,3 +27,9 @@ app:
   admin:
     username: testadmin
     password: testpass
+    email: test@example.com
+
+spring:
+  security:
+    user:
+      password: testpass

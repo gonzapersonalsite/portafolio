@@ -1,7 +1,6 @@
 package com.gonzalomartinez.portfolio_backend.domain.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,30 +20,20 @@ public class SpokenLanguage {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotBlank(message = "English name is required")
-    @Size(max = 100, message = "Name must not exceed 100 characters")
     @Column(nullable = false, length = 100)
-    private String nameEn; // e.g., "Spanish"
+    private String nameEn;
 
-    @NotBlank(message = "Spanish name is required")
-    @Size(max = 100, message = "Name must not exceed 100 characters")
     @Column(nullable = false, length = 100)
-    private String nameEs; // e.g., "Español"
+    private String nameEs;
 
-    @NotBlank(message = "English level description is required")
-    @Size(max = 100, message = "Level description must not exceed 100 characters")
     @Column(nullable = false, length = 100)
-    private String levelEn; // e.g., "Native"
+    private String levelEn;
 
-    @NotBlank(message = "Spanish level description is required")
-    @Size(max = 100, message = "Level description must not exceed 100 characters")
     @Column(nullable = false, length = 100)
-    private String levelEs; // e.g., "Nativo"
+    private String levelEs;
 
-    @Min(value = 0, message = "Proficiency must be at least 0")
-    @Max(value = 100, message = "Proficiency must not exceed 100")
     @Column(nullable = false)
-    private Integer proficiency; // 0-100 for ordering or progress bars logic if needed
+    private Integer proficiency;
 
     @Column(name = "display_order")
     private Integer order;

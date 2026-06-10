@@ -1,6 +1,7 @@
 package com.gonzalomartinez.portfolio_backend.infrastructure.web.exception;
 
 import com.gonzalomartinez.portfolio_backend.application.dto.ErrorResponse;
+import com.gonzalomartinez.portfolio_backend.domain.exception.EmailSendException;
 import com.gonzalomartinez.portfolio_backend.domain.exception.InvalidCredentialsException;
 import com.gonzalomartinez.portfolio_backend.domain.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -116,6 +117,24 @@ public class GlobalExceptionHandler {
                 .build();
         
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
+    
+    @ExceptionHandler(EmailSendException.class)
+    public ResponseEntity<ErrorResponse> handleEmailSendException(
+            EmailSendException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Email send failed: {}", ex.getMessage());
+        
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.SERVICE_UNAVAILABLE.value())
+                .error("Email Service Unavailable")
+                .message("Failed to send email. Please try again later.")
+                .path(request.getRequestURI())
+                .build();
+        
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(errorResponse);
     }
     
     @ExceptionHandler(Exception.class)

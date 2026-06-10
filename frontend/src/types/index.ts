@@ -1,8 +1,3 @@
-export interface User {
-    username: string;
-    role: string;
-}
-
 export interface AuthResponse {
     token: string;
     username: string;
@@ -103,12 +98,6 @@ export interface ForgotPasswordRequest {
 export interface ResetPasswordRequest {
     token: string;
     newPassword: string;
-}
-
-export interface LoginResponse {
-    token: string;
-    username: string;
-    role: string;
 }
 
 export interface ApiError {

@@ -1,6 +1,7 @@
 package com.gonzalomartinez.portfolio_backend.infrastructure.email;
 
 import com.gonzalomartinez.portfolio_backend.application.service.EmailService;
+import com.gonzalomartinez.portfolio_backend.domain.exception.EmailSendException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -46,7 +47,7 @@ public class ResendEmailService implements EmailService {
             log.debug("Resend response: {}", response);
         } catch (Exception e) {
             log.error("Failed to send password reset email to {}: {}", to, e.getMessage());
-            throw new RuntimeException("Failed to send password reset email", e);
+            throw new EmailSendException("Failed to send password reset email", e);
         }
     }
 

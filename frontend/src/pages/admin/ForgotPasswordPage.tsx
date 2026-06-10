@@ -1,28 +1,25 @@
 import React, { useState } from 'react';
-import { Container, Paper, Typography, TextField, Button, Box, Alert } from '@mui/material';
+import { Container, Paper, Typography, TextField, Button, Box, Alert, Link as MuiLink } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { authService } from '@/services/authService';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '@/components/common/LanguageSelector';
 import axios from 'axios';
-
-interface ForgotPasswordForm {
-    username: string;
-}
+import type { ForgotPasswordRequest } from '@/types';
 
 const ForgotPasswordPage: React.FC = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm<ForgotPasswordForm>();
+    const { register, handleSubmit, formState: { errors } } = useForm<ForgotPasswordRequest>();
     const [message, setMessage] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const { t } = useTranslation();
 
-    const onSubmit = async (data: ForgotPasswordForm) => {
+    const onSubmit = async (data: ForgotPasswordRequest) => {
         try {
             setLoading(true);
             setError(null);
-            const response = await authService.forgotPassword(data);
+            await authService.forgotPassword(data);
             setMessage(t('admin.resetEmailSent'));
         } catch (err: unknown) {
             if (axios.isAxiosError(err) && err.response) {
@@ -78,9 +75,9 @@ const ForgotPasswordPage: React.FC = () => {
                     )}
 
                     <Box sx={{ textAlign: 'center', mt: 2 }}>
-                        <Link to="/admin/login" style={{ color: '#1976d2' }}>
+                        <MuiLink component={RouterLink} to="/admin/login" sx={{ fontSize: '0.875rem' }}>
                             {t('admin.backToLogin', 'Back to login')}
-                        </Link>
+                        </MuiLink>
                     </Box>
                 </Paper>
             </Box>

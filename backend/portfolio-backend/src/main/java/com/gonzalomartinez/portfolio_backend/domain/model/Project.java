@@ -1,8 +1,6 @@
 package com.gonzalomartinez.portfolio_backend.domain.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,13 +23,9 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     
-    @NotBlank(message = "Title (English) is required")
-    @Size(max = 200, message = "Title must not exceed 200 characters")
     @Column(nullable = false, length = 200)
     private String titleEn;
     
-    @NotBlank(message = "Title (Spanish) is required")
-    @Size(max = 200, message = "Title must not exceed 200 characters")
     @Column(nullable = false, length = 200)
     private String titleEs;
     
@@ -54,11 +48,9 @@ public class Project {
     @Builder.Default
     private List<String> technologies = new ArrayList<>();
     
-    @Size(max = 500, message = "GitHub URL must not exceed 500 characters")
     @Column(length = 500)
     private String githubUrl;
     
-    @Size(max = 500, message = "Live URL must not exceed 500 characters")
     @Column(length = 500)
     private String liveUrl;
 
