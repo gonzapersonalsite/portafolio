@@ -5,7 +5,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { authApi } from '@/entities/user';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
-import type { ForgotPasswordRequest } from '@/shared/lib/types';
+import type { ForgotPasswordRequest } from '@/shared/lib';
 
 const ForgotPasswordPage: React.FC = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<ForgotPasswordRequest>();

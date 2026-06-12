@@ -3,7 +3,7 @@
 ## Project Identity
 | Property   | Value                                            |
 |------------|--------------------------------------------------|
-| Stack      | React 19, TypeScript 6, Vite 8, ESLint 10 (flat), pnpm |
+| Stack      | React, TypeScript, Vite, ESLint (flat), pnpm — see package.json for versions |
 | Architecture | Feature-Sliced Design (FSD)                     |
 | Purpose    | Template: every project spawned from this MUST preserve FSD integrity across its entire lifecycle. No architectural drift allowed. |
 

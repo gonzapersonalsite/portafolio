@@ -2,7 +2,7 @@ import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
-const mockMuiPath = path.resolve(__dirname, './src/__tests__/__mocks__/mui.ts')
+const mockMuiPath = path.resolve(__dirname, './src/shared/lib/__mocks__/mui.ts')
 
 export default defineConfig({
   plugins: [react()],

@@ -5,7 +5,7 @@ import { Link as RouterLink, useSearchParams, useNavigate } from 'react-router-d
 import { authApi } from '@/entities/user';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
-import type { ResetPasswordRequest } from '@/shared/lib/types';
+import type { ResetPasswordRequest } from '@/shared/lib';
 
 const ERROR_TRANSLATIONS: Record<string, string> = {
     'Invalid or expired reset token': 'admin.resetTokenInvalid',

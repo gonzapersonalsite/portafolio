@@ -47,7 +47,7 @@
 - **Base de Datos:** PostgreSQL (Aiven)
 - **Gestión de Estado:** Zustand
 - **Documentación API:** Swagger / OpenAPI 3.0
-- **Herramientas de Construcción:** Gradle (Backend) & NPM (Frontend)
+- **Herramientas de Construcción:** Gradle (Backend) & pnpm (Frontend)
 
 ---
 
@@ -56,7 +56,7 @@
 El proyecto sigue una **Arquitectura Full Stack** moderna, priorizando escalabilidad, seguridad y mantenibilidad.
 
 - **Backend en Capas Limpio:** Patrón Controlador-Servicio-Repositorio para una clara separación de la lógica de negocio.
-- **Frontend Basado en Componentes:** Componentes UI altamente reutilizables con gestión de estado centralizada.
+- **Frontend Feature-Sliced:** Arquitectura FSD de 6 capas (`app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/`) con fronteras de importación estrictas forzadas por ESLint.
 - **CI/CD Automatizado:** Pipeline de despliegue continuo usando Vercel (Frontend) y Render (Backend).
 - **Persistencia de Datos:** Gestión robusta de esquemas con Spring Data JPA y PostgreSQL.
 

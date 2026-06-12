@@ -56,7 +56,7 @@
 The project follows a modern **Full Stack Architecture**, prioritizing scalability, security, and maintainability.
 
 - **Clean Layered Backend:** Controller-Service-Repository pattern for clear business logic separation.
-- **Component-Driven Frontend:** Highly reusable UI components with centralized state management.
+- **Feature-Sliced Frontend:** 6-layer FSD architecture (`app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/`) with strict import boundaries enforced by ESLint.
 - **Automated CI/CD:** Continuous deployment pipeline using Vercel (Frontend) and Render (Backend).
 - **Data Persistence:** Robust schema management with Spring Data JPA and PostgreSQL.
 

@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { ThemeProvider as MuiThemeProvider, CssBaseline } from '@mui/material';
-import { createAppTheme } from '@/shared/config/theme';
+import { createAppTheme } from '@/shared/config';
 import { ColorModeContext, type ColorMode } from '@/features/theme-switch/model/ThemeContext';
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

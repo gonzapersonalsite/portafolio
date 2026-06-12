@@ -26,7 +26,7 @@ The project follows a decoupled **Full Stack** architecture, ensuring high perfo
 - **Data Integrity:** Transaction management via Spring Data JPA and automated schema handling.
 
 ### ⚛️ Frontend Architecture
-- **Modular Components:** UI built with reusable React components and Material UI (MUI), strictly adhering to the Single Responsibility Principle (SRP).
+- **Feature-Sliced Design (FSD):** Codebase organized into 6 canonical layers — `app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/` — with strict import rules enforced by `eslint-plugin-fsd-lint`.
 - **State Management:** Lightweight global state using **Zustand**.
 - **Context API:** Used for cross-cutting concerns like Theme, Language, and Notifications.
 - **Dynamic Localization:** Centralized i18next system for real-time interface translation.

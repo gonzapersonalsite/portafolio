@@ -1,6 +1,6 @@
 import { apiClient } from '@/shared/api';
 import type { AuthResponse } from '@/entities/user/model/types';
-import type { ForgotPasswordRequest, MessageResponse, ResetPasswordRequest } from '@/shared/lib/types';
+import type { ForgotPasswordRequest, MessageResponse, ResetPasswordRequest } from '@/shared/lib';
 
 export interface LoginCredentials {
     username: string;

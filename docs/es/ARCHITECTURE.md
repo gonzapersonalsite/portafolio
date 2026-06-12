@@ -26,7 +26,7 @@ El proyecto sigue una arquitectura **Full Stack** desacoplada, asegurando alto r
 - **Integridad de Datos:** Gestión de transacciones vía Spring Data JPA y manejo automatizado de esquemas.
 
 ### ⚛️ Arquitectura Frontend
-- **Componentes Modulares:** UI construida con componentes React reutilizables y Material UI (MUI), adhiriéndose estrictamente al Principio de Responsabilidad Única (SRP).
+- **Feature-Sliced Design (FSD):** Código organizado en 6 capas canónicas — `app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/` — con reglas estrictas de importación forzadas por `eslint-plugin-fsd-lint`.
 - **Gestión de Estado:** Estado global ligero usando **Zustand**.
 - **Context API:** Usado para preocupaciones transversales como Tema, Idioma y Notificaciones.
 - **Localización Dinámica:** Sistema centralizado i18next para traducción de interfaz en tiempo real.

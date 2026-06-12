@@ -105,8 +105,8 @@ const { data, loading, error, refetch } = useApiData(
 - **Framework**: Vitest v4 + @testing-library/react v16
 - **Environment**: jsdom
 - **Mocks**: `vi.mock` at module level, `vi.fn()` for spies
-- **Conventions**: co-located tests (`*.test.ts` next to source), `describe`/`it` blocks, mocks before imports
-- **MUI mock**: Aliased in `vitest.config.ts` to `src/__tests__/__mocks__/mui.ts` (MUI v7 subpath resolution bug)
+- **Conventions**: co-located tests (`*.test.ts(x)` next to source), `describe`/`it` blocks, mocks before imports
+- **MUI mock**: Provides minimal stubs for MUI (`@mui/material`, `@mui/icons-material`) used during testing.
 - **Run**: `pnpm test` (CI: `frontend-ci.yml`)
 
 ## Build & Deploy
@@ -119,7 +119,7 @@ const { data, loading, error, refetch } = useApiData(
 ## Security
 
 - **Auth**: JWT bearer token in Authorization header
-- **Scripts**: `.npmrc` with `ignore-scripts=true`, `pnpm-workspace.yaml` with `onlyBuiltDependencies: [esbuild]`
+- **Scripts**: `.npmrc` with `only-built-dependencies[]=esbuild` (pnpm v11 security)
 - **Input**: Sanitization in form dialogs + backend (Spring Security, XSS prevention)
 
 ## File Organization (FSD Migration Target)
