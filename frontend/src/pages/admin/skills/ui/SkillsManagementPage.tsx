@@ -13,6 +13,7 @@ import type { Skill } from '@/entities/skill';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/features/language-switch';
 import { useNotification } from '@/features/notifications';
+import { usePageMeta } from '@/shared/lib';
 import { ConfirmDialog } from '@/shared/ui';
 import { SkillFormDialog } from '@/features/skill-crud';
 
@@ -29,6 +30,8 @@ const SkillsManagement: React.FC = () => {
     const { showNotification } = useNotification();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+    usePageMeta({ title: `${t('admin.skills')} | Gonzalo Martinez` });
 
     const fetchSkills = useCallback(async () => {
         try {

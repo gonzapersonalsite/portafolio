@@ -9,13 +9,18 @@ import { useLanguage } from '@/features/language-switch';
 import { getAllSkills } from '@/entities/skill';
 import { getAllSpokenLanguages } from '@/entities/spoken-language';
 import { getProfile } from '@/entities/profile';
-import { formatImageUrl, useApiData } from '@/shared/lib';
+import { formatImageUrl, useApiData, usePageMeta } from '@/shared/lib';
 import { AboutSkeleton, PageHeaderSkeleton, ImageWithFallback, RichTextRenderer } from '@/shared/ui';
 
 const AboutPage: React.FC = () => {
     const { t } = useTranslation();
     const { language } = useLanguage();
     const theme = useTheme();
+
+    usePageMeta({
+        title: t('seo.about.title'),
+        description: t('seo.about.description'),
+    });
 
     const { data: skills, loading: skillsLoading } = useApiData(
         () => getAllSkills(),

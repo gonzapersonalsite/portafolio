@@ -15,6 +15,7 @@ import type { Project } from '@/entities/project';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/features/language-switch';
 import { useNotification } from '@/features/notifications';
+import { usePageMeta } from '@/shared/lib';
 import { formatImageUrl, parseUrlStringToArray, parseCommaSeparatedString } from '@/shared/lib';
 import { ImageWithFallback, ConfirmDialog, RichTextRenderer, ScrollableContent } from '@/shared/ui';
 import { ProjectFormDialog } from '@/features/project-crud';
@@ -31,6 +32,8 @@ const ProjectsManagement: React.FC = () => {
     const { t } = useTranslation();
     const { language } = useLanguage();
     const { showNotification } = useNotification();
+
+    usePageMeta({ title: `${t('admin.projects')} | Gonzalo Martinez` });
 
     const fetchData = useCallback(async () => {
         try {

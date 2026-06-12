@@ -13,6 +13,7 @@ import { useLanguage } from '@/features/language-switch';
 import { getSpokenLanguages, createSpokenLanguage, updateSpokenLanguage, deleteSpokenLanguage } from '@/entities/spoken-language';
 import type { SpokenLanguage } from '@/entities/spoken-language';
 import { useNotification } from '@/features/notifications';
+import { usePageMeta } from '@/shared/lib';
 import { ConfirmDialog } from '@/shared/ui';
 import { SpokenLanguageFormDialog } from '@/features/language-crud';
 
@@ -22,6 +23,8 @@ const SpokenLanguageManagement: React.FC = () => {
     const { showNotification } = useNotification();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+    usePageMeta({ title: `${t('admin.languages')} | Gonzalo Martinez` });
     const [languages, setLanguages] = useState<SpokenLanguage[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);

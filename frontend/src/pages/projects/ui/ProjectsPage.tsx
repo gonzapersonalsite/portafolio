@@ -4,10 +4,15 @@ import { useTranslation } from 'react-i18next';
 import { getAllProjects, ProjectCard } from '@/entities/project';
 import { ProjectGridSkeleton, PageHeaderSkeleton, EmptyState, ErrorState } from '@/shared/ui';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-import { useApiData } from '@/shared/lib';
+import { useApiData, usePageMeta } from '@/shared/lib';
 
 const ProjectsPage: React.FC = () => {
     const { t } = useTranslation();
+
+    usePageMeta({
+        title: t('seo.projects.title'),
+        description: t('seo.projects.description'),
+    });
 
     const { data: projects, loading, error, refetch } = useApiData(
         () => getAllProjects(),

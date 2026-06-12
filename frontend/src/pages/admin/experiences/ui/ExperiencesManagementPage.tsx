@@ -15,6 +15,7 @@ import type { Experience } from '@/entities/experience';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/features/language-switch';
 import { useNotification } from '@/features/notifications';
+import { usePageMeta } from '@/shared/lib';
 import { ConfirmDialog, RichTextRenderer, ScrollableContent } from '@/shared/ui';
 import { ExperienceFormDialog } from '@/features/experience-crud';
 import type { ExperiencePayload } from '@/features/experience-crud';
@@ -32,6 +33,8 @@ const ExperiencesManagement: React.FC = () => {
     const { language } = useLanguage();
     const { showNotification } = useNotification();
     const theme = useTheme();
+
+    usePageMeta({ title: `${t('admin.experiences')} | Gonzalo Martinez` });
 
     const fetchData = useCallback(async () => {
         try {

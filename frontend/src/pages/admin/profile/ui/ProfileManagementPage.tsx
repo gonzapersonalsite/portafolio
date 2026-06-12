@@ -6,6 +6,7 @@ import {
 import SaveIcon from '@mui/icons-material/Save';
 import { useTranslation } from 'react-i18next';
 import { useNotification } from '@/features/notifications';
+import { usePageMeta } from '@/shared/lib';
 import { getProfile, updateProfile } from '@/entities/profile';
 import type { Profile } from '@/entities/profile';
 import { HomeTab, AboutTab, GeneralCvTab, PersonalSocialTab } from '@/features/profile-editor';
@@ -13,6 +14,8 @@ import { HomeTab, AboutTab, GeneralCvTab, PersonalSocialTab } from '@/features/p
 const ProfileManagement: React.FC = () => {
     const { t } = useTranslation();
     const { showNotification } = useNotification();
+
+    usePageMeta({ title: `${t('admin.profile')} | Gonzalo Martinez` });
     const [profile, setProfile] = useState<Profile | null>(null);
     const [loading, setLoading] = useState(true);
     const [tabValue, setTabValue] = useState(0);

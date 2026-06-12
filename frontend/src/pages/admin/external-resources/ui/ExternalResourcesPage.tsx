@@ -12,10 +12,13 @@ import StorageIcon from '@mui/icons-material/Storage';
 import DnsIcon from '@mui/icons-material/Dns';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import { usePageMeta } from '@/shared/lib';
 
 const ExternalResources: React.FC = () => {
     const { t } = useTranslation();
     const theme = useTheme();
+
+    usePageMeta({ title: `${t('admin.externalResources')} | Gonzalo Martinez` });
 
     const resources = [
         {

@@ -8,12 +8,17 @@ import { getAllExperiences } from '@/entities/experience';
 import { useLanguage } from '@/features/language-switch';
 import { ExperienceSkeleton, PageHeaderSkeleton, RichTextRenderer, ScrollableContent, EmptyState, ErrorState } from '@/shared/ui';
 import ExploreIcon from '@mui/icons-material/Explore';
-import { useApiData } from '@/shared/lib';
+import { useApiData, usePageMeta } from '@/shared/lib';
 
 const ExperiencePage: React.FC = () => {
     const { t } = useTranslation();
     const { language } = useLanguage();
     const theme = useTheme();
+
+    usePageMeta({
+        title: t('seo.experience.title'),
+        description: t('seo.experience.description'),
+    });
 
     const { data: experiences, loading, error, refetch } = useApiData(
         () => getAllExperiences(),

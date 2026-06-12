@@ -9,6 +9,7 @@ import { ContactForm } from '@/features/contact-form';
 import { useNotification } from '@/features/notifications';
 import { useLanguage } from '@/features/language-switch';
 import { useProfile } from '@/entities/profile';
+import { usePageMeta } from '@/shared/lib';
 import { ContactSkeleton, PageHeaderSkeleton, ErrorState } from '@/shared/ui';
 
 const ContactPage: React.FC = () => {
@@ -17,6 +18,11 @@ const ContactPage: React.FC = () => {
     const theme = useTheme();
     const { showNotification } = useNotification();
     const { profile, loading, error, refetch } = useProfile();
+
+    usePageMeta({
+        title: t('seo.contact.title'),
+        description: t('seo.contact.description'),
+    });
 
     if (loading) {
         return (

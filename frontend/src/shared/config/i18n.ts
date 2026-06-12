@@ -257,6 +257,32 @@ const resources = {
                 rights: 'All rights reserved.',
                 madeWith: 'Made with',
                 using: 'using'
+            },
+            seo: {
+                home: {
+                    title: 'Gonzalo Martinez | Full Stack Developer & Web App Specialist',
+                    description: 'Portfolio of Gonzalo Martinez, a Full Stack Developer specialized in React, Java Spring Boot and modern web architectures. Based in Palma de Mallorca, Spain.'
+                },
+                about: {
+                    title: 'About Me | Gonzalo Martinez',
+                    description: 'Learn about Gonzalo Martinez, a Full Stack Developer based in Palma de Mallorca, Spain. Discover my journey, philosophy, skills and professional background.'
+                },
+                skills: {
+                    title: 'Skills | Gonzalo Martinez',
+                    description: 'Explore the technical skills of Gonzalo Martinez, a Full Stack Developer proficient in React, TypeScript, Java, Spring Boot and modern web technologies.'
+                },
+                experience: {
+                    title: 'Experience | Gonzalo Martinez',
+                    description: 'View the professional experience of Gonzalo Martinez, a Full Stack Developer with expertise in web application development and modern architectures.'
+                },
+                projects: {
+                    title: 'Projects | Gonzalo Martinez',
+                    description: 'Browse portfolio projects by Gonzalo Martinez, showcasing web applications built with React, TypeScript, Java and modern development stacks.'
+                },
+                contact: {
+                    title: 'Contact | Gonzalo Martinez',
+                    description: 'Get in touch with Gonzalo Martinez for professional opportunities, collaborations, or project inquiries. Based in Palma de Mallorca, Spain.'
+                }
             }
         },
     },
@@ -515,6 +541,32 @@ const resources = {
                 rights: 'Todos los derechos reservados.',
                 madeWith: 'Hecho con',
                 using: 'usando'
+            },
+            seo: {
+                home: {
+                    title: 'Gonzalo Martinez | Desarrollador Full Stack',
+                    description: 'Portafolio de Gonzalo Martinez, un Desarrollador Full Stack especializado en React, Java Spring Boot y arquitecturas web modernas. En Palma de Mallorca, España.'
+                },
+                about: {
+                    title: 'Sobre Mí | Gonzalo Martinez',
+                    description: 'Conoce a Gonzalo Martinez, un Desarrollador Full Stack en Palma de Mallorca, España. Descubre mi trayectoria, filosofía, habilidades y experiencia profesional.'
+                },
+                skills: {
+                    title: 'Habilidades | Gonzalo Martinez',
+                    description: 'Explora las habilidades técnicas de Gonzalo Martinez, un Desarrollador Full Stack con experiencia en React, TypeScript, Java, Spring Boot y tecnologías web modernas.'
+                },
+                experience: {
+                    title: 'Experiencia | Gonzalo Martinez',
+                    description: 'Conoce la experiencia profesional de Gonzalo Martinez, un Desarrollador Full Stack con experiencia en desarrollo de aplicaciones web y arquitecturas modernas.'
+                },
+                projects: {
+                    title: 'Proyectos | Gonzalo Martinez',
+                    description: 'Explora los proyectos de Gonzalo Martinez, que muestran aplicaciones web construidas con React, TypeScript, Java y stacks de desarrollo modernos.'
+                },
+                contact: {
+                    title: 'Contacto | Gonzalo Martinez',
+                    description: 'Ponte en contacto con Gonzalo Martinez para oportunidades profesionales, colaboraciones o consultas sobre proyectos. En Palma de Mallorca, España.'
+                }
             }
         },
     },

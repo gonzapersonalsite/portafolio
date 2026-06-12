@@ -2,8 +2,11 @@ import React from 'react';
 import { Container, Box } from '@mui/material';
 import { ResetPasswordForm } from '@/features/auth';
 import { LanguageSelector } from '@/features/language-switch';
+import { usePageMeta } from '@/shared/lib';
 
 const ResetPasswordPage: React.FC = () => {
+    usePageMeta({ title: 'Reset Password | Gonzalo Martinez' });
+
     return (
         <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <Container maxWidth="xs">

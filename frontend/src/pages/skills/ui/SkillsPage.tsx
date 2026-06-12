@@ -5,12 +5,17 @@ import { getAllSkills } from '@/entities/skill';
 import { useLanguage } from '@/features/language-switch';
 import { SkillsSkeleton, PageHeaderSkeleton, EmptyState, ErrorState } from '@/shared/ui';
 import PsychologyIcon from '@mui/icons-material/Psychology';
-import { useApiData } from '@/shared/lib';
+import { useApiData, usePageMeta } from '@/shared/lib';
 
 const SkillsPage: React.FC = () => {
     const { t } = useTranslation();
     const { language } = useLanguage();
     const theme = useTheme();
+
+    usePageMeta({
+        title: t('seo.skills.title'),
+        description: t('seo.skills.description'),
+    });
 
     const { data: skills, loading, error, refetch } = useApiData(
         () => getAllSkills(),

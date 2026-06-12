@@ -11,7 +11,7 @@ import { ProjectCard, getFeaturedProjects } from '@/entities/project';
 import { getProfile } from '@/entities/profile';
 import { useLanguage } from '@/features/language-switch';
 import { Link as RouterLink } from 'react-router-dom';
-import { formatImageUrl, useApiData } from '@/shared/lib';
+import { formatImageUrl, useApiData, usePageMeta } from '@/shared/lib';
 import { HeroSkeleton, ProjectCardSkeleton, ImageWithFallback, RichTextRenderer, EmptyState, ErrorState } from '@/shared/ui';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
@@ -25,6 +25,11 @@ const HomePage: React.FC = () => {
     const { t } = useTranslation();
     const { language } = useLanguage();
     const theme = useTheme();
+
+    usePageMeta({
+        title: t('seo.home.title'),
+        description: t('seo.home.description'),
+    });
 
     const { data: featuredProjects, loading: projectsLoading, error: projectsError, refetch: refetchProjects } = useApiData(
         () => getFeaturedProjects(),
