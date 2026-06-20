@@ -12,7 +12,8 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "cd .. && husky .husky"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -48,6 +49,11 @@
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
     "vite": "^7.3.5",
-    "vitest": "^4.1.8"
+    "vitest": "^4.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.7"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "eslint"
   }
 }
