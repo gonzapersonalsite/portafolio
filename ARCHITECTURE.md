@@ -1,7 +1,7 @@
 # 🏗️ Architecture Guide
 
 [![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react)](https://react.dev/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0-6DB33F?logo=springboot)](https://spring.io/projects/spring-boot)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.1-6DB33F?logo=springboot)](https://spring.io/projects/spring-boot)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk)](https://openjdk.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)](https://www.postgresql.org/)
@@ -19,11 +19,11 @@ This document provides a detailed analysis of the architectural patterns, design
 The project follows a decoupled **Full Stack** architecture, ensuring high performance, scalability, and security.
 
 ### 🏛️ Backend Architecture
-- **Layered Design:** Strict separation of concerns using the **Controller-Service-Repository** pattern.
-- **Domain Protection:** Use of Data Transfer Objects (DTOs) to isolate domain entities from the web layer.
+- **Hexagonal Architecture (Ports & Adapters):** Strict separation of concerns. The Domain is 100% pure Java, agnostic of any framework (no Spring, no JPA).
+- **Immutability & Zero Lombok:** Domain models and DTOs are modeled as Java `Record` types to guarantee immutability. Lombok is strictly forbidden.
 - **RESTful API:** Stateless communication protocol for all frontend-backend interactions.
 - **Security First:** Implementation of **Spring Security** with **JWT (JSON Web Tokens)** for stateless authentication, and strict input sanitization to prevent XSS.
-- **Data Integrity:** Transaction management via Spring Data JPA and automated schema handling.
+- **Data Integrity:** Transaction management via Spring Data JPA (isolated in the infrastructure layer) and automated schema handling.
 
 ### ⚛️ Frontend Architecture
 - **Feature-Sliced Design (FSD):** Codebase organized into 6 canonical layers — `app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/` — with strict import rules enforced by `eslint-plugin-fsd-lint`.

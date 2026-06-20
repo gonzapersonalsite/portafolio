@@ -45,20 +45,20 @@ services:
     depends_on:
       database:
         condition: service_healthy
-  frontend:
-     build:
-       context: ./frontend
-       dockerfile: Dockerfile.dev
-     ports:
-       - "5173:5173"
-     volumes:
-       - ./frontend:/app
-       - /app/node_modules
-     environment:
-       - VITE_API_BASE_URL=${VITE_API_BASE_URL}
-       - VITE_API_TARGET=${VITE_API_TARGET}
-       - VITE_EMAILJS_SERVICE_ID=${VITE_EMAILJS_SERVICE_ID}
-       - VITE_EMAILJS_TEMPLATE_ID=${VITE_EMAILJS_TEMPLATE_ID}
-       - VITE_EMAILJS_PUBLIC_KEY=${VITE_EMAILJS_PUBLIC_KEY}
-     depends_on:
-       - backend
+#  frontend:
+#     build:
+#       context: ./frontend
+#       dockerfile: Dockerfile.dev
+#     ports:
+#       - "5173:5173"
+#     volumes:
+#       - ./frontend:/app
+#       - /app/node_modules
+#     environment:
+#       - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+#       - VITE_API_TARGET=${VITE_API_TARGET}
+#       - VITE_EMAILJS_SERVICE_ID=${VITE_EMAILJS_SERVICE_ID}
+#       - VITE_EMAILJS_TEMPLATE_ID=${VITE_EMAILJS_TEMPLATE_ID}
+#       - VITE_EMAILJS_PUBLIC_KEY=${VITE_EMAILJS_PUBLIC_KEY}
+#     depends_on:
+#       - backend

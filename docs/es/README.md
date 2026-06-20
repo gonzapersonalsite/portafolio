@@ -1,7 +1,7 @@
 # 🚀 Portafolio Profesional Full Stack
 
 [![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react)](https://react.dev/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0-6DB33F?logo=springboot)](https://spring.io/projects/spring-boot)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.1-6DB33F?logo=springboot)](https://spring.io/projects/spring-boot)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk)](https://openjdk.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)](https://www.postgresql.org/)
@@ -55,10 +55,10 @@
 
 El proyecto sigue una **Arquitectura Full Stack** moderna, priorizando escalabilidad, seguridad y mantenibilidad.
 
-- **Backend en Capas Limpio:** Patrón Controlador-Servicio-Repositorio para una clara separación de la lógica de negocio.
+- **Arquitectura Hexagonal Estricta:** Patrón Ports & Adapters que garantiza un dominio Java puro, aislado de frameworks y bases de datos.
 - **Frontend Feature-Sliced:** Arquitectura FSD de 6 capas (`app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/`) con fronteras de importación estrictas forzadas por ESLint.
 - **CI/CD Automatizado:** Pipeline de despliegue continuo usando Vercel (Frontend) y Render (Backend).
-- **Persistencia de Datos:** Gestión robusta de esquemas con Spring Data JPA y PostgreSQL.
+- **Persistencia de Datos:** Gestión robusta de esquemas con Spring Data JPA (vía adaptadores de salida) y PostgreSQL.
 
 📖 **[Guía de Arquitectura](ARCHITECTURE.md)** — Patrones, decisiones de diseño y documentación de API.
 🛠️ **[Guía de Operaciones](../../OPERATIONS.md)** — Despliegue, CI/CD, variables de entorno y configuración local.

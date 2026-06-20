@@ -1,7 +1,7 @@
 # 🚀 Professional Full Stack Portfolio
 
 [![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react)](https://react.dev/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0-6DB33F?logo=springboot)](https://spring.io/projects/spring-boot)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.1-6DB33F?logo=springboot)](https://spring.io/projects/spring-boot)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk)](https://openjdk.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)](https://www.postgresql.org/)
@@ -42,7 +42,7 @@
 
 - **Frontend:** React 19 + TypeScript (Vite)
 - **UI Framework:** Material UI (MUI) with deep theme customization
-- **Backend:** Java 25 + Spring Boot 4.0
+- **Backend:** Java 25 + Spring Boot 4.1
 - **Security:** Spring Security & JWT (JSON Web Tokens)
 - **Database:** PostgreSQL (Aiven)
 - **State Management:** Zustand
@@ -55,10 +55,10 @@
 
 The project follows a modern **Full Stack Architecture**, prioritizing scalability, security, and maintainability.
 
-- **Clean Layered Backend:** Controller-Service-Repository pattern for clear business logic separation.
+- **Clean Hexagonal Architecture:** Strict Ports & Adapters pattern ensuring pure Java domain, isolated from frameworks and databases.
 - **Feature-Sliced Frontend:** 6-layer FSD architecture (`app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/`) with strict import boundaries enforced by ESLint.
 - **Automated CI/CD:** Continuous deployment pipeline using Vercel (Frontend) and Render (Backend).
-- **Data Persistence:** Robust schema management with Spring Data JPA and PostgreSQL.
+- **Data Persistence:** Robust schema management with Spring Data JPA (via outbound adapters) and PostgreSQL.
 
 📖 **[Architecture Guide](ARCHITECTURE.md)** — Patterns, design decisions, and API documentation.
 🛠️ **[Operations Guide](OPERATIONS.md)** — Deployment, CI/CD, environment variables, and local setup.

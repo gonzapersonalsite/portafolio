@@ -78,8 +78,7 @@ Seguridad y acceso:
 - Los tests no incluyen secretos reales; cualquier clave en `src/test/resources` es solo de ámbito test.
 
 Seeder:
-- El seeder de datos está anotado con perfil `!prod`; no se ejecuta en producción.
-- En entornos de producción define `SPRING_PROFILES_ACTIVE=prod`.
+- El seeder del backend ha sido completamente eliminado como parte de la migración a la Arquitectura Hexagonal. El esquema de la base de datos y el estado inicial se manejan enteramente a través de migraciones de Flyway.
 
 ---
 

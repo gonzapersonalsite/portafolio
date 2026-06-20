@@ -12,6 +12,9 @@ RUN corepack enable && pnpm install --ignore-scripts && pnpm approve-builds esbu
 # Copy the rest of the application code
 COPY . .
 
+# IMPORTANT: We need git installed to extract the commit hash during build
+RUN apk add --no-cache git
+
 # Build argument for API URL
 ARG VITE_API_BASE_URL
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL

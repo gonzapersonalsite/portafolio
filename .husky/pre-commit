@@ -1,2 +1,17 @@
 cd frontend || exit 1
 pnpm lint-staged
+
+cd ../backend/portfolio-backend || exit 1
+
+# Run Gradle tests in an ephemeral Docker container using Java 25
+# Use MSYS_NO_PATHCONV=1 to prevent Git Bash from translating Linux paths (like /app) into Windows paths
+MSYS_NO_PATHCONV=1 docker run --rm \
+  -v "${PWD}:/app" \
+  -v gradle-cache:/root/.gradle \
+  -w /app \
+  eclipse-temurin:25-jdk-jammy \
+  ./gradlew test
+
+
+
+

@@ -1,7 +1,7 @@
 # 🏗️ Guía de Arquitectura
 
 [![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react)](https://react.dev/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0-6DB33F?logo=springboot)](https://spring.io/projects/spring-boot)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.1-6DB33F?logo=springboot)](https://spring.io/projects/spring-boot)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk)](https://openjdk.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)](https://www.postgresql.org/)
@@ -19,11 +19,11 @@ Este documento proporciona un análisis detallado de los patrones arquitectónic
 El proyecto sigue una arquitectura **Full Stack** desacoplada, asegurando alto rendimiento, escalabilidad y seguridad.
 
 ### 🏛️ Arquitectura Backend
-- **Diseño en Capas:** Separación estricta de preocupaciones usando el patrón **Controlador-Servicio-Repositorio**.
-- **Protección del Dominio:** Uso de Data Transfer Objects (DTOs) para aislar las entidades de dominio de la capa web.
+- **Arquitectura Hexagonal (Ports & Adapters):** Separación estricta de responsabilidades. El Dominio es 100% Java puro, agnóstico a cualquier framework (sin Spring, sin JPA).
+- **Inmutabilidad y Cero Lombok:** Los modelos de dominio y DTOs usan `Records` de Java para garantizar inmutabilidad. El uso de Lombok está estrictamente prohibido.
 - **API RESTful:** Protocolo de comunicación sin estado para todas las interacciones frontend-backend.
 - **Seguridad Primero:** Implementación de **Spring Security** con **JWT (JSON Web Tokens)** para autenticación sin estado, y estricta sanitización de entradas para prevenir XSS.
-- **Integridad de Datos:** Gestión de transacciones vía Spring Data JPA y manejo automatizado de esquemas.
+- **Integridad de Datos:** Gestión de transacciones vía Spring Data JPA (aislado en la capa de infraestructura) y manejo automatizado de esquemas.
 
 ### ⚛️ Arquitectura Frontend
 - **Feature-Sliced Design (FSD):** Código organizado en 6 capas canónicas — `app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/` — con reglas estrictas de importación forzadas por `eslint-plugin-fsd-lint`.

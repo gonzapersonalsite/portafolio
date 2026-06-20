@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Container, Typography, IconButton, useTheme } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
@@ -27,6 +27,16 @@ const Footer: React.FC = () => {
 
     const textColor = isGlass ? glassColors.text.primary : 'text.primary';
     const secondaryTextColor = isGlass ? glassColors.text.secondary : 'text.secondary';
+
+    useEffect(() => {
+        // Easter egg for developers inspecting the console
+        console.info(
+            `%c🚀 Portafolio v${__APP_VERSION__} (%c${__COMMIT_HASH__}%c)`,
+            'color: #00e5ff; font-weight: bold; font-size: 12px; padding: 4px;',
+            'color: #b388ff; font-weight: normal;',
+            'color: #00e5ff; font-weight: bold;'
+        );
+    }, []);
 
     return (
         <Box
@@ -123,6 +133,9 @@ const Footer: React.FC = () => {
 
                     <Typography variant="body2" sx={{ color: secondaryTextColor, textAlign: 'center' }}>
                         © {currentYear} {language === 'en' ? profile?.fullNameEn : profile?.fullNameEs}. {t('footer.rights', 'All rights reserved.')}
+                        <Box component="span" sx={{ display: 'block', mt: 0.5, fontSize: '0.7rem', opacity: 0.6 }}>
+                            v{__APP_VERSION__} · {__COMMIT_HASH__}
+                        </Box>
                     </Typography>
                 </Box>
             </Container>

@@ -1,7 +1,7 @@
 # 🛠️ Operations Guide
 
 [![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react)](https://react.dev/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0-6DB33F?logo=springboot)](https://spring.io/projects/spring-boot)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.1-6DB33F?logo=springboot)](https://spring.io/projects/spring-boot)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk)](https://openjdk.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)](https://www.postgresql.org/)
@@ -78,8 +78,7 @@ Security and access:
 - Tests do not include real secrets; any keys in `src/test/resources` are for test scope only.
 
 Seeder:
-- Data seeder is annotated with profile `!prod`; it will not run in production.
-- Set `SPRING_PROFILES_ACTIVE=prod` in production environments.
+- The backend seeder has been completely removed as part of the Hexagonal Architecture migration. Database schema and initial state are managed entirely through Flyway migrations.
 
 ---
 
