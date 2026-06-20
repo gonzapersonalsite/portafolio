@@ -1,7 +1,7 @@
 cd frontend || exit 1
 pnpm lint-staged
 
-cd ../backend/portfolio-backend || exit 1
+cd ../backend || exit 1
 
 # Run Gradle tests in an ephemeral Docker container using Java 25
 # Use MSYS_NO_PATHCONV=1 to prevent Git Bash from translating Linux paths (like /app) into Windows paths

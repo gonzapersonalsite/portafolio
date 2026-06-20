@@ -32,7 +32,7 @@ Current deployment flow with pre‑deployment quality gate:
   - Required Vercel env var: `PNPM_APPROVE_BUILDS=true` (pnpm v11 security requirement).
   - Vercel dashboard: set Install Command to `pnpm install` and Build Command to `pnpm run build`.
 - **Backend (container on Render):**
-  - GitHub Actions runs backend tests on pushes to `main` within `backend/portfolio-backend/**`.
+  - GitHub Actions runs backend tests on pushes to `main` within `backend/**`.
   - If tests pass, CI invokes the private **Deploy Hook** for the Render service to start the deploy.
   - In Render, the service has **Auto‑Deploy disabled**; it only deploys when the hook is called.
   - The backend `Dockerfile` builds with `./gradlew build -x test` for fast builds (tests already run in CI).

@@ -15,7 +15,7 @@ Este documento define el plan estructurado y secuencial para migrar el backend a
 - **Acciones:**
   1. Eliminar la carpeta `.agents` y archivos de IA actuales en el backend (si existen).
   2. Copiar la carpeta `.agents` y `AGENTS.md` de la plantilla al monorepo/backend para forzar la skill `spring-hexagonal-maintainer`. Esto garantiza que los agentes respeten la prohibición de Lombok y el uso de Records.
-  3. Modificar `backend/portfolio-backend/build.gradle` para añadir la dependencia de `ArchUnit`.
+  3. Modificar `backend/build.gradle` para añadir la dependencia de `ArchUnit`.
   4. Copiar el archivo `ArchitectureTest.java` de la plantilla y adaptarlo al paquete base `com.gonzalomartinez.portfolio_backend`. Esto materializa el contrato: si se viola la regla de capas, el test fallará.
   5. Configurar `ArchitectureTest` para que aplique inicialmente solo a los nuevos paquetes refactorizados.
   6. **Husky Compartido (Monorepo):** Modificar `.husky/pre-commit` en la raíz para que ejecute los checks del frontend (`pnpm lint-staged`) y luego ejecute los checks del backend (`./gradlew test`). Como ArchUnit es un test de JUnit, correrá automáticamente.

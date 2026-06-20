@@ -32,7 +32,7 @@ Flujo actual de despliegue con control de calidad previo:
   - Variable de entorno requerida en Vercel: `PNPM_APPROVE_BUILDS=true` (requisito de seguridad de pnpm v11).
   - Panel de Vercel: configura el comando de instalación como `pnpm install` y el comando de compilación como `pnpm run build`.
 - **Backend (contenedor en Render):**
-  - GitHub Actions ejecuta los tests de backend al hacer push a `main` en `backend/portfolio-backend/**`.
+  - GitHub Actions ejecuta los tests de backend al hacer push a `main` en `backend/**`.
   - Si los tests pasan, CI invoca el **Deploy Hook** privado de Render para iniciar el deploy.
   - En Render, el servicio tiene **Auto‑Deploy desactivado**; solo se despliega cuando el hook es llamado.
   - El `Dockerfile` de backend compila el artefacto con `./gradlew build -x test` para builds rápidos (los tests ya corren en CI).
