@@ -190,7 +190,7 @@ const handleOpen = (proj?: Project) => {
                                     </ScrollableContent>
                                 </Box>
                                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                    {proj.technologies?.map((tech) => (
+                                    {Array.from(new Set(proj.technologies || [])).map((tech) => (
                                         <Chip key={tech} label={tech} size="small" />
                                     ))}
                                 </Box>

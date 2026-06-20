@@ -56,6 +56,11 @@ public class SpokenLanguageRepositoryAdapter implements SpokenLanguageRepository
         return jpaRepository.existsById(id);
     }
 
+    @Override
+    public Integer findMaxOrder() {
+        return jpaRepository.findMaxOrder();
+    }
+
     private SpokenLanguage toDomain(SpokenLanguageEntity entity) {
         return new SpokenLanguage(
                 entity.getId(),

@@ -8,11 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class SkillUseCaseService implements ManageSkillUseCase {
 
     private static final Logger log = LoggerFactory.getLogger(SkillUseCaseService.class);
@@ -41,6 +44,7 @@ public class SkillUseCaseService implements ManageSkillUseCase {
     }
 
     @Override
+    @Transactional
     public SkillDto createSkill(SkillDto dto) {
         Skill skill = convertToEntity(dto, null);
 
@@ -55,6 +59,7 @@ public class SkillUseCaseService implements ManageSkillUseCase {
     }
 
     @Override
+    @Transactional
     public SkillDto updateSkill(UUID id, SkillDto dto) {
         if (!skillRepository.existsById(id)) {
             throw new ResourceNotFoundException("Skill", "id", id);
@@ -69,6 +74,7 @@ public class SkillUseCaseService implements ManageSkillUseCase {
     }
 
     @Override
+    @Transactional
     public void deleteSkill(UUID id) {
         if (!skillRepository.existsById(id)) {
             throw new ResourceNotFoundException("Skill", "id", id);
@@ -103,10 +109,7 @@ public class SkillUseCaseService implements ManageSkillUseCase {
     }
 
     private Integer getNextOrder() {
-        List<Skill> skills = skillRepository.findAll();
-        return skills.stream()
-                .map(Skill::order)
-                .max(Integer::compareTo)
-                .orElse(0) + 1;
+        Integer maxOrder = skillRepository.findMaxOrder();
+        return (maxOrder != null ? maxOrder : 0) + 1;
     }
 }

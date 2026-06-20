@@ -2,7 +2,7 @@
   "name": "frontend",
   "description": "Portafolio Profesional Full Stack. PROPRIETARY SOFTWARE. © 2026 Gonzalo Martínez García. ALL RIGHTS RESERVED. UNAUTHORIZED COPYING, MODIFICATION, OR DISTRIBUTION IS STRICTLY PROHIBITED.",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "UNLICENSED",
   "packageManager": "pnpm@11.5.2",
   "type": "module",

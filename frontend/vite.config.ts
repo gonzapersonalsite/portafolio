@@ -27,7 +27,15 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
-    watch: { usePolling: true },
+    strictPort: true,
+    watch: {
+      usePolling: true,
+      interval: 500,
+      ignored: ['**/node_modules/**', '**/.git/**']
+    },
+    hmr: {
+      clientPort: 5173,
+    },
     proxy: {
       '/api': {
         target: process.env.VITE_API_TARGET || 'http://localhost:8080',

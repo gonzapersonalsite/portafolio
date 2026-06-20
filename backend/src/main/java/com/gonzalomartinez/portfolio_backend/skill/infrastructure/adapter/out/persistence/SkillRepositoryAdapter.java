@@ -56,6 +56,11 @@ public class SkillRepositoryAdapter implements SkillRepositoryPort {
         return jpaSkillRepository.existsById(id);
     }
 
+    @Override
+    public Integer findMaxOrder() {
+        return jpaSkillRepository.findMaxOrder();
+    }
+
     private Skill toDomain(SkillEntity entity) {
         return new Skill(
                 entity.getId(),

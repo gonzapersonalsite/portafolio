@@ -4,6 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProfileRepositoryPort {
-    List<Profile> findAll();
+    Optional<Profile> findFirst();
     Profile save(Profile profile);
 }

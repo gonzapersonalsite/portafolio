@@ -11,4 +11,5 @@ public interface SpokenLanguageRepositoryPort {
     SpokenLanguage save(SpokenLanguage language);
     void deleteById(UUID id);
     boolean existsById(UUID id);
+    Integer findMaxOrder();
 }

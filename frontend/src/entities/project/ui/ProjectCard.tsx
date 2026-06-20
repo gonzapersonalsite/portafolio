@@ -157,7 +157,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                     </ScrollableContent>
                 </Box>
                 <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mt: 'auto' }}>
-                    {project.technologies.map((tech) => (
+                    {Array.from(new Set(project.technologies || [])).map((tech) => (
                         <Chip
                             key={tech}
                             label={tech}

@@ -100,11 +100,7 @@ class SkillUseCaseServiceTest {
 
     @Test
     void createSkill_WithNullOrder_SetsNextOrder() {
-        List<Skill> existingSkills = List.of(
-                new Skill(UUID.randomUUID(), "S1", "S1", 10, "C1", null, 3),
-                new Skill(UUID.randomUUID(), "S2", "S2", 20, "C2", null, 7)
-        );
-        when(skillRepository.findAll()).thenReturn(existingSkills);
+        when(skillRepository.findMaxOrder()).thenReturn(5);
         when(skillRepository.save(any(Skill.class))).thenReturn(skill);
 
         SkillDto dto = new SkillDto(
@@ -113,12 +109,12 @@ class SkillUseCaseServiceTest {
 
         skillService.createSkill(dto);
 
-        verify(skillRepository).findAll();
+        verify(skillRepository).findMaxOrder();
     }
 
     @Test
     void createSkill_WithNullOrEmptyRepo_OrderIsOne() {
-        when(skillRepository.findAll()).thenReturn(List.of());
+        when(skillRepository.findMaxOrder()).thenReturn(null);
         when(skillRepository.save(any(Skill.class))).thenAnswer(i -> i.getArgument(0));
 
         SkillDto dto = new SkillDto(

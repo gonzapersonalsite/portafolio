@@ -206,7 +206,7 @@ const handleOpen = (exp?: Experience) => {
                                     </Box>
                                     
                                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
-                                        {exp.technologies.map(tech => (
+                                        {Array.from(new Set(exp.technologies || [])).map(tech => (
                                             <Chip key={tech} label={tech} size="small" variant="outlined" />
                                         ))}
                                     </Box>

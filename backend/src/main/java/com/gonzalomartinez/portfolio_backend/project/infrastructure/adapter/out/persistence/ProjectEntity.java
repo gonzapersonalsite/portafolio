@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -28,13 +30,13 @@ public class ProjectEntity {
     @Column(columnDefinition = "TEXT")
     private String descriptionEs;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "project_images", joinColumns = @JoinColumn(name = "project_id"))
     @Column(name = "image_url", length = 500)
     @OrderColumn(name = "image_order")
     private List<String> imageUrls = new ArrayList<>();
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "project_technologies", joinColumns = @JoinColumn(name = "project_id"))
     @Column(name = "technology")
     private List<String> technologies = new ArrayList<>();

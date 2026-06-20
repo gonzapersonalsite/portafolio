@@ -15,6 +15,7 @@ import org.mockito.quality.Strictness;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,7 +46,7 @@ class ProfileUseCaseServiceTest {
         Profile profile = new Profile(
                 UUID.randomUUID(), "Hello", "Hola", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Gonzalo", "Gonzalo", null, null, null, null, null, null, null
         );
-        when(profileRepository.findAll()).thenReturn(List.of(profile));
+        when(profileRepository.findFirst()).thenReturn(Optional.of(profile));
 
         ProfileDto result = profileService.getProfile();
 
@@ -55,7 +56,7 @@ class ProfileUseCaseServiceTest {
 
     @Test
     void getProfile_WhenEmpty_ThrowsException() {
-        when(profileRepository.findAll()).thenReturn(Collections.emptyList());
+        when(profileRepository.findFirst()).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class,
                 () -> profileService.getProfile());
@@ -67,7 +68,7 @@ class ProfileUseCaseServiceTest {
         Profile existing = new Profile(
                 UUID.randomUUID(), null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Old", null, null, null, null, null, null, null, null
         );
-        when(profileRepository.findAll()).thenReturn(List.of(existing));
+        when(profileRepository.findFirst()).thenReturn(Optional.of(existing));
         when(profileRepository.save(any(Profile.class))).thenReturn(existing);
 
         ProfileDto updateDto = new ProfileDto(

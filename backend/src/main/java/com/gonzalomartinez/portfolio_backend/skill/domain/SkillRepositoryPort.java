@@ -11,4 +11,5 @@ public interface SkillRepositoryPort {
     Skill save(Skill skill);
     void deleteById(UUID id);
     boolean existsById(UUID id);
+    Integer findMaxOrder();
 }

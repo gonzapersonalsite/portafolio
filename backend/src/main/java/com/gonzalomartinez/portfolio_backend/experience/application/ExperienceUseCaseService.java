@@ -8,11 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class ExperienceUseCaseService implements ManageExperienceUseCase {
     
     private static final Logger log = LoggerFactory.getLogger(ExperienceUseCaseService.class);
@@ -41,6 +44,7 @@ public class ExperienceUseCaseService implements ManageExperienceUseCase {
     }
 
     @Override
+    @Transactional
     public ExperienceDto createExperience(ExperienceDto dto) {
         validateDates(dto);
         
@@ -54,6 +58,7 @@ public class ExperienceUseCaseService implements ManageExperienceUseCase {
     }
 
     @Override
+    @Transactional
     public ExperienceDto updateExperience(UUID id, ExperienceDto dto) {
         validateDates(dto);
         
@@ -71,6 +76,7 @@ public class ExperienceUseCaseService implements ManageExperienceUseCase {
     }
 
     @Override
+    @Transactional
     public void deleteExperience(UUID id) {
         if (!experienceRepository.existsById(id)) {
             throw new ResourceNotFoundException("Experience", "id", id);

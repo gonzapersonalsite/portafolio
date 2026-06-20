@@ -6,9 +6,12 @@ import com.gonzalomartinez.portfolio_backend.profile.domain.ProfileRepositoryPor
 import com.gonzalomartinez.portfolio_backend.shared.application.SanitizerPort;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class ProfileUseCaseService implements GetProfileUseCase, UpdateProfileUseCase {
 
     private final ProfileRepositoryPort profileRepository;
@@ -21,18 +24,16 @@ public class ProfileUseCaseService implements GetProfileUseCase, UpdateProfileUs
 
     @Override
     public ProfileDto getProfile() {
-        List<Profile> profiles = profileRepository.findAll();
-        if (profiles.isEmpty()) {
-            throw new ResourceNotFoundException("Profile", "id", "any");
-        }
-        return convertToDto(profiles.get(0));
+        Profile profile = profileRepository.findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Profile", "id", "any"));
+        return convertToDto(profile);
     }
 
     @Override
+    @Transactional
     public ProfileDto updateProfile(ProfileDto profileDetails) {
-        List<Profile> profiles = profileRepository.findAll();
-        
-        Profile existingProfile = profiles.isEmpty() ? createEmptyProfile() : profiles.get(0);
+        Profile existingProfile = profileRepository.findFirst()
+                .orElseGet(this::createEmptyProfile);
 
         String cvUrl = profileDetails.cvUrl() != null 
                 ? inputSanitizer.sanitizeUrl(profileDetails.cvUrl()) 

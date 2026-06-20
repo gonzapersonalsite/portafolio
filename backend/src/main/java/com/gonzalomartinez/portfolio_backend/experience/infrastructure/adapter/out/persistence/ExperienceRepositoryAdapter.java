@@ -59,7 +59,7 @@ public class ExperienceRepositoryAdapter implements ExperienceRepositoryPort {
                 entity.getEndDate(),
                 entity.getDescriptionEn(),
                 entity.getDescriptionEs(),
-                entity.getTechnologies()
+                entity.getTechnologies() != null ? entity.getTechnologies() : List.of()
         );
     }
 
@@ -74,7 +74,7 @@ public class ExperienceRepositoryAdapter implements ExperienceRepositoryPort {
                 domain.endDate(),
                 domain.descriptionEn(),
                 domain.descriptionEs(),
-                domain.technologies()
+                domain.technologies() != null ? domain.technologies() : List.of()
         );
     }
 }

@@ -9,12 +9,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class ProjectUseCaseService implements ManageProjectUseCase {
     
     private static final Logger log = LoggerFactory.getLogger(ProjectUseCaseService.class);
@@ -51,6 +54,7 @@ public class ProjectUseCaseService implements ManageProjectUseCase {
     }
 
     @Override
+    @Transactional
     public ProjectDto createProject(ProjectDto dto) {
         Project project = convertToEntity(dto, null, LocalDateTime.now());
         
@@ -65,6 +69,7 @@ public class ProjectUseCaseService implements ManageProjectUseCase {
     }
 
     @Override
+    @Transactional
     public ProjectDto updateProject(UUID id, ProjectDto dto) {
         Project existingProject = projectRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Project", "id", id));
@@ -78,6 +83,7 @@ public class ProjectUseCaseService implements ManageProjectUseCase {
     }
 
     @Override
+    @Transactional
     public void deleteProject(UUID id) {
         if (!projectRepository.existsById(id)) {
             throw new ResourceNotFoundException("Project", "id", id);

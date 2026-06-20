@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -39,7 +41,7 @@ public class ExperienceEntity {
     @Column(columnDefinition = "TEXT")
     private String descriptionEs;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "experience_technologies", joinColumns = @JoinColumn(name = "experience_id"))
     @Column(name = "technology")
     private List<String> technologies = new ArrayList<>();

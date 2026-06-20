@@ -81,11 +81,7 @@ class SpokenLanguageUseCaseServiceTest {
 
     @Test
     void createSpokenLanguage_WithNullOrder_SetsNextOrder() {
-        List<SpokenLanguage> existing = List.of(
-                new SpokenLanguage(UUID.randomUUID(), "L1", "L1", "L1", "L1", 10, 2),
-                new SpokenLanguage(UUID.randomUUID(), "L2", "L2", "L2", "L2", 20, 5)
-        );
-        when(spokenLanguageRepository.findAll()).thenReturn(existing);
+        when(spokenLanguageRepository.findMaxOrder()).thenReturn(5);
         when(spokenLanguageRepository.save(any(SpokenLanguage.class))).thenReturn(spokenLanguage);
 
         SpokenLanguageDto dto = new SpokenLanguageDto(
@@ -94,12 +90,12 @@ class SpokenLanguageUseCaseServiceTest {
 
         spokenLanguageService.createSpokenLanguage(dto);
 
-        verify(spokenLanguageRepository).findAll();
+        verify(spokenLanguageRepository).findMaxOrder();
     }
 
     @Test
     void createSpokenLanguage_WithNullOrEmptyRepo_OrderIsOne() {
-        when(spokenLanguageRepository.findAll()).thenReturn(List.of());
+        when(spokenLanguageRepository.findMaxOrder()).thenReturn(null);
         when(spokenLanguageRepository.save(any(SpokenLanguage.class))).thenAnswer(i -> i.getArgument(0));
 
         SpokenLanguageDto dto = new SpokenLanguageDto(

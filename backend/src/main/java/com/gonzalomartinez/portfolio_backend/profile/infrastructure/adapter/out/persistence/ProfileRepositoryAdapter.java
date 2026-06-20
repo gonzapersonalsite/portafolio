@@ -5,6 +5,7 @@ import com.gonzalomartinez.portfolio_backend.profile.domain.ProfileRepositoryPor
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -17,11 +18,9 @@ public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
     }
 
     @Override
-    public List<Profile> findAll() {
-        return jpaProfileRepository.findAll()
-                .stream()
-                .map(this::toDomain)
-                .collect(Collectors.toList());
+    public Optional<Profile> findFirst() {
+        return jpaProfileRepository.findTopByOrderByIdAsc()
+                .map(this::toDomain);
     }
 
     @Override

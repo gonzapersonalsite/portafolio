@@ -8,11 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class SpokenLanguageUseCaseService implements ManageSpokenLanguageUseCase {
 
     private static final Logger log = LoggerFactory.getLogger(SpokenLanguageUseCaseService.class);
@@ -41,6 +44,7 @@ public class SpokenLanguageUseCaseService implements ManageSpokenLanguageUseCase
     }
 
     @Override
+    @Transactional
     public SpokenLanguageDto createSpokenLanguage(SpokenLanguageDto dto) {
         SpokenLanguage language = convertToEntity(dto, null);
 
@@ -55,6 +59,7 @@ public class SpokenLanguageUseCaseService implements ManageSpokenLanguageUseCase
     }
 
     @Override
+    @Transactional
     public SpokenLanguageDto updateSpokenLanguage(UUID id, SpokenLanguageDto dto) {
         if (!spokenLanguageRepository.existsById(id)) {
             throw new ResourceNotFoundException("SpokenLanguage", "id", id);
@@ -69,6 +74,7 @@ public class SpokenLanguageUseCaseService implements ManageSpokenLanguageUseCase
     }
 
     @Override
+    @Transactional
     public void deleteSpokenLanguage(UUID id) {
         if (!spokenLanguageRepository.existsById(id)) {
             throw new ResourceNotFoundException("SpokenLanguage", "id", id);
@@ -103,10 +109,7 @@ public class SpokenLanguageUseCaseService implements ManageSpokenLanguageUseCase
     }
 
     private Integer getNextOrder() {
-        List<SpokenLanguage> languages = spokenLanguageRepository.findAll();
-        return languages.stream()
-                .map(SpokenLanguage::order)
-                .max(Integer::compareTo)
-                .orElse(0) + 1;
+        Integer maxOrder = spokenLanguageRepository.findMaxOrder();
+        return (maxOrder != null ? maxOrder : 0) + 1;
     }
 }
