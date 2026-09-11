@@ -53,8 +53,6 @@ const Navbar: React.FC = () => {
         setMobileOpen(!mobileOpen);
     };
 
-    // Removed local toggleLanguage as it's provided by context
-
     const navItems = [
         { label: t('nav.home'), path: '/' },
         { label: t('nav.about'), path: '/about' },
@@ -85,7 +83,7 @@ const Navbar: React.FC = () => {
         <Box sx={{ flexGrow: 1 }}>
             <HideOnScroll>
                 <AppBar position="fixed" color="default" elevation={0} sx={{
-                    backdropFilter: isGlass ? glassEffects.blur : 'blur(20px)',
+                    backdropFilter: isGlass ? glassEffects.blur : 'none',
                     backgroundColor: isGlass 
                         ? 'rgba(255, 255, 255, 0.4)' 
                         : (mode === 'dark' ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.9)'),
@@ -95,7 +93,6 @@ const Navbar: React.FC = () => {
                 }}>
                     <Container maxWidth="lg">
                         <Toolbar disableGutters>
-                            {/* Mobile Menu Icon */}
                             <IconButton
                                 color="inherit"
                                 aria-label="open drawer"
@@ -105,8 +102,6 @@ const Navbar: React.FC = () => {
                             >
                                 <MenuIcon />
                             </IconButton>
-
-                            {/* Logo */}
                             <Typography
                                 variant="h6"
                                 component={RouterLink}
@@ -128,8 +123,6 @@ const Navbar: React.FC = () => {
                                     </>
                                 )}
                             </Typography>
-
-                            {/* Desktop/Tablet Menu */}
                             <Box sx={{ display: { xs: 'none', lg: 'flex' }, gap: 1, alignItems: 'center' }}>
                                 {navItems.map((item) => (
                                     <Button
@@ -152,8 +145,6 @@ const Navbar: React.FC = () => {
                                     </Button>
                                 ))}
                             </Box>
-
-                            {/* Actions */}
                             <Box sx={{ ml: 2, display: 'flex', gap: 1.5, alignItems: 'center' }}>
                                 <LanguageSelector />
                                 <ThemeSelector />
@@ -162,14 +153,13 @@ const Navbar: React.FC = () => {
                     </Container>
                 </AppBar>
             </HideOnScroll>
-            {/* Drawer for Mobile */}
             <Box component="nav">
                 <Drawer
                     variant="temporary"
                     open={mobileOpen}
                     onClose={handleDrawerToggle}
                     ModalProps={{
-                        keepMounted: true, // Better open performance on mobile.
+                        keepMounted: true,
                     }}
                     sx={{
                         display: { xs: 'block', lg: 'none' },
@@ -179,7 +169,6 @@ const Navbar: React.FC = () => {
                     {drawer}
                 </Drawer>
             </Box>
-            {/* Spacer for fixed AppBar */}
             <Toolbar />
         </Box>
     );

@@ -77,7 +77,6 @@ const ExperiencePage: React.FC = () => {
                                             }
                                         }}
                                     >
-                                        {/* Mobile Date View */}
                                         <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', gap: 1, mb: 1, color: 'text.secondary' }}>
                                             <CalendarMonthIcon fontSize="small" />
                                             <Typography variant="caption" fontWeight="bold">

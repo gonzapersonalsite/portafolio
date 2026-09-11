@@ -26,7 +26,6 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
     const [hasError, setHasError] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
-    // Check if image is already loaded in cache when component mounts or src changes
     const onImageRef = (img: HTMLImageElement | null) => {
         if (img) {
             setIsLoading(!img.complete);
@@ -55,7 +54,6 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
 
     const finalSrc = hasError || !src ? getFallbackUrl() : src;
 
-    // If aspectRatio is provided, we use a container to reserve space
     if (aspectRatio) {
         return (
             <Box 
@@ -64,7 +62,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
                         position: 'relative', 
                         width: '100%', 
                         aspectRatio,
-                        overflow: 'hidden' // Ensures children (img/skeleton) respect parent's borderRadius
+                        overflow: 'hidden'
                     },
                     ...(Array.isArray(sx) ? sx : [sx])
                 ]} 
@@ -102,8 +100,6 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
         );
     }
 
-    // Fallback for when no aspectRatio is provided (legacy behavior but with skeleton overlay if possible)
-    // Without aspect ratio, we can't perfectly reserve space, but we can try.
     return (
         <Box 
             sx={[
@@ -120,7 +116,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
                 <Skeleton
                     variant="rectangular"
                     width="100%"
-                    height="100%" // This might not work well if parent has no height
+                    height="100%"
                     sx={{ position: 'absolute', top: 0, left: 0, minHeight: '200px' }} 
                 />
             )}

@@ -28,6 +28,47 @@ El proyecto es una **aplicación frontend totalmente estática**. No hay backend
 ### 📬 Contacto
 - El formulario de contacto funciona íntegramente en el navegador mediante **EmailJS**; no hay gestión de correo en servidor.
 
+## 📊 Arquitectura de un Vistazo
+
+### Flujo de capas FSD
+
+```mermaid
+flowchart TB
+    app[app] --> pages[pages]
+    app --> shared[shared]
+    pages --> widgets[widgets]
+    pages --> features[features]
+    pages --> entities[entities]
+    pages --> shared
+    widgets --> features
+    widgets --> entities
+    widgets --> shared
+    features --> entities
+    features --> shared
+    entities --> shared
+    style app fill:#bbdefb,color:#0d47a1
+    style pages fill:#c8e6c9,color:#1a5e20
+    style widgets fill:#fff3e0,color:#e65100
+    style features fill:#f3e5f5,color:#7b1fa2
+    style entities fill:#e8f5e9,color:#1b5e20
+    style shared fill:#eceff1,color:#263238
+```
+
+### Flujo de contenido estático
+
+```mermaid
+flowchart LR
+    data[data.json por entidad] --> api[Getters síncronos de entidad]
+    api --> ui[Pages y widgets]
+    providers[Theme / Language / Notifications] --> ui
+    ui --> browser[UI renderizada del portafolio]
+    style data fill:#c8e6c9,color:#1a5e20
+    style api fill:#bbdefb,color:#0d47a1
+    style providers fill:#f3e5f5,color:#7b1fa2
+    style ui fill:#fff3e0,color:#e65100
+    style browser fill:#eceff1,color:#263238
+```
+
 ---
 
 ## 📐 Modelo de Contenido

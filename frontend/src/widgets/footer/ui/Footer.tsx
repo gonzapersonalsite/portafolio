@@ -20,16 +20,15 @@ const Footer: React.FC = () => {
     const { profile } = useProfile();
 
     const socialLinks = {
-        github: profile?.githubUrl || "https://github.com/gonzapersonalsite",
-        linkedin: profile?.linkedinUrl || "http://www.linkedin.com/in/gonzalo-martinez-garcia-353507370",
-        email: `mailto:${profile?.email || "gonzalomartinezg2001@gmail.com"}`
+        github: profile.githubUrl,
+        linkedin: profile.linkedinUrl,
+        email: `mailto:${profile.email}`
     };
 
     const textColor = isGlass ? glassColors.text.primary : 'text.primary';
     const secondaryTextColor = isGlass ? glassColors.text.secondary : 'text.secondary';
 
     useEffect(() => {
-        // Easter egg for developers inspecting the console
         console.info(
             `%c🚀 Portafolio v${__APP_VERSION__} (%c${__COMMIT_HASH__}%c)`,
             'color: #00e5ff; font-weight: bold; font-size: 12px; padding: 4px;',
@@ -66,7 +65,7 @@ const Footer: React.FC = () => {
                 >
                     <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
                         <Typography variant="h6" sx={{ color: textColor, fontWeight: 'bold' }}>
-                            {language === 'en' ? profile?.fullNameEn : profile?.fullNameEs}
+                            {language === 'en' ? profile.fullNameEn : profile.fullNameEs}
                         </Typography>
                         <Typography variant="body2" sx={{ color: secondaryTextColor }}>
                             Full Stack Developer
@@ -132,7 +131,7 @@ const Footer: React.FC = () => {
                     </Box>
 
                     <Typography variant="body2" sx={{ color: secondaryTextColor, textAlign: 'center' }}>
-                        © {currentYear} {language === 'en' ? profile?.fullNameEn : profile?.fullNameEs}. {t('footer.rights', 'All rights reserved.')}
+                        © {currentYear} {language === 'en' ? profile.fullNameEn : profile.fullNameEs}. {t('footer.rights', 'All rights reserved.')}
                         <Box component="span" sx={{ display: 'block', mt: 0.5, fontSize: '0.7rem', opacity: 0.6 }}>
                             v{__APP_VERSION__} · {__COMMIT_HASH__}
                         </Box>

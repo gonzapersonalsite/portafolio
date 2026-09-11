@@ -1,5 +1,3 @@
-/// <reference types="vite/client" />
-
 import React, { useState } from 'react';
 import { Box, TextField, Button, CircularProgress } from '@mui/material';
 import type { AlertColor } from '@mui/material';

@@ -7,27 +7,16 @@ interface RichTextRendererProps {
     variant?: 'body1' | 'body2' | 'caption' | 'subtitle1' | 'subtitle2';
 }
 
-/**
- * Renders text with smart formatting:
- * - Detects bullet points (●, •, -, *) and renders them as proper lists
- * - Preserves paragraphs for normal text
- * - Handles mixed content
- */
 const RichTextRenderer: React.FC<RichTextRendererProps> = ({ text, variant = 'body1' }) => {
     if (!text) return null;
 
-    // Normalize newlines: handle \r\n, \n, and escaped \\n (common in JSON from backend)
     let normalizedText = text.replace(/\\n/g, '\n');
-    
-    // Recovery for data with collapsed newlines: insert newline before bullet markers found inline
     normalizedText = normalizedText.replace(/([^\n])\s+([●•*◦▪-])/g, '$1\n$2');
 
     const lines = normalizedText.split(/\r?\n/);
     
     const elements: React.ReactNode[] = [];
     let currentList: string[] = [];
-
-    // Calculate bullet margin based on text variant
     const isSmallText = variant === 'body2' || variant === 'caption' || variant === 'subtitle2';
     const bulletMt = isSmallText ? '7px' : '10px';
 
@@ -61,14 +50,11 @@ const RichTextRenderer: React.FC<RichTextRendererProps> = ({ text, variant = 'bo
 
     lines.forEach((line, index) => {
         const trimmed = line.trim();
-        // Detect bullets: starts with ●, •, *, ◦, ▪, - followed by optional space; capture text in group 2
         const bulletMatch = trimmed.match(/^([●•*◦▪-])\s*(.*)/);
         
         if (bulletMatch) {
-            // Add clean text to current list
             currentList.push(bulletMatch[2]);
         } else {
-            // Not a bullet
             flushList(index);
             
             if (!trimmed) {

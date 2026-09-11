@@ -1,18 +1,16 @@
 import React, { useState, useCallback } from 'react';
 import { Snackbar, Alert, type AlertColor, useTheme } from '@mui/material';
-import { useTranslation } from 'react-i18next';
 import { NotificationContext } from '@/features/notifications/model/NotificationContext';
 
 export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const theme = useTheme();
-    const { t } = useTranslation();
     const [open, setOpen] = useState(false);
-    const [messageKey, setMessageKey] = useState('');
+    const [message, setMessage] = useState('');
     const [severity, setSeverity] = useState<AlertColor>('info');
     const [duration, setDuration] = useState(10000);
 
     const showNotification = useCallback((msg: string, sev: AlertColor = 'info', dur: number = 10000) => {
-        setMessageKey(msg);
+        setMessage(msg);
         setSeverity(sev);
         setDuration(dur);
         setOpen(true);
@@ -34,7 +32,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 sx={{ mt: 7, zIndex: theme.zIndex.snackbar + 100 }}
             >
                 <Alert onClose={handleClose} severity={severity} variant="filled" sx={{ width: '100%', boxShadow: theme.shadows[3], borderRadius: `${theme.shape.borderRadius}px` }}>
-                    {messageKey.includes('.') ? t(messageKey) : messageKey}
+                    {message}
                 </Alert>
             </Snackbar>
         </NotificationContext.Provider>

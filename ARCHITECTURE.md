@@ -28,6 +28,47 @@ The project is a **fully static frontend application**. There is no backend, no 
 ### 📬 Contact
 - The contact form runs entirely in the browser via **EmailJS**; there is no server-side mail handling.
 
+## 📊 Architecture at a Glance
+
+### FSD layer flow
+
+```mermaid
+flowchart TB
+    app[app] --> pages[pages]
+    app --> shared[shared]
+    pages --> widgets[widgets]
+    pages --> features[features]
+    pages --> entities[entities]
+    pages --> shared
+    widgets --> features
+    widgets --> entities
+    widgets --> shared
+    features --> entities
+    features --> shared
+    entities --> shared
+    style app fill:#bbdefb,color:#0d47a1
+    style pages fill:#c8e6c9,color:#1a5e20
+    style widgets fill:#fff3e0,color:#e65100
+    style features fill:#f3e5f5,color:#7b1fa2
+    style entities fill:#e8f5e9,color:#1b5e20
+    style shared fill:#eceff1,color:#263238
+```
+
+### Static content flow
+
+```mermaid
+flowchart LR
+    data[data.json per entity] --> api[Synchronous entity getters]
+    api --> ui[Pages and widgets]
+    providers[Theme / Language / Notifications] --> ui
+    ui --> browser[Rendered portfolio UI]
+    style data fill:#c8e6c9,color:#1a5e20
+    style api fill:#bbdefb,color:#0d47a1
+    style providers fill:#f3e5f5,color:#7b1fa2
+    style ui fill:#fff3e0,color:#e65100
+    style browser fill:#eceff1,color:#263238
+```
+
 ---
 
 ## 📐 Content Model

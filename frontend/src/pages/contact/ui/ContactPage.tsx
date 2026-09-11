@@ -24,8 +24,8 @@ const ContactPage: React.FC = () => {
     });
 
     const socialLinks = [
-        { icon: <GitHubIcon fontSize="large" />, url: profile?.githubUrl || "https://github.com/gonzapersonalsite", label: "GitHub" },
-        { icon: <LinkedInIcon fontSize="large" />, url: profile?.linkedinUrl || "http://www.linkedin.com/in/gonzalo-martinez-garcia-353507370", label: "LinkedIn" }
+        { icon: <GitHubIcon fontSize="large" />, url: profile.githubUrl, label: 'GitHub' },
+        { icon: <LinkedInIcon fontSize="large" />, url: profile.linkedinUrl, label: 'LinkedIn' }
     ];
 
     return (
@@ -39,7 +39,6 @@ const ContactPage: React.FC = () => {
                 </Typography>
 
                 <Grid container spacing={6}>
-                    {/* Contact Info Side */}
                     <Grid size={{ xs: 12, md: 5 }}>
                         <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                             <Typography variant="h5" gutterBottom fontWeight="600">
@@ -59,7 +58,7 @@ const ContactPage: React.FC = () => {
                                             {t('contact.email', "Email")}
                                         </Typography>
                                         <Typography variant="body1" fontWeight="500">
-                                            {profile?.email || "gonzalomartinezg2001@gmail.com"}
+                                            {profile.email}
                                         </Typography>
                                     </Box>
                                 </Box>
@@ -90,6 +89,7 @@ const ContactPage: React.FC = () => {
                                             href={link.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
+                                            aria-label={link.label}
                                             sx={{
                                                 border: `1px solid ${theme.palette.divider}`,
                                                 '&:hover': { bgcolor: 'primary.main', color: 'white', borderColor: 'primary.main' }
@@ -103,7 +103,6 @@ const ContactPage: React.FC = () => {
                         </Box>
                     </Grid>
 
-                    {/* Form Side */}
                     <Grid size={{ xs: 12, md: 7 }}>
                         <Paper
                             elevation={0}

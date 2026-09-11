@@ -14,8 +14,6 @@ const PublicLayout: React.FC = () => {
         <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', position: 'relative' }}>
             <CssBaseline />
             {mode === 'glass' && <div className="liquid-glass-bg" />}
-            
-            {/* Skip to Content Link */}
             <a href="#main-content" className="skip-link">
                 {t('common.skipToContent', 'Skip to main content')}
             </a>
@@ -26,8 +24,6 @@ const PublicLayout: React.FC = () => {
             </Box>
 
             <Footer />
-
-            {/* Return to Top (Accessibility) */}
             <a href="#root" className="return-to-top" aria-label={t('common.returnToTop', 'Return to top')}>
                 ↑
             </a>

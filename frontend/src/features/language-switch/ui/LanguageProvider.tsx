@@ -16,6 +16,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     useEffect(() => {
         i18n.changeLanguage(language);
         localStorage.setItem('language', language);
+        document.documentElement.lang = language;
     }, [language, i18n]);
 
     const toggleLanguage = () => {

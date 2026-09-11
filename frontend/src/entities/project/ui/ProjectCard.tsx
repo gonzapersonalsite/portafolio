@@ -7,8 +7,7 @@ import {
     Button,
     Chip,
     Stack,
-    CardActions,
-    IconButton
+    CardActions
 } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LaunchIcon from '@mui/icons-material/Launch';
@@ -38,6 +37,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     const description = language === 'en' ? project.descriptionEn : project.descriptionEs;
     const imageUrls = Array.isArray(project.imageUrls) ? project.imageUrls : [];
     const coverImageUrl = imageUrls.length > 0 && imageUrls[0] ? imageUrls[0] : '';
+    const openGalleryLabel = t('projects.openGallery', {
+        title,
+        defaultValue: 'Open image gallery for {{title}}'
+    });
 
     const handleOpenGallery = () => {
         if (imageUrls.length > 0) {
@@ -91,6 +94,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                 
                 {imageUrls.length > 0 && (
                     <Box
+                        component="button"
+                        type="button"
+                        aria-label={openGalleryLabel}
                         className="preview-overlay"
                         onClick={handleOpenGallery}
                         sx={{
@@ -103,19 +109,31 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                             opacity: 0,
                             transition: 'opacity 0.3s',
                             cursor: 'pointer',
-                            zIndex: 1
+                            zIndex: 1,
+                            border: 0,
+                            padding: 0,
+                            appearance: 'none',
+                            '&:focus-visible': {
+                                opacity: 1,
+                                outline: '3px solid white',
+                                outlineOffset: '-3px',
+                            }
                         }}
                     >
-                        <IconButton
+                        <Box
                             sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
                                 color: 'white',
                                 backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                                '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.3)' }
+                                borderRadius: '50%',
+                                width: 56,
+                                height: 56,
                             }}
-                            size="large"
                         >
-                            <VisibilityIcon fontSize="large" />
-                        </IconButton>
+                            <VisibilityIcon fontSize="large" aria-hidden="true" />
+                        </Box>
                     </Box>
                 )}
 
@@ -197,8 +215,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                     </Button>
                 )}
             </CardActions>
-
-            {/* Gallery Lightbox */}
             {galleryOpen && (
                 <ProjectGallery
                     open={galleryOpen}

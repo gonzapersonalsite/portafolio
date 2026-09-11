@@ -8,10 +8,6 @@ interface ScrollableContentProps {
     sx?: SxProps<Theme>;
 }
 
-/**
- * A container with a customizable max-height and consistent styling for scrolling content.
- * Includes a subtle background, border, and custom scrollbar styles.
- */
 const ScrollableContent: React.FC<ScrollableContentProps> = ({ 
     children, 
     maxHeight = '150px',

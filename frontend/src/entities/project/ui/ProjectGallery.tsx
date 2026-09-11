@@ -6,6 +6,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import { useTranslation } from 'react-i18next';
 
 interface ProjectGalleryProps {
     open: boolean;
@@ -18,6 +19,7 @@ interface ProjectGalleryProps {
 const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrls, imageUrlsFull, title }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [zoomLevel, setZoomLevel] = useState(1);
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (open) {
@@ -28,7 +30,6 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
 
     const handleCloseGallery = () => {
         onClose();
-        // Un pequeño delay para que la animación de cierre termine antes de resetear el zoom
         setTimeout(() => setZoomLevel(1), 300);
     };
 
@@ -55,6 +56,7 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
             open={open} 
             onClose={handleCloseGallery}
             fullScreen
+            aria-label={title}
             PaperProps={{
                 sx: {
                     backgroundColor: 'rgba(0, 0, 0, 0.95)',
@@ -65,8 +67,6 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
             }}
         >
             <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
-                
-                {/* Controles Top Right (Zoom y Cerrar) */}
                 <Box sx={{ 
                     position: 'absolute', 
                     top: 16, 
@@ -82,13 +82,28 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
                         overflow: 'hidden',
                         mr: 2
                     }}>
-                        <IconButton onClick={handleZoomOut} disabled={zoomLevel <= 1} sx={{ color: 'white', borderRadius: 0, '&:hover': { backgroundColor: 'rgba(255,255,255,0.2)' }, '&.Mui-disabled': { color: 'rgba(255,255,255,0.3)' } }}>
+                        <IconButton
+                            onClick={handleZoomOut}
+                            disabled={zoomLevel <= 1}
+                            aria-label={t('projects.gallery.zoomOut', { defaultValue: 'Zoom out' })}
+                            sx={{ color: 'white', borderRadius: 0, '&:hover': { backgroundColor: 'rgba(255,255,255,0.2)' }, '&.Mui-disabled': { color: 'rgba(255,255,255,0.3)' } }}
+                        >
                             <ZoomOutIcon />
                         </IconButton>
-                        <IconButton onClick={handleResetZoom} disabled={zoomLevel === 1} sx={{ color: 'white', borderRadius: 0, '&:hover': { backgroundColor: 'rgba(255,255,255,0.2)' }, '&.Mui-disabled': { color: 'rgba(255,255,255,0.3)' } }}>
+                        <IconButton
+                            onClick={handleResetZoom}
+                            disabled={zoomLevel === 1}
+                            aria-label={t('projects.gallery.resetZoom', { defaultValue: 'Reset zoom' })}
+                            sx={{ color: 'white', borderRadius: 0, '&:hover': { backgroundColor: 'rgba(255,255,255,0.2)' }, '&.Mui-disabled': { color: 'rgba(255,255,255,0.3)' } }}
+                        >
                             <RestartAltIcon />
                         </IconButton>
-                        <IconButton onClick={handleZoomIn} disabled={zoomLevel >= 4} sx={{ color: 'white', borderRadius: 0, '&:hover': { backgroundColor: 'rgba(255,255,255,0.2)' }, '&.Mui-disabled': { color: 'rgba(255,255,255,0.3)' } }}>
+                        <IconButton
+                            onClick={handleZoomIn}
+                            disabled={zoomLevel >= 4}
+                            aria-label={t('projects.gallery.zoomIn', { defaultValue: 'Zoom in' })}
+                            sx={{ color: 'white', borderRadius: 0, '&:hover': { backgroundColor: 'rgba(255,255,255,0.2)' }, '&.Mui-disabled': { color: 'rgba(255,255,255,0.3)' } }}
+                        >
                             <ZoomInIcon />
                         </IconButton>
                     </Box>
@@ -96,6 +111,7 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
                     <IconButton
                         onClick={handleCloseGallery}
                         size="large"
+                        aria-label={t('projects.gallery.close', { defaultValue: 'Close gallery' })}
                         sx={{ 
                             color: 'white', 
                             backgroundColor: 'rgba(255,255,255,0.1)',
@@ -105,8 +121,6 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
                         <CloseIcon fontSize="large" />
                     </IconButton>
                 </Box>
-                
-                {/* Contenedor Principal de la Imagen (Fijo) */}
                 <Box sx={{ 
                     flex: 1, 
                     display: 'flex', 
@@ -121,6 +135,7 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
                         <IconButton 
                             onClick={handlePrevImage}
                             size="large"
+                            aria-label={t('projects.gallery.previousImage', { defaultValue: 'Previous image' })}
                             sx={{ 
                                 position: 'absolute', 
                                 left: { xs: 8, md: 24 }, 
@@ -162,6 +177,7 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
                         <IconButton 
                             onClick={handleNextImage}
                             size="large"
+                            aria-label={t('projects.gallery.nextImage', { defaultValue: 'Next image' })}
                             sx={{ 
                                 position: 'absolute', 
                                 right: { xs: 8, md: 24 }, 
@@ -175,8 +191,6 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
                         </IconButton>
                     )}
                 </Box>
-                
-                {/* Tira de Miniaturas Fija en la Base */}
                 {imageUrls.length > 1 && (
                     <Box sx={{ 
                         height: '100px', 
@@ -191,8 +205,17 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
                     }}>
                         {imageUrls.map((url, idx) => (
                             <Box 
+                                component="button"
+                                type="button"
                                 key={idx} 
                                 onClick={() => setCurrentImageIndex(idx)}
+                                aria-label={t('projects.gallery.thumbnail', {
+                                    index: idx + 1,
+                                    total: imageUrls.length,
+                                    title,
+                                    defaultValue: 'View image {{index}} of {{total}} for {{title}}'
+                                })}
+                                aria-pressed={currentImageIndex === idx}
                                 sx={{ 
                                     width: 80, 
                                     height: 56, 
@@ -205,16 +228,23 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
                                     backgroundSize: 'cover',
                                     backgroundPosition: 'center',
                                     flexShrink: 0,
+                                    appearance: 'none',
+                                    padding: 0,
                                     '&:hover': {
                                         opacity: 0.8,
                                         transform: 'scale(1.05)'
+                                    },
+                                    '&:focus-visible': {
+                                        opacity: 1,
+                                        outline: '2px solid white',
+                                        outlineOffset: 2,
                                     }
                                 }} 
                             />
                         ))}
                     </Box>
                 )}
-        </Box>
+            </Box>
         </Dialog>
     );
 };

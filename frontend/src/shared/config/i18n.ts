@@ -1,7 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-// Translation resources
 const resources = {
     en: {
         translation: {
@@ -49,6 +48,16 @@ const resources = {
                 featured: 'Featured Projects',
                 viewAll: 'View All',
                 viewLive: 'View Live',
+                openGallery: 'Open image gallery for {{title}}',
+                gallery: {
+                    close: 'Close gallery',
+                    zoomIn: 'Zoom in',
+                    zoomOut: 'Zoom out',
+                    resetZoom: 'Reset zoom',
+                    previousImage: 'Previous image',
+                    nextImage: 'Next image',
+                    thumbnail: 'View image {{index}} of {{total}} for {{title}}'
+                },
                 types: {
                     WEB: 'Web App',
                     DESKTOP: 'Desktop App',
@@ -187,6 +196,16 @@ const resources = {
                 featured: 'Proyectos Destacados',
                 viewAll: 'Ver Todos',
                 viewLive: 'Ver Demo',
+                openGallery: 'Abrir galería de imágenes de {{title}}',
+                gallery: {
+                    close: 'Cerrar galería',
+                    zoomIn: 'Acercar',
+                    zoomOut: 'Alejar',
+                    resetZoom: 'Restablecer zoom',
+                    previousImage: 'Imagen anterior',
+                    nextImage: 'Imagen siguiente',
+                    thumbnail: 'Ver imagen {{index}} de {{total}} de {{title}}'
+                },
                 types: {
                     WEB: 'App Web',
                     DESKTOP: 'App de Escritorio',
@@ -281,12 +300,11 @@ const resources = {
     },
 };
 
-// Detect user language
 const getInitialLanguage = () => {
     const savedLanguage = localStorage.getItem('language');
     if (savedLanguage) return savedLanguage;
 
-    const systemLang = navigator.language.split('-')[0]; // 'en-US' -> 'en'
+    const systemLang = navigator.language.split('-')[0];
     return ['en', 'es'].includes(systemLang) ? systemLang : 'en';
 };
 
