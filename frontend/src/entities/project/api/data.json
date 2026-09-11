@@ -1,0 +1,214 @@
+[
+  {
+    "id": "portfolio",
+    "titleEn": "Professional portfolio",
+    "titleEs": "Portafolio profesional",
+    "descriptionEn": "A modern, bilingual portfolio built as a fully static frontend: no backend, no database, and no servers to maintain. The whole site is served from a CDN, so it loads instantly and has zero running cost.\n\nBuilt with React + TypeScript under Feature-Sliced Design to keep the codebase modular and scalable. Content is modeled as data: projects, skills, experience, and profile live in versioned JSON files validated by automated tests, and every image is self-hosted.\n\nIt features three theme modes including a visionOS-inspired Liquid Glass design, instant Spanish/English switching for both interface and content, an interactive project gallery with zoom, and a contact form powered by EmailJS directly from the browser.\n\nDeployed on Vercel with a CI/CD pipeline that runs typecheck, lint, and tests on every push.",
+    "descriptionEs": "Un portafolio moderno y bilingüe construido como frontend totalmente estático: sin backend, sin base de datos y sin servidores que mantener. Todo el sitio se sirve desde una CDN, por lo que carga al instante y no tiene coste de funcionamiento.\n\nDesarrollado con React + TypeScript bajo Feature-Sliced Design para mantener el código modular y escalable. El contenido se modela como datos: proyectos, habilidades, experiencia y perfil viven en ficheros JSON versionados y validados con tests automatizados, y todas las imágenes están autohospedadas.\n\nIncluye tres modos de tema, entre ellos un diseño Liquid Glass inspirado en visionOS, cambio instantáneo español/inglés tanto de interfaz como de contenido, una galería de proyectos interactiva con zoom y un formulario de contacto impulsado por EmailJS directamente desde el navegador.\n\nDesplegado en Vercel con un pipeline CI/CD que ejecuta typecheck, lint y tests en cada push.",
+    "technologies": [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Material UI",
+      "Feature-Sliced Design",
+      "i18next",
+      "EmailJS",
+      "Vercel"
+    ],
+    "imageUrls": [
+      "/images/projects/portfolio/00-portada_portafolio-800.webp",
+      "/images/projects/portfolio/01-portfolio_home-800.webp",
+      "/images/projects/portfolio/02-portfolio_about-800.webp",
+      "/images/projects/portfolio/03-portfolio_projects-800.webp"
+    ],
+    "githubUrl": "https://github.com/gonzapersonalsite/portafolio",
+    "liveUrl": "https://mi-portafolio-gonzalo.vercel.app/",
+    "type": "WEB",
+    "featured": false,
+    "order": 1,
+    "imageUrlsFull": [
+      "/images/projects/portfolio/00-portada_portafolio-full.webp",
+      "/images/projects/portfolio/01-portfolio_home-full.webp",
+      "/images/projects/portfolio/02-portfolio_about-full.webp",
+      "/images/projects/portfolio/03-portfolio_projects-full.webp"
+    ]
+  },
+  {
+    "id": "kanban-board",
+    "titleEn": "Kanban Board App",
+    "titleEs": "Aplicación de Tablero Kanban",
+    "descriptionEn": "A modern Kanban frontend inspired by tools like Trello, focused on task and board management in a smooth client-side experience.\n\nBuilt with React + TypeScript under Feature-Sliced Design to keep the codebase modular and scalable. It uses Zustand for persistent state management, React Router for board-based navigation, and @dnd-kit for drag-and-drop interactions.\n\nIt includes multi-board support, calendar view, task editing with due dates, internationalization, dark mode, and local persistence. The project also follows good practices with automated testing, accessibility details, responsive behavior, and a clean architecture.",
+    "descriptionEs": "Una aplicación frontend moderna de tipo Kanban, inspirada en herramientas como Trello y centrada en la gestión visual de tareas y tableros en una experiencia fluida del lado del cliente.\n\nEstá construida con React + TypeScript siguiendo arquitectura Feature-Sliced para mantener el código modular y escalable. Utiliza Zustand para el estado persistente, React Router para la navegación por tableros y @dnd-kit para las interacciones drag and drop.\n\nIncluye soporte multi-board, vista de calendario, edición de tareas con fechas, internacionalización, modo oscuro y persistencia local. Además, aplica buenas prácticas con testing automatizado, detalles de accesibilidad, diseño responsive y una arquitectura limpia.",
+    "technologies": [
+      "React 19",
+      "Testing Library",
+      "Vitest",
+      "CSS Modules",
+      "@dnd-kit",
+      "React Router",
+      "Zustand",
+      "Vite",
+      "TypeScript",
+      "Feature-Sliced Design"
+    ],
+    "imageUrls": [
+      "/images/projects/kanban-board/00-kanban-board-800.webp",
+      "/images/projects/kanban-board/01-kanban-calendar-800.webp",
+      "/images/projects/kanban-board/02-kanban-edit-task-800.webp"
+    ],
+    "githubUrl": "https://github.com/gonzapersonalsite/kanban-board-app",
+    "liveUrl": "https://kanban-board-app-kappa.vercel.app/",
+    "type": "WEB",
+    "featured": true,
+    "order": 2,
+    "imageUrlsFull": [
+      "/images/projects/kanban-board/00-kanban-board-full.webp",
+      "/images/projects/kanban-board/01-kanban-calendar-full.webp",
+      "/images/projects/kanban-board/02-kanban-edit-task-full.webp"
+    ]
+  },
+  {
+    "id": "pokedex",
+    "titleEn": "Pokedex",
+    "titleEs": "Pokedex",
+    "descriptionEn": "An interactive Pokédex built as a modern frontend application that consumes the public PokeAPI.\\n\\nDeveloped with React + TypeScript following Feature-Sliced architecture to keep code organized and scalable. Implements TanStack Query for API request management with intelligent caching and Zustand for persistent local state.\\n\\nFeatures key functionality including autocomplete search, type filtering, a favorites system that persists in localStorage, and detailed evolution modals. Includes light/dark theme, toast notifications, and PWA installation capability.\\n\\nThe project follows best practices with unit testing, responsive design, and accessibility, demonstrating modern and well-structured frontend development.",
+    "descriptionEs": "Una Pokédex interactiva desarrollada como aplicación frontend moderna que consume la API pública de PokeAPI.\\n\\nConstruida con React + TypeScript siguiendo la arquitectura Feature-Sliced para mantener el código organizado y escalable. Implementa TanStack Query para gestionar las peticiones a la API con caché inteligente y Zustand para el estado local persistente.\\n\\nOfrece funcionalidades clave como búsqueda con autocompletado, filtrado por tipos, sistema de favoritos que persiste en localStorage, y modales con detalles de evolución. Incluye tema claro/oscuro, notificaciones toast y capacidad de instalación como PWA.\\n\\nEl proyecto sigue buenas prácticas con testing unitario, diseño responsive y accesibilidad, demostrando un desarrollo frontend moderno y bien estructurado.",
+    "technologies": [
+      "Query",
+      "TanStack",
+      "Vite",
+      "Typescript",
+      "React",
+      "Vitest",
+      "PWA",
+      "Heroicons",
+      "TailwindCSS",
+      "Zustand (persist)"
+    ],
+    "imageUrls": [
+      "/images/projects/pokedex/00-pokedex-800.webp",
+      "/images/projects/pokedex/01-pokedex-800.webp",
+      "/images/projects/pokedex/02-pokedex-list-800.webp"
+    ],
+    "githubUrl": "https://github.com/gonzapersonalsite/Pokedex",
+    "liveUrl": "https://pokedex-pokeapi-gonzalo.vercel.app/",
+    "type": "WEB",
+    "featured": true,
+    "order": 3,
+    "imageUrlsFull": [
+      "/images/projects/pokedex/00-pokedex-full.webp",
+      "/images/projects/pokedex/01-pokedex-full.webp",
+      "/images/projects/pokedex/02-pokedex-list-full.webp"
+    ]
+  },
+  {
+    "id": "licence-generator",
+    "titleEn": "LicenseGenerator",
+    "titleEs": "LicenseGenerator",
+    "descriptionEn": "License Generator is a desktop application designed to centralize and automate the licensing lifecycle for independent software products. The tool enables developers to manage multiple applications from a single interface, integrating secure key pair generation with a detailed history of issued licenses.\\n\\nThe system follows a high-security cryptographic model: it utilizes RSA-2048 asymmetric encryption with PEM (PKCS#8) standards to sign license data. During the generation process, the application allows linking licenses to specific hardware identifiers ( HWID ) and defining expiration dates, facilitating time-based subscription models and preventing unauthorized redistribution.\\n\\nOnce a license is issued, the system produces a Base64-encoded JSON payload that can be validated offline by any client application (regardless of the programming language used). Being a local, self-contained solution, it operates without external APIs or databases, ensuring total control over private keys and distribution logs.\\n\\nAdditionally, it incorporates professional-grade distribution standards, including code obfuscation and self-contained publishing for cross-platform environments (Windows and Linux), making it a robust administrative backbone for software monetization.",
+    "descriptionEs": "License Generator es una aplicación de escritorio diseñada para centralizar y automatizar el ciclo de vida de licenciamiento para productos de software independientes. La herramienta permite a los desarrolladores gestionar múltiples aplicaciones desde una sola interfaz, integrando la generación segura de pares de claves con un historial detallado de licencias emitidas.\\n\\nEl sistema sigue un modelo criptográfico de alta seguridad: utiliza cifrado asimétrico RSA-2048 con estándares PEM (PKCS#8) para firmar los datos de licencia. Durante el proceso de generación, la aplicación permite vincular licencias a identificadores de hardware específicos (HWID) y definir fechas de expiración, facilitando modelos de suscripción basados en tiempo y previniendo redistribución no autorizada.\\n\\nUna vez emitida una licencia, el sistema produce un payload JSON codificado en Base64 que puede ser validado offline por cualquier aplicación cliente (independientemente del lenguaje de programación utilizado). Al ser una solución local y autocontenida, opera sin APIs externas ni bases de datos, garantizando control total sobre claves privadas y logs de distribución.\\n\\nAdemás, incorpora estándares profesionales de distribución, incluyendo ofuscación de código y publicación autocontenida para entornos multiplataforma (Windows y Linux), convirtiéndola en una sólida columna vertebral administrativa para la monetización de software.",
+    "technologies": [
+      ".NET 8 SDK (C# 12)",
+      "Avalonia UI",
+      "RSA / Cryptography",
+      "CommunityToolkit.Mvvm",
+      "Obfuscar",
+      "Self-Contained Publishing",
+      "i18n (Localization System)"
+    ],
+    "imageUrls": [
+      "/images/projects/licence-generator/00-Logo_Licence_Generator-800.webp",
+      "/images/projects/licence-generator/01-licensegenerator_dashboard-800.webp",
+      "/images/projects/licence-generator/02-licensegenerator_apps-800.webp",
+      "/images/projects/licence-generator/03-licensegenerator_license-800.webp",
+      "/images/projects/licence-generator/04-licensegenerator_history-800.webp",
+      "/images/projects/licence-generator/05-licensegenerator-settings-800.webp"
+    ],
+    "githubUrl": "https://github.com/gonzapersonalsite/LicenseGenerator-Docs-",
+    "liveUrl": "https://github.com/gonzapersonalsite/LicenseGenerator-Docs-/releases/tag/LicenseGenerator-1.0.3.0",
+    "type": "DESKTOP",
+    "featured": true,
+    "order": 4,
+    "imageUrlsFull": [
+      "/images/projects/licence-generator/00-Logo_Licence_Generator-full.webp",
+      "/images/projects/licence-generator/01-licensegenerator_dashboard-full.webp",
+      "/images/projects/licence-generator/02-licensegenerator_apps-full.webp",
+      "/images/projects/licence-generator/03-licensegenerator_license-full.webp",
+      "/images/projects/licence-generator/04-licensegenerator_history-full.webp",
+      "/images/projects/licence-generator/05-licensegenerator-settings-full.webp"
+    ]
+  },
+  {
+    "id": "nutrimanager",
+    "titleEn": "Nutrimanager",
+    "titleEs": "Nutrimanager",
+    "descriptionEn": "NutriManager is a desktop application designed to centralize common tasks in a nutritionist's office. It requires a license to try it and access its features; if you contact me with interest, I will gladly provide it for you to see and try it.\\n\\nThe software enables organized patient management, integrating their clinical history with specific pathology management for each case.\\n\\nThe tool follows a modular structure for dietary planning: it manages a database of individual ingredients used to create complete recipes, which are finally organized into personalized weekly diets. During this process, the application automates caloric and macronutrient calculations based on standard industry formulas (such as Harris-Benedict).\\n\\nOnce the nutritional plan is configured, the system generates a professional PDF document for the patient. Being a local SQLite-based solution, it works without internet connection, ensuring data privacy and daily usage agility.\\n\\nAdditionally, it incorporates a proprietary security system through RSA digital licensing linked to hardware, protecting software distribution.\\nI use another project for personal license management (License Generator)",
+    "descriptionEs": "NutriManager es una aplicación de escritorio diseñada para centralizar las tareas comunes en la consulta de un nutricionista. Requiere una licencia para probarla y acceder a sus funciones; si me contactan con interés, se la proporciono con gusto para que la vean y prueben.\\n\\nEl software permite llevar un control organizado de los pacientes, integrando su historial clínico con la gestión de patologías específicas para cada caso.\\n\\nLa herramienta sigue una estructura modular para la planificación dietética: permite gestionar una base de datos de ingredientes individuales, que se utilizan para crear recetas completas, las cuales finalmente se organizan en dietas semanales personalizadas. Durante este proceso, la aplicación automatiza los cálculos calóricos y de macronutrientes basándose en fórmulas estándar del sector (como Harris-Benedict).\\n\\nUna vez configurado el plan nutricional, el sistema genera un documento PDF profesional para el paciente. Al ser una solución local basada en SQLite, funciona sin necesidad de conexión a internet, garantizando la privacidad de los datos y la agilidad en el uso diario.\\n\\nAdemás, incorpora un sistema de seguridad propio mediante licenciamiento digital RSA vinculado al hardware, protegiendo la distribución del software.\\nHago uso de otro proyecto para la gestión de licencias personales (License Generator )",
+    "technologies": [
+      ".NET 8 SDK (C# 12)",
+      "Obfuscar",
+      "RSA-2048",
+      "JSON Localization System",
+      "QuestPDF",
+      "Microsoft Dependency Injection",
+      "CommunityToolkit.Mvvm",
+      "Self-Contained Publishing",
+      "SQLite",
+      "Entity Framework Core 8 (ORM)",
+      "Avalonia UI"
+    ],
+    "imageUrls": [
+      "/images/projects/nutrimanager/00-Logo_NutriManager-800.webp",
+      "/images/projects/nutrimanager/01-nutrimanager_welcome-800.webp",
+      "/images/projects/nutrimanager/02-nutrimanager_patients-800.webp",
+      "/images/projects/nutrimanager/03-nutrimanager_diets-800.webp",
+      "/images/projects/nutrimanager/04-nutrimanager-diet-800.webp"
+    ],
+    "githubUrl": "https://github.com/gonzapersonalsite/NutriManager-Docs-",
+    "liveUrl": "https://www.mediafire.com/file/aslln72owat95ym/NutriManager.exe/file",
+    "type": "DESKTOP",
+    "featured": false,
+    "order": 6,
+    "imageUrlsFull": [
+      "/images/projects/nutrimanager/00-Logo_NutriManager-full.webp",
+      "/images/projects/nutrimanager/01-nutrimanager_welcome-full.webp",
+      "/images/projects/nutrimanager/02-nutrimanager_patients-full.webp",
+      "/images/projects/nutrimanager/03-nutrimanager_diets-full.webp",
+      "/images/projects/nutrimanager/04-nutrimanager-diet-full.webp"
+    ]
+  },
+  {
+    "id": "developer-site",
+    "titleEn": "Gonzalo Apps – App Hub",
+    "titleEs": "Gonzalo Apps – Hub de aplicaciones",
+    "descriptionEn": "Gonzalo Apps is the public home of my commercial applications: a multilingual storefront where each product gets its own page, legal documents, screenshots and store links.\\n\\nRather than building pages by hand, I wrote a custom static-site generator in Dart: it reads a JSON registry and each app's legal markdown, and emits deterministic HTML that is reviewed before every commit and served from Cloudflare Pages with no build step and zero JavaScript.\\n\\nThe generator enforces its own rules — no link that does not resolve, no document that was not declared, no partial publication — and publishes every page in English and Spanish, with PWA manifests per app, a sitemap, and llms.txt markdown twins so AI agents read the same content as humans.",
+    "descriptionEs": "Gonzalo Apps es la casa pública de mis aplicaciones comerciales: un escaparate multilingüe donde cada producto tiene su propia página, sus documentos legales, capturas y enlaces a las tiendas.\\n\\nEn lugar de crear páginas a mano, escribí un generador de sitio estático propio en Dart: lee un registro JSON y los documentos legales en markdown de cada app, y emite HTML determinista que se revisa antes de cada commit y se sirve desde Cloudflare Pages sin paso de build y sin una línea de JavaScript.\\n\\nEl generador impone sus propias reglas — ningún enlace que no resuelva, ningún documento no declarado, ninguna publicación parcial — y publica cada página en inglés y español, con manifiestos PWA por aplicación, sitemap y copias markdown vía llms.txt para que los agentes de IA lean el mismo contenido que los humanos.",
+    "technologies": [
+      "Dart",
+      "Cloudflare Pages",
+      "HTML + CSS (zero JS)",
+      "PWA Web Manifest",
+      "i18n (EN/ES)",
+      "llms.txt v2",
+      "PowerShell",
+      "Git Hooks"
+    ],
+    "imageUrls": [
+      "/images/projects/developer-site/00-developer-site_home-800.webp",
+      "/images/projects/developer-site/01-developer-site_apps-800.webp",
+      "/images/projects/developer-site/02-developer-site_quotidia-800.webp",
+      "/images/projects/developer-site/03-developer-site_es-800.webp"
+    ],
+    "githubUrl": "https://github.com/gonzapersonalsite/developer-site",
+    "liveUrl": "https://gonzaloapps.es/",
+    "type": "WEB",
+    "featured": true,
+    "order": 7,
+    "imageUrlsFull": [
+      "/images/projects/developer-site/00-developer-site_home-full.webp",
+      "/images/projects/developer-site/01-developer-site_apps-full.webp",
+      "/images/projects/developer-site/02-developer-site_quotidia-full.webp",
+      "/images/projects/developer-site/03-developer-site_es-full.webp"
+    ]
+  }
+]

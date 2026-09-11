@@ -1,11 +1,8 @@
 # 🛠️ Operations Guide
 
-[![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react)](https://react.dev/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.1-6DB33F?logo=springboot)](https://spring.io/projects/spring-boot)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)](https://www.typescriptlang.org/)
-[![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk)](https://openjdk.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)](https://www.postgresql.org/)
-[![Swagger](https://img.shields.io/badge/Swagger-OpenAPI_3.0-yellow?logo=swagger)](https://swagger.io/)
+[![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-7.3-646CFF?logo=vite)](https://vite.dev/)
 [![License: Evaluation Only](https://img.shields.io/badge/License-Evaluation--Only-red)](LICENSE)
 
 🇺🇸 **English** | [🇪🇸 Español](docs/es/OPERATIONS.md)
@@ -16,92 +13,99 @@ This document covers the infrastructure, deployment pipeline, environment config
 
 ## ☁️ Infrastructure & Deployment
 
-The project is designed for high availability using modern cloud-native services.
+The project is **static-only** — a single deployment, zero servers.
 
-### Cloud Providers
-- **Frontend Hosting:** [Vercel](https://vercel.app) (Optimized for React/Vite applications).
-- **Backend Hosting:** [Render](https://render.com) (Container-based deployment).
-- **Database:** [Aiven](https://aiven.io/) (PostgreSQL).
+### Cloud Provider
+- **Frontend Hosting:** [Vercel](https://vercel.app) (optimized for React/Vite applications), root directory `frontend/`.
 
 ### 🚀 CI/CD Pipeline
-Current deployment flow with pre‑deployment quality gate:
 - **Frontend (Vercel):**
-  - Vercel auto‑deploys on every push to `main` from the `frontend/` directory.
-  - Vercel auto‑detects pnpm via the `packageManager` field in `package.json`.
-  - GitHub Actions runs typecheck + lint on pushes/PRs touching `frontend/**` as an early warning gate.
+  - Vercel auto-deploys on every push to `main` from the `frontend/` directory.
+  - Vercel auto-detects pnpm via the `packageManager` field in `package.json`.
+  - GitHub Actions runs typecheck + lint + tests on pushes/PRs touching `frontend/**` as a quality gate.
   - Required Vercel env var: `PNPM_APPROVE_BUILDS=true` (pnpm v11 security requirement).
   - Vercel dashboard: set Install Command to `pnpm install` and Build Command to `pnpm run build`.
-- **Backend (container on Render):**
-  - GitHub Actions runs backend tests on pushes to `main` within `backend/**`.
-  - If tests pass, CI invokes the private **Deploy Hook** for the Render service to start the deploy.
-  - In Render, the service has **Auto‑Deploy disabled**; it only deploys when the hook is called.
-  - The backend `Dockerfile` builds with `./gradlew build -x test` for fast builds (tests already run in CI).
 
 Pipeline details:
-- Backend workflow: `.github/workflows/backend-ci.yml`
-- Frontend workflow: `.github/workflows/frontend-ci.yml`
-- Required GitHub secret: `RENDER_DEPLOY_HOOK_URL` (the service's Deploy Hook from Render)
-- Render configuration:
-  - Settings → Build & Deploy → Auto‑Deploy = Off
-  - Deploy Hook: copy and store as a GitHub secret
+- Workflow: `.github/workflows/frontend-ci.yml`
 
 ---
 
 ## 🔧 Environment Configuration
 
-Key variables required for production:
-
 ### Frontend
-- `VITE_API_BASE_URL`: Full URL to the Render API endpoint.
 - `VITE_EMAILJS_SERVICE_ID`: EmailJS service identifier.
 - `VITE_EMAILJS_TEMPLATE_ID`: EmailJS template identifier.
 - `VITE_EMAILJS_PUBLIC_KEY`: EmailJS public key.
-- `PNPM_APPROVE_BUILDS`: Set to `true` in Vercel to allow esbuild build scripts (pnpm v11+ requirement).
+- `PNPM_APPROVE_BUILDS`: set to `true` in Vercel to allow esbuild build scripts (pnpm v11+ requirement).
 
-### Backend
-- `SPRING_DATASOURCE_URL`: Aiven PostgreSQL connection string.
-- `SPRING_DATASOURCE_USERNAME`: Aiven database username.
-- `SPRING_DATASOURCE_PASSWORD`: Aiven database password.
-- `ADMIN_USERNAME`: Default admin username.
-- `ADMIN_PASSWORD`: Default admin password.
-- `JWT_SECRET`: Secret key for secure token generation.
-- `CORS_ORIGINS`: Allowed frontend domain.
-- `JWT_EXPIRATION`: JWT token expiration time (ms).
-- `JPA_DDL_AUTO`: Schema management strategy (`validate` for prod, `update` for local dev).
-- `FLYWAY_ENABLED`: Enable Flyway migrations (default `true`).
-- `RATE_LIMIT_ENABLED`: Enable/disable rate limiting on public and admin endpoints.
-- `SPRING_PROFILES_ACTIVE`: Must be `prod` in production to disable the seeder.
-
-Security and access:
-- All routes under `/api/admin/**` require role `ADMIN`.
-- Stateless JWT authentication; tokens are not stored on the server.
-- Tests do not include real secrets; any keys in `src/test/resources` are for test scope only.
-
-Seeder:
-- The backend seeder has been completely removed as part of the Hexagonal Architecture migration. Database schema and initial state are managed entirely through Flyway migrations.
+Local development: place the three `VITE_EMAILJS_*` variables in `frontend/.env.local` (gitignored). Vercel keeps the production values in the project dashboard.
 
 ---
 
 ## 🛠️ Local Development
 
 ### Quick Start
-The easiest way to run the database, backend, and frontend locally is via Docker Compose:
-
 ```bash
-docker compose up -d
+cd frontend
+pnpm install
+pnpm dev
 ```
 
-Ensure your `.env` file is properly configured with the variables listed above.
+### Quality Gates
+```bash
+pnpm lint     # ESLint: FSD rules + TS rules
+pnpm test     # Vitest: unit + content-integrity tests
+pnpm build    # TypeScript compilation + Vite production build
+```
 
-### Tests (backend)
-Unit tests covering service layer and security components:
-- **Service tests:** `src/test/java/.../application/service/` — Authentication, Experience, Profile, Project, Skill, SpokenLanguage services.
-- **Security tests:** `src/test/java/.../infrastructure/security/` — InputSanitizer, TokenBucketRateLimiter.
+---
 
-Gradle commands:
-- Run tests: `./gradlew test`
-- Run app: `./gradlew bootRun`
-- Build JAR: `./gradlew build -x test`
+## 🧠 Content Management
+
+There is no CMS and no admin panel. All content is **static JSON + self-hosted images**, edited directly in the repo. Every push to `main` deploys automatically via Vercel.
+
+### 1. Edit content
+
+Content lives in `frontend/src/entities/<entity>/api/data.json`:
+
+| Content | File | Notes |
+|---|---|---|
+| Profile | `entities/profile/api/data.json` | bilingual fields (`titleEn`/`titleEs`, …) |
+| Projects | `entities/project/api/data.json` | sorted by `order` asc; `featured` flag controls the home grid |
+| Skills | `entities/skill/api/data.json` | sorted by `order` asc; `level` 0–100 |
+| Experience | `entities/experience/api/data.json` | sorted by `endDate DESC` (open-ended first), then `startDate DESC`; omit `endDate` for current roles |
+| Spoken languages | `entities/spoken-language/api/data.json` | sorted by `order` asc |
+
+**Add a project:** append an object to the projects array with `id` (slug), bilingual texts, `technologies`, `imageUrls`, `imageUrlsFull`, `githubUrl`/`liveUrl`, `type`, `featured`, and the next `order` value.
+
+### 2. Add images
+
+Every project image ships in **two WebP variants** under `frontend/public/images/projects/<slug>/`:
+- `<name>-800.webp` — used by project cards and gallery thumbnails (`imageUrls`)
+- `<name>-full.webp` — used by the fullscreen lightbox (`imageUrlsFull`)
+
+Generate them from any source image with `sharp-cli`:
+
+```bash
+npx -y sharp-cli@5 -i source.png -o "public/images/projects/<slug>/{name}-800.webp"  resize 800 -q 82
+npx -y sharp-cli@5 -i source.png -o "public/images/projects/<slug>/{name}-full.webp" -q 82
+```
+
+Rules: WebP only, quality ~82, no external image hosts. Profile photo lives in `images/profile/`; social preview is `public/og-cover.jpg` (1200×630 JPEG, re-generate on demand).
+
+### 3. Verify
+
+```bash
+cd frontend
+pnpm test    # data-integrity tests FAIL if any image is missing, URLs are external, fields/orderings break
+pnpm lint
+pnpm build
+```
+
+### 4. Ship
+
+Commit and push to `main` → Vercel deploys automatically (GitHub Actions runs typecheck + lint + tests as a gate).
 
 ---
 
@@ -116,5 +120,5 @@ This software is **proprietary** and is provided for **evaluation purposes only*
 
 ---
 
-**Developed by Gonzalo Martínez García**  
+**Developed by Gonzalo Martínez García**
 *Full Stack Developer | Software Engineering & Innovation*

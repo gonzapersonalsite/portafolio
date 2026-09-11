@@ -2,9 +2,9 @@ import React from 'react';
 import { Box, Container, Typography, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { getAllProjects, ProjectCard } from '@/entities/project';
-import { ProjectGridSkeleton, PageHeaderSkeleton, EmptyState, ErrorState } from '@/shared/ui';
+import { EmptyState } from '@/shared/ui';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-import { useApiData, usePageMeta } from '@/shared/lib';
+import { useContent, usePageMeta } from '@/shared/lib';
 
 const ProjectsPage: React.FC = () => {
     const { t } = useTranslation();
@@ -14,31 +14,7 @@ const ProjectsPage: React.FC = () => {
         description: t('seo.projects.description'),
     });
 
-    const { data: projects, loading, error, refetch } = useApiData(
-        () => getAllProjects(),
-        '/public/projects'
-    );
-
-    if (loading) {
-        return (
-            <Box sx={{ py: 8 }}>
-                <Container maxWidth="lg">
-                    <PageHeaderSkeleton />
-                    <ProjectGridSkeleton />
-                </Container>
-            </Box>
-        );
-    }
-
-    if (error) {
-        return (
-            <Box sx={{ py: 8 }}>
-                <Container maxWidth="lg">
-                    <ErrorState message={error} onRetry={refetch} />
-                </Container>
-            </Box>
-        );
-    }
+    const { data: projects } = useContent(() => getAllProjects());
 
     return (
         <Box sx={{ py: 8 }}>
@@ -59,8 +35,8 @@ const ProjectsPage: React.FC = () => {
                     {(projects ?? []).length === 0 && (
                         <Grid size={{ xs: 12 }}>
                             <EmptyState
-                                title={t('admin.emptyState.projects.title', 'Building the Future')}
-                                description={t('admin.emptyState.projects.description', 'No projects here yet, but great things are in the making.')}
+                                title={t('emptyState.projects.title', 'Building the Future')}
+                                description={t('emptyState.projects.description', 'No projects here yet, but great things are in the making.')}
                                 icon={<RocketLaunchIcon />}
                             />
                         </Grid>

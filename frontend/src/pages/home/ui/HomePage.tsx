@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Typography, Button, Grid, useTheme, Chip, Stack, Skeleton } from '@mui/material';
+import { Box, Container, Typography, Button, Grid, useTheme, Chip, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import DownloadIcon from '@mui/icons-material/Download';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -11,8 +11,8 @@ import { ProjectCard, getFeaturedProjects } from '@/entities/project';
 import { getProfile } from '@/entities/profile';
 import { useLanguage } from '@/features/language-switch';
 import { Link as RouterLink } from 'react-router-dom';
-import { formatImageUrl, useApiData, usePageMeta } from '@/shared/lib';
-import { HeroSkeleton, ProjectCardSkeleton, ImageWithFallback, RichTextRenderer, EmptyState, ErrorState } from '@/shared/ui';
+import { useContent, usePageMeta } from '@/shared/lib';
+import { ImageWithFallback, RichTextRenderer, EmptyState } from '@/shared/ui';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
 const float = keyframes`
@@ -31,72 +31,12 @@ const HomePage: React.FC = () => {
         description: t('seo.home.description'),
     });
 
-    const { data: featuredProjects, loading: projectsLoading, error: projectsError, refetch: refetchProjects } = useApiData(
-        () => getFeaturedProjects(),
-        '/public/projects/featured'
-    );
-    const { data: profile, loading: profileLoading, error: profileError, refetch: refetchProfile } = useApiData(
-        () => getProfile(),
-        '/public/profile'
-    );
-
-    const loading = projectsLoading || profileLoading;
-    const error = projectsError || profileError;
-    const refetch = () => {
-        refetchProjects();
-        refetchProfile();
-    };
+    const { data: featuredProjects } = useContent(() => getFeaturedProjects());
+    const { data: profile } = useContent(() => getProfile());
 
     const getLocalizedText = (en: string, es: string) => {
         return language === 'en' ? (en || es) : (es || en);
     };
-
-    if (loading) {
-        return (
-            <Box>
-                <HeroSkeleton />
-                <Box sx={{ py: 8 }}>
-                    <Container maxWidth="lg">
-                        <Skeleton width="300px" height={60} sx={{ mb: 6 }} />
-                        <Grid container spacing={4}>
-                            {Array.from(new Array(3)).map((_, i) => (
-                                <Grid size={{ xs: 12, md: 6, lg: 4 }} key={i}>
-                                    <ProjectCardSkeleton />
-                                </Grid>
-                            ))}
-                        </Grid>
-                    </Container>
-                </Box>
-                <Box sx={{ py: 10 }}>
-                    <Container maxWidth="lg">
-                        <Grid container spacing={6} alignItems="center">
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <Skeleton animation="wave" variant="rectangular" width="80%" sx={{ pt: '100%', borderRadius: 4, mx: 'auto' }} />
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <Skeleton animation="wave" width="100px" height={20} sx={{ mb: 2 }} />
-                                <Skeleton animation="wave" width="80%" height={50} sx={{ mb: 3 }} />
-                                <Skeleton animation="wave" width="100%" height={20} sx={{ mb: 1 }} />
-                                <Skeleton animation="wave" width="100%" height={20} sx={{ mb: 1 }} />
-                                <Skeleton animation="wave" width="90%" height={20} sx={{ mb: 4 }} />
-                                <Skeleton animation="wave" width="150px" height={48} sx={{ borderRadius: 1 }} />
-                            </Grid>
-                        </Grid>
-                    </Container>
-                </Box>
-            </Box>
-        );
-    }
-
-    if (error) {
-        return (
-            <Box sx={{ py: 8 }}>
-                <Container maxWidth="lg">
-                    <ErrorState message={error} onRetry={refetch} />
-                </Container>
-            </Box>
-        );
-    }
 
     return (
         <Box sx={{ overflow: 'hidden' }}>
@@ -247,8 +187,8 @@ const HomePage: React.FC = () => {
                         {(!featuredProjects || featuredProjects.length === 0) && (
                             <Grid size={{ xs: 12 }}>
                                 <EmptyState
-                                    title={t('admin.emptyState.featured.title', 'Highlights Coming Soon')}
-                                    description={t('admin.emptyState.featured.description', 'Curating the best projects to showcase here.')}
+                                    title={t('emptyState.featured.title', 'Highlights Coming Soon')}
+                                    description={t('emptyState.featured.description', 'Curating the best projects to showcase here.')}
                                     icon={<RocketLaunchIcon />}
                                 />
                             </Grid>
@@ -261,9 +201,10 @@ const HomePage: React.FC = () => {
                 <Grid container spacing={6} alignItems="center">
                     <Grid size={{ xs: 12, md: 6 }}>
                         <ImageWithFallback
-                            src={formatImageUrl(profile?.imageUrl)}
+                            src={profile?.imageUrl}
                             alt={(language === 'en' ? profile?.fullNameEn : profile?.fullNameEs) || 'Profile'}
                             type="profile"
+                            aspectRatio="2/3"
                             loading="lazy"
                             sx={{
                                 maxWidth: 400,

@@ -37,9 +37,9 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
         if (fallbackSrc) return fallbackSrc;
         
         if (type === 'profile') {
-            return "/profile-fallback.jpg";
+            return "/profile-fallback.webp";
         }
-        return "https://placehold.co/600x400?text=No+Image";
+        return "/images/no-image.svg";
     };
 
     const handleError = () => {

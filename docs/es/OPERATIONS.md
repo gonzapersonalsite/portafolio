@@ -1,107 +1,111 @@
 # 🛠️ Guía de Operaciones
 
-[![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react)](https://react.dev/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0-6DB33F?logo=springboot)](https://spring.io/projects/spring-boot)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)](https://www.typescriptlang.org/)
-[![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk)](https://openjdk.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)](https://www.postgresql.org/)
-[![Swagger](https://img.shields.io/badge/Swagger-OpenAPI_3.0-yellow?logo=swagger)](https://swagger.io/)
-[![License: Evaluation Only](https://img.shields.io/badge/License-Evaluation--Only-red)](../../LICENSE)
+[![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-7.3-646CFF?logo=vite)](https://vite.dev/)
+[![License: Evaluation Only](https://img.shields.io/badge/License-Evaluation--Only-red)](../LICENSE)
 
-[🇺🇸 English](../../OPERATIONS.md) | 🇪🇸 **Español**
+🇺🇸 [English](../OPERATIONS.md) | **🇪🇸 Español**
 
-Este documento cubre la infraestructura, el pipeline de despliegue, la configuración del entorno y la configuración para el desarrollo local del proyecto Portfolio.
+Este documento cubre la infraestructura, el pipeline de despliegue, la configuración de entorno y el desarrollo local del proyecto Portafolio.
 
 ---
 
 ## ☁️ Infraestructura y Despliegue
 
-El proyecto está diseñado para alta disponibilidad utilizando servicios modernos nativos de la nube.
+El proyecto es **solo estático**: un único despliegue, cero servidores.
 
-### Proveedores Cloud
-- **Hosting Frontend:** [Vercel](https://vercel.app) (Optimizado para aplicaciones React/Vite).
-- **Hosting Backend:** [Render](https://render.com) (Despliegue basado en contenedores).
-- **Base de Datos:** [Aiven](https://aiven.io/) (PostgreSQL).
+### Proveedor Cloud
+- **Hosting del Frontend:** [Vercel](https://vercel.app) (optimizado para aplicaciones React/Vite), directorio raíz `frontend/`.
 
 ### 🚀 Pipeline CI/CD
-Flujo actual de despliegue con control de calidad previo:
 - **Frontend (Vercel):**
   - Vercel despliega automáticamente en cada push a `main` desde el directorio `frontend/`.
-  - Vercel detecta automáticamente pnpm mediante el campo `packageManager` en `package.json`.
-  - GitHub Actions ejecuta typecheck + lint en pushes/PRs que afecten a `frontend/**` como verificación de alerta temprana.
+  - Vercel detecta pnpm automáticamente mediante el campo `packageManager` de `package.json`.
+  - GitHub Actions ejecuta typecheck + lint + tests en push/PR que toquen `frontend/**` como puerta de calidad.
   - Variable de entorno requerida en Vercel: `PNPM_APPROVE_BUILDS=true` (requisito de seguridad de pnpm v11).
-  - Panel de Vercel: configura el comando de instalación como `pnpm install` y el comando de compilación como `pnpm run build`.
-- **Backend (contenedor en Render):**
-  - GitHub Actions ejecuta los tests de backend al hacer push a `main` en `backend/**`.
-  - Si los tests pasan, CI invoca el **Deploy Hook** privado de Render para iniciar el deploy.
-  - En Render, el servicio tiene **Auto‑Deploy desactivado**; solo se despliega cuando el hook es llamado.
-  - El `Dockerfile` de backend compila el artefacto con `./gradlew build -x test` para builds rápidos (los tests ya corren en CI).
+  - Panel de Vercel: Install Command `pnpm install` y Build Command `pnpm run build`.
 
 Detalles del pipeline:
-- Workflow backend: `.github/workflows/backend-ci.yml`
-- Workflow frontend: `.github/workflows/frontend-ci.yml`
-- Secret requerido en GitHub: `RENDER_DEPLOY_HOOK_URL` (Deploy Hook del servicio en Render)
-- Configuración en Render:
-  - Settings → Build & Deploy → Auto‑Deploy = Off
-  - Deploy Hook: copiar y usar en el secret de GitHub
+- Workflow: `.github/workflows/frontend-ci.yml`
 
 ---
 
-## 🔧 Configuración del Entorno
-
-Variables clave requeridas para producción:
+## 🔧 Configuración de Entorno
 
 ### Frontend
-- `VITE_API_BASE_URL`: URL completa al endpoint API de Render.
-- `VITE_EMAILJS_SERVICE_ID`: Identificador del servicio EmailJS.
-- `VITE_EMAILJS_TEMPLATE_ID`: Identificador de la plantilla EmailJS.
-- `VITE_EMAILJS_PUBLIC_KEY`: Clave pública de EmailJS.
-- `PNPM_APPROVE_BUILDS`: Configurar como `true` en Vercel para permitir scripts de compilación de esbuild (requisito de pnpm v11+).
+- `VITE_EMAILJS_SERVICE_ID`: identificador del servicio de EmailJS.
+- `VITE_EMAILJS_TEMPLATE_ID`: identificador de la plantilla de EmailJS.
+- `VITE_EMAILJS_PUBLIC_KEY`: clave pública de EmailJS.
+- `PNPM_APPROVE_BUILDS`: valor `true` en Vercel para permitir los scripts de build de esbuild (requisito de pnpm v11+).
 
-### Backend
-- `SPRING_DATASOURCE_URL`: Cadena de conexión PostgreSQL de Aiven.
-- `SPRING_DATASOURCE_USERNAME`: Usuario de base de datos Aiven.
-- `SPRING_DATASOURCE_PASSWORD`: Contraseña de base de datos Aiven.
-- `ADMIN_USERNAME`: Nombre de usuario administrador por defecto.
-- `ADMIN_PASSWORD`: Contraseña de administrador por defecto.
-- `JWT_SECRET`: Clave secreta para la generación segura de tokens.
-- `CORS_ORIGINS`: Dominio frontend permitido.
-- `JWT_EXPIRATION`: Tiempo de expiración del token JWT (ms).
-- `JPA_DDL_AUTO`: Estrategia de gestión del esquema (`validate` para prod, `update` para desarrollo local).
-- `FLYWAY_ENABLED`: Habilitar migraciones Flyway (por defecto `true`).
-- `RATE_LIMIT_ENABLED`: Habilitar/deshabilitar límite de tasa.
-- `SPRING_PROFILES_ACTIVE`: Debe ser `prod` en producción para desactivar el seeder.
-
-Seguridad y acceso:
-- Todas las rutas bajo `/api/admin/**` requieren rol `ADMIN`.
-- Autenticación basada en JWT; los tokens no se almacenan en servidor (stateless).
-- Los tests no incluyen secretos reales; cualquier clave en `src/test/resources` es solo de ámbito test.
-
-Seeder:
-- El seeder del backend ha sido completamente eliminado como parte de la migración a la Arquitectura Hexagonal. El esquema de la base de datos y el estado inicial se manejan enteramente a través de migraciones de Flyway.
+Desarrollo local: coloca las tres variables `VITE_EMAILJS_*` en `frontend/.env.local` (gitignored). Vercel mantiene los valores de producción en el panel del proyecto.
 
 ---
 
 ## 🛠️ Desarrollo Local
 
 ### Inicio Rápido
-La forma más fácil de ejecutar la base de datos, el backend y el frontend localmente es vía Docker Compose:
-
 ```bash
-docker compose up -d
+cd frontend
+pnpm install
+pnpm dev
 ```
 
-Asegúrate de que tu archivo `.env` esté configurado correctamente con las variables listadas arriba.
+### Puertas de Calidad
+```bash
+pnpm lint     # ESLint: reglas FSD + TS
+pnpm test     # Vitest: unit + integridad del contenido
+pnpm build    # Compilación TypeScript + build de producción con Vite
+```
 
-### Tests (backend)
-Tests unitarios que cubren la capa de servicio y los componentes de seguridad:
-- **Tests de servicio:** `src/test/java/.../application/service/` — Servicios Authentication, Experience, Profile, Project, Skill, SpokenLanguage.
-- **Tests de seguridad:** `src/test/java/.../infrastructure/security/` — InputSanitizer, TokenBucketRateLimiter.
+---
 
-Comandos Gradle:
-- Ejecutar tests: `./gradlew test`
-- Ejecutar app: `./gradlew bootRun`
-- Generar JAR: `./gradlew build -x test`
+## 🧠 Gestión de Contenido
+
+No hay CMS ni panel de administración. Todo el contenido es **JSON estático + imágenes autohospedadas**, editado directamente en el repositorio. Cada push a `main` despliega automáticamente vía Vercel.
+
+### 1. Editar contenido
+
+El contenido vive en `frontend/src/entities/<entidad>/api/data.json`:
+
+| Contenido | Fichero | Notas |
+|---|---|---|
+| Perfil | `entities/profile/api/data.json` | campos bilingües (`titleEn`/`titleEs`, …) |
+| Proyectos | `entities/project/api/data.json` | ordenado por `order` asc; el flag `featured` controla la parrilla de inicio |
+| Habilidades | `entities/skill/api/data.json` | ordenado por `order` asc; `level` 0–100 |
+| Experiencia | `entities/experience/api/data.json` | ordenado por `endDate` DESC (sin fecha primero), luego `startDate` DESC; omitir `endDate` en puestos actuales |
+| Idiomas | `entities/spoken-language/api/data.json` | ordenado por `order` asc |
+
+**Añadir un proyecto:** añade un objeto al array de proyectos con `id` (slug), textos bilingües, `technologies`, `imageUrls`, `imageUrlsFull`, `githubUrl`/`liveUrl`, `type`, `featured` y el siguiente valor de `order`.
+
+### 2. Añadir imágenes
+
+Cada imagen de proyecto se guarda en **dos variantes WebP** bajo `frontend/public/images/projects/<slug>/`:
+- `<nombre>-800.webp` — usada por las tarjetas de proyecto y las miniaturas de la galería (`imageUrls`)
+- `<nombre>-full.webp` — usada por el lightbox a pantalla completa (`imageUrlsFull`)
+
+Genéralas desde cualquier imagen de origen con `sharp-cli`:
+
+```bash
+npx -y sharp-cli@5 -i origen.png -o "public/images/projects/<slug>/{name}-800.webp"  resize 800 -q 82
+npx -y sharp-cli@5 -i origen.png -o "public/images/projects/<slug>/{name}-full.webp" -q 82
+```
+
+Reglas: solo WebP, calidad ~82, sin hosts de imágenes externos. La foto de perfil vive en `images/profile/`; la vista previa social es `public/og-cover.jpg` (1200×630 JPEG, regenerar cuando haga falta).
+
+### 3. Verificar
+
+```bash
+cd frontend
+pnpm test    # los tests de integridad de datos FALLAN si falta una imagen, hay URLs externas o se rompe el contrato/orden
+pnpm lint
+pnpm build
+```
+
+### 4. Publicar
+
+Haz commit y push a `main` → Vercel despliega automáticamente (GitHub Actions ejecuta typecheck + lint + tests como puerta de calidad).
 
 ---
 
@@ -109,12 +113,12 @@ Comandos Gradle:
 
 **© 2026 Gonzalo Martínez García. Todos los derechos reservados.**
 
-Este software es **propietario** y se proporciona **exclusivamente para fines de evaluación**.
+Este software es **propietario** y se proporciona **únicamente con fines de evaluación**.
 - **Queda estrictamente prohibida la copia**, modificación, distribución o uso no autorizado de este software por cualquier medio.
-- **No se permite el uso personal para otros portafolios.**
-- Ver el archivo [LICENSE](../../LICENSE) para los términos y condiciones completos.
+- **No está permitido el uso personal para otros portafolios.**
+- Consulta el archivo [LICENSE](../LICENSE) para los términos y condiciones completos.
 
 ---
 
-**Desarrollado por Gonzalo Martínez García**  
+**Desarrollado por Gonzalo Martínez García**
 *Full Stack Developer | Software Engineering & Innovation*

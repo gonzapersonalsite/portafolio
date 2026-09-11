@@ -6,9 +6,9 @@ import BusinessIcon from '@mui/icons-material/Business';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { getAllExperiences } from '@/entities/experience';
 import { useLanguage } from '@/features/language-switch';
-import { ExperienceSkeleton, PageHeaderSkeleton, RichTextRenderer, ScrollableContent, EmptyState, ErrorState } from '@/shared/ui';
+import { RichTextRenderer, ScrollableContent, EmptyState } from '@/shared/ui';
 import ExploreIcon from '@mui/icons-material/Explore';
-import { useApiData, usePageMeta } from '@/shared/lib';
+import { useContent, usePageMeta } from '@/shared/lib';
 
 const ExperiencePage: React.FC = () => {
     const { t } = useTranslation();
@@ -20,31 +20,7 @@ const ExperiencePage: React.FC = () => {
         description: t('seo.experience.description'),
     });
 
-    const { data: experiences, loading, error, refetch } = useApiData(
-        () => getAllExperiences(),
-        '/public/experiences'
-    );
-
-    if (loading) {
-        return (
-            <Box sx={{ py: 8 }}>
-                <Container maxWidth="lg">
-                    <PageHeaderSkeleton />
-                    <ExperienceSkeleton />
-                </Container>
-            </Box>
-        );
-    }
-
-    if (error) {
-        return (
-            <Box sx={{ py: 8 }}>
-                <Container maxWidth="lg">
-                    <ErrorState message={error} onRetry={refetch} />
-                </Container>
-            </Box>
-        );
-    }
+    const { data: experiences } = useContent(() => getAllExperiences());
 
     return (
         <Box sx={{ py: 8 }}>
@@ -132,8 +108,8 @@ const ExperiencePage: React.FC = () => {
                     </Timeline>
                 ) : (
                     <EmptyState
-                        title={t('admin.emptyState.experience.title', 'The Journey Begins')}
-                        description={t('admin.emptyState.experience.description', 'Every expert was once a beginner. My professional path starts here.')}
+                        title={t('emptyState.experience.title', 'The Journey Begins')}
+                        description={t('emptyState.experience.description', 'Every expert was once a beginner. My professional path starts here.')}
                         icon={<ExploreIcon />}
                     />
                 )}

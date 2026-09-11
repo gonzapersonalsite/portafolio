@@ -3,9 +3,9 @@ import { Box, Container, Typography, Grid, LinearProgress, Paper, useTheme } fro
 import { useTranslation } from 'react-i18next';
 import { getAllSkills } from '@/entities/skill';
 import { useLanguage } from '@/features/language-switch';
-import { SkillsSkeleton, PageHeaderSkeleton, EmptyState, ErrorState } from '@/shared/ui';
+import { EmptyState } from '@/shared/ui';
 import PsychologyIcon from '@mui/icons-material/Psychology';
-import { useApiData, usePageMeta } from '@/shared/lib';
+import { useContent, usePageMeta } from '@/shared/lib';
 
 const SkillsPage: React.FC = () => {
     const { t } = useTranslation();
@@ -17,10 +17,7 @@ const SkillsPage: React.FC = () => {
         description: t('seo.skills.description'),
     });
 
-    const { data: skills, loading, error, refetch } = useApiData(
-        () => getAllSkills(),
-        '/public/skills'
-    );
+    const { data: skills } = useContent(() => getAllSkills());
 
     const skillsByCategory = useMemo(() => {
         if (!skills) return {};
@@ -33,27 +30,6 @@ const SkillsPage: React.FC = () => {
         });
         return groups;
     }, [skills]);
-
-    if (loading) {
-        return (
-            <Box sx={{ py: 8 }}>
-                <Container maxWidth="lg">
-                    <PageHeaderSkeleton />
-                    <SkillsSkeleton />
-                </Container>
-            </Box>
-        );
-    }
-
-    if (error) {
-        return (
-            <Box sx={{ py: 8 }}>
-                <Container maxWidth="lg">
-                    <ErrorState message={error} onRetry={refetch} />
-                </Container>
-            </Box>
-        );
-    }
 
     return (
         <Box sx={{ py: 8 }}>
@@ -116,8 +92,8 @@ const SkillsPage: React.FC = () => {
                     ) : (
                         <Grid size={{ xs: 12 }}>
                             <EmptyState
-                                title={t('admin.emptyState.skills.title', 'Unlocking Potential')}
-                                description={t('admin.emptyState.skills.description', 'Skills are being honed and added. Stay tuned for updates.')}
+                                title={t('emptyState.skills.title', 'Unlocking Potential')}
+                                description={t('emptyState.skills.description', 'Skills are being honed and added. Stay tuned for updates.')}
                                 icon={<PsychologyIcon />}
                             />
                         </Grid>

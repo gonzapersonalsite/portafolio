@@ -1,0 +1,267 @@
+[
+  {
+    "id": "172e8679-6364-448c-a61b-34af17d36909",
+    "nameEn": "Java",
+    "nameEs": "Java",
+    "level": 75,
+    "category": "Backend",
+    "iconUrl": "https://fontawesome.com/icons/java?f=brands&s=solid",
+    "order": 1
+  },
+  {
+    "id": "db1adf5a-c26e-4351-9dcb-edab48dde588",
+    "nameEn": "Spring Boot",
+    "nameEs": "Spring Boot",
+    "level": 70,
+    "category": "Backend",
+    "order": 2
+  },
+  {
+    "id": "7b456745-5856-4da3-926e-7ecacd239ae0",
+    "nameEn": "JavaScript",
+    "nameEs": "JavaScript",
+    "level": 75,
+    "category": "Frontend",
+    "order": 3
+  },
+  {
+    "id": "b360a246-99cb-470c-817f-a0d45fe47f7f",
+    "nameEn": "TypeScript",
+    "nameEs": "TypeScript",
+    "level": 70,
+    "category": "Frontend",
+    "order": 4
+  },
+  {
+    "id": "927f1303-9109-4251-8b43-80312e5a5871",
+    "nameEn": "HTML5",
+    "nameEs": "HTML5",
+    "level": 95,
+    "category": "Frontend",
+    "order": 5
+  },
+  {
+    "id": "b725ff13-58d2-4ce2-9225-80da4e3f7695",
+    "nameEn": "Cascading Style Sheets (CSS)",
+    "nameEs": "Hojas de estilos en cascada (CSS)",
+    "level": 95,
+    "category": "Frontend",
+    "order": 6
+  },
+  {
+    "id": "129bf2e7-de42-4b18-8e53-0e3b3fe8e212",
+    "nameEn": "Bootstrap",
+    "nameEs": "Bootstrap",
+    "level": 80,
+    "category": "Frontend",
+    "order": 7
+  },
+  {
+    "id": "f73138bf-acd2-4548-bc32-eb763e12481f",
+    "nameEn": "Tailwind",
+    "nameEs": "Tailwind",
+    "level": 65,
+    "category": "Frontend",
+    "order": 8
+  },
+  {
+    "id": "368e7eb6-1019-4066-a810-29ac1e3d1019",
+    "nameEn": "React",
+    "nameEs": "React",
+    "level": 80,
+    "category": "Frontend",
+    "order": 9
+  },
+  {
+    "id": "8b82664b-b0df-4632-8158-3077eda29c44",
+    "nameEn": "Quasar",
+    "nameEs": "Quasar",
+    "level": 65,
+    "category": "Frontend",
+    "order": 10
+  },
+  {
+    "id": "8eb1a601-6cd2-4343-b730-8286a7d0d6e2",
+    "nameEn": "Node",
+    "nameEs": "Node",
+    "level": 50,
+    "category": "Backend",
+    "order": 11
+  },
+  {
+    "id": "d55e56c7-8ad9-4adb-bd05-d135b8d1db10",
+    "nameEn": "SQL",
+    "nameEs": "SQL",
+    "level": 70,
+    "category": "Database",
+    "order": 12
+  },
+  {
+    "id": "155cda93-56a7-406b-8ba5-c77f2ee38204",
+    "nameEn": "PostgreSQL",
+    "nameEs": "PostgreSQL",
+    "level": 60,
+    "category": "Database",
+    "order": 13
+  },
+  {
+    "id": "fc627354-8602-46f7-a112-6538ac07e61c",
+    "nameEn": "Git",
+    "nameEs": "Git",
+    "level": 85,
+    "category": "Tools",
+    "order": 14
+  },
+  {
+    "id": "1ec108dd-ff8d-42d2-8df9-5a6956d51326",
+    "nameEn": "CI/CD (pipelines with GitLab)",
+    "nameEs": "CI/CD (pipelines con GitLab)",
+    "level": 55,
+    "category": "Tools",
+    "order": 15
+  },
+  {
+    "id": "925ebc33-7db4-4775-8afa-b5cecb90bd4e",
+    "nameEn": "Docker",
+    "nameEs": "Docker",
+    "level": 85,
+    "category": "Tools",
+    "order": 16
+  },
+  {
+    "id": "04a4fe4f-62d4-47fe-8a15-7a6340fcc9ea",
+    "nameEn": "Agile methodologies",
+    "nameEs": "Metodologías ágiles",
+    "level": 50,
+    "category": "Other",
+    "order": 17
+  },
+  {
+    "id": "3923ddf4-65fa-4e09-b22c-e14ca96a7e94",
+    "nameEn": "Hardware repair",
+    "nameEs": "Reparación hardware",
+    "level": 70,
+    "category": "Other",
+    "order": 18
+  },
+  {
+    "id": "a934c2fd-9fbc-4701-94eb-81c57039b8f6",
+    "nameEn": "Linux",
+    "nameEs": "Linux",
+    "level": 85,
+    "category": "Tools",
+    "order": 19
+  },
+  {
+    "id": "15a57180-8968-4ff9-aed4-d90471e0ef97",
+    "nameEn": "Windows",
+    "nameEs": "Windows",
+    "level": 80,
+    "category": "Tools",
+    "order": 20
+  },
+  {
+    "id": "dc0a8e2f-9049-40df-b5d2-f270419c641b",
+    "nameEn": "Networks",
+    "nameEs": "Redes",
+    "level": 70,
+    "category": "Other",
+    "order": 21
+  },
+  {
+    "id": "62333e49-f6e2-4a02-bc67-ba96cb3196e4",
+    "nameEn": "DNS",
+    "nameEs": "DNS",
+    "level": 65,
+    "category": "Other",
+    "order": 22
+  },
+  {
+    "id": "7d3e2f39-e50c-49e1-bddd-628ae6a87e9e",
+    "nameEn": "Routers/switches",
+    "nameEs": "Routers/switches",
+    "level": 70,
+    "category": "Other",
+    "order": 23
+  },
+  {
+    "id": "f2c25b1f-a991-4ba4-bab6-b33da84acdf1",
+    "nameEn": "VirtualBox",
+    "nameEs": "VirtualBox",
+    "level": 75,
+    "category": "Tools",
+    "order": 24
+  },
+  {
+    "id": "ce253580-59f8-4193-b16c-4a711dbc77ce",
+    "nameEn": "Nginx",
+    "nameEs": "Nginx",
+    "level": 70,
+    "category": "Backend",
+    "order": 25
+  },
+  {
+    "id": "059e0187-7456-4a61-87a6-d46af2b73ef9",
+    "nameEn": "Apache",
+    "nameEs": "Apache",
+    "level": 75,
+    "category": "Backend",
+    "order": 26
+  },
+  {
+    "id": "b25de2fa-1243-46be-9ea5-0e57fc798432",
+    "nameEn": "Tomcat",
+    "nameEs": "Tomcat",
+    "level": 60,
+    "category": "Backend",
+    "order": 27
+  },
+  {
+    "id": "9b63e7f8-75bf-46e3-bb57-d66cf52ef254",
+    "nameEn": "Basic security",
+    "nameEs": "Seguridad básica",
+    "level": 50,
+    "category": "Other",
+    "order": 28
+  },
+  {
+    "id": "3e92dd95-37d1-437d-963b-73d1cf26a9f0",
+    "nameEn": "Incident diagnosis",
+    "nameEs": "Diagnóstico de incidencias",
+    "level": 55,
+    "category": "Other",
+    "order": 29
+  },
+  {
+    "id": "a4ee9472-2454-4520-b005-79f84d6b3db2",
+    "nameEn": "OS Installation",
+    "nameEs": "Instalación SO",
+    "level": 90,
+    "category": "Tools",
+    "order": 30
+  },
+  {
+    "id": "448215d1-986a-441b-a5c6-d484e35c5ce9",
+    "nameEn": "Hibernate ORM",
+    "nameEs": "Hibernate ORM",
+    "level": 70,
+    "category": "Backend",
+    "order": 31
+  },
+  {
+    "id": "831a0ed2-9ff6-4e6e-8d9e-4d65eb752cf6",
+    "nameEn": "MongoDB",
+    "nameEs": "MongoDB",
+    "level": 50,
+    "category": "Database",
+    "order": 32
+  },
+  {
+    "id": "6b391a7d-0259-4e6f-8cf7-d534daf368da",
+    "nameEn": "Proxmox VE",
+    "nameEs": "Proxmox VE",
+    "level": 50,
+    "category": "Other",
+    "order": 33
+  }
+]

@@ -6,16 +6,16 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import { formatImageUrl } from '@/shared/lib/imageUtils';
 
 interface ProjectGalleryProps {
     open: boolean;
     onClose: () => void;
     imageUrls: string[];
+    imageUrlsFull?: string[];
     title: string;
 }
 
-const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrls, title }) => {
+const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrls, imageUrlsFull, title }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [zoomLevel, setZoomLevel] = useState(1);
 
@@ -142,7 +142,7 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
                         justifyContent: 'center'
                     }}>
                         <img 
-                            src={formatImageUrl(imageUrls[currentImageIndex])} 
+                            src={(imageUrlsFull && imageUrlsFull[currentImageIndex]) || imageUrls[currentImageIndex]} 
                             alt={`${title} - ${currentImageIndex + 1}`}
                             style={{ 
                                 maxWidth: '100%', 
@@ -201,7 +201,7 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
                                     border: currentImageIndex === idx ? '2px solid white' : '2px solid transparent',
                                     borderRadius: 1,
                                     transition: 'all 0.2s ease-in-out',
-                                    backgroundImage: `url(${formatImageUrl(url)})`,
+                                    backgroundImage: `url(${url})`,
                                     backgroundSize: 'cover',
                                     backgroundPosition: 'center',
                                     flexShrink: 0,

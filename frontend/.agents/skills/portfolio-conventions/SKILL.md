@@ -10,87 +10,79 @@ This skill documents project-specific decisions for the Portfolio application. I
 |---|---|---|
 | UI Library | MUI (Material UI) | v7 |
 | Routing | React Router DOM | v7 |
-| State (server) | Zustand | v5 |
 | State (UI) | React Context API | — |
-| Forms | react-hook-form | v7 |
-| HTTP Client | Axios (custom adapter) | v1 |
+| Forms | plain controlled components | — |
 | i18n | i18next + react-i18next | latest |
 | Email | EmailJS | v4 |
 | Testing | Vitest + Testing Library | latest |
 | CSS | MUI `sx` prop + Emotion + CSS co-located in `ui/` | — |
 
+## Architecture (static content)
+
+The portfolio is a **fully static frontend**. There is no backend, no HTTP client, and no server state.
+
+- All business content lives in **static JSON files** co-located in the `api/` segment of each entity slice:
+  - `entities/project/api/data.json`
+  - `entities/profile/api/data.json`
+  - `entities/skill/api/data.json`
+  - `entities/experience/api/data.json`
+  - `entities/spoken-language/api/data.json`
+- The `api/` segment is the **data access layer**: the `*.ts` files in `api/` import the JSON and expose plain synchronous getters (`getAllProjects()`, `getFeaturedProjects()`, `getProfile()`, `getAllSkills()`, `getAllExperiences()`, `getAllSpokenLanguages()`).
+- Content is **bilingual by design**: every text field is an En/Es pair (`titleEn`/`titleEs`). Language switch only re-renders.
+- Adding/editing content = **editing JSON** (data change, not code change). No CMS, no admin panel.
+- Data integrity is enforced by co-located tests (`entities/<entity>/api/data.test.ts`): they validate the field contract, ordering, and that every referenced image exists in `public/images/`.
+- All images are **self-hosted** under `frontend/public/images/`. External image hosts are forbidden (enforced by data-integrity tests).
+
+## Image Strategy
+
+- **Format:** WebP (Baseline widely available), quality 82 for project screenshots, 85 for the profile photo. No PNG/JPEG payloads in the bundle (except `og-cover.jpg` for social crawlers, which reject WebP).
+- **Two variants per project image:**
+  - `<name>-800.webp` — covers and gallery thumbnails (`Project.imageUrls`)
+  - `<name>-full.webp` — lightbox fullscreen view (`Project.imageUrlsFull`, optional fallback to `imageUrls`)
+  - Thumbnails reuse the `-800` file, so they hit the same cache entry as the card cover.
+- **Social preview:** `public/og-cover.jpg` (1200×630) referenced from `index.html` `og:image`.
+- **Fallbacks:** `images/no-image.svg` (general), `profile-fallback.webp` (profile). Both local.
+- **No layout shift (CLS):** every `ImageWithFallback` usage MUST pass `aspectRatio` (project covers `16/9`, profile photo `2/3`) so the container reserves space while the image loads.
+- **Lazy loading:** `loading="lazy"` on all below-the-fold images (project covers, profile photo). Nothing image-like sits above the fold (LCP is the hero text), so no `fetchpriority="high"` is needed; never combine `fetchpriority` with `loading="lazy"`.
+- When adding/replacing images: generate both WebP variants (e.g. `sharp resize 800` + full-size, q82), update `data.json`, and run `pnpm test` (integrity tests check every referenced file exists on disk).
+
 ## Routing
 
 - **Library**: React Router DOM v7
 - **Pattern**: `React.lazy()` for all page components (code-splitting)
-- **Protected routes**: `ProtectedRoute` component in `features/auth/` checks `useAuthStore().isAuthenticated`
-- **Layouts**: Public pages wrapped in `PublicLayout` (Navbar + Footer + Outlet); Admin pages wrapped in `DashboardLayout` (AppBar + Drawer + Outlet)
+- **Layouts**: all pages wrapped in `PublicLayout` (Navbar + Footer + Outlet)
 - **Fallback**: `<Suspense>` with page-specific skeleton loaders
+- Routes: `/`, `/about`, `/skills`, `/experience`, `/projects`, `/contact`; catch-all redirects to `/`
 
 ## State Management
 
-### Zustand
+- **No global server state** and **no Zustand**. Content is read synchronously via the entity getters.
+- **React Context** is used for cross-cutting UI state only:
+  - **Theme** (`features/theme-switch/`): `light | dark | glass`. Persisted to `localStorage: themeMode`. MUI `ThemeProvider` wraps app.
+  - **Language** (`features/language-switch/`): `en | es`. Persisted to `localStorage: language`. i18next `changeLanguage` on toggle.
+  - **Notifications** (`features/notifications/`): MUI Snackbar + Alert for form feedback.
 
-- **Auth store** (`entities/user/model/store.ts`): `token`, `username`, `isAuthenticated`, `login`, `logout`, `validateToken`
-- **Persist**: `zustand/middleware/persist` with `localStorage` key `auth-storage`. Partialize: only token, username, isAuthenticated.
-- **Usage**: `useAuthStore.getState().token` for JWT in API interceptor; `useAuthStore(state => state.isAuthenticated)` in components
+## Content Fetching Pattern
 
-### React Context
+Pages read content synchronously through the `useContent` hook (`shared/lib/useContent.ts`):
 
-- **Theme** (`features/theme-switch/`): `light | dark | glass` modes. Persisted to `localStorage: themeMode`. MUI `ThemeProvider` wraps app.
-- **Language** (`features/language-switch/`): `en | es`. Persisted to `localStorage: language`. i18next changeLanguage on toggle.
-- **Notifications** (`features/notifications/`): MUI Snackbar + Alert. Pub/sub via `notificationEvents` for external triggers (apiClient).
+```tsx
+import { useContent } from '@/shared/lib';
 
-## HTTP Client (`shared/api/`)
+const { data: projects } = useContent(() => getAllProjects());
+```
 
-- **Base**: Axios instance with `baseURL: '/api'` (relative, proxied via Vite dev / Vercel prod)
-- **Custom adapter**: Cache (localStorage, 24h TTL), request deduplication, retry with exponential backoff (max 2), cold-start notification
-- **Interceptors**: 
-  - Request: attach JWT token from `useAuthStore`, attach `Accept-Language` from i18n
-  - Response: 401 auto-redirect to `/admin/login` (admin routes only)
-- **Cache invalidation**: Any non-GET request to non-public URLs clears entire cache
-- **Architecture**: Infra in `shared/api/client.ts`, auth interceptor in `app/api/interceptors.ts`
+### Contract
+
+- `data: T` — always defined (content is part of the bundle)
+- No `loading`, no `error`, no `refetch`: there is nothing to fetch, cache, or retry
 
 ## i18n
 
 - **Languages**: English (`en`), Spanish (`es`)
 - **Detection**: localStorage → navigator.language → fallback `en`
-- **Translation files**: Inline in `shared/config/i18n.ts`
-- **No lang in cache keys**: API returns bilingual data (En/Es fields), so cache keys do NOT include language. Language switch only re-renders, never refetches.
-
-## Data Fetching Pattern
-
-All public pages use the `useApiData` hook (`shared/lib/useApiData.ts`) for fetching, caching, loading, and error states:
-
-```tsx
-import { useApiData } from '@/shared/lib';
-
-const { data, loading, error, refetch } = useApiData(
-    () => getAllProjects(),      // stable fetcher function
-    '/public/projects'           // cache key (without lang)
-);
-```
-
-### Contract
-
-- `data`: `T | null` — cached data on mount, then fresh data after fetch
-- `loading`: `boolean` — `true` only on first fetch when no cache exists
-- `error`: `string | null` — human-readable error message on failure
-- `refetch`: `() => Promise<void>` — force refetch ignoring cache
-
-### Behavior
-
-- **Cache-first**: Returns cached data (24h TTL via `requestCache` in localStorage) on mount, avoiding skeleton flash
-- **Single fetch**: Fetches once on mount. Does NOT refetch on language change (data is bilingual)
-- **Cancellation**: Sets `cancelledRef` on unmount to prevent state updates on unmounted components
-- **Stable fetcher**: Stores `fetcher` in a ref updated via `useEffect` to handle inline arrow functions without infinite re-renders
-
-## Forms
-
-- **Library**: react-hook-form v7
-- **Admin CRUD dialogs**: `SkillFormDialog`, `ExperienceFormDialog`, `ProjectFormDialog`, `SpokenLanguageFormDialog`
-- **Auth forms**: Login, ForgotPassword, ResetPassword pages
-- **Sanitization**: `parseUrlStringToArray` (multiline text → clean URL array), `parseCommaSeparatedString` (CSV → array)
+- **Translation files**: inline in `shared/config/i18n.ts`. UI strings only; content text lives in the JSON data (En/Es fields).
+- Keep `i18n.ts` pruned: a key must be reachable from code via `t()`/`i18n.t()`; remove unused keys when touching components.
 
 ## Theming
 
@@ -106,25 +98,25 @@ const { data, loading, error, refetch } = useApiData(
 - **Environment**: jsdom
 - **Mocks**: `vi.mock` at module level, `vi.fn()` for spies
 - **Conventions**: co-located tests (`*.test.ts(x)` next to source), `describe`/`it` blocks, mocks before imports
-- **MUI mock**: Provides minimal stubs for MUI (`@mui/material`, `@mui/icons-material`) used during testing.
+- **MUI mock**: Provides minimal stubs for MUI (`@mui/material`, `@mui/icons-material`) used during testing (aliased in `vitest.config.ts`).
+- **Content integrity tests**: `entities/<entity>/api/data.test.ts` validate the static JSON (contract, ordering, images exist via `import.meta.glob`).
 - **Run**: `pnpm test` (CI: `frontend-ci.yml`)
 
 ## Build & Deploy
 
 - **Build**: `tsc -b && vite build` with chunk splitting: `react-vendor` (react, react-dom, react-router-dom), `mui-vendor` (@mui/material, @mui/icons-material)
-- **Dev**: Vite dev server (port 5173) with proxy `/api` → `localhost:8080`
-- **Prod**: Vercel with SPA rewrites + API proxy `/api/(.*)` → Render backend
-- **Docker**: Multi-stage (Node build → Nginx Alpine serve), docker-compose for local dev
+- **Dev**: Vite dev server (port 5173); no API proxy needed
+- **Prod**: Vercel (root dir `frontend/`) with SPA rewrites (`vercel.json`); no `/api` proxy
 
 ## Security
 
-- **Auth**: JWT bearer token in Authorization header
 - **Scripts**: `.npmrc` with `only-built-dependencies[]=esbuild` (pnpm v11 security)
-- **Input**: Sanitization in form dialogs + backend (Spring Security, XSS prevention)
+- **Contact form**: EmailJS in the browser (keys are public by design); no secrets stored in the repo
+- No authentication surface exists in this app
 
-## File Organization (FSD Migration Target)
+## File Organization (FSD)
 
-See `AGENTS.md` and `react-fsd-maintainer/SKILL.md` for the canonical FSD layer hierarchy. This project is being migrated to FSD. During migration, all code moves from the legacy `src/components/`, `src/context/`, `src/services/`, etc. structure into the 6 FSD layers.
+See `AGENTS.md` and `react-fsd-maintainer/SKILL.md` for the canonical FSD layer hierarchy and import rules.
 
 ## Peer Skills
 

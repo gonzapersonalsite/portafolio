@@ -1,52 +1,51 @@
 # 🏗️ Guía de Arquitectura
 
-[![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react)](https://react.dev/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.1-6DB33F?logo=springboot)](https://spring.io/projects/spring-boot)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)](https://www.typescriptlang.org/)
-[![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk)](https://openjdk.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)](https://www.postgresql.org/)
-[![Swagger](https://img.shields.io/badge/Swagger-OpenAPI_3.0-yellow?logo=swagger)](https://swagger.io/)
-[![License: Evaluation Only](https://img.shields.io/badge/License-Evaluation--Only-red)](../../LICENSE)
+[![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-7.3-646CFF?logo=vite)](https://vite.dev/)
+[![License: Evaluation Only](https://img.shields.io/badge/License-Evaluation--Only-red)](../LICENSE)
 
-[🇺🇸 English](../../ARCHITECTURE.md) | 🇪🇸 **Español**
+🇺🇸 [English](../ARCHITECTURE.md) | **🇪🇸 Español**
 
-Este documento proporciona un análisis detallado de los patrones arquitectónicos, principios de diseño y decisiones tecnológicas para el proyecto Portfolio. Para despliegue, infraestructura y configuración de entorno, ver la [Guía de Operaciones](../../OPERATIONS.md).
+Este documento ofrece un análisis detallado de los patrones arquitectónicos y las decisiones tecnológicas del proyecto Portafolio. Para despliegue, infraestructura y configuración de entorno, consulta la [Guía de Operaciones](OPERATIONS.md).
 
 ---
 
 ## 🏗️ Arquitectura y Principios
 
-El proyecto sigue una arquitectura **Full Stack** desacoplada, asegurando alto rendimiento, escalabilidad y seguridad.
+El proyecto es una **aplicación frontend totalmente estática**. No hay backend, no hay base de datos y no hay runtime de servidor: solo assets estáticos servidos por una CDN.
 
-### 🏛️ Arquitectura Backend
-- **Arquitectura Hexagonal (Ports & Adapters):** Separación estricta de responsabilidades. El Dominio es 100% Java puro, agnóstico a cualquier framework (sin Spring, sin JPA).
-- **Inmutabilidad y Cero Lombok:** Los modelos de dominio y DTOs usan `Records` de Java para garantizar inmutabilidad. El uso de Lombok está estrictamente prohibido.
-- **API RESTful:** Protocolo de comunicación sin estado para todas las interacciones frontend-backend.
-- **Seguridad Primero:** Implementación de **Spring Security** con **JWT (JSON Web Tokens)** para autenticación sin estado, y estricta sanitización de entradas para prevenir XSS.
-- **Integridad de Datos:** Gestión de transacciones vía Spring Data JPA (aislado en la capa de infraestructura) y manejo automatizado de esquemas.
+### ⚛️ Arquitectura del Frontend
+- **Feature-Sliced Design (FSD):** código organizado en 6 capas canónicas — `app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/` — con reglas de importación estrictas aplicadas por `eslint-plugin-fsd-lint`.
+- **Modelo de Contenido Estático:** todo el contenido de negocio (perfil, proyectos, habilidades, experiencias, idiomas hablados) vive en JSON bilingües dentro del segmento `api/` de cada entidad (`frontend/src/entities/<entidad>/api/data.json`). El contenido se lee de forma síncrona en runtime y se valida en tiempo de build/test.
+- **Gestión de Estado:** React Context API para preocupaciones transversales como Tema, Idioma y Notificaciones. No existe estado de servidor.
+- **Localización Dinámica:** sistema centralizado i18next para traducción de la interfaz en tiempo real; los campos de contenido son pares bilingües En/Es en los JSON de datos.
 
-### ⚛️ Arquitectura Frontend
-- **Feature-Sliced Design (FSD):** Código organizado en 6 capas canónicas — `app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/` — con reglas estrictas de importación forzadas por `eslint-plugin-fsd-lint`.
-- **Gestión de Estado:** Estado global ligero usando **Zustand**.
-- **Context API:** Usado para preocupaciones transversales como Tema, Idioma y Notificaciones.
-- **Localización Dinámica:** Sistema centralizado i18next para traducción de interfaz en tiempo real.
+### 🖼️ Estrategia de Assets
+- Todas las imágenes están **autohospedadas** en `frontend/public/images/` (una carpeta por slug de proyecto, foto de perfil y un fallback local "sin imagen").
+- Los hosts de imágenes externos están prohibidos por convención y se aplican mediante tests de integridad de datos.
+
+### 📬 Contacto
+- El formulario de contacto funciona íntegramente en el navegador mediante **EmailJS**; no hay gestión de correo en servidor.
 
 ---
 
-## 📚 Documentación API
+## 📐 Modelo de Contenido
 
-El backend genera automáticamente documentación interactiva usando **Swagger/OpenAPI**.
-- **Endpoint:** `/swagger-ui/index.html`
-- **Especificación:** `/v3/api-docs`
+El esquema de contenido refleja el contrato de la API anterior (campos bilingües, colecciones ordenadas):
 
-### Diseño de API REST
-- Rutas basadas en recursos bajo el prefijo `/api`, siguiendo convenciones **RESTful**.
-- Segmentación por responsabilidad:
-  - Público: `/api/public` — solo lectura mediante **GET**.
-  - Administración: `/api/admin` — **GET** (lectura), **POST** (creación, 201), **PUT** (actualización idempotente), **DELETE** (eliminación, 204).
-  - Autenticación: `/api/auth` — operaciones idempotentes y de sesión según el verbo (p. ej., `POST /login`, `GET /validate`).
-- Códigos de estado estándar: 200 en lecturas/actualizaciones exitosas, 201 en creaciones, 204 en eliminaciones.
-- La lista completa de endpoints puede evolucionar y se consulta siempre en Swagger. Esta guía no duplica endpoints específicos para evitar discrepancias.
+| Entidad | Ubicación JSON | Campos clave |
+|---|---|---|
+| Perfil | `entities/profile/api/data.json` | greeting, title, subtitle, description, about*, cvUrl, redes, imageUrl (pares En/Es) |
+| Proyecto | `entities/project/api/data.json` | title, description, technologies, imageUrls, githubUrl, liveUrl, type, featured, order |
+| Habilidad | `entities/skill/api/data.json` | name, level (0-100), category, order |
+| Experiencia | `entities/experience/api/data.json` | company, position, fechas, description, technologies |
+| Idioma | `entities/spoken-language/api/data.json` | name, level, proficiency, order |
+
+**Reglas de integridad** (aplicadas por `data.test.ts` de cada entidad):
+- Toda imagen referenciada debe existir en `public/images/` y ser una ruta local.
+- Las colecciones deben estar ordenadas (proyectos/habilidades/idiomas por `order` asc; experiencias por `endDate DESC NULLS FIRST, startDate DESC` — el mismo orden que proporcionaba la API).
+- El contrato de campos debe cumplirse (tipos, textos bilingües no vacíos, rangos válidos).
 
 ---
 
@@ -54,12 +53,12 @@ El backend genera automáticamente documentación interactiva usando **Swagger/O
 
 **© 2026 Gonzalo Martínez García. Todos los derechos reservados.**
 
-Este software es **propietario** y se proporciona **exclusivamente para fines de evaluación**.
+Este software es **propietario** y se proporciona **únicamente con fines de evaluación**.
 - **Queda estrictamente prohibida la copia**, modificación, distribución o uso no autorizado de este software por cualquier medio.
-- **No se permite el uso personal para otros portafolios.**
-- Ver el archivo [LICENSE](../../LICENSE) para los términos y condiciones completos.
+- **No está permitido el uso personal para otros portafolios.**
+- Consulta el archivo [LICENSE](../LICENSE) para los términos y condiciones completos.
 
 ---
 
-**Desarrollado por Gonzalo Martínez García**  
+**Desarrollado por Gonzalo Martínez García**
 *Full Stack Developer | Software Engineering & Innovation*

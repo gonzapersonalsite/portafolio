@@ -1,87 +1,81 @@
-# 🚀 Portafolio Profesional Full Stack
+# 🚀 Portafolio Profesional
 
-[![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react)](https://react.dev/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.1-6DB33F?logo=springboot)](https://spring.io/projects/spring-boot)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)](https://www.typescriptlang.org/)
-[![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk)](https://openjdk.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)](https://www.postgresql.org/)
-[![Swagger](https://img.shields.io/badge/Swagger-OpenAPI_3.0-yellow?logo=swagger)](https://swagger.io/)
-[![License: Evaluation Only](https://img.shields.io/badge/License-Evaluation--Only-red)](../../LICENSE)
+[![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-7.3-646CFF?logo=vite)](https://vite.dev/)
+[![License: Evaluation Only](https://img.shields.io/badge/License-Evaluation--Only-red)](LICENSE)
 
-[🇺🇸 English](../../README.md) | 🇪🇸 **Español**
+🇺🇸 [English](../README.md) | **🇪🇸 Español**
 
-**Portafolio Profesional** es una solución de software integral diseñada para la gestión dinámica de contenido y la presentación profesional. Esta aplicación Full Stack permite a los desarrolladores gestionar su perfil profesional, proyectos y habilidades a través de una interfaz administrativa segura, mientras ofrece una experiencia inmersiva a los visitantes.
+**Portafolio Profesional** es una aplicación web estática diseñada para mostrar una carrera profesional: proyectos, experiencia, habilidades y perfil, con una interfaz inmersiva y animada.
 
-**Demo en Vivo:** [https://mi-portafolio-gonzalo.vercel.app/](https://mi-portafolio-gonzalo.vercel.app/)  
-**Documentación API:** [https://portafolio-9uob.onrender.com/swagger-ui/index.html](https://portafolio-9uob.onrender.com/swagger-ui/index.html)
+**Demo en vivo:** [https://mi-portafolio-gonzalo.vercel.app/](https://mi-portafolio-gonzalo.vercel.app/)
 
 ---
 
 ## ✨ Características Principales
 
-### 👨‍💼 Sistema de Gestión de Contenidos (CMS)
-- **Panel de Administración No-Code:** Acceso exclusivo vía login seguro (Spring Security + JWT) para **CRUD completo** en Proyectos, Experiencias, Habilidades y Perfil. **Añade/actualiza todo sin una sola línea de código** – los cambios son visibles instantáneamente en el sitio público.
-- **Actualizaciones en Tiempo Real:** Contenido dinámico siempre actualizado para los visitantes.
-- **Autenticación Segura:** Login robusto impulsado por Spring Security y JWT.
-
-
 ### 🎨 Experiencia de Usuario Inmersiva (UX)
-- **Interfaz Liquid Glass:** Estilo visual de vanguardia inspirado en visionOS, con glassmorphism avanzado y acentos neón.
-- **Galería Interactiva de Proyectos:** Escaparate de múltiples imágenes a pantalla completa con capacidad de zoom nativo.
-- **Motor de Temas:** Sistema centralizado que soporta modos Claro, Oscuro y el exclusivo Liquid Glass.
-- **Localización Dinámica:** Soporte bilingüe completo (Español/Inglés) con traducción instantánea de interfaz y contenido.
+- **Interfaz Liquid Glass:** estilo visual vanguardista inspirado en visionOS, con glassmorphism avanzado y acentos de neón.
+- **Galería de Proyectos Interactiva:** showcases de múltiples imágenes a pantalla completa con zoom nativo.
+- **Motor de Temas:** sistema centralizado con modo Claro, Oscuro y el exclusivo modo Liquid Glass.
+- **Localización Dinámica:** soporte bilingüe completo (español/inglés) con traducción instantánea de interfaz y contenido.
 
-### 📦 Inteligencia de Proyectos
-- **Integración con GitHub:** Obtención automática de las últimas releases binarias (.exe, .apk) directamente desde repositorios de GitHub.
-- **Diseño Responsivo:** Diseños fluidos optimizados para escritorio, tablet y móvil.
-- **Fondos Animados:** Animaciones CSS de alto rendimiento para una sensación moderna e interactiva.
+### 📦 Contenido como Datos
+- **Modelo de contenido JSON estático:** proyectos, habilidades, experiencia, perfil e idiomas viven en ficheros JSON versionados — sin CMS, sin API, sin base de datos. Añadir un proyecto es un cambio de datos, no de código.
+- **Imágenes autohospedadas:** todas las imágenes de proyectos y perfil se sirven desde el propio sitio — cero hosts de imágenes de terceros.
+- **Formulario de contacto:** impulsado por EmailJS (solo navegador, sin backend).
+- **Diseño Responsive:** layouts fluidos optimizados para escritorio, tablet y móvil.
+- **Fondos Animados:** animaciones CSS de alto rendimiento para un look moderno e interactivo.
 
 ---
 
 ## 🛠️ Stack Tecnológico
 
-- **Frontend:** React 19 + TypeScript (Vite)
-- **Framework UI:** Material UI (MUI) con personalización profunda de temas
-- **Backend:** Java 25 + Spring Boot 4.0
-- **Seguridad:** Spring Security & JWT (JSON Web Tokens)
-- **Base de Datos:** PostgreSQL (Aiven)
-- **Gestión de Estado:** Zustand
-- **Documentación API:** Swagger / OpenAPI 3.0
-- **Herramientas de Construcción:** Gradle (Backend) & pnpm (Frontend)
+- **Frontend:** React + TypeScript (Vite)
+- **UI:** Material UI (MUI) con personalización profunda de temas
+- **Routing:** React Router con páginas lazy-loaded
+- **i18n:** i18next + react-i18next
+- **Contacto:** EmailJS (solo navegador)
+- **Testing:** Vitest + Testing Library
+- **Gestión de paquetes:** pnpm
 
 ---
 
 ## 🏗️ Arquitectura y Principios
 
-El proyecto sigue una **Arquitectura Full Stack** moderna, priorizando escalabilidad, seguridad y mantenibilidad.
+El proyecto sigue una **arquitectura de frontend estático** moderna, priorizando mantenibilidad, rendimiento y coste operativo cero.
 
-- **Arquitectura Hexagonal Estricta:** Patrón Ports & Adapters que garantiza un dominio Java puro, aislado de frameworks y bases de datos.
-- **Frontend Feature-Sliced:** Arquitectura FSD de 6 capas (`app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/`) con fronteras de importación estrictas forzadas por ESLint.
-- **CI/CD Automatizado:** Pipeline de despliegue continuo usando Vercel (Frontend) y Render (Backend).
-- **Persistencia de Datos:** Gestión robusta de esquemas con Spring Data JPA (vía adaptadores de salida) y PostgreSQL.
+- **Frontend Feature-Sliced:** arquitectura FSD de 6 capas (`app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/`) con límites de importación estrictos aplicados por ESLint.
+- **Modelo de Contenido Estático:** contenido bilingüe en JSON por entidad, validado por tests de integridad de datos.
+- **CI/CD Automatizado:** pipeline de despliegue continuo con Vercel.
 
-📖 **[Guía de Arquitectura](ARCHITECTURE.md)** — Patrones, decisiones de diseño y documentación de API.
-🛠️ **[Guía de Operaciones](../../OPERATIONS.md)** — Despliegue, CI/CD, variables de entorno y configuración local.
+📖 **[Guía de Arquitectura](ARCHITECTURE.md)** — Patrones y decisiones de diseño.
+🛠️ **[Guía de Operaciones](OPERATIONS.md)** — Despliegue, CI/CD, variables de entorno y setup local.
 
 ---
 
 ## 🚀 Ejecución Local
 
-Este proyecto está contenerizado para facilitar el despliegue y desarrollo local.
-
-### Prerrequisitos
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado y ejecutándose.
-- Archivo `.env` configurado con las variables de entorno necesarias (ver `../../OPERATIONS.md`).
+### Requisitos
+- Node.js (ver `frontend/package.json` para la versión gestionada) y pnpm.
 
 ### Iniciar la Aplicación
 ```bash
-docker compose up -d
+cd frontend
+pnpm install
+pnpm dev
 ```
 
-**Acceder a la aplicación:**
+**Acceso:**
 - Frontend: [http://localhost:5173/](http://localhost:5173/)
-- Backend API: [http://localhost:8080](http://localhost:8080)
-- Swagger UI: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+
+### Puertas de Calidad
+```bash
+pnpm lint     # ESLint (reglas FSD + TS)
+pnpm test     # Vitest (unit + integridad del contenido)
+pnpm build    # Compilación TypeScript + build de producción con Vite
+```
 
 ---
 
@@ -89,12 +83,12 @@ docker compose up -d
 
 **© 2026 Gonzalo Martínez García. Todos los derechos reservados.**
 
-Este software es **propietario** y se proporciona **exclusivamente para fines de evaluación**.
+Este software es **propietario** y se proporciona **únicamente con fines de evaluación**.
 - **Queda estrictamente prohibida la copia**, modificación, distribución o uso no autorizado de este software por cualquier medio.
-- **No se permite el uso personal para otros portafolios.**
-- Ver el archivo [LICENSE](../../LICENSE) para los términos y condiciones completos.
+- **No está permitido el uso personal para otros portafolios.**
+- Consulta el archivo [LICENSE](../LICENSE) para los términos y condiciones completos.
 
 ---
 
-**Desarrollado por Gonzalo Martínez García**  
+**Desarrollado por Gonzalo Martínez García**
 *Full Stack Developer | Software Engineering & Innovation*

@@ -21,7 +21,6 @@ import { useTranslation } from 'react-i18next';
 import { useColorMode } from '@/features/theme-switch';
 import { LanguageSelector } from '@/features/language-switch';
 import { ThemeSelector } from '@/features/theme-switch';
-import { useAuthStore } from '@/entities/user';
 import { useProfile } from '@/entities/profile';
 import { glassEffects } from '@/shared/config';
 
@@ -48,7 +47,6 @@ const Navbar: React.FC = () => {
     const isGlass = mode === 'glass';
     const textColor = isGlass ? '#0b0a1c' : 'inherit';
     
-    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const { profile } = useProfile();
 
     const handleDrawerToggle = () => {
@@ -79,13 +77,6 @@ const Navbar: React.FC = () => {
                         </ListItemButton>
                     </ListItem>
                 ))}
-                {isAuthenticated && (
-                    <ListItem disablePadding>
-                        <ListItemButton component={RouterLink} to="/admin" sx={{ textAlign: 'center' }}>
-                            <ListItemText primary={t('admin.dashboard')} />
-                        </ListItemButton>
-                    </ListItem>
-                )}
             </List>
         </Box>
     );
@@ -164,29 +155,6 @@ const Navbar: React.FC = () => {
 
                             {/* Actions */}
                             <Box sx={{ ml: 2, display: 'flex', gap: 1.5, alignItems: 'center' }}>
-                                {isAuthenticated && (
-                                    <Button
-                                        component={RouterLink}
-                                        to="/admin"
-                                        color="primary"
-                                        variant="outlined"
-                                        size="small"
-                                        sx={{ 
-                                            display: { xs: 'none', lg: 'inline-flex' },
-                                            borderRadius: 20,
-                                            textTransform: 'none',
-                                            fontWeight: 600,
-                                            px: 2,
-                                            py: 0.5,
-                                            minHeight: 32,
-                                            whiteSpace: 'nowrap',
-                                            borderColor: isGlass ? 'primary.main' : undefined,
-                                            color: isGlass ? 'primary.main' : undefined
-                                        }}
-                                    >
-                                        {t('admin.dashboard')}
-                                    </Button>
-                                )}
                                 <LanguageSelector />
                                 <ThemeSelector />
                             </Box>

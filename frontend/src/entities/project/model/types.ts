@@ -6,6 +6,7 @@ export interface Project {
     descriptionEs: string;
     technologies: string[];
     imageUrls: string[];
+    imageUrlsFull?: string[];
     githubUrl?: string;
     liveUrl?: string;
     type: 'WEB' | 'DESKTOP' | 'MOBILE' | 'OTHER';

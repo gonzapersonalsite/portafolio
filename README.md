@@ -1,29 +1,19 @@
-# 🚀 Professional Full Stack Portfolio
+# 🚀 Professional Portfolio
 
-[![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react)](https://react.dev/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.1-6DB33F?logo=springboot)](https://spring.io/projects/spring-boot)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)](https://www.typescriptlang.org/)
-[![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk)](https://openjdk.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)](https://www.postgresql.org/)
-[![Swagger](https://img.shields.io/badge/Swagger-OpenAPI_3.0-yellow?logo=swagger)](https://swagger.io/)
+[![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-7.3-646CFF?logo=vite)](https://vite.dev/)
 [![License: Evaluation Only](https://img.shields.io/badge/License-Evaluation--Only-red)](LICENSE)
 
 🇺🇸 **English** | [🇪🇸 Español](docs/es/README.md)
 
-**Professional Portfolio** is a comprehensive software solution designed for dynamic content management and professional career showcasing. This Full Stack application allows developers to manage their professional profile, projects, and skills through a secure administrative interface while providing an immersive experience for visitors.
+**Professional Portfolio** is a static web application designed to showcase a professional career: projects, experience, skills, and profile — with an immersive, animated interface.
 
-**Live Demo:** [https://mi-portafolio-gonzalo.vercel.app/](https://mi-portafolio-gonzalo.vercel.app/)  
-**API Documentation:** [https://portafolio-9uob.onrender.com/swagger-ui/index.html](https://portafolio-9uob.onrender.com/swagger-ui/index.html)
+**Live Demo:** [https://mi-portafolio-gonzalo.vercel.app/](https://mi-portafolio-gonzalo.vercel.app/)
 
 ---
 
 ## ✨ Key Features
-
-### 👨‍💼 Content Management System (CMS)
-- **No-Code Admin Panel:** Access exclusively via secure login (Spring Security + JWT) for **full CRUD** on Projects, Experiences, Skills, and Profile. **Add/update everything without a single line of code** – live changes instantly visible on the public site.
-- **Real-Time Updates:** Dynamic content always up-to-date for visitors.
-- **Secure Authentication:** Robust login powered by Spring Security and JWT.
-
 
 ### 🎨 Immersive User Experience (UX)
 - **Liquid Glass Interface:** Cutting-edge visual style inspired by visionOS, featuring advanced glassmorphism and neon accents.
@@ -31,57 +21,61 @@
 - **Theme Engine:** Centralized system supporting Light, Dark, and the exclusive Liquid Glass mode.
 - **Dynamic Localization:** Full bilingual support (Spanish/English) with instant interface and content translation.
 
-### 📦 Project Intelligence
-- **GitHub Integration:** Automated fetching of the latest binary releases (.exe, .apk) directly from GitHub repositories.
-- **Responsive Design:** Fluid layouts optimized for desktop, tablet, and mobile devices.
-- **Animated Backgrounds:** High-performance CSS animations for a modern, interactive feel.
+### 📦 Content as Data
+- **Static JSON content model:** projects, skills, experience, profile, and spoken languages live in versioned JSON files — no CMS, no API, no database. Adding a project is a data change, not a code change.
+- **Self-hosted images:** all project and profile images are served from the site itself — zero third-party image hosts.
+- **Contact form:** powered by EmailJS (browser-only, no backend required).
+- **Responsive Design:** fluid layouts optimized for desktop, tablet, and mobile devices.
+- **Animated Backgrounds:** high-performance CSS animations for a modern, interactive feel.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** React 19 + TypeScript (Vite)
+- **Frontend:** React + TypeScript (Vite)
 - **UI Framework:** Material UI (MUI) with deep theme customization
-- **Backend:** Java 25 + Spring Boot 4.1
-- **Security:** Spring Security & JWT (JSON Web Tokens)
-- **Database:** PostgreSQL (Aiven)
-- **State Management:** Zustand
-- **API Documentation:** Swagger / OpenAPI 3.0
-- **Build Tools:** Gradle (Backend) & pnpm (Frontend)
+- **Routing:** React Router with lazy-loaded pages
+- **i18n:** i18next + react-i18next
+- **Contact:** EmailJS (browser-only)
+- **Testing:** Vitest + Testing Library
+- **Build Tools:** pnpm
 
 ---
 
 ## 🏗️ Architecture & Principles
 
-The project follows a modern **Full Stack Architecture**, prioritizing scalability, security, and maintainability.
+The project follows a modern **static frontend architecture**, prioritizing maintainability, performance, and zero operational cost.
 
-- **Clean Hexagonal Architecture:** Strict Ports & Adapters pattern ensuring pure Java domain, isolated from frameworks and databases.
 - **Feature-Sliced Frontend:** 6-layer FSD architecture (`app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/`) with strict import boundaries enforced by ESLint.
-- **Automated CI/CD:** Continuous deployment pipeline using Vercel (Frontend) and Render (Backend).
-- **Data Persistence:** Robust schema management with Spring Data JPA (via outbound adapters) and PostgreSQL.
+- **Static Content Model:** bilingual content in JSON per entity, validated by data-integrity tests.
+- **Automated CI/CD:** continuous deployment pipeline using Vercel.
 
-📖 **[Architecture Guide](ARCHITECTURE.md)** — Patterns, design decisions, and API documentation.
+📖 **[Architecture Guide](ARCHITECTURE.md)** — Patterns and design decisions.
 🛠️ **[Operations Guide](OPERATIONS.md)** — Deployment, CI/CD, environment variables, and local setup.
 
 ---
 
 ## 🚀 Running Locally
 
-This project is containerized for easy deployment and local development.
-
 ### Prerequisites
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
-- `.env` file configured with necessary environment variables (see `OPERATIONS.md`).
+- Node.js (see `frontend/package.json` for the managed version) and pnpm.
 
 ### Start Application
 ```bash
-docker compose up -d
+cd frontend
+pnpm install
+pnpm dev
 ```
 
 **Access the application:**
 - Frontend: [http://localhost:5173/](http://localhost:5173/)
-- Backend API: [http://localhost:8080](http://localhost:8080)
-- Swagger UI: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+
+### Quality Gates
+```bash
+pnpm lint     # ESLint (FSD rules + TS rules)
+pnpm test     # Vitest (unit + content-integrity tests)
+pnpm build    # TypeScript compilation + Vite production build
+```
 
 ---
 
@@ -96,5 +90,5 @@ This software is **proprietary** and is provided for **evaluation purposes only*
 
 ---
 
-**Developed by Gonzalo Martínez García**  
+**Developed by Gonzalo Martínez García**
 *Full Stack Developer | Software Engineering & Innovation*

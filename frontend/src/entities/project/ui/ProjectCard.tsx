@@ -24,8 +24,6 @@ import { i18n } from '@/shared/config';
 import { ImageWithFallback, RichTextRenderer, ScrollableContent } from '@/shared/ui';
 import ProjectGallery from '@/entities/project/ui/ProjectGallery';
 
-import { formatImageUrl } from '@/shared/lib/imageUtils';
-
 interface ProjectCardProps {
     project: Project;
 }
@@ -39,7 +37,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     const title = language === 'en' ? project.titleEn : project.titleEs;
     const description = language === 'en' ? project.descriptionEn : project.descriptionEs;
     const imageUrls = Array.isArray(project.imageUrls) ? project.imageUrls : [];
-    const coverImageUrl = imageUrls.length > 0 && imageUrls[0] ? formatImageUrl(imageUrls[0]) : '';
+    const coverImageUrl = imageUrls.length > 0 && imageUrls[0] ? imageUrls[0] : '';
 
     const handleOpenGallery = () => {
         if (imageUrls.length > 0) {
@@ -80,6 +78,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                     alt={title}
                     type="project"
                     aspectRatio="16/9"
+                    loading="lazy"
                     sx={{
                         width: '100%',
                         backgroundColor: 'rgba(0,0,0,0.05)',
@@ -88,7 +87,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                             transform: 'scale(1.02)'
                         }
                     }}
-                    referrerPolicy="no-referrer"
                 />
                 
                 {imageUrls.length > 0 && (
@@ -206,6 +204,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                     open={galleryOpen}
                     onClose={() => setGalleryOpen(false)}
                     imageUrls={imageUrls}
+                    imageUrlsFull={project.imageUrlsFull}
                     title={title}
                 />
             )}

@@ -9,8 +9,8 @@ import { useLanguage } from '@/features/language-switch';
 import { getAllSkills } from '@/entities/skill';
 import { getAllSpokenLanguages } from '@/entities/spoken-language';
 import { getProfile } from '@/entities/profile';
-import { formatImageUrl, useApiData, usePageMeta } from '@/shared/lib';
-import { AboutSkeleton, PageHeaderSkeleton, ImageWithFallback, RichTextRenderer } from '@/shared/ui';
+import { useContent, usePageMeta } from '@/shared/lib';
+import { ImageWithFallback, RichTextRenderer } from '@/shared/ui';
 
 const AboutPage: React.FC = () => {
     const { t } = useTranslation();
@@ -22,20 +22,9 @@ const AboutPage: React.FC = () => {
         description: t('seo.about.description'),
     });
 
-    const { data: skills, loading: skillsLoading } = useApiData(
-        () => getAllSkills(),
-        '/public/skills'
-    );
-    const { data: spokenLanguages, loading: languagesLoading } = useApiData(
-        () => getAllSpokenLanguages(),
-        '/public/spoken-languages'
-    );
-    const { data: profile, loading: profileLoading } = useApiData(
-        () => getProfile(),
-        '/public/profile'
-    );
-
-    const loading = skillsLoading || languagesLoading || profileLoading;
+    const { data: skills } = useContent(() => getAllSkills());
+    const { data: spokenLanguages } = useContent(() => getAllSpokenLanguages());
+    const { data: profile } = useContent(() => getProfile());
 
     const competencies = useMemo(() =>
         skills ? skills.filter(s => s.level >= 70) : [],
@@ -45,17 +34,6 @@ const AboutPage: React.FC = () => {
     const getLocalizedText = (en: string, es: string) => {
         return language === 'en' ? (en || es) : (es || en);
     };
-
-    if (loading) {
-        return (
-            <Box sx={{ py: 8 }}>
-                <Container maxWidth="lg">
-                    <PageHeaderSkeleton />
-                    <AboutSkeleton />
-                </Container>
-            </Box>
-        );
-    }
 
     return (
         <Box sx={{ py: 8 }}>
@@ -70,9 +48,11 @@ const AboutPage: React.FC = () => {
                 <Grid container spacing={6} sx={{ mt: 2 }}>
                     <Grid size={{ xs: 12, md: 5 }}>
                         <ImageWithFallback
-                            src={formatImageUrl(profile?.imageUrl)}
+                            src={profile?.imageUrl}
                             alt={language === 'en' ? profile?.fullNameEn || t('home.name') : profile?.fullNameEs || t('home.name')}
                             type="profile"
+                            aspectRatio="2/3"
+                            loading="lazy"
                             sx={{
                                 maxWidth: 400,
                                 margin: '0 auto',

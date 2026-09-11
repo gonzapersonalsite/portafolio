@@ -1,10 +1,6 @@
 {
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://portafolio-9uob.onrender.com/api/$1"
-    },
-    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
@@ -29,7 +25,7 @@
       ]
     },
     {
-      "source": "/favicon.ico",
+      "source": "/images/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -38,11 +34,11 @@
       ]
     },
     {
-      "source": "/api/(.*)",
+      "source": "/favicon.ico",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "no-store, no-cache, must-revalidate"
+          "value": "public, max-age=604800, s-maxage=604800, immutable"
         }
       ]
     }

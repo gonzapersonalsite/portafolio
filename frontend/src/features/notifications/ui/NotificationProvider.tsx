@@ -1,7 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Snackbar, Alert, type AlertColor, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { notificationEvents } from '@/shared/lib/notificationEvents';
 import { NotificationContext } from '@/features/notifications/model/NotificationContext';
 
 export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -18,16 +17,6 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         setDuration(dur);
         setOpen(true);
     }, []);
-
-    useEffect(() => {
-        const unsubscribe = notificationEvents.subscribe(({ message, severity }) => {
-            showNotification(message, severity);
-        });
-        
-        return () => {
-            unsubscribe();
-        };
-    }, [showNotification]);
 
     const handleClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') return;

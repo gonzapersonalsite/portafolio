@@ -10,40 +10,18 @@ import { useNotification } from '@/features/notifications';
 import { useLanguage } from '@/features/language-switch';
 import { useProfile } from '@/entities/profile';
 import { usePageMeta } from '@/shared/lib';
-import { ContactSkeleton, PageHeaderSkeleton, ErrorState } from '@/shared/ui';
 
 const ContactPage: React.FC = () => {
     const { language } = useLanguage();
     const { t } = useTranslation();
     const theme = useTheme();
     const { showNotification } = useNotification();
-    const { profile, loading, error, refetch } = useProfile();
+    const { profile } = useProfile();
 
     usePageMeta({
         title: t('seo.contact.title'),
         description: t('seo.contact.description'),
     });
-
-    if (loading) {
-        return (
-            <Box sx={{ py: 8 }}>
-                <Container maxWidth="lg">
-                    <PageHeaderSkeleton />
-                    <ContactSkeleton />
-                </Container>
-            </Box>
-        );
-    }
-
-    if (error) {
-        return (
-            <Box sx={{ py: 8 }}>
-                <Container maxWidth="lg">
-                    <ErrorState message={error} onRetry={refetch} />
-                </Container>
-            </Box>
-        );
-    }
 
     const socialLinks = [
         { icon: <GitHubIcon fontSize="large" />, url: profile?.githubUrl || "https://github.com/gonzapersonalsite", label: "GitHub" },

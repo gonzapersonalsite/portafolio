@@ -13,10 +13,6 @@ vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: vi.fn((k: string) => k) }),
 }))
 
-vi.mock('@/shared/lib/notificationEvents', () => ({
-  notificationEvents: { subscribe: vi.fn(() => vi.fn()) },
-}))
-
 const wrapper = ({ children }: { children: React.ReactNode }) => <NotificationProvider>{children}</NotificationProvider>
 
 describe('useNotification', () => {

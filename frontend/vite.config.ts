@@ -36,12 +36,6 @@ export default defineConfig({
     hmr: {
       clientPort: 5173,
     },
-    proxy: {
-      '/api': {
-        target: process.env.VITE_API_TARGET || 'http://localhost:8080',
-        changeOrigin: true,
-      },
-    },
   },
   build: {
     outDir: 'dist',

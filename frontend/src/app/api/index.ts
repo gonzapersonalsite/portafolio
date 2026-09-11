@@ -1,1 +1,0 @@
-export { setupInterceptors } from './interceptors';

@@ -1,0 +1,29 @@
+[
+  {
+    "id": "29cd2b74-8bab-47dd-8fc8-2535c8e32897",
+    "nameEn": "Spanish",
+    "nameEs": "Español",
+    "levelEn": "Native",
+    "levelEs": "Nativo",
+    "proficiency": 100,
+    "order": 1
+  },
+  {
+    "id": "640aac6e-030a-480b-988d-34718553f103",
+    "nameEn": "Catalan",
+    "nameEs": "Catalán",
+    "levelEn": "Intermediate",
+    "levelEs": "Intermedio",
+    "proficiency": 75,
+    "order": 2
+  },
+  {
+    "id": "44001c82-156d-4029-818a-ac8c16dc7caf",
+    "nameEn": "English",
+    "nameEs": "Inglés",
+    "levelEn": "Basic",
+    "levelEs": "Básico",
+    "proficiency": 30,
+    "order": 3
+  }
+]

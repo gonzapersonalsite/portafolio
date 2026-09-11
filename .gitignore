@@ -3,16 +3,9 @@
 **/.pnpm-store
 **/dist
 **/build
-**/.gradle
 **/.DS_Store
 **/.idea
 **/.vscode
-
-# Database Dumps
-*.sql
-!**/db/migration/*.sql
-backup.sql
-backend/backups/*
 
 # Environment Variables
 **/.env
