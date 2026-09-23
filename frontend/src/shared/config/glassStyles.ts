@@ -30,13 +30,3 @@ export const glassEffects = {
   outerBoxShadow: `0 20px 40px ${glassColors.outerShadow}`,
   textShadow: (color: string) => `0 0 30px ${color}`,
 };
-
-export const glassAnimations = {
-  liquid: `
-    @keyframes liquidGradient {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-  `,
-};

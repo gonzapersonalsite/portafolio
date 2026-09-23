@@ -30,7 +30,6 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
 
     const handleCloseGallery = () => {
         onClose();
-        setTimeout(() => setZoomLevel(1), 300);
     };
 
     const handleNextImage = () => {

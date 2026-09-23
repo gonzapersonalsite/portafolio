@@ -18,11 +18,11 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useColorMode } from '@/features/theme-switch';
 import { LanguageSelector } from '@/features/language-switch';
-import { ThemeSelector } from '@/features/theme-switch';
-import { useProfile } from '@/entities/profile';
+import { ThemeSelector, useColorMode } from '@/features/theme-switch';
+import { getProfile } from '@/entities/profile';
 import { glassEffects } from '@/shared/config';
+import { useContent } from '@/shared/lib';
 
 interface Props {
     children: React.ReactElement;
@@ -47,7 +47,7 @@ const Navbar: React.FC = () => {
     const isGlass = mode === 'glass';
     const textColor = isGlass ? '#0b0a1c' : 'inherit';
     
-    const { profile } = useProfile();
+    const { data: profile } = useContent(() => getProfile());
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
@@ -95,7 +95,7 @@ const Navbar: React.FC = () => {
                         <Toolbar disableGutters>
                             <IconButton
                                 color="inherit"
-                                aria-label="open drawer"
+                                aria-label={t('nav.openMenu')}
                                 edge="start"
                                 onClick={handleDrawerToggle}
                                 sx={{ mr: 2, display: { lg: 'none' } }}

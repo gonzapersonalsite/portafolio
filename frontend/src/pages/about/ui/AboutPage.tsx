@@ -9,7 +9,7 @@ import { useLanguage } from '@/features/language-switch';
 import { getAllSkills } from '@/entities/skill';
 import { getAllSpokenLanguages } from '@/entities/spoken-language';
 import { getProfile } from '@/entities/profile';
-import { useContent, usePageMeta } from '@/shared/lib';
+import { getLocalizedText, useContent, usePageMeta } from '@/shared/lib';
 import { ImageWithFallback, RichTextRenderer } from '@/shared/ui';
 
 const AboutPage: React.FC = () => {
@@ -31,10 +31,6 @@ const AboutPage: React.FC = () => {
         [skills]
     );
 
-    const getLocalizedText = (en: string, es: string) => {
-        return language === 'en' ? (en || es) : (es || en);
-    };
-
     return (
         <Box sx={{ py: 8 }}>
             <Container maxWidth="lg">
@@ -42,14 +38,14 @@ const AboutPage: React.FC = () => {
                     {t('nav.about', "ABOUT ME")}
                 </Typography>
                 <Typography variant="h2" component="h1" fontWeight="800" gutterBottom>
-                    {getLocalizedText(profile?.aboutTitleEn || "", profile?.aboutTitleEs || "") || t('about.title')}
+                    {getLocalizedText(language, profile?.aboutTitleEn, profile?.aboutTitleEs) || t('about.title')}
                 </Typography>
 
                 <Grid container spacing={6} sx={{ mt: 2 }}>
                     <Grid size={{ xs: 12, md: 5 }}>
                         <ImageWithFallback
                             src={profile?.imageUrl}
-                            alt={language === 'en' ? profile?.fullNameEn || t('home.name') : profile?.fullNameEs || t('home.name')}
+                            alt={getLocalizedText(language, profile?.fullNameEn, profile?.fullNameEs) || t('home.name')}
                             type="profile"
                             aspectRatio="2/3"
                             loading="lazy"
@@ -78,16 +74,16 @@ const AboutPage: React.FC = () => {
 
                     <Grid size={{ xs: 12, md: 7 }}>
                         <Typography variant="h5" component="h2" gutterBottom fontWeight="bold">
-                            {getLocalizedText(profile?.aboutIntroTitleEn || "", profile?.aboutIntroTitleEs || "") || t('about.jobTitle')}
+                            {getLocalizedText(language, profile?.aboutIntroTitleEn, profile?.aboutIntroTitleEs) || t('about.jobTitle')}
                         </Typography>
                         
                         <RichTextRenderer 
-                            text={getLocalizedText(profile?.aboutSummaryEn || "", profile?.aboutSummaryEs || "") || t('about.summary')} 
+                            text={getLocalizedText(language, profile?.aboutSummaryEn, profile?.aboutSummaryEs) || t('about.summary')}
                         />
 
                         <Box sx={{ mt: 2 }}>
                             <RichTextRenderer 
-                                text={getLocalizedText(profile?.aboutPhilosophyEn || "", profile?.aboutPhilosophyEs || "") || t('about.philosophy')} 
+                                text={getLocalizedText(language, profile?.aboutPhilosophyEn, profile?.aboutPhilosophyEs) || t('about.philosophy')}
                             />
                         </Box>
 
@@ -96,7 +92,7 @@ const AboutPage: React.FC = () => {
                                 {t('about.sentenceTitle')}
                             </Typography>
                             <Typography variant="body1" sx={{ fontStyle: 'italic', fontSize: '1.1rem' }}>
-                                "{getLocalizedText(profile?.sentenceEn || "", profile?.sentenceEs || "") || t('about.sentence')}"
+                                "{getLocalizedText(language, profile?.sentenceEn, profile?.sentenceEs) || t('about.sentence')}"
                             </Typography>
                         </Box>
 
@@ -113,7 +109,7 @@ const AboutPage: React.FC = () => {
                                                 {competencies
                                                     .filter(s => s.category.toLowerCase() === 'frontend')
                                                     .slice(0, 3)
-                                                    .map(s => language === 'en' ? s.nameEn : s.nameEs)
+                                                    .map(s => getLocalizedText(language, s.nameEn, s.nameEs))
                                                     .join(', ')}
                                             </Typography>
                                         </Box>
@@ -130,7 +126,7 @@ const AboutPage: React.FC = () => {
                                                 {competencies
                                                     .filter(s => s.category.toLowerCase() === 'backend' || s.category.toLowerCase() === 'database')
                                                     .slice(0, 3)
-                                                    .map(s => language === 'en' ? s.nameEn : s.nameEs)
+                                                    .map(s => getLocalizedText(language, s.nameEn, s.nameEs))
                                                     .join(', ')}
                                             </Typography>
                                         </Box>
@@ -139,45 +135,42 @@ const AboutPage: React.FC = () => {
                             </Grid>
                         </Grid>
 
-                        <Box sx={{ mt: 4 }}>
-                            <Typography variant="h6" gutterBottom fontWeight="bold" sx={{ mt: 2 }}>
-                                {t('about.skills', "Core Competencies")}
-                            </Typography>
-                            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ mt: 1 }}>
-                                {competencies.length > 0 ? (
-                                    competencies.map((skill) => (
-                                        <Chip key={skill.id} label={language === 'en' ? skill.nameEn : skill.nameEs} variant="outlined" sx={{ m: 0.5 }} />
-                                    ))
-                                ) : (
-                                    <Typography variant="body2" color="text.secondary">
-                                        {t('common.loading', "Loading...")}
-                                    </Typography>
-                                )}
-                            </Stack>
-                        </Box>
+                        {competencies.length > 0 && (
+                            <Box sx={{ mt: 4 }}>
+                                <Typography variant="h6" gutterBottom fontWeight="bold" sx={{ mt: 2 }}>
+                                    {t('about.skills', "Core Competencies")}
+                                </Typography>
+                                <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ mt: 1 }}>
+                                    {competencies.map((skill) => (
+                                        <Chip
+                                            key={skill.id}
+                                            label={getLocalizedText(language, skill.nameEn, skill.nameEs)}
+                                            variant="outlined"
+                                            sx={{ m: 0.5 }}
+                                        />
+                                    ))}
+                                </Stack>
+                            </Box>
+                        )}
 
-                        <Box sx={{ mt: 4 }}>
-                            <Typography variant="h6" component="h2" gutterBottom fontWeight="bold" sx={{ mt: 2 }}>
-                                {t('about.languages', "Languages")}
-                            </Typography>
-                            <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
-                                {(spokenLanguages ?? []).length > 0 ? (
-                                    (spokenLanguages ?? []).map((lang) => (
+                        {spokenLanguages.length > 0 && (
+                            <Box sx={{ mt: 4 }}>
+                                <Typography variant="h6" component="h2" gutterBottom fontWeight="bold" sx={{ mt: 2 }}>
+                                    {t('about.languages', "Languages")}
+                                </Typography>
+                                <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
+                                    {spokenLanguages.map((lang) => (
                                         <Chip
                                             key={lang.id}
-                                            label={`${language === 'en' ? lang.nameEn : lang.nameEs} (${language === 'en' ? lang.levelEn : lang.levelEs})`}
+                                            label={`${getLocalizedText(language, lang.nameEn, lang.nameEs)} (${getLocalizedText(language, lang.levelEn, lang.levelEs)})`}
                                             color="default"
                                             variant="outlined"
                                             sx={{ fontWeight: 500 }}
                                         />
-                                    ))
-                                ) : (
-                                    <Typography variant="body2" color="text.secondary">
-                                        {t('common.loading', "Loading...")}
-                                    </Typography>
-                                )}
-                            </Stack>
-                        </Box>
+                                    ))}
+                                </Stack>
+                            </Box>
+                        )}
                     </Grid>
                 </Grid>
             </Container>

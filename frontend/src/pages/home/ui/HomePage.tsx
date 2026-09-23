@@ -11,7 +11,7 @@ import { ProjectCard, getFeaturedProjects } from '@/entities/project';
 import { getProfile } from '@/entities/profile';
 import { useLanguage } from '@/features/language-switch';
 import { Link as RouterLink } from 'react-router-dom';
-import { useContent, usePageMeta } from '@/shared/lib';
+import { getLocalizedText, useContent, usePageMeta } from '@/shared/lib';
 import { ImageWithFallback, RichTextRenderer, EmptyState } from '@/shared/ui';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
@@ -34,10 +34,6 @@ const HomePage: React.FC = () => {
     const { data: featuredProjects } = useContent(() => getFeaturedProjects());
     const { data: profile } = useContent(() => getProfile());
 
-    const getLocalizedText = (en: string, es: string) => {
-        return language === 'en' ? (en || es) : (es || en);
-    };
-
     return (
         <Box sx={{ overflow: 'hidden' }}>
             <Box
@@ -59,7 +55,7 @@ const HomePage: React.FC = () => {
                                 color="text.primary"
                                 sx={{ letterSpacing: 2, fontWeight: 'bold' }}
                             >
-                                {getLocalizedText(profile?.greetingEn || "", profile?.greetingEs || "")}
+                                {getLocalizedText(language, profile?.greetingEn, profile?.greetingEs)}
                             </Typography>
                             <Typography
                                 variant="h2"
@@ -74,15 +70,15 @@ const HomePage: React.FC = () => {
                                     WebkitTextFillColor: 'transparent',
                                 }}
                             >
-                                {language === 'en' ? profile?.fullNameEn || t('home.name') : profile?.fullNameEs || t('home.name')}
+                                {getLocalizedText(language, profile?.fullNameEn, profile?.fullNameEs) || t('home.name')}
                             </Typography>
                             <Typography variant="h4" component="p" color="text.secondary" gutterBottom sx={{ mb: 4 }}>
-                                {getLocalizedText(profile?.subtitleEn || "", profile?.subtitleEs || "") || t('home.jobTitle')}
+                                {getLocalizedText(language, profile?.subtitleEn, profile?.subtitleEs) || t('home.jobTitle')}
                             </Typography>
                             
                             <Box sx={{ maxWidth: 600, mb: 4 }}>
                                 <RichTextRenderer 
-                                    text={getLocalizedText(profile?.descriptionEn || "", profile?.descriptionEs || "") || t('home.description')}
+                                    text={getLocalizedText(language, profile?.descriptionEn, profile?.descriptionEs) || t('home.description')}
                                 />
                             </Box>
 
@@ -202,7 +198,7 @@ const HomePage: React.FC = () => {
                     <Grid size={{ xs: 12, md: 6 }}>
                         <ImageWithFallback
                             src={profile?.imageUrl}
-                            alt={(language === 'en' ? profile?.fullNameEn : profile?.fullNameEs) || 'Profile'}
+                            alt={getLocalizedText(language, profile?.fullNameEn, profile?.fullNameEs) || 'Profile'}
                             type="profile"
                             aspectRatio="2/3"
                             loading="lazy"
@@ -223,11 +219,11 @@ const HomePage: React.FC = () => {
                             {t('about.subtitle', "WHO I AM")}
                         </Typography>
                         <Typography variant="h3" component="h2" gutterBottom fontWeight="bold" sx={{ mb: 3 }}>
-                            {getLocalizedText(profile?.aboutTitleEn || "", profile?.aboutTitleEs || "") || t('about.title')}
+                            {getLocalizedText(language, profile?.aboutTitleEn, profile?.aboutTitleEs) || t('about.title')}
                         </Typography>
                         <Box sx={{ mb: 3, '& p': { fontSize: '1.1rem' } }}>
                             <RichTextRenderer 
-                                text={getLocalizedText(profile?.aboutSummaryEn || "", profile?.aboutSummaryEs || "") || t('about.summary')}
+                                text={getLocalizedText(language, profile?.aboutSummaryEn, profile?.aboutSummaryEs) || t('about.summary')}
                             />
                         </Box>
                         <Button

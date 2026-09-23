@@ -7,9 +7,12 @@ export interface ColorModeContextType {
     toggleColorMode: (newMode?: ColorMode) => void;
 }
 
-export const ColorModeContext = createContext<ColorModeContextType>({
-    mode: 'light',
-    toggleColorMode: () => { },
-});
+export const ColorModeContext = createContext<ColorModeContextType | undefined>(undefined);
 
-export const useColorMode = () => useContext(ColorModeContext);
+export const useColorMode = () => {
+    const context = useContext(ColorModeContext);
+    if (context === undefined) {
+        throw new Error('useColorMode must be used within a ThemeProvider');
+    }
+    return context;
+};

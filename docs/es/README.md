@@ -1,8 +1,5 @@
 # 🚀 Portafolio Profesional
 
-[![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-7.3-646CFF?logo=vite)](https://vite.dev/)
 [![License: Evaluation Only](https://img.shields.io/badge/License-Evaluation--Only-red)](LICENSE)
 
 🇺🇸 [English](../README.md) | **🇪🇸 Español**

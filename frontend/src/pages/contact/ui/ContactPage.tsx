@@ -8,15 +8,15 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { ContactForm } from '@/features/contact-form';
 import { useNotification } from '@/features/notifications';
 import { useLanguage } from '@/features/language-switch';
-import { useProfile } from '@/entities/profile';
-import { usePageMeta } from '@/shared/lib';
+import { getProfile } from '@/entities/profile';
+import { useContent, usePageMeta } from '@/shared/lib';
 
 const ContactPage: React.FC = () => {
     const { language } = useLanguage();
     const { t } = useTranslation();
     const theme = useTheme();
     const { showNotification } = useNotification();
-    const { profile } = useProfile();
+    const { data: profile } = useContent(() => getProfile());
 
     usePageMeta({
         title: t('seo.contact.title'),

@@ -11,6 +11,7 @@ const resources = {
                 experience: 'Experience',
                 projects: 'Projects',
                 contact: 'Contact',
+                openMenu: 'Open menu',
             },
             home: {
                 cta: 'View Projects',
@@ -100,7 +101,6 @@ const resources = {
                 }
             },
             common: {
-                loading: 'Loading...',
                 error: 'An error occurred',
                 present: 'Present',
                 sending: 'Sending...',
@@ -159,6 +159,7 @@ const resources = {
                 experience: 'Experiencia',
                 projects: 'Proyectos',
                 contact: 'Contacto',
+                openMenu: 'Abrir menú',
             },
             home: {
                 cta: 'Ver Proyectos',
@@ -248,7 +249,6 @@ const resources = {
                 }
             },
             common: {
-                loading: 'Cargando...',
                 error: 'Ocurrió un error',
                 present: 'Presente',
                 sending: 'Enviando...',

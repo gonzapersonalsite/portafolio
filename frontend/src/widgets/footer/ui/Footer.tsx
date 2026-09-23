@@ -6,8 +6,9 @@ import EmailIcon from '@mui/icons-material/Email';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/features/language-switch';
 import { useColorMode } from '@/features/theme-switch';
-import { useProfile } from '@/entities/profile';
+import { getProfile } from '@/entities/profile';
 import { glassColors, glassEffects } from '@/shared/config';
+import { useContent } from '@/shared/lib';
 
 const Footer: React.FC = () => {
     const { t } = useTranslation();
@@ -17,7 +18,7 @@ const Footer: React.FC = () => {
     const currentYear = new Date().getFullYear();
     const isGlass = mode === 'glass';
 
-    const { profile } = useProfile();
+    const { data: profile } = useContent(() => getProfile());
 
     const socialLinks = {
         github: profile.githubUrl,

@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
+import { renderHook } from '@testing-library/react'
 import { useColorMode } from './ThemeContext'
 
 describe('useColorMode', () => {
@@ -7,8 +8,8 @@ describe('useColorMode', () => {
   })
 
   it('throws when used outside provider', () => {
-    let error: Error | null = null
-    try { useColorMode() } catch (e) { error = e as Error }
-    expect(error).toBeTruthy()
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    expect(() => renderHook(() => useColorMode())).toThrow('useColorMode must be used within a ThemeProvider')
+    spy.mockRestore()
   })
 })

@@ -1,8 +1,5 @@
 # 🛠️ Operations Guide
 
-[![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-7.3-646CFF?logo=vite)](https://vite.dev/)
 [![License: Evaluation Only](https://img.shields.io/badge/License-Evaluation--Only-red)](LICENSE)
 
 🇺🇸 **English** | [🇪🇸 Español](docs/es/OPERATIONS.md)
@@ -39,7 +36,7 @@ Pipeline details:
 - `VITE_EMAILJS_PUBLIC_KEY`: EmailJS public key.
 - `PNPM_APPROVE_BUILDS`: set to `true` in Vercel to allow esbuild build scripts (pnpm v11+ requirement).
 
-Local development: place the three `VITE_EMAILJS_*` variables in `frontend/.env.local` (gitignored). Vercel keeps the production values in the project dashboard.
+Local development: place the three `VITE_EMAILJS_*` variables in `frontend/.env.local` (gitignored; expected keys are documented in `frontend/.env.example`). Vercel keeps the production values in the project dashboard.
 
 ---
 

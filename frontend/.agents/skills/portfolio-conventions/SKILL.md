@@ -83,13 +83,14 @@ const { data: projects } = useContent(() => getAllProjects());
 - **Detection**: localStorage → navigator.language → fallback `en`
 - **Translation files**: inline in `shared/config/i18n.ts`. UI strings only; content text lives in the JSON data (En/Es fields).
 - Keep `i18n.ts` pruned: a key must be reachable from code via `t()`/`i18n.t()`; remove unused keys when touching components.
+- Bilingual content fields (En/Es) are resolved with `getLocalizedText(language, en, es)` from `@/shared/lib`. Do not re-implement the En/Es fallback inline.
 
 ## Theming
 
 - **Three modes**: `light`, `dark`, `glass` (Liquid Glass aesthetic)
 - **Glass mode**: MUI dark base + glass morphism effects (backdrop-filter blur, neon colors, text shadows)
 - **Theme factory**: `createAppTheme(mode)` in `shared/config/theme.ts`
-- **Glass constants**: `glassColors`, `glassEffects`, `glassAnimations` in `shared/config/glassStyles.ts`
+- **Glass constants**: `glassColors`, `glassEffects` in `shared/config/glassStyles.ts`
 - **Neon colors**: turquoise `#5DE0E6`, violet `#8A6EFF`, pink `#FF7B9C`
 
 ## Testing
@@ -111,7 +112,7 @@ const { data: projects } = useContent(() => getAllProjects());
 ## Security
 
 - **Scripts**: `.npmrc` with `only-built-dependencies[]=esbuild` (pnpm v11 security)
-- **Contact form**: EmailJS in the browser (keys are public by design); no secrets stored in the repo
+- **Contact form**: EmailJS in the browser (keys are public by design); no secrets stored in the repo. The network call lives in `features/contact-form/api/contactApi.ts` and is bounded by a 15s timeout; form state and notifications live in `features/contact-form/model/useContactForm.ts`.
 - No authentication surface exists in this app
 
 ## File Organization (FSD)
