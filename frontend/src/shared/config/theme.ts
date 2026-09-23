@@ -29,7 +29,7 @@ const getThemeOptions = (mode: 'light' | 'dark' | 'glass'): ThemeOptions => {
             } : {}),
         },
         typography: {
-            fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+            fontFamily: '"Inter Variable", "Inter", "Roboto", "Helvetica", "Arial", sans-serif',
             h1: {
                 fontWeight: 700,
                 fontSize: '3.5rem',

@@ -28,6 +28,29 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
         }
     }, [open]);
 
+    useEffect(() => {
+        if (!open || !imageUrls || imageUrls.length === 0) return;
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'ArrowLeft' && imageUrls.length > 1) {
+                setCurrentImageIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
+                setZoomLevel(1);
+            } else if (event.key === 'ArrowRight' && imageUrls.length > 1) {
+                setCurrentImageIndex((prev) => (prev + 1) % imageUrls.length);
+                setZoomLevel(1);
+            } else if (event.key === '+' || event.key === '=') {
+                setZoomLevel((prev) => Math.min(prev + 0.5, 4));
+            } else if (event.key === '-') {
+                setZoomLevel((prev) => Math.max(prev - 0.5, 1));
+            } else if (event.key === '0') {
+                setZoomLevel(1);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [open, imageUrls]);
+
     const handleCloseGallery = () => {
         onClose();
     };
@@ -159,7 +182,7 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
                     }}>
                         <img 
                             src={(imageUrlsFull && imageUrlsFull[currentImageIndex]) || imageUrls[currentImageIndex]} 
-                            alt={`${title} - ${currentImageIndex + 1}`}
+                            alt={`${title} - ${currentImageIndex + 1}/${imageUrls.length}`}
                             style={{ 
                                 maxWidth: '100%', 
                                 maxHeight: '100%', 

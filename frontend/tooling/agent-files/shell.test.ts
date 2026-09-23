@@ -31,6 +31,22 @@ describe('injectAgentBlock', () => {
       '<link rel="alternate" type="text/markdown" hreflang="es" href="https://mi-portafolio-gonzalo.vercel.app/index.es.md">',
     );
   });
+
+  it('embeds valid Person structured data', () => {
+    const html = injectAgentBlock(INDEX_HTML, HOME_ROUTE);
+    const match = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+
+    expect(match).not.toBeNull();
+
+    const data = JSON.parse(match?.[1] ?? '') as {
+      '@type': string;
+      url: string;
+      sameAs: string[];
+    };
+    expect(data['@type']).toBe('Person');
+    expect(data.url).toBe('https://mi-portafolio-gonzalo.vercel.app/');
+    expect(data.sameAs).toContain('https://github.com/gonzapersonalsite');
+  });
 });
 
 describe('buildRouteShell', () => {

@@ -16,6 +16,7 @@ This skill documents project-specific decisions for the Portfolio application. I
 | Email | EmailJS |
 | Testing | Vitest + Testing Library |
 | CSS | MUI `sx` prop + Emotion + CSS co-located in `ui/` |
+| Typography | Inter Variable via `@fontsource-variable/inter`; no external font CDNs |
 
 Versions live in `frontend/package.json`; do not duplicate them in documentation.
 

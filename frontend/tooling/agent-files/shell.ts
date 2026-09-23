@@ -1,3 +1,4 @@
+import { getProfile } from '../../src/entities/profile/api/profileApi';
 import { absoluteUrl, twinPathOf, type RouteSpec } from './routes';
 
 const BLOCK_PATTERN = /<!-- agent-files:start -->[\s\S]*?<!-- agent-files:end -->/;
@@ -9,12 +10,30 @@ const escapeHtmlAttribute = (value: string): string =>
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
 
+const personStructuredData = (): string => {
+  const profile = getProfile();
+
+  return JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: profile.fullNameEn,
+    jobTitle: profile.subtitleEn,
+    url: absoluteUrl('/'),
+    image: absoluteUrl(profile.imageUrl),
+    email: profile.email,
+    sameAs: [profile.githubUrl, profile.linkedinUrl],
+  });
+};
+
 const agentBlock = (route: RouteSpec): string =>
   [
     '<!-- agent-files:start -->',
     `<link rel="canonical" href="${absoluteUrl(route.path)}">`,
     `<link rel="alternate" type="text/markdown" href="${absoluteUrl(twinPathOf(route, 'en'))}">`,
     `<link rel="alternate" type="text/markdown" hreflang="es" href="${absoluteUrl(twinPathOf(route, 'es'))}">`,
+    '<script type="application/ld+json">',
+    personStructuredData(),
+    '</script>',
     '<!-- agent-files:end -->',
   ].join('\n');
 

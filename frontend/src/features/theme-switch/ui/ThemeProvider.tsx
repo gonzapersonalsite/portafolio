@@ -44,6 +44,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     const theme = useMemo(() => createAppTheme(mode), [mode]);
 
+    useEffect(() => {
+        document
+            .querySelector('meta[name="theme-color"]')
+            ?.setAttribute('content', theme.palette.background.default);
+    }, [theme]);
+
     return (
         <ColorModeContext.Provider value={colorMode}>
             <MuiThemeProvider theme={theme}>
