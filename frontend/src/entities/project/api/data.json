@@ -1,36 +1,73 @@
 [
   {
-    "id": "portfolio",
-    "titleEn": "Professional portfolio",
-    "titleEs": "Portafolio profesional",
-    "descriptionEn": "A modern, bilingual portfolio built as a fully static frontend: no backend, no database, and no servers to maintain. The whole site is served from a CDN, so it loads instantly and has zero running cost.\n\nBuilt with React + TypeScript under Feature-Sliced Design to keep the codebase modular and scalable. Content is modeled as data: projects, skills, experience, and profile live in versioned JSON files validated by automated tests, and every image is self-hosted.\n\nIt features three theme modes including a visionOS-inspired Liquid Glass design, instant Spanish/English switching for both interface and content, an interactive project gallery with zoom, and a contact form powered by EmailJS directly from the browser.\n\nDeployed on Vercel with a CI/CD pipeline that runs typecheck, lint, and tests on every push.",
-    "descriptionEs": "Un portafolio moderno y bilingüe construido como frontend totalmente estático: sin backend, sin base de datos y sin servidores que mantener. Todo el sitio se sirve desde una CDN, por lo que carga al instante y no tiene coste de funcionamiento.\n\nDesarrollado con React + TypeScript bajo Feature-Sliced Design para mantener el código modular y escalable. El contenido se modela como datos: proyectos, habilidades, experiencia y perfil viven en ficheros JSON versionados y validados con tests automatizados, y todas las imágenes están autohospedadas.\n\nIncluye tres modos de tema, entre ellos un diseño Liquid Glass inspirado en visionOS, cambio instantáneo español/inglés tanto de interfaz como de contenido, una galería de proyectos interactiva con zoom y un formulario de contacto impulsado por EmailJS directamente desde el navegador.\n\nDesplegado en Vercel con un pipeline CI/CD que ejecuta typecheck, lint y tests en cada push.",
+    "id": "licence-generator",
+    "titleEn": "LicenseGenerator",
+    "titleEs": "LicenseGenerator",
+    "descriptionEn": "License Generator is a desktop application designed to centralize and automate the licensing lifecycle for independent software products, letting developers manage multiple applications from a single interface.\\n\\nBuilt with C# 12 on .NET 8 and Avalonia UI, following the MVVM pattern with CommunityToolkit.Mvvm. Licenses are signed with RSA-2048 using the open PEM (PKCS#8) standard, with optional hardware binding (HWID) and expiration dates for time-based subscription models.\\n\\nOnce a license is issued, the system produces a Base64-encoded JSON payload that any client application can validate offline, regardless of the language it was written in. The application includes a complete history of issued licenses and a built-in localization system.\\n\\nThe distribution pipeline produces obfuscated, self-contained executables, and free Windows and Linux builds are available from the release page; the tool runs entirely offline and private keys never leave the developer's machine.",
+    "descriptionEs": "License Generator es una aplicación de escritorio diseñada para centralizar y automatizar el ciclo de vida del licenciamiento de productos de software independientes, permitiendo a los desarrolladores gestionar múltiples aplicaciones desde una sola interfaz.\\n\\nConstruida con C# 12 sobre .NET 8 y Avalonia UI, siguiendo el patrón MVVM con CommunityToolkit.Mvvm. Las licencias se firman con RSA-2048 usando el estándar abierto PEM (PKCS#8), con vinculación opcional a hardware (HWID) y fechas de expiración para modelos de suscripción.\\n\\nUna vez emitida, la licencia es un payload JSON codificado en Base64 que cualquier aplicación cliente puede validar offline, sin importar el lenguaje en el que esté escrita. La aplicación incluye un historial completo de licencias emitidas y un sistema de localización integrado.\\n\\nEl pipeline de distribución genera ejecutables ofuscados y autocontenidos, y hay compilaciones gratuitas para Windows y Linux disponibles en la página de descargas; la herramienta funciona íntegramente offline y las claves privadas nunca salen de la máquina del desarrollador.",
     "technologies": [
-      "React",
-      "TypeScript",
-      "Vite",
-      "Material UI",
-      "Feature-Sliced Design",
-      "i18next",
-      "EmailJS",
-      "Vercel"
+      ".NET 8 SDK (C# 12)",
+      "Avalonia UI",
+      "CommunityToolkit.Mvvm",
+      "RSA-2048 (PEM)",
+      "Obfuscar",
+      "Self-Contained Publishing",
+      "i18n (Localization System)"
     ],
     "imageUrls": [
-      "/images/projects/portfolio/00-portada_portafolio-800.webp",
-      "/images/projects/portfolio/01-portfolio_projects-800.webp",
-      "/images/projects/portfolio/02-portfolio_about-800.webp",
-      "/images/projects/portfolio/03-portfolio_experience-800.webp"
+      "/images/projects/licence-generator/00-Logo_Licence_Generator-800.webp",
+      "/images/projects/licence-generator/01-licensegenerator_dashboard-800.webp",
+      "/images/projects/licence-generator/02-licensegenerator_apps-800.webp",
+      "/images/projects/licence-generator/03-licensegenerator_license-800.webp",
+      "/images/projects/licence-generator/04-licensegenerator_history-800.webp",
+      "/images/projects/licence-generator/05-licensegenerator-settings-800.webp"
     ],
-    "githubUrl": "https://github.com/gonzapersonalsite/portafolio",
-    "liveUrl": "https://mi-portafolio-gonzalo.vercel.app/",
-    "type": "WEB",
-    "featured": false,
+    "githubUrl": "https://github.com/gonzapersonalsite/LicenseGenerator-Docs-",
+    "liveUrl": "https://github.com/gonzapersonalsite/LicenseGenerator-Docs-/releases/tag/LicenseGenerator-1.0.3.0",
+    "type": "DESKTOP",
+    "featured": true,
     "order": 1,
     "imageUrlsFull": [
-      "/images/projects/portfolio/00-portada_portafolio-full.webp",
-      "/images/projects/portfolio/01-portfolio_projects-full.webp",
-      "/images/projects/portfolio/02-portfolio_about-full.webp",
-      "/images/projects/portfolio/03-portfolio_experience-full.webp"
+      "/images/projects/licence-generator/00-Logo_Licence_Generator-full.webp",
+      "/images/projects/licence-generator/01-licensegenerator_dashboard-full.webp",
+      "/images/projects/licence-generator/02-licensegenerator_apps-full.webp",
+      "/images/projects/licence-generator/03-licensegenerator_license-full.webp",
+      "/images/projects/licence-generator/04-licensegenerator_history-full.webp",
+      "/images/projects/licence-generator/05-licensegenerator-settings-full.webp"
+    ]
+  },
+  {
+    "id": "developer-site",
+    "titleEn": "Gonzalo Apps – App Hub",
+    "titleEs": "Gonzalo Apps – Hub de aplicaciones",
+    "descriptionEn": "Gonzalo Apps is the public home for commercial applications: a multilingual storefront where each product gets its own page, legal documents, screenshots and store links.\\n\\nRather than building pages by hand, the site is generated by a custom static-site generator written in Dart: it reads a JSON registry and each app's legal markdown, and emits deterministic HTML that is reviewed before every commit and served from Cloudflare Pages with no build step and zero JavaScript.\\n\\nEvery page is published in English and Spanish, with PWA manifests per app, a sitemap, and llms.txt markdown twins so AI agents read the same content as humans.\\n\\nThe generator enforces its own rules — no link that does not resolve, no document that was not declared, no partial publication — so the published site can never drift from what was reviewed.",
+    "descriptionEs": "Gonzalo Apps es la casa pública de las aplicaciones comerciales: un escaparate multilingüe donde cada producto tiene su propia página, sus documentos legales, capturas y enlaces a las tiendas.\\n\\nEn lugar de crear páginas a mano, el sitio lo genera un generador estático propio escrito en Dart: lee un registro JSON y los documentos legales en markdown de cada aplicación, y emite HTML determinista que se revisa antes de cada commit y se sirve desde Cloudflare Pages sin paso de build y sin una línea de JavaScript.\\n\\nCada página se publica en inglés y español, con manifiestos PWA por aplicación, sitemap y copias markdown vía llms.txt para que los agentes de IA lean el mismo contenido que los humanos.\\n\\nEl generador impone sus propias reglas — ningún enlace que no resuelva, ningún documento no declarado, ninguna publicación parcial — de modo que el sitio publicado nunca puede desviarse de lo que fue revisado.",
+    "technologies": [
+      "Dart",
+      "Cloudflare Pages",
+      "HTML + CSS (zero JS)",
+      "PWA Web Manifest",
+      "i18n (EN/ES)",
+      "llms.txt v2",
+      "PowerShell",
+      "Git Hooks"
+    ],
+    "imageUrls": [
+      "/images/projects/developer-site/00-developer-site_home-800.webp",
+      "/images/projects/developer-site/01-developer-site_apps-800.webp",
+      "/images/projects/developer-site/02-developer-site_quotidia-800.webp",
+      "/images/projects/developer-site/03-developer-site_es-800.webp"
+    ],
+    "githubUrl": "https://github.com/gonzapersonalsite/developer-site",
+    "liveUrl": "https://gonzaloapps.es/",
+    "type": "WEB",
+    "featured": true,
+    "order": 2,
+    "imageUrlsFull": [
+      "/images/projects/developer-site/00-developer-site_home-full.webp",
+      "/images/projects/developer-site/01-developer-site_apps-full.webp",
+      "/images/projects/developer-site/02-developer-site_quotidia-full.webp",
+      "/images/projects/developer-site/03-developer-site_es-full.webp"
     ]
   },
   {
@@ -60,83 +97,11 @@
     "liveUrl": "https://kanban-board-app-kappa.vercel.app/",
     "type": "WEB",
     "featured": true,
-    "order": 2,
+    "order": 3,
     "imageUrlsFull": [
       "/images/projects/kanban-board/00-kanban-board-full.webp",
       "/images/projects/kanban-board/01-kanban-calendar-full.webp",
       "/images/projects/kanban-board/02-kanban-edit-task-full.webp"
-    ]
-  },
-  {
-    "id": "pokedex",
-    "titleEn": "Pokédex",
-    "titleEs": "Pokédex",
-    "descriptionEn": "An interactive Pokédex built as a modern frontend application that consumes the public PokeAPI.\\n\\nDeveloped with React + TypeScript following Feature-Sliced Design with a container/presentational split to keep the code organized and scalable. It implements TanStack Query for API requests with intelligent caching and Zustand with persistence for local state.\\n\\nIt features autocomplete search, type filtering, a favorites system that persists in localStorage, and detailed evolution modals with intra-modal navigation. It includes light/dark theme support, global toast notifications, and PWA installation capability.\\n\\nThe project follows best practices with unit testing, responsive design, and accessibility, demonstrating modern and well-structured frontend development.",
-    "descriptionEs": "Una Pokédex interactiva desarrollada como aplicación frontend moderna que consume la API pública de PokeAPI.\\n\\nDesarrollada con React + TypeScript siguiendo Feature-Sliced Design con una separación container/presentational para mantener el código organizado y escalable. Implementa TanStack Query para las peticiones a la API con caché inteligente y Zustand con persistencia para el estado local.\\n\\nOfrece búsqueda con autocompletado, filtrado por tipos, un sistema de favoritos que persiste en localStorage y modales de detalle con cadena de evoluciones y navegación intra-modal. Incluye soporte de tema claro/oscuro, notificaciones toast globales y capacidad de instalación como PWA.\\n\\nEl proyecto sigue buenas prácticas con testing unitario, diseño responsive y accesibilidad, demostrando un desarrollo frontend moderno y bien estructurado.",
-    "technologies": [
-      "React",
-      "TypeScript",
-      "Vite",
-      "Feature-Sliced Design",
-      "TanStack Query",
-      "Zustand (persist)",
-      "TailwindCSS",
-      "Heroicons",
-      "PWA",
-      "Vitest",
-      "Testing Library"
-    ],
-    "imageUrls": [
-      "/images/projects/pokedex/00-pokedex-800.webp",
-      "/images/projects/pokedex/01-pokedex-800.webp",
-      "/images/projects/pokedex/02-pokedex-list-800.webp"
-    ],
-    "githubUrl": "https://github.com/gonzapersonalsite/Pokedex",
-    "liveUrl": "https://pokedex-pokeapi-gonzalo.vercel.app/",
-    "type": "WEB",
-    "featured": true,
-    "order": 3,
-    "imageUrlsFull": [
-      "/images/projects/pokedex/00-pokedex-full.webp",
-      "/images/projects/pokedex/01-pokedex-full.webp",
-      "/images/projects/pokedex/02-pokedex-list-full.webp"
-    ]
-  },
-  {
-    "id": "licence-generator",
-    "titleEn": "LicenseGenerator",
-    "titleEs": "LicenseGenerator",
-    "descriptionEn": "License Generator is a desktop application designed to centralize and automate the licensing lifecycle for independent software products, letting developers manage multiple applications from a single interface.\\n\\nBuilt with C# 12 on .NET 8 and Avalonia UI, following the MVVM pattern with CommunityToolkit.Mvvm. It follows a high-security cryptographic model: licenses are signed with RSA-2048 using PEM (PKCS#8) standards, with optional hardware binding (HWID) and expiration dates for time-based subscription models.\\n\\nOnce a license is issued, the system produces a Base64-encoded JSON payload that any client application can validate offline, regardless of the language it was written in. The application includes a complete history of issued licenses and a built-in localization system.\\n\\nThe distribution pipeline produces obfuscated, self-contained executables, so the tool runs entirely offline while private keys never leave the developer's machine.",
-    "descriptionEs": "License Generator es una aplicación de escritorio diseñada para centralizar y automatizar el ciclo de vida del licenciamiento de productos de software independientes, permitiendo a los desarrolladores gestionar múltiples aplicaciones desde una sola interfaz.\\n\\nConstruida con C# 12 sobre .NET 8 y Avalonia UI, siguiendo el patrón MVVM con CommunityToolkit.Mvvm. Sigue un modelo criptográfico de alta seguridad: las licencias se firman con RSA-2048 usando estándares PEM (PKCS#8), con vinculación opcional a hardware (HWID) y fechas de expiración para modelos de suscripción.\\n\\nUna vez emitida, la licencia es un payload JSON codificado en Base64 que cualquier aplicación cliente puede validar offline, sin importar el lenguaje en el que esté escrita. La aplicación incluye un historial completo de licencias emitidas y un sistema de localización integrado.\\n\\nEl pipeline de distribución genera ejecutables ofuscados y autocontenidos, de modo que la herramienta funciona íntegramente offline mientras las claves privadas nunca salen de la máquina del desarrollador.",
-    "technologies": [
-      ".NET 8 SDK (C# 12)",
-      "Avalonia UI",
-      "CommunityToolkit.Mvvm",
-      "RSA-2048 (PEM)",
-      "Obfuscar",
-      "Self-Contained Publishing",
-      "i18n (Localization System)"
-    ],
-    "imageUrls": [
-      "/images/projects/licence-generator/00-Logo_Licence_Generator-800.webp",
-      "/images/projects/licence-generator/01-licensegenerator_dashboard-800.webp",
-      "/images/projects/licence-generator/02-licensegenerator_apps-800.webp",
-      "/images/projects/licence-generator/03-licensegenerator_license-800.webp",
-      "/images/projects/licence-generator/04-licensegenerator_history-800.webp",
-      "/images/projects/licence-generator/05-licensegenerator-settings-800.webp"
-    ],
-    "githubUrl": "https://github.com/gonzapersonalsite/LicenseGenerator-Docs-",
-    "liveUrl": "https://github.com/gonzapersonalsite/LicenseGenerator-Docs-/releases/tag/LicenseGenerator-1.0.3.0",
-    "type": "DESKTOP",
-    "featured": true,
-    "order": 4,
-    "imageUrlsFull": [
-      "/images/projects/licence-generator/00-Logo_Licence_Generator-full.webp",
-      "/images/projects/licence-generator/01-licensegenerator_dashboard-full.webp",
-      "/images/projects/licence-generator/02-licensegenerator_apps-full.webp",
-      "/images/projects/licence-generator/03-licensegenerator_license-full.webp",
-      "/images/projects/licence-generator/04-licensegenerator_history-full.webp",
-      "/images/projects/licence-generator/05-licensegenerator-settings-full.webp"
     ]
   },
   {
@@ -169,7 +134,7 @@
     "liveUrl": "https://github.com/gonzapersonalsite/NutriManager-Docs-",
     "type": "DESKTOP",
     "featured": false,
-    "order": 6,
+    "order": 4,
     "imageUrlsFull": [
       "/images/projects/nutrimanager/00-Logo_NutriManager-full.webp",
       "/images/projects/nutrimanager/01-nutrimanager_welcome-full.webp",
@@ -179,37 +144,72 @@
     ]
   },
   {
-    "id": "developer-site",
-    "titleEn": "Gonzalo Apps – App Hub",
-    "titleEs": "Gonzalo Apps – Hub de aplicaciones",
-    "descriptionEn": "Gonzalo Apps is the public home for commercial applications: a multilingual storefront where each product gets its own page, legal documents, screenshots and store links.\\n\\nRather than building pages by hand, the site is generated by a custom static-site generator written in Dart: it reads a JSON registry and each app's legal markdown, and emits deterministic HTML that is reviewed before every commit and served from Cloudflare Pages with no build step and zero JavaScript.\\n\\nEvery page is published in English and Spanish, with PWA manifests per app, a sitemap, and llms.txt markdown twins so AI agents read the same content as humans.\\n\\nThe generator enforces its own rules — no link that does not resolve, no document that was not declared, no partial publication — so the published site can never drift from what was reviewed.",
-    "descriptionEs": "Gonzalo Apps es la casa pública de las aplicaciones comerciales: un escaparate multilingüe donde cada producto tiene su propia página, sus documentos legales, capturas y enlaces a las tiendas.\\n\\nEn lugar de crear páginas a mano, el sitio lo genera un generador estático propio escrito en Dart: lee un registro JSON y los documentos legales en markdown de cada aplicación, y emite HTML determinista que se revisa antes de cada commit y se sirve desde Cloudflare Pages sin paso de build y sin una línea de JavaScript.\\n\\nCada página se publica en inglés y español, con manifiestos PWA por aplicación, sitemap y copias markdown vía llms.txt para que los agentes de IA lean el mismo contenido que los humanos.\\n\\nEl generador impone sus propias reglas — ningún enlace que no resuelva, ningún documento no declarado, ninguna publicación parcial — de modo que el sitio publicado nunca puede desviarse de lo que fue revisado.",
+    "id": "pokedex",
+    "titleEn": "Pokédex",
+    "titleEs": "Pokédex",
+    "descriptionEn": "An interactive Pokédex built as a modern frontend application that consumes the public PokeAPI.\\n\\nDeveloped with React + TypeScript following Feature-Sliced Design with a container/presentational split to keep the code organized and scalable. It implements TanStack Query for API requests with intelligent caching and Zustand with persistence for local state.\\n\\nIt features autocomplete search, type filtering, a favorites system that persists in localStorage, and detailed evolution modals with intra-modal navigation. It includes light/dark theme support, global toast notifications, and PWA installation capability.\\n\\nThe project follows best practices with unit testing, responsive design, and accessibility, demonstrating modern and well-structured frontend development.",
+    "descriptionEs": "Una Pokédex interactiva desarrollada como aplicación frontend moderna que consume la API pública de PokeAPI.\\n\\nDesarrollada con React + TypeScript siguiendo Feature-Sliced Design con una separación container/presentational para mantener el código organizado y escalable. Implementa TanStack Query para las peticiones a la API con caché inteligente y Zustand con persistencia para el estado local.\\n\\nOfrece búsqueda con autocompletado, filtrado por tipos, un sistema de favoritos que persiste en localStorage y modales de detalle con cadena de evoluciones y navegación intra-modal. Incluye soporte de tema claro/oscuro, notificaciones toast globales y capacidad de instalación como PWA.\\n\\nEl proyecto sigue buenas prácticas con testing unitario, diseño responsive y accesibilidad, demostrando un desarrollo frontend moderno y bien estructurado.",
     "technologies": [
-      "Dart",
-      "Cloudflare Pages",
-      "HTML + CSS (zero JS)",
-      "PWA Web Manifest",
-      "i18n (EN/ES)",
-      "llms.txt v2",
-      "PowerShell",
-      "Git Hooks"
+      "React",
+      "TypeScript",
+      "Vite",
+      "Feature-Sliced Design",
+      "TanStack Query",
+      "Zustand (persist)",
+      "TailwindCSS",
+      "Heroicons",
+      "PWA",
+      "Vitest",
+      "Testing Library"
     ],
     "imageUrls": [
-      "/images/projects/developer-site/00-developer-site_home-800.webp",
-      "/images/projects/developer-site/01-developer-site_apps-800.webp",
-      "/images/projects/developer-site/02-developer-site_quotidia-800.webp",
-      "/images/projects/developer-site/03-developer-site_es-800.webp"
+      "/images/projects/pokedex/00-pokedex-800.webp",
+      "/images/projects/pokedex/01-pokedex-800.webp",
+      "/images/projects/pokedex/02-pokedex-list-800.webp"
     ],
-    "githubUrl": "https://github.com/gonzapersonalsite/developer-site",
-    "liveUrl": "https://gonzaloapps.es/",
+    "githubUrl": "https://github.com/gonzapersonalsite/Pokedex",
+    "liveUrl": "https://pokedex-pokeapi-gonzalo.vercel.app/",
     "type": "WEB",
     "featured": true,
-    "order": 7,
+    "order": 5,
     "imageUrlsFull": [
-      "/images/projects/developer-site/00-developer-site_home-full.webp",
-      "/images/projects/developer-site/01-developer-site_apps-full.webp",
-      "/images/projects/developer-site/02-developer-site_quotidia-full.webp",
-      "/images/projects/developer-site/03-developer-site_es-full.webp"
+      "/images/projects/pokedex/00-pokedex-full.webp",
+      "/images/projects/pokedex/01-pokedex-full.webp",
+      "/images/projects/pokedex/02-pokedex-list-full.webp"
+    ]
+  },
+  {
+    "id": "portfolio",
+    "titleEn": "Professional portfolio",
+    "titleEs": "Portafolio profesional",
+    "descriptionEn": "A modern, bilingual portfolio built as a fully static frontend: no backend, no database, and no servers to maintain. The whole site is served from a CDN, so it loads instantly and has zero running cost.\n\nBuilt with React + TypeScript under Feature-Sliced Design to keep the codebase modular and scalable. Content is modeled as data: projects, skills, experience, and profile live in versioned JSON files validated by automated tests, and every image is self-hosted.\n\nIt features three theme modes including a visionOS-inspired Liquid Glass design, instant Spanish/English switching for both interface and content, an interactive project gallery with zoom, and a contact form powered by EmailJS directly from the browser.\n\nDeployed on Vercel with a CI/CD pipeline that runs typecheck, lint, and tests on every push.",
+    "descriptionEs": "Un portafolio moderno y bilingüe construido como frontend totalmente estático: sin backend, sin base de datos y sin servidores que mantener. Todo el sitio se sirve desde una CDN, por lo que carga al instante y no tiene coste de funcionamiento.\n\nDesarrollado con React + TypeScript bajo Feature-Sliced Design para mantener el código modular y escalable. El contenido se modela como datos: proyectos, habilidades, experiencia y perfil viven en ficheros JSON versionados y validados con tests automatizados, y todas las imágenes están autohospedadas.\n\nIncluye tres modos de tema, entre ellos un diseño Liquid Glass inspirado en visionOS, cambio instantáneo español/inglés tanto de interfaz como de contenido, una galería de proyectos interactiva con zoom y un formulario de contacto impulsado por EmailJS directamente desde el navegador.\n\nDesplegado en Vercel con un pipeline CI/CD que ejecuta typecheck, lint y tests en cada push.",
+    "technologies": [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Material UI",
+      "Feature-Sliced Design",
+      "i18next",
+      "EmailJS",
+      "Vercel"
+    ],
+    "imageUrls": [
+      "/images/projects/portfolio/00-portada_portafolio-800.webp",
+      "/images/projects/portfolio/01-portfolio_projects-800.webp",
+      "/images/projects/portfolio/02-portfolio_about-800.webp",
+      "/images/projects/portfolio/03-portfolio_experience-800.webp"
+    ],
+    "githubUrl": "https://github.com/gonzapersonalsite/portafolio",
+    "liveUrl": "https://mi-portafolio-gonzalo.vercel.app/",
+    "type": "WEB",
+    "featured": false,
+    "order": 6,
+    "imageUrlsFull": [
+      "/images/projects/portfolio/00-portada_portafolio-full.webp",
+      "/images/projects/portfolio/01-portfolio_projects-full.webp",
+      "/images/projects/portfolio/02-portfolio_about-full.webp",
+      "/images/projects/portfolio/03-portfolio_experience-full.webp"
     ]
   }
 ]
