@@ -110,6 +110,7 @@ const { data: projects } = useContent(() => getAllProjects());
 ## Build & Deploy
 
 - **Build**: `tsc -b && vite build` with chunk splitting: `react-vendor` (react, react-dom, react-router-dom), `mui-vendor` (@mui/material, @mui/icons-material)
+- **TypeScript side-by-side layout**: `typescript` is aliased to `@typescript/typescript6` — the programmatic API that typescript-eslint consumes, exposing `tsc6` — while `@typescript/native` provides the native compiler that `tsc` (and therefore `pnpm build`) resolves to. Do not collapse them into a single `typescript` dependency until typescript-eslint supports the native compiler API.
 - **Dev**: Vite dev server (port 5173); no API proxy needed
 - **Prod**: Vercel (root dir `frontend/`) with SPA rewrites (`vercel.json`); no `/api` proxy
 

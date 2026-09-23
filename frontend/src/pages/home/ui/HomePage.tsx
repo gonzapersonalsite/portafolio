@@ -48,7 +48,7 @@ const HomePage: React.FC = () => {
                 }}
             >
                 <Container maxWidth="lg">
-                    <Grid container spacing={4} alignItems="center">
+                    <Grid container spacing={4} sx={{ alignItems: 'center' }}>
                         <Grid size={{ xs: 12, md: 7 }}>
                             <Typography
                                 variant="overline"
@@ -88,6 +88,7 @@ const HomePage: React.FC = () => {
                                     size="large"
                                     endIcon={<ArrowForwardIcon />}
                                     component={RouterLink}
+                                    nativeButton={false}
                                     to="/projects"
                                 >
                                     {t('home.cta')}
@@ -126,7 +127,7 @@ const HomePage: React.FC = () => {
                                         <Chip icon={<StorageIcon />} label={t('home.chips.backend')} color="secondary" variant="outlined" />
                                         <Chip icon={<WebIcon />} label={t('home.chips.uiux')} color="success" variant="outlined" />
                                     </Stack>
-                                    <Typography variant="caption" display="block" sx={{ mt: 2, fontFamily: 'monospace' }}>
+                                    <Typography variant="caption" sx={{ mt: 2, fontFamily: 'monospace', display: 'block' }}>
                                         {t('home.chips.passion')}
                                     </Typography>
                                 </Box>
@@ -162,12 +163,13 @@ const HomePage: React.FC = () => {
             <Box sx={{ py: 8, bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : 'grey.50' }}>
                 <Container maxWidth="lg">
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 6 }}>
-                        <Typography variant="h3" component="h2" fontWeight="800">
+                        <Typography variant="h3" component="h2" sx={{ fontWeight: '800' }}>
                             {t('projects.featured')}
                         </Typography>
                         <Button
                             endIcon={<ArrowForwardIcon />}
                             component={RouterLink}
+                            nativeButton={false}
                             to="/projects"
                             size="large"
                         >
@@ -194,7 +196,7 @@ const HomePage: React.FC = () => {
             </Box>
 
             <Container sx={{ py: 10 }}>
-                <Grid container spacing={6} alignItems="center">
+                <Grid container spacing={6} sx={{ alignItems: 'center' }}>
                     <Grid size={{ xs: 12, md: 6 }}>
                         <ImageWithFallback
                             src={profile?.imageUrl}
@@ -215,10 +217,10 @@ const HomePage: React.FC = () => {
                         />
                     </Grid>
                     <Grid size={{ xs: 12, md: 6 }}>
-                        <Typography variant="overline" color="secondary" fontWeight="bold" letterSpacing={1.5}>
+                        <Typography variant="overline" color="secondary" sx={{ fontWeight: 'bold', letterSpacing: 1.5 }}>
                             {t('about.subtitle', "WHO I AM")}
                         </Typography>
-                        <Typography variant="h3" component="h2" gutterBottom fontWeight="bold" sx={{ mb: 3 }}>
+                        <Typography variant="h3" component="h2" gutterBottom sx={{ mb: 3, fontWeight: 'bold' }}>
                             {getLocalizedText(language, profile?.aboutTitleEn, profile?.aboutTitleEs) || t('about.title')}
                         </Typography>
                         <Box sx={{ mb: 3, '& p': { fontSize: '1.1rem' } }}>
@@ -231,6 +233,7 @@ const HomePage: React.FC = () => {
                             color="primary"
                             size="large"
                             component={RouterLink}
+                            nativeButton={false}
                             to="/about"
                         >
                             {t('about.more', "More About Me")}

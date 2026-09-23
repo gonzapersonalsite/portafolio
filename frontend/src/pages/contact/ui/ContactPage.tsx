@@ -31,20 +31,20 @@ const ContactPage: React.FC = () => {
     return (
         <Box sx={{ py: 8 }}>
             <Container maxWidth="lg">
-                <Typography variant="overline" color="primary" fontWeight="bold">
+                <Typography variant="overline" color="primary" sx={{ fontWeight: 'bold' }}>
                     {t('nav.contact', "CONTACT")}
                 </Typography>
-                <Typography variant="h2" component="h1" fontWeight="800" gutterBottom sx={{ mb: 6 }}>
+                <Typography variant="h2" component="h1" gutterBottom sx={{ mb: 6, fontWeight: 800 }}>
                     {t('contact.heading', "Get In Touch")}
                 </Typography>
 
                 <Grid container spacing={6}>
                     <Grid size={{ xs: 12, md: 5 }}>
                         <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <Typography variant="h5" gutterBottom fontWeight="600">
+                            <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
                                 {t('contact.subtitle', "Let's work together")}
                             </Typography>
-                            <Typography variant="body1" color="text.secondary" paragraph sx={{ mb: 4, fontSize: '1.1rem' }}>
+                            <Typography variant="body1" color="text.secondary" sx={{ mb: 4, fontSize: '1.1rem' }}>
                                 {t('contact.description', "I am open to new professional opportunities. If you have a project or a job offer, I would love to hear from you.")}
                             </Typography>
 
@@ -54,10 +54,10 @@ const ContactPage: React.FC = () => {
                                         <EmailIcon />
                                     </Paper>
                                     <Box>
-                                        <Typography variant="caption" color="text.secondary" display="block">
+                                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                                             {t('contact.email', "Email")}
                                         </Typography>
-                                        <Typography variant="body1" fontWeight="500">
+                                        <Typography variant="body1" sx={{ fontWeight: 500 }}>
                                             {profile.email}
                                         </Typography>
                                     </Box>
@@ -67,10 +67,10 @@ const ContactPage: React.FC = () => {
                                         <LocationOnIcon />
                                     </Paper>
                                     <Box>
-                                        <Typography variant="caption" color="text.secondary" display="block">
+                                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                                             {t('contact.location', "Location")}
                                         </Typography>
-                                        <Typography variant="body1" fontWeight="500">
+                                        <Typography variant="body1" sx={{ fontWeight: 500 }}>
                                             {language === 'en' ? profile?.locationEn : profile?.locationEs}
                                         </Typography>
                                     </Box>

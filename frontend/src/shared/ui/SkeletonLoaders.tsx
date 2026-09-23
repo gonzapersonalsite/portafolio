@@ -4,7 +4,7 @@ import { Box, Grid, Skeleton, Stack, Container } from '@mui/material';
 export const HeroSkeleton: React.FC = () => (
     <Box sx={{ minHeight: '90vh', display: 'flex', alignItems: 'center' }}>
         <Container maxWidth="lg">
-            <Grid container spacing={4} alignItems="center">
+            <Grid container spacing={4} sx={{ alignItems: 'center' }}>
                 <Grid size={{ xs: 12, md: 7 }}>
                     <Skeleton animation="wave" width="150px" height={24} sx={{ mb: 2 }} />
                     <Skeleton animation="wave" width="80%" height={80} sx={{ mb: 2 }} />

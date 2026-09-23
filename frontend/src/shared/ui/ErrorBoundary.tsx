@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, Button, Container } from '@mui/material';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import ErrorOutlinedIcon from '@mui/icons-material/ErrorOutlined';
 import { i18n } from '@/shared/config';
 
 interface Props {
@@ -43,8 +43,8 @@ class ErrorBoundary extends React.Component<Props, State> {
                             textAlign: 'center',
                         }}
                     >
-                        <ErrorOutlineIcon sx={{ fontSize: 80, color: 'error.main' }} />
-                        <Typography variant="h4" fontWeight="bold">
+                        <ErrorOutlinedIcon sx={{ fontSize: 80, color: 'error.main' }} />
+                        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
                             {i18n.t('common.errorBoundaryTitle')}
                         </Typography>
                         <Typography variant="body1" color="text.secondary">

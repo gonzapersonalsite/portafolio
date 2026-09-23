@@ -19,10 +19,10 @@ const ProjectsPage: React.FC = () => {
     return (
         <Box sx={{ py: 8 }}>
             <Container maxWidth="lg">
-                <Typography variant="overline" color="primary" fontWeight="bold">
+                <Typography variant="overline" color="primary" sx={{ fontWeight: 'bold' }}>
                     {t('nav.projects', "PORTFOLIO")}
                 </Typography>
-                <Typography variant="h2" component="h1" fontWeight="800" gutterBottom sx={{ mb: 6 }}>
+                <Typography variant="h2" component="h1" gutterBottom sx={{ mb: 6, fontWeight: '800' }}>
                     {t('projects.heading', "All Projects")}
                 </Typography>
 

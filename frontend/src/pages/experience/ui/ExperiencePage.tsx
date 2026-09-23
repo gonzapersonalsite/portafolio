@@ -25,10 +25,10 @@ const ExperiencePage: React.FC = () => {
     return (
         <Box sx={{ py: 8 }}>
             <Container maxWidth="lg">
-                <Typography variant="overline" color="primary" fontWeight="bold">
+                <Typography variant="overline" color="primary" sx={{ fontWeight: 'bold' }}>
                     {t('nav.experience', "EXPERIENCE")}
                 </Typography>
-                <Typography variant="h2" component="h1" fontWeight="800" gutterBottom sx={{ mb: 6 }}>
+                <Typography variant="h2" component="h1" gutterBottom sx={{ mb: 6, fontWeight: '800' }}>
                     {t('experience.heading', "Work History")}
                 </Typography>
 
@@ -47,7 +47,7 @@ const ExperiencePage: React.FC = () => {
                                 <TimelineOppositeContent color="text.secondary" sx={{ py: '12px', px: 2, display: { xs: 'none', md: 'block' } }}>
                                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                                         <CalendarMonthIcon fontSize="small" />
-                                        <Typography variant="body2" fontWeight="bold" sx={{ whiteSpace: 'nowrap' }}>
+                                        <Typography variant="body2" sx={{ whiteSpace: 'nowrap', fontWeight: 'bold' }}>
                                             {exp.startDate} — {exp.endDate || t('common.present', 'Present')}
                                         </Typography>
                                     </Box>
@@ -79,15 +79,15 @@ const ExperiencePage: React.FC = () => {
                                     >
                                         <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', gap: 1, mb: 1, color: 'text.secondary' }}>
                                             <CalendarMonthIcon fontSize="small" />
-                                            <Typography variant="caption" fontWeight="bold">
+                                            <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
                                                 {exp.startDate} — {exp.endDate || t('common.present', 'Present')}
                                             </Typography>
                                         </Box>
 
-                                        <Typography variant="h6" component="h3" fontWeight="bold" color="primary">
+                                        <Typography variant="h6" component="h3" color="primary" sx={{ fontWeight: 'bold' }}>
                                             {language === 'en' ? exp.positionEn : exp.positionEs}
                                         </Typography>
-                                        <Typography variant="subtitle1" fontWeight="500" gutterBottom>
+                                        <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: '500' }}>
                                             @{language === 'en' ? exp.companyEn : exp.companyEs}
                                         </Typography>
                                         <Box sx={{ mt: 2, mb: 2 }}>

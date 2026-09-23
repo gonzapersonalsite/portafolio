@@ -172,7 +172,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                         <RichTextRenderer text={description} variant="body2" />
                     </ScrollableContent>
                 </Box>
-                <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mt: 'auto' }}>
+                <Stack direction="row" sx={{ mt: 'auto', flexWrap: 'wrap', gap: 1 }}>
                     {Array.from(new Set(project.technologies || [])).map((tech) => (
                         <Chip
                             key={tech}

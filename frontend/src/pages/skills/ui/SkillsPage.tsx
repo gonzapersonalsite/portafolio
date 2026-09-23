@@ -34,10 +34,10 @@ const SkillsPage: React.FC = () => {
     return (
         <Box sx={{ py: 8 }}>
             <Container maxWidth="lg">
-                <Typography variant="overline" color="primary" fontWeight="bold">
+                <Typography variant="overline" color="primary" sx={{ fontWeight: 'bold' }}>
                     {t('nav.skills', "SKILLS")}
                 </Typography>
-                <Typography variant="h2" component="h1" fontWeight="800" gutterBottom sx={{ mb: 6 }}>
+                <Typography variant="h2" component="h1" gutterBottom sx={{ mb: 6, fontWeight: '800' }}>
                     {t('skills.heading', "Technical Expertise")}
                 </Typography>
 
@@ -55,14 +55,14 @@ const SkillsPage: React.FC = () => {
                                         border: `1px solid ${theme.palette.divider}`
                                     }}
                                 >
-                                    <Typography variant="h5" fontWeight="bold" gutterBottom color="primary" sx={{ mb: 3 }}>
+                                    <Typography variant="h5" gutterBottom color="primary" sx={{ mb: 3, fontWeight: 'bold' }}>
                                         {category}
                                     </Typography>
                                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                                         {categorySkills.map((skill) => (
                                             <Box key={skill.id}>
                                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                                                    <Typography variant="subtitle1" fontWeight="600">
+                                                    <Typography variant="subtitle1" sx={{ fontWeight: '600' }}>
                                                         {language === 'en' ? skill.nameEn : skill.nameEs}
                                                     </Typography>
                                                     <Typography variant="body2" color="text.secondary">

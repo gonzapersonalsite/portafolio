@@ -56,12 +56,14 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
             onClose={handleCloseGallery}
             fullScreen
             aria-label={title}
-            PaperProps={{
-                sx: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.95)',
-                    boxShadow: 'none',
-                    overflow: 'hidden',
-                    backdropFilter: 'blur(10px)'
+            slotProps={{
+                paper: {
+                    sx: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.95)',
+                        boxShadow: 'none',
+                        overflow: 'hidden',
+                        backdropFilter: 'blur(10px)'
+                    }
                 }
             }}
         >

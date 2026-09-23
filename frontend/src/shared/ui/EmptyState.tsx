@@ -44,7 +44,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({ title, description, icon }) => 
                     {React.cloneElement(icon, { fontSize: 'large' })}
                 </Box>
             )}
-            <Typography variant="h6" fontWeight="bold" gutterBottom>
+            <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
                 {title}
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 500 }}>

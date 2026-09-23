@@ -23,7 +23,7 @@ export default defineConfig({
   plugins: [react(), agentFilesPlugin()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(import.meta.dirname, './src'),
     },
   },
   server: {
@@ -45,9 +45,11 @@ export default defineConfig({
     chunkSizeWarningLimit: 500,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'mui-vendor': ['@mui/material', '@mui/icons-material'],
+        manualChunks(id) {
+          const normalized = id.replaceAll('\\', '/')
+          if (/\/node_modules\/(react|react-dom|react-router-dom)\//.test(normalized)) return 'react-vendor'
+          if (/\/node_modules\/@mui\//.test(normalized)) return 'mui-vendor'
+          return undefined
         },
       },
     },

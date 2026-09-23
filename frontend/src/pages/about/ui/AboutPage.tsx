@@ -34,10 +34,10 @@ const AboutPage: React.FC = () => {
     return (
         <Box sx={{ py: 8 }}>
             <Container maxWidth="lg">
-                <Typography variant="overline" color="primary" fontWeight="bold">
+                <Typography variant="overline" color="primary" sx={{ fontWeight: 'bold' }}>
                     {t('nav.about', "ABOUT ME")}
                 </Typography>
-                <Typography variant="h2" component="h1" fontWeight="800" gutterBottom>
+                <Typography variant="h2" component="h1" gutterBottom sx={{ fontWeight: 800 }}>
                     {getLocalizedText(language, profile?.aboutTitleEn, profile?.aboutTitleEs) || t('about.title')}
                 </Typography>
 
@@ -73,7 +73,7 @@ const AboutPage: React.FC = () => {
                     </Grid>
 
                     <Grid size={{ xs: 12, md: 7 }}>
-                        <Typography variant="h5" component="h2" gutterBottom fontWeight="bold">
+                        <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
                             {getLocalizedText(language, profile?.aboutIntroTitleEn, profile?.aboutIntroTitleEs) || t('about.jobTitle')}
                         </Typography>
                         
@@ -88,7 +88,7 @@ const AboutPage: React.FC = () => {
                         </Box>
 
                         <Box sx={{ mt: 4, mb: 2, p: 3, bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)', borderRadius: 2, borderLeft: `4px solid ${theme.palette.primary.main}` }}>
-                            <Typography variant="subtitle1" component="h3" fontWeight="bold" gutterBottom color="primary">
+                            <Typography variant="subtitle1" component="h3" gutterBottom color="primary" sx={{ fontWeight: 'bold' }}>
                                 {t('about.sentenceTitle')}
                             </Typography>
                             <Typography variant="body1" sx={{ fontStyle: 'italic', fontSize: '1.1rem' }}>
@@ -104,7 +104,7 @@ const AboutPage: React.FC = () => {
                                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                         <CodeIcon color="primary" sx={{ mr: 2, fontSize: 32 }} />
                                         <Box>
-                                            <Typography variant="h6" component="h3" fontWeight="bold">Frontend</Typography>
+                                            <Typography variant="h6" component="h3" sx={{ fontWeight: 'bold' }}>Frontend</Typography>
                                             <Typography variant="body2" color="text.secondary">
                                                 {competencies
                                                     .filter(s => s.category.toLowerCase() === 'frontend')
@@ -121,7 +121,7 @@ const AboutPage: React.FC = () => {
                                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                         <WorkIcon color="secondary" sx={{ mr: 2, fontSize: 32 }} />
                                         <Box>
-                                            <Typography variant="h6" component="h3" fontWeight="bold">Backend</Typography>
+                                            <Typography variant="h6" component="h3" sx={{ fontWeight: 'bold' }}>Backend</Typography>
                                             <Typography variant="body2" color="text.secondary">
                                                 {competencies
                                                     .filter(s => s.category.toLowerCase() === 'backend' || s.category.toLowerCase() === 'database')
@@ -137,10 +137,10 @@ const AboutPage: React.FC = () => {
 
                         {competencies.length > 0 && (
                             <Box sx={{ mt: 4 }}>
-                                <Typography variant="h6" gutterBottom fontWeight="bold" sx={{ mt: 2 }}>
+                                <Typography variant="h6" gutterBottom sx={{ mt: 2, fontWeight: 'bold' }}>
                                     {t('about.skills', "Core Competencies")}
                                 </Typography>
-                                <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ mt: 1 }}>
+                                <Stack direction="row" spacing={1} useFlexGap sx={{ mt: 1, flexWrap: 'wrap' }}>
                                     {competencies.map((skill) => (
                                         <Chip
                                             key={skill.id}
@@ -155,7 +155,7 @@ const AboutPage: React.FC = () => {
 
                         {spokenLanguages.length > 0 && (
                             <Box sx={{ mt: 4 }}>
-                                <Typography variant="h6" component="h2" gutterBottom fontWeight="bold" sx={{ mt: 2 }}>
+                                <Typography variant="h6" component="h2" gutterBottom sx={{ mt: 2, fontWeight: 'bold' }}>
                                     {t('about.languages', "Languages")}
                                 </Typography>
                                 <Stack direction="row" spacing={2} sx={{ mt: 1 }}>

@@ -70,7 +70,7 @@ const Navbar: React.FC = () => {
             <List>
                 {navItems.map((item) => (
                     <ListItem key={item.path} disablePadding>
-                        <ListItemButton component={RouterLink} to={item.path} sx={{ textAlign: 'center' }}>
+                        <ListItemButton component={RouterLink} to={item.path} nativeButton={false} sx={{ textAlign: 'center' }}>
                             <ListItemText primary={item.label} />
                         </ListItemButton>
                     </ListItem>
@@ -128,6 +128,7 @@ const Navbar: React.FC = () => {
                                     <Button
                                         key={item.path}
                                         component={RouterLink}
+                                        nativeButton={false}
                                         to={item.path}
                                         sx={{
                                             color: location.pathname === item.path 
