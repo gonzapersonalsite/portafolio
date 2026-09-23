@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest'
 import data from './data.json'
 
-describe('contenido estático de experiencias', () => {
-    it('tiene al menos una experiencia', () => {
+describe('static experience content', () => {
+    it('has at least one experience', () => {
         expect(data.length).toBeGreaterThan(0)
     })
 
-    it('cumple el contrato de campos y formato de fechas', () => {
+    it('satisfies the field contract and date format', () => {
         for (const exp of data) {
             expect(exp.companyEn.length).toBeGreaterThan(0)
             expect(exp.positionEn.length).toBeGreaterThan(0)
@@ -19,7 +19,7 @@ describe('contenido estático de experiencias', () => {
         }
     })
 
-    it('está ordenado como el API: endDate DESC NULLS FIRST, startDate DESC', () => {
+    it('is sorted like the API: endDate DESC NULLS FIRST, startDate DESC', () => {
         const keys = data.map((e) => ({ e: e.endDate ?? '9999-12-31', s: e.startDate }))
         const sorted = [...keys].sort((a, b) => (a.e !== b.e ? b.e.localeCompare(a.e) : b.s.localeCompare(a.s)))
         expect(keys).toEqual(sorted)

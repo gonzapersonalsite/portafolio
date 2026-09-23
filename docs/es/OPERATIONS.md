@@ -20,7 +20,7 @@ El proyecto es **solo estático**: un único despliegue, cero servidores.
   - Vercel despliega automáticamente en cada push a `main` desde el directorio `frontend/`.
   - Vercel detecta pnpm automáticamente mediante el campo `packageManager` de `package.json`.
   - GitHub Actions ejecuta typecheck + lint + tests + build de producción en push/PR que toquen `frontend/**` como puerta de calidad.
-  - Variable de entorno requerida en Vercel: `PNPM_APPROVE_BUILDS=true` (requisito de seguridad de pnpm v11). El repo declara la misma aprobación para instalaciones locales/CI en `frontend/.npmrc` (`only-built-dependencies[]=esbuild`) y `frontend/pnpm-workspace.yaml` (`allowBuilds`/`onlyBuiltDependencies`).
+  - Variable de entorno requerida en Vercel: `PNPM_APPROVE_BUILDS=true` (requisito de seguridad de pnpm). El repo declara la misma aprobación para instalaciones locales/CI en `frontend/.npmrc` (`only-built-dependencies[]=esbuild`) y `frontend/pnpm-workspace.yaml` (`allowBuilds`/`onlyBuiltDependencies`).
   - Panel de Vercel: Install Command `pnpm install` y Build Command `pnpm run build`.
 
 Detalles del pipeline:
@@ -34,7 +34,7 @@ Detalles del pipeline:
 - `VITE_EMAILJS_SERVICE_ID`: identificador del servicio de EmailJS.
 - `VITE_EMAILJS_TEMPLATE_ID`: identificador de la plantilla de EmailJS.
 - `VITE_EMAILJS_PUBLIC_KEY`: clave pública de EmailJS.
-- `PNPM_APPROVE_BUILDS`: valor `true` en Vercel para permitir los scripts de build de esbuild (requisito de pnpm v11+). La aprobación en el repo vive en `frontend/.npmrc` y `frontend/pnpm-workspace.yaml`.
+- `PNPM_APPROVE_BUILDS`: valor `true` en Vercel para permitir los scripts de build de esbuild (requisito de pnpm). La aprobación en el repo vive en `frontend/.npmrc` y `frontend/pnpm-workspace.yaml`.
 
 Desarrollo local: coloca las tres variables `VITE_EMAILJS_*` en `frontend/.env.local` (gitignored; las claves esperadas están documentadas en `frontend/.env.example`). Vercel mantiene los valores de producción en el panel del proyecto.
 

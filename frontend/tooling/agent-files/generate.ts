@@ -1,8 +1,8 @@
-import { buildLlmsTxt } from './llmsTxt';
-import { buildRobotsTxt } from './robotsTxt';
-import { buildSitemap } from './sitemap';
-import { buildTwin } from './twins';
-import { ROUTES, twinPathOf, type Locale } from './routes';
+import { buildLlmsTxt } from './llmsTxt.ts';
+import { buildRobotsTxt } from './robotsTxt.ts';
+import { buildSitemap } from './sitemap.ts';
+import { buildTwin } from './twins.ts';
+import { ROUTES, twinPathOf, type Locale } from './routes.ts';
 
 export interface AgentFile {
   path: string;

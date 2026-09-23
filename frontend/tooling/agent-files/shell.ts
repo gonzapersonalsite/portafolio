@@ -1,5 +1,5 @@
-import { getProfile } from '../../src/entities/profile/api/profileApi';
-import { absoluteUrl, twinPathOf, type RouteSpec } from './routes';
+import { getProfile } from '../../src/entities/profile/api/profileApi.ts';
+import { absoluteUrl, twinPathOf, type RouteSpec } from './routes.ts';
 
 const BLOCK_PATTERN = /<!-- agent-files:start -->[\s\S]*?<!-- agent-files:end -->/;
 

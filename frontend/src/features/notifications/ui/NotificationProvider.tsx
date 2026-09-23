@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Snackbar, Alert, type AlertColor, useTheme } from '@mui/material';
-import { NotificationContext } from '@/features/notifications/model/NotificationContext';
+import { NotificationContext } from '../model/NotificationContext';
 
 export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const theme = useTheme();

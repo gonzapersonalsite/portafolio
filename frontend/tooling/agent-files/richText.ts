@@ -1,4 +1,4 @@
-import { normalizeRichText } from '../../src/shared/lib/richText';
+import { normalizeRichText } from '../../src/shared/lib/richText.ts';
 
 // Mirrors RichTextRenderer: every non-empty line is its own paragraph and
 // consecutive bullet lines become a single tight markdown list.

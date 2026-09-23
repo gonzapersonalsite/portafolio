@@ -1,14 +1,14 @@
-import type { Experience } from '../../src/entities/experience/model/types';
-import type { Project } from '../../src/entities/project/model/types';
-import { getAllExperiences } from '../../src/entities/experience/api/experienceApi';
-import { getProfile } from '../../src/entities/profile/api/profileApi';
-import { getAllProjects, getFeaturedProjects } from '../../src/entities/project/api/projectApi';
-import { getAllSkills } from '../../src/entities/skill/api/skillApi';
-import { getAllSpokenLanguages } from '../../src/entities/spoken-language/api/languageApi';
-import { getLocalizedText } from '../../src/shared/lib/getLocalizedText';
-import { TWIN_LABELS, type TwinLabels } from './labels';
-import { richTextToBlocks } from './richText';
-import { ROUTES, twinPathOf, type Locale, type RouteId } from './routes';
+import type { Experience } from '../../src/entities/experience/model/types.ts';
+import type { Project } from '../../src/entities/project/model/types.ts';
+import { getAllExperiences } from '../../src/entities/experience/api/experienceApi.ts';
+import { getProfile } from '../../src/entities/profile/api/profileApi.ts';
+import { getAllProjects, getFeaturedProjects } from '../../src/entities/project/api/projectApi.ts';
+import { getAllSkills } from '../../src/entities/skill/api/skillApi.ts';
+import { getAllSpokenLanguages } from '../../src/entities/spoken-language/api/languageApi.ts';
+import { getLocalizedText } from '../../src/shared/lib/getLocalizedText.ts';
+import { TWIN_LABELS, type TwinLabels } from './labels.ts';
+import { richTextToBlocks } from './richText.ts';
+import { ROUTES, twinPathOf, type Locale, type RouteId } from './routes.ts';
 
 const join = (blocks: readonly string[]): string =>
   blocks.filter((block) => block.length > 0).join('\n\n');

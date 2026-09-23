@@ -3,13 +3,13 @@ import data from './data.json'
 
 const publicImages = new Set(Object.keys(import.meta.glob('/public/images/**/*')))
 
-describe('contenido estático del perfil', () => {
-    it('la imagen es local y existe en public/', () => {
-        expect(data.imageUrl.startsWith('/images/'), `imagen externa: ${data.imageUrl}`).toBe(true)
-        expect(publicImages.has(`/public${data.imageUrl}`), `no existe en disco: ${data.imageUrl}`).toBe(true)
+describe('static profile content', () => {
+    it('the image is local and exists in public/', () => {
+        expect(data.imageUrl.startsWith('/images/'), `external image: ${data.imageUrl}`).toBe(true)
+        expect(publicImages.has(`/public${data.imageUrl}`), `missing on disk: ${data.imageUrl}`).toBe(true)
     })
 
-    it('cumple el contrato de campos esenciales', () => {
+    it('satisfies the essential field contract', () => {
         expect(data.id).toBe('profile')
         expect(data.email).toContain('@')
         expect(data.fullNameEn.length).toBeGreaterThan(0)

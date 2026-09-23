@@ -1,5 +1,5 @@
-import type { Project } from '../../src/entities/project/model/types';
-import type { Locale, RouteId } from './routes';
+import type { Project } from '../../src/entities/project/model/types.ts';
+import type { Locale, RouteId } from './routes.ts';
 
 export interface TwinLabels {
   technologies: string;

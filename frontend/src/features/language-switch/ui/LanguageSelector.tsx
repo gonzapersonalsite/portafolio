@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Menu, MenuItem, Typography } from '@mui/material';
 import TranslateIcon from '@mui/icons-material/Translate';
-import { useLanguage } from '@/features/language-switch/model/LanguageContext';
+import { useLanguage } from '../model/LanguageContext';
 import { useTranslation } from 'react-i18next';
 
 const LanguageSelector: React.FC = () => {

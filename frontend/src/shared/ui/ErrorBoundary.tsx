@@ -9,26 +9,18 @@ interface Props {
 
 interface State {
     hasError: boolean;
-    error: Error | null;
 }
 
 class ErrorBoundary extends React.Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = { hasError: false, error: null };
-    }
+    state: State = { hasError: false };
 
-    static getDerivedStateFromError(error: Error): State {
-        return { hasError: true, error };
+    static getDerivedStateFromError(): State {
+        return { hasError: true };
     }
 
     componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
         console.error('ErrorBoundary caught an error:', error, errorInfo);
     }
-
-    handleReset = () => {
-        this.setState({ hasError: false, error: null });
-    };
 
     render() {
         if (this.state.hasError) {

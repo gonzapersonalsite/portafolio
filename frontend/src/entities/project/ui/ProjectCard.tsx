@@ -17,11 +17,11 @@ import DesktopWindowsIcon from '@mui/icons-material/DesktopWindows';
 import SmartphoneIcon from '@mui/icons-material/Smartphone';
 import CodeIcon from '@mui/icons-material/Code';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import type { Project } from '@/entities/project/model/types';
+import type { Project } from '../model/types';
 import { useTranslation } from 'react-i18next';
 import { i18n } from '@/shared/config';
 import { ImageWithFallback, RichTextRenderer, ScrollableContent } from '@/shared/ui';
-import ProjectGallery from '@/entities/project/ui/ProjectGallery';
+import ProjectGallery from './ProjectGallery';
 
 interface ProjectCardProps {
     project: Project;

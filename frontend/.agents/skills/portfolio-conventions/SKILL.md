@@ -125,7 +125,7 @@ const { data: projects } = useContent(() => getAllProjects());
 
 ## Security
 
-- **Scripts**: esbuild's build script is approved in-repo via `only-built-dependencies[]=esbuild` (`frontend/.npmrc`) and `pnpm-workspace.yaml` (`allowBuilds`/`onlyBuiltDependencies`); pnpm v11 security requirement.
+- **Scripts**: esbuild's build script is approved in-repo via `only-built-dependencies[]=esbuild` (`frontend/.npmrc`) and `pnpm-workspace.yaml` (`allowBuilds`/`onlyBuiltDependencies`); a pnpm security requirement.
 - **Contact form**: EmailJS in the browser (keys are public by design); no secrets stored in the repo. The network call lives in `features/contact-form/api/contactApi.ts` and is bounded by a 15s timeout; form state and notifications live in `features/contact-form/model/useContactForm.ts`.
 - No authentication surface exists in this app
 

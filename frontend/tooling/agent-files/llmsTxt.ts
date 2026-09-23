@@ -1,9 +1,9 @@
-import { getProfile } from '../../src/entities/profile/api/profileApi';
-import { getAllProjects } from '../../src/entities/project/api/projectApi';
-import { getLocalizedText } from '../../src/shared/lib/getLocalizedText';
-import { TWIN_LABELS } from './labels';
-import { richTextToBlocks } from './richText';
-import { absoluteUrl, ROUTES, twinPathOf, type Locale } from './routes';
+import { getProfile } from '../../src/entities/profile/api/profileApi.ts';
+import { getAllProjects } from '../../src/entities/project/api/projectApi.ts';
+import { getLocalizedText } from '../../src/shared/lib/getLocalizedText.ts';
+import { TWIN_LABELS } from './labels.ts';
+import { richTextToBlocks } from './richText.ts';
+import { absoluteUrl, ROUTES, twinPathOf, type Locale } from './routes.ts';
 
 const pageList = (locale: Locale): string =>
   ROUTES.map(

@@ -24,7 +24,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 11.5.2
+          package_json_file: frontend/package.json
 
       - name: Setup Node
         uses: actions/setup-node@v4

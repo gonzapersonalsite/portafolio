@@ -1,5 +1,5 @@
-import projectsData from './data.json';
-import type { Project } from '@/entities/project/model/types';
+import projectsData from './data.json' with { type: 'json' };
+import type { Project } from '../model/types.ts';
 
 const projects = projectsData as Project[];
 

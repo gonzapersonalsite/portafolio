@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LanguageContext, type Language } from '@/features/language-switch/model/LanguageContext';
+import { LanguageContext, type Language } from '../model/LanguageContext';
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { i18n } = useTranslation();

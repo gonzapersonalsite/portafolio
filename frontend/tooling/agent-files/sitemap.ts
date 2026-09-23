@@ -1,4 +1,4 @@
-import { absoluteUrl, ROUTES } from './routes';
+import { absoluteUrl, ROUTES } from './routes.ts';
 
 export const buildSitemap = (): string => {
   const urls = ROUTES.map(

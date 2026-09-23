@@ -97,10 +97,10 @@ const HomePage: React.FC = () => {
                                     variant="outlined"
                                     size="large"
                                     startIcon={<DownloadIcon />}
-                                    href={profile?.cvUrl || "#"}
+                                    href={profile.cvUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    disabled={!profile?.cvUrl}
+                                    disabled={!profile.cvUrl}
                                 >
                                     {t('home.resume')}
                                 </Button>
@@ -177,12 +177,12 @@ const HomePage: React.FC = () => {
                         </Button>
                     </Box>
                     <Grid container spacing={4}>
-                        {(featuredProjects ?? []).map((project) => (
+                        {featuredProjects.map((project) => (
                             <Grid size={{ xs: 12, md: 6, lg: 4 }} key={project.id}>
                                 <ProjectCard project={project} />
                             </Grid>
                         ))}
-                        {(!featuredProjects || featuredProjects.length === 0) && (
+                        {featuredProjects.length === 0 && (
                             <Grid size={{ xs: 12 }}>
                                 <EmptyState
                                     title={t('emptyState.featured.title', 'Highlights Coming Soon')}

@@ -3,9 +3,9 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 import { execSync } from 'child_process'
 // eslint-disable-next-line fsd-lint/no-relative-imports
-import { agentFilesPlugin } from './tooling/agent-files/vitePlugin'
+import { agentFilesPlugin } from './tooling/agent-files/vitePlugin.ts'
 // eslint-disable-next-line fsd-lint/no-relative-imports
-import pkg from './package.json'
+import pkg from './package.json' with { type: 'json' }
 
 // Get current git commit hash
 let commitHash = 'unknown'

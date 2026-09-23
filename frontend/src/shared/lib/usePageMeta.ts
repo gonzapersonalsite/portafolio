@@ -13,33 +13,45 @@ export const usePageMeta = ({ title, description }: PageMetaOptions) => {
     const previousOgDescription = getMetaContent('og:description');
 
     document.title = title;
-    setMeta('description', description);
     setMeta('og:title', title);
-    setMeta('og:description', description);
+    if (description !== undefined) {
+      setMeta('description', description);
+      setMeta('og:description', description);
+    }
 
     return () => {
       document.title = previousTitle;
-      setMeta('description', previousDescription);
-      setMeta('og:title', previousOgTitle ?? previousTitle);
-      setMeta('og:description', previousOgDescription ?? previousDescription);
+      restoreMeta('description', previousDescription);
+      restoreMeta('og:title', previousOgTitle);
+      restoreMeta('og:description', previousOgDescription);
     };
   }, [title, description]);
 };
 
+const metaAttribute = (name: string): 'property' | 'name' =>
+  name.startsWith('og:') ? 'property' : 'name';
+
+const metaSelector = (name: string): string => `meta[${metaAttribute(name)}="${name}"]`;
+
 function getMetaContent(name: string): string | undefined {
-  const attr = name.startsWith('og:') ? 'property' : 'name';
-  return document.querySelector<HTMLMetaElement>(`meta[${attr}="${name}"]`)
+  return document.querySelector<HTMLMetaElement>(metaSelector(name))
     ?.getAttribute('content') ?? undefined;
 }
 
-function setMeta(name: string, content?: string) {
-  if (content === undefined) return;
-  const attr = name.startsWith('og:') ? 'property' : 'name';
-  let meta = document.querySelector<HTMLMetaElement>(`meta[${attr}="${name}"]`);
+function setMeta(name: string, content: string) {
+  let meta = document.querySelector<HTMLMetaElement>(metaSelector(name));
   if (!meta) {
     meta = document.createElement('meta');
-    meta.setAttribute(attr, name);
+    meta.setAttribute(metaAttribute(name), name);
     document.head.appendChild(meta);
   }
   meta.setAttribute('content', content);
+}
+
+function restoreMeta(name: string, content?: string) {
+  if (content === undefined) {
+    document.querySelector(metaSelector(name))?.remove();
+    return;
+  }
+  setMeta(name, content);
 }

@@ -3,7 +3,7 @@ import { Button, Menu, MenuItem, Typography, Box } from '@mui/material';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import { useColorMode } from '@/features/theme-switch/model/ThemeContext';
+import { useColorMode } from '../model/ThemeContext';
 import { useTranslation } from 'react-i18next';
 
 const ThemeSelector: React.FC = () => {

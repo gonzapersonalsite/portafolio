@@ -1,7 +1,7 @@
 import type { Plugin } from 'vite';
-import { buildAgentFiles } from './generate';
-import { HOME_ROUTE, htmlFileOf, ROUTES } from './routes';
-import { buildRouteShell, injectAgentBlock } from './shell';
+import { buildAgentFiles } from './generate.ts';
+import { HOME_ROUTE, htmlFileOf, ROUTES } from './routes.ts';
+import { buildRouteShell, injectAgentBlock } from './shell.ts';
 
 export function agentFilesPlugin(): Plugin {
   return {
