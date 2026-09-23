@@ -24,9 +24,11 @@ describe('injectAgentBlock', () => {
     expect(html).toContain(
       '<link rel="canonical" href="https://mi-portafolio-gonzalo.vercel.app/">',
     );
-    expect(html).toContain('<link rel="alternate" type="text/markdown" href="/index.md">');
     expect(html).toContain(
-      '<link rel="alternate" type="text/markdown" hreflang="es" href="/index.es.md">',
+      '<link rel="alternate" type="text/markdown" href="https://mi-portafolio-gonzalo.vercel.app/index.md">',
+    );
+    expect(html).toContain(
+      '<link rel="alternate" type="text/markdown" hreflang="es" href="https://mi-portafolio-gonzalo.vercel.app/index.es.md">',
     );
   });
 });
@@ -41,12 +43,18 @@ describe('buildRouteShell', () => {
     expect(shell).toContain(
       '<link rel="canonical" href="https://mi-portafolio-gonzalo.vercel.app/about">',
     );
-    expect(shell).toContain('href="/about/index.md"');
-    expect(shell).toContain('href="/about/index.es.md"');
+    expect(shell).toContain(
+      'href="https://mi-portafolio-gonzalo.vercel.app/about/index.md"',
+    );
+    expect(shell).toContain(
+      'href="https://mi-portafolio-gonzalo.vercel.app/about/index.es.md"',
+    );
     expect(shell).toContain(
       '<meta property="og:url" content="https://mi-portafolio-gonzalo.vercel.app/about" />',
     );
-    expect(shell).not.toContain('href="/index.md"');
+    expect(shell).not.toContain(
+      'href="https://mi-portafolio-gonzalo.vercel.app/index.md"',
+    );
     expect(shell.match(/agent-files:start/g)).toHaveLength(1);
   });
 

@@ -65,7 +65,7 @@ const Footer: React.FC = () => {
                     }}
                 >
                     <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
-                        <Typography variant="h6" sx={{ color: textColor, fontWeight: 'bold' }}>
+                        <Typography variant="h6" component="p" sx={{ color: textColor, fontWeight: 'bold' }}>
                             {language === 'en' ? profile.fullNameEn : profile.fullNameEs}
                         </Typography>
                         <Typography variant="body2" sx={{ color: secondaryTextColor }}>
@@ -133,7 +133,7 @@ const Footer: React.FC = () => {
 
                     <Typography variant="body2" sx={{ color: secondaryTextColor, textAlign: 'center' }}>
                         © {currentYear} {language === 'en' ? profile.fullNameEn : profile.fullNameEs}. {t('footer.rights', 'All rights reserved.')}
-                        <Box component="span" sx={{ display: 'block', mt: 0.5, fontSize: '0.7rem', opacity: 0.6 }}>
+                        <Box component="span" sx={{ display: 'block', mt: 0.5, fontSize: '0.7rem' }}>
                             v{__APP_VERSION__} · {__COMMIT_HASH__}
                         </Box>
                     </Typography>

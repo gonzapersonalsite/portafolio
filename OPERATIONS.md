@@ -95,6 +95,8 @@ npx -y sharp-cli@5 -i source.png -o "public/images/projects/<slug>/{name}-full.w
 
 `npx -y` downloads and executes `sharp-cli`; run it only against your own trusted source images. Rules: WebP only, quality ~82, no external image hosts. Profile photo lives in `images/profile/`; social preview is `public/og-cover.jpg` (1200×630 JPEG, re-generate on demand).
 
+**Cache immutability:** Vercel serves `/assets/*`, `/images/*` and `/favicon.ico` with a 1-year immutable `Cache-Control`. Vite hashes JS/CSS filenames, so they refresh on every build; image filenames do not. If you replace an image's content, **rename the file** (bump its numeric prefix, e.g. `00-` → `01-`) and update `data.json`, or returning visitors will keep the old image for up to one year. `index.html` is always revalidated, so new deployments are picked up immediately.
+
 ### 3. Verify
 
 ```bash

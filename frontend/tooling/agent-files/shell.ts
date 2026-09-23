@@ -13,8 +13,8 @@ const agentBlock = (route: RouteSpec): string =>
   [
     '<!-- agent-files:start -->',
     `<link rel="canonical" href="${absoluteUrl(route.path)}">`,
-    `<link rel="alternate" type="text/markdown" href="${twinPathOf(route, 'en')}">`,
-    `<link rel="alternate" type="text/markdown" hreflang="es" href="${twinPathOf(route, 'es')}">`,
+    `<link rel="alternate" type="text/markdown" href="${absoluteUrl(twinPathOf(route, 'en'))}">`,
+    `<link rel="alternate" type="text/markdown" hreflang="es" href="${absoluteUrl(twinPathOf(route, 'es'))}">`,
     '<!-- agent-files:end -->',
   ].join('\n');
 

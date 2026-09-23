@@ -47,6 +47,7 @@ The portfolio is a **fully static frontend**. There is no backend, no HTTP clien
 - **No layout shift (CLS):** every `ImageWithFallback` usage MUST pass `aspectRatio` (project covers `16/9`, profile photo `2/3`) so the container reserves space while the image loads.
 - **Lazy loading:** `loading="lazy"` on all below-the-fold images (project covers, profile photo). Nothing image-like sits above the fold (LCP is the hero text), so no `fetchpriority="high"` is needed; never combine `fetchpriority` with `loading="lazy"`.
 - When adding/replacing images: generate both WebP variants (e.g. `sharp resize 800` + full-size, q82), update `data.json`, and run `pnpm test` (integrity tests check every referenced file exists on disk).
+- **Cache immutability:** Vercel serves `/assets/*`, `/images/*` and `/favicon.ico` immutable for 1 year (`vercel.json`). Vite hashes JS/CSS filenames, so they refresh every build; image filenames do not. When replacing an image's content, **rename the file** (bump the numeric prefix) and update `data.json`. `index.html` stays `max-age=0, must-revalidate` so deployments are picked up immediately.
 
 ## Routing
 
