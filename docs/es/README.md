@@ -46,6 +46,7 @@ El proyecto sigue una **arquitectura de frontend estático** moderna, priorizand
 - **Frontend Feature-Sliced:** arquitectura FSD de 6 capas (`app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/`) con límites de importación estrictos aplicados por ESLint.
 - **Modelo de Contenido Estático:** contenido bilingüe en JSON por entidad, validado por tests de integridad de datos.
 - **CI/CD Automatizado:** pipeline de despliegue continuo con Vercel.
+- **Salida para Agentes:** `llms.txt`, robots/sitemap y copias markdown (EN/ES) por ruta, generadas en build desde el mismo contenido JSON.
 
 📖 **[Guía de Arquitectura](ARCHITECTURE.md)** — Patrones y decisiones de diseño.
 🛠️ **[Guía de Operaciones](OPERATIONS.md)** — Despliegue, CI/CD, variables de entorno y setup local.

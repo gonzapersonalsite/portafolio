@@ -66,6 +66,16 @@ flowchart LR
     style browser fill:#eceff1,color:#263238
 ```
 
+### Salida para agentes
+
+El mismo contenido de las entidades alimenta un generador en build (`tooling/agent-files/`, integrado en `vite.config.ts`) que emite, sin nada generado en git:
+
+- `llms.txt`, `robots.txt` y `sitemap.xml` en la raíz del sitio.
+- Copias markdown (`/about/index.md`, `/about/index.es.md`, ...) en inglés y español para cada ruta, enlazadas desde el HTML con `<link rel="alternate" type="text/markdown">`.
+- Un shell HTML por ruta con su propio title, description, canonical y alternates markdown, para que los agentes y crawlers que no ejecutan JavaScript lean el mismo contenido que la SPA.
+
+`pnpm dev` sirve los ficheros generados por middleware; `pnpm build` los emite en `dist/`. Los tests fijan el contenido, la paridad de metadatos con i18n y que todo enlace interno resuelva a un fichero generado.
+
 ---
 
 ## 📐 Modelo de Contenido

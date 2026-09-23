@@ -125,8 +125,8 @@ Eliminar el backend (Render) y la base de datos (Aiven) para acabar con la depen
 - [x] Borrar el script de extracción desechable y artefactos temporales.
 
 ### Fase 7 — Extras opcionales (adopciones de developer-site)
-- [ ] `sitemap.xml` + `robots.txt` (hoy no existen).
-- [ ] `llms.txt` + twins markdown por página.
+- [x] `sitemap.xml` + `robots.txt` (generados en build por `tooling/agent-files`).
+- [x] `llms.txt` + twins markdown por página (EN/ES) + shells HTML por ruta con canonical, metadatos y `rel="alternate"`.
 - [ ] Dimensiones de imagen en datos para cero CLS (técnica de leer headers).
 - [ ] Carpeta `audits/` con evidencia Lighthouse versionada.
 

@@ -46,6 +46,7 @@ The project follows a modern **static frontend architecture**, prioritizing main
 - **Feature-Sliced Frontend:** 6-layer FSD architecture (`app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/`) with strict import boundaries enforced by ESLint.
 - **Static Content Model:** bilingual content in JSON per entity, validated by data-integrity tests.
 - **Automated CI/CD:** continuous deployment pipeline using Vercel.
+- **Agent-Readable Output:** `llms.txt`, robots/sitemap and English/Spanish markdown twins per route, generated at build time from the same JSON content.
 
 📖 **[Architecture Guide](ARCHITECTURE.md)** — Patterns and design decisions.
 🛠️ **[Operations Guide](OPERATIONS.md)** — Deployment, CI/CD, environment variables, and local setup.

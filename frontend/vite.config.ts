@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 import { execSync } from 'child_process'
 // eslint-disable-next-line fsd-lint/no-relative-imports
+import { agentFilesPlugin } from './tooling/agent-files/vitePlugin'
+// eslint-disable-next-line fsd-lint/no-relative-imports
 import pkg from './package.json'
 
 // Get current git commit hash
@@ -18,7 +20,7 @@ export default defineConfig({
     __APP_VERSION__: JSON.stringify(pkg.version),
     __COMMIT_HASH__: JSON.stringify(commitHash),
   },
-  plugins: [react()],
+  plugins: [react(), agentFilesPlugin()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

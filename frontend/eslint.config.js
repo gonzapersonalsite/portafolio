@@ -32,5 +32,16 @@ export default tseslint.config(
       'fsd-lint/no-ui-in-business-logic': 'error',
     },
   },
+  {
+    // FSD boundaries describe the src application; tooling is build-time code.
+    files: ['tooling/**/*.{ts,tsx}'],
+    rules: {
+      'fsd-lint/forbidden-imports': 'off',
+      'fsd-lint/no-relative-imports': 'off',
+      'fsd-lint/no-public-api-sidestep': 'off',
+      'fsd-lint/no-cross-slice-dependency': 'off',
+      'fsd-lint/no-ui-in-business-logic': 'off',
+    },
+  },
   prettierConfig,
 );

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography, Box, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import CircleIcon from '@mui/icons-material/Circle';
+import { normalizeRichText } from '@/shared/lib';
 
 interface RichTextRendererProps {
     text: string;
@@ -10,8 +11,7 @@ interface RichTextRendererProps {
 const RichTextRenderer: React.FC<RichTextRendererProps> = ({ text, variant = 'body1' }) => {
     if (!text) return null;
 
-    let normalizedText = text.replace(/\\n/g, '\n');
-    normalizedText = normalizedText.replace(/([^\n])\s+([●•*◦▪-])/g, '$1\n$2');
+    const normalizedText = normalizeRichText(text);
 
     const lines = normalizedText.split(/\r?\n/);
     

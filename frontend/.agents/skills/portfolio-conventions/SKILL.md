@@ -109,6 +109,14 @@ const { data: projects } = useContent(() => getAllProjects());
 - **Dev**: Vite dev server (port 5173); no API proxy needed
 - **Prod**: Vercel (root dir `frontend/`) with SPA rewrites (`vercel.json`); no `/api` proxy
 
+## Agent-Readable Output
+
+- `tooling/agent-files/` generates `llms.txt`, `robots.txt`, `sitemap.xml`, one English and one Spanish markdown twin per route, and one HTML shell per route (own title, description, canonical and markdown alternates).
+- It runs as a Vite plugin (`vitePlugin.ts`, wired in `vite.config.ts`): `pnpm build` emits the files into `dist/`; `pnpm dev` serves them from middleware. **Nothing generated is committed to git.**
+- Content comes from the entity getters and `shared/lib/richText.ts`; shell metadata mirrors `seo.*` in `shared/config/i18n.ts` and twin labels mirror UI strings. Tests enforce both parities, link integrity across generated files, and deterministic output.
+- Base URL (`BASE_URL`) and the route table live in `tooling/agent-files/routes.ts`. Adding a route to the SPA router requires adding it here too; the generator and its tests then cover it.
+- `src/shared/lib/richText.ts` is the single normalization ruleset shared by `RichTextRenderer` and the twins; change it only in both consumers' interest.
+
 ## Security
 
 - **Scripts**: `.npmrc` with `only-built-dependencies[]=esbuild` (pnpm v11 security)

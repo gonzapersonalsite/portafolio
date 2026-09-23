@@ -66,6 +66,16 @@ flowchart LR
     style browser fill:#eceff1,color:#263238
 ```
 
+### Agent-readable output
+
+The same entity data feeds a build-time generator (`tooling/agent-files/`, wired into `vite.config.ts`) that emits, with nothing generated committed to git:
+
+- `llms.txt`, `robots.txt` and `sitemap.xml` at the site root.
+- Markdown twins (`/about/index.md`, `/about/index.es.md`, ...) in English and Spanish for every route, linked from the HTML with `<link rel="alternate" type="text/markdown">`.
+- One HTML shell per route with its own title, description, canonical address and markdown alternates, so agents and crawlers that do not run JavaScript read the same content as the SPA.
+
+`pnpm dev` serves the generated files through middleware; `pnpm build` emits them into `dist/`. Unit tests pin content, metadata parity with i18n and that every internal link resolves to a generated file.
+
 ---
 
 ## 📐 Content Model
