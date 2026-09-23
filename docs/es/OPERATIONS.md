@@ -19,8 +19,8 @@ El proyecto es **solo estático**: un único despliegue, cero servidores.
 - **Frontend (Vercel):**
   - Vercel despliega automáticamente en cada push a `main` desde el directorio `frontend/`.
   - Vercel detecta pnpm automáticamente mediante el campo `packageManager` de `package.json`.
-  - GitHub Actions ejecuta typecheck + lint + tests en push/PR que toquen `frontend/**` como puerta de calidad.
-  - Variable de entorno requerida en Vercel: `PNPM_APPROVE_BUILDS=true` (requisito de seguridad de pnpm v11).
+  - GitHub Actions ejecuta typecheck + lint + tests + build de producción en push/PR que toquen `frontend/**` como puerta de calidad.
+  - Variable de entorno requerida en Vercel: `PNPM_APPROVE_BUILDS=true` (requisito de seguridad de pnpm v11). El repo declara la misma aprobación para instalaciones locales/CI en `frontend/.npmrc` (`only-built-dependencies[]=esbuild`) y `frontend/pnpm-workspace.yaml` (`allowBuilds`/`onlyBuiltDependencies`).
   - Panel de Vercel: Install Command `pnpm install` y Build Command `pnpm run build`.
 
 Detalles del pipeline:
@@ -34,7 +34,7 @@ Detalles del pipeline:
 - `VITE_EMAILJS_SERVICE_ID`: identificador del servicio de EmailJS.
 - `VITE_EMAILJS_TEMPLATE_ID`: identificador de la plantilla de EmailJS.
 - `VITE_EMAILJS_PUBLIC_KEY`: clave pública de EmailJS.
-- `PNPM_APPROVE_BUILDS`: valor `true` en Vercel para permitir los scripts de build de esbuild (requisito de pnpm v11+).
+- `PNPM_APPROVE_BUILDS`: valor `true` en Vercel para permitir los scripts de build de esbuild (requisito de pnpm v11+). La aprobación en el repo vive en `frontend/.npmrc` y `frontend/pnpm-workspace.yaml`.
 
 Desarrollo local: coloca las tres variables `VITE_EMAILJS_*` en `frontend/.env.local` (gitignored; las claves esperadas están documentadas en `frontend/.env.example`). Vercel mantiene los valores de producción en el panel del proyecto.
 
@@ -56,6 +56,8 @@ pnpm test     # Vitest: unit + integridad del contenido
 pnpm build    # Compilación TypeScript + build de producción con Vite
 ```
 
+`pnpm build` también alimenta `pnpm preview`, que sirve el bundle de producción en local. Un hook de Husky en pre-commit (`.husky/pre-commit`, instalado por el script `prepare` al hacer `pnpm install`) ejecuta `lint-staged`: ESLint sobre los ficheros `*.ts`/`*.tsx` en stage.
+
 ---
 
 ## 🧠 Gestión de Contenido
@@ -74,7 +76,9 @@ El contenido vive en `frontend/src/entities/<entidad>/api/data.json`:
 | Experiencia | `entities/experience/api/data.json` | ordenado por `endDate` DESC (sin fecha primero), luego `startDate` DESC; omitir `endDate` en puestos actuales |
 | Idiomas | `entities/spoken-language/api/data.json` | ordenado por `order` asc |
 
-**Añadir un proyecto:** añade un objeto al array de proyectos con `id` (slug), textos bilingües, `technologies`, `imageUrls`, `imageUrlsFull`, `githubUrl`/`liveUrl`, `type`, `featured` y el siguiente valor de `order`.
+**Añadir un proyecto:** añade un objeto al array de proyectos con `id` (slug), textos bilingües, `technologies`, `imageUrls`, `imageUrlsFull`, `githubUrl`/`liveUrl`, `type`, `featured` y el siguiente valor de `order`. `imageUrls` e `imageUrlsFull` deben tener la misma longitud, y cada fichero referenciado debe existir en `public/images/projects/<slug>/`.
+
+**Texto enriquecido:** las descripciones pueden guardar saltos de línea como secuencias literales `\n` y listas como líneas que empiezan por `●` (también `•`, `*`, `◦`, `▪`, `-`). `src/shared/lib/richText.ts` normaliza ambas convenciones para la UI y los twins markdown generados.
 
 ### 2. Añadir imágenes
 
@@ -89,20 +93,20 @@ npx -y sharp-cli@5 -i origen.png -o "public/images/projects/<slug>/{name}-800.we
 npx -y sharp-cli@5 -i origen.png -o "public/images/projects/<slug>/{name}-full.webp" -q 82
 ```
 
-Reglas: solo WebP, calidad ~82, sin hosts de imágenes externos. La foto de perfil vive en `images/profile/`; la vista previa social es `public/og-cover.jpg` (1200×630 JPEG, regenerar cuando haga falta).
+`npx -y` descarga y ejecuta `sharp-cli`; úsalo solo con imágenes de origen propias y de confianza. Reglas: solo WebP, calidad ~82, sin hosts de imágenes externos. La foto de perfil vive en `images/profile/`; la vista previa social es `public/og-cover.jpg` (1200×630 JPEG, regenerar cuando haga falta).
 
 ### 3. Verificar
 
 ```bash
 cd frontend
-pnpm test    # los tests de integridad de datos FALLAN si falta una imagen, hay URLs externas o se rompe el contrato/orden
+pnpm test    # los tests de integridad de datos FALLAN si falta una imagen, hay URLs externas, las listas de imágenes no coinciden o se rompe el contrato/orden
 pnpm lint
 pnpm build
 ```
 
 ### 4. Publicar
 
-Haz commit y push a `main` → Vercel despliega automáticamente (GitHub Actions ejecuta typecheck + lint + tests como puerta de calidad).
+Haz commit y push a `main` → Vercel despliega automáticamente (GitHub Actions ejecuta typecheck + lint + tests + build de producción como puerta de calidad).
 
 ---
 

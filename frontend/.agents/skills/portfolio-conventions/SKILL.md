@@ -6,16 +6,18 @@ This skill documents project-specific decisions for the Portfolio application. I
 
 ## Stack
 
-| Category | Choice | Version |
-|---|---|---|
-| UI Library | MUI (Material UI) | v7 |
-| Routing | React Router DOM | v7 |
-| State (UI) | React Context API | — |
-| Forms | plain controlled components | — |
-| i18n | i18next + react-i18next | latest |
-| Email | EmailJS | v4 |
-| Testing | Vitest + Testing Library | latest |
-| CSS | MUI `sx` prop + Emotion + CSS co-located in `ui/` | — |
+| Category | Choice |
+|---|---|
+| UI Library | MUI (Material UI) |
+| Routing | React Router DOM |
+| State (UI) | React Context API |
+| Forms | plain controlled components |
+| i18n | i18next + react-i18next |
+| Email | EmailJS |
+| Testing | Vitest + Testing Library |
+| CSS | MUI `sx` prop + Emotion + CSS co-located in `ui/` |
+
+Versions live in `frontend/package.json`; do not duplicate them in documentation.
 
 ## Architecture (static content)
 
@@ -48,7 +50,7 @@ The portfolio is a **fully static frontend**. There is no backend, no HTTP clien
 
 ## Routing
 
-- **Library**: React Router DOM v7
+- **Library**: React Router DOM (version in `package.json`)
 - **Pattern**: `React.lazy()` for all page components (code-splitting)
 - **Layouts**: all pages wrapped in `PublicLayout` (Navbar + Footer + Outlet)
 - **Fallback**: `<Suspense>` with page-specific skeleton loaders
@@ -95,13 +97,14 @@ const { data: projects } = useContent(() => getAllProjects());
 
 ## Testing
 
-- **Framework**: Vitest v4 + @testing-library/react v16
+- **Framework**: Vitest + @testing-library/react (versions in `package.json`)
 - **Environment**: jsdom
 - **Mocks**: `vi.mock` at module level, `vi.fn()` for spies
 - **Conventions**: co-located tests (`*.test.ts(x)` next to source), `describe`/`it` blocks, mocks before imports
 - **MUI mock**: Provides minimal stubs for MUI (`@mui/material`, `@mui/icons-material`) used during testing (aliased in `vitest.config.ts`).
 - **Content integrity tests**: `entities/<entity>/api/data.test.ts` validate the static JSON (contract, ordering, images exist via `import.meta.glob`).
 - **Run**: `pnpm test` (CI: `frontend-ci.yml`)
+- **Local gate**: a Husky pre-commit hook (installed by the `prepare` script on `pnpm install`) runs `lint-staged` — ESLint over staged `*.ts`/`*.tsx` files.
 
 ## Build & Deploy
 
@@ -119,13 +122,15 @@ const { data: projects } = useContent(() => getAllProjects());
 
 ## Security
 
-- **Scripts**: `.npmrc` with `only-built-dependencies[]=esbuild` (pnpm v11 security)
+- **Scripts**: esbuild's build script is approved in-repo via `only-built-dependencies[]=esbuild` (`frontend/.npmrc`) and `pnpm-workspace.yaml` (`allowBuilds`/`onlyBuiltDependencies`); pnpm v11 security requirement.
 - **Contact form**: EmailJS in the browser (keys are public by design); no secrets stored in the repo. The network call lives in `features/contact-form/api/contactApi.ts` and is bounded by a 15s timeout; form state and notifications live in `features/contact-form/model/useContactForm.ts`.
 - No authentication surface exists in this app
 
 ## File Organization (FSD)
 
 See `AGENTS.md` and `react-fsd-maintainer/SKILL.md` for the canonical FSD layer hierarchy and import rules.
+
+**Template supersession (deliberate):** the HTTP/API two-layer pattern and the store examples in those template files are generic and do not apply to this repository — there is no backend and no `shared/api/`. FSD boundaries govern `src/` only; `tooling/**` is build-time code and is exempted from the `fsd-lint` rules in `eslint.config.js` on purpose. Do not remove that exemption.
 
 ## Peer Skills
 

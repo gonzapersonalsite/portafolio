@@ -14,7 +14,7 @@ El proyecto es una **aplicación frontend totalmente estática**. No hay backend
 
 ### ⚛️ Arquitectura del Frontend
 - **Feature-Sliced Design (FSD):** código organizado en 6 capas canónicas — `app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/` — con reglas de importación estrictas aplicadas por `eslint-plugin-fsd-lint`.
-- **Modelo de Contenido Estático:** todo el contenido de negocio (perfil, proyectos, habilidades, experiencias, idiomas hablados) vive en JSON bilingües dentro del segmento `api/` de cada entidad (`frontend/src/entities/<entidad>/api/data.json`). El contenido se lee de forma síncrona en runtime y se valida en tiempo de build/test.
+- **Modelo de Contenido Estático:** todo el contenido de negocio (perfil, proyectos, habilidades, experiencias, idiomas hablados) vive en JSON bilingües dentro del segmento `api/` de cada entidad (`frontend/src/entities/<entidad>/api/data.json`). El contenido se lee de forma síncrona en runtime y lo valida la suite de tests.
 - **Gestión de Estado:** React Context API para preocupaciones transversales como Tema, Idioma y Notificaciones. No existe estado de servidor.
 - **Localización Dinámica:** sistema centralizado i18next para traducción de la interfaz en tiempo real; los campos de contenido son pares bilingües En/Es en los JSON de datos.
 
@@ -84,11 +84,11 @@ El esquema de contenido refleja el contrato de la API anterior (campos bilingüe
 
 | Entidad | Ubicación JSON | Campos clave |
 |---|---|---|
-| Perfil | `entities/profile/api/data.json` | greeting, title, subtitle, description, about*, cvUrl, redes, imageUrl (pares En/Es) |
-| Proyecto | `entities/project/api/data.json` | title, description, technologies, imageUrls, githubUrl, liveUrl, type, featured, order |
+| Perfil | `entities/profile/api/data.json` | greeting, title, subtitle, description, about*, sentence, fullName, location, email, githubUrl, linkedinUrl, cvUrl, logoText, imageUrl (pares En/Es) |
+| Proyecto | `entities/project/api/data.json` | id, title, description, technologies, imageUrls, imageUrlsFull, githubUrl, liveUrl, type, featured, order |
 | Habilidad | `entities/skill/api/data.json` | name, level (0-100), category, order |
 | Experiencia | `entities/experience/api/data.json` | company, position, fechas, description, technologies |
-| Idioma | `entities/spoken-language/api/data.json` | name, level, proficiency, order |
+| Idioma | `entities/spoken-language/api/data.json` | name, level, proficiency, order (pares En/Es) |
 
 **Reglas de integridad** (aplicadas por `data.test.ts` de cada entidad):
 - Toda imagen referenciada debe existir en `public/images/` y ser una ruta local.

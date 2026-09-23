@@ -14,7 +14,7 @@ The project is a **fully static frontend application**. There is no backend, no 
 
 ### ⚛️ Frontend Architecture
 - **Feature-Sliced Design (FSD):** Codebase organized into 6 canonical layers — `app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/` — with strict import rules enforced by `eslint-plugin-fsd-lint`.
-- **Static Content Model:** All business content (profile, projects, skills, experiences, spoken languages) lives in bilingual JSON files inside each entity's `api/` segment (`frontend/src/entities/<entity>/api/data.json`). Content is read synchronously at runtime and is validated at build/test time.
+- **Static Content Model:** All business content (profile, projects, skills, experiences, spoken languages) lives in bilingual JSON files inside each entity's `api/` segment (`frontend/src/entities/<entity>/api/data.json`). Content is read synchronously at runtime and is validated by the test suite.
 - **State Management:** React Context API for cross-cutting concerns like Theme, Language, and Notifications. No server state exists.
 - **Dynamic Localization:** Centralized i18next system for real-time interface translation; content fields are bilingual En/Es pairs in the JSON data.
 
@@ -84,11 +84,11 @@ The content schema mirrors the previous API contract (bilingual fields, ordered 
 
 | Entity | JSON location | Key fields |
 |---|---|---|
-| Profile | `entities/profile/api/data.json` | greeting, title, subtitle, description, about*, cvUrl, socials, imageUrl (En/Es pairs) |
-| Project | `entities/project/api/data.json` | title, description, technologies, imageUrls, githubUrl, liveUrl, type, featured, order |
+| Profile | `entities/profile/api/data.json` | greeting, title, subtitle, description, about*, sentence, fullName, location, email, githubUrl, linkedinUrl, cvUrl, logoText, imageUrl (En/Es pairs) |
+| Project | `entities/project/api/data.json` | id, title, description, technologies, imageUrls, imageUrlsFull, githubUrl, liveUrl, type, featured, order |
 | Skill | `entities/skill/api/data.json` | name, level (0-100), category, order |
 | Experience | `entities/experience/api/data.json` | company, position, dates, description, technologies |
-| SpokenLanguage | `entities/spoken-language/api/data.json` | name, level, proficiency, order |
+| SpokenLanguage | `entities/spoken-language/api/data.json` | name, level, proficiency, order (En/Es pairs) |
 
 **Integrity rules** (enforced by `data.test.ts` per entity):
 - Every referenced image must exist in `public/images/` and be a local path.

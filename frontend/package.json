@@ -5,6 +5,9 @@
   "version": "1.0.1",
   "license": "UNLICENSED",
   "packageManager": "pnpm@11.5.2",
+  "engines": {
+    "node": ">=24"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",

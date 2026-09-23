@@ -4,6 +4,5 @@ export interface Skill {
     nameEs: string;
     level: number;
     category: string;
-    iconUrl?: string;
     order: number;
 }
