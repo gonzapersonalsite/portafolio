@@ -16,7 +16,7 @@ This skill documents project-specific decisions for the Portfolio application. I
 | Email | EmailJS |
 | Testing | Vitest + Testing Library |
 | CSS | MUI `sx` prop + Emotion + CSS co-located in `ui/` |
-| Typography | Inter Variable via `@fontsource-variable/inter`; no external font CDNs |
+| Typography | Inter Variable via `@fontsource-variable/inter`, latin subset preloaded by the build; no external font CDNs |
 
 Versions live in `frontend/package.json`; do not duplicate them in documentation.
 
@@ -30,41 +30,60 @@ The portfolio is a **fully static frontend**. There is no backend, no HTTP clien
   - `entities/skill/api/data.json`
   - `entities/experience/api/data.json`
   - `entities/spoken-language/api/data.json`
-- The `api/` segment is the **data access layer**: the `*.ts` files in `api/` import the JSON and expose plain synchronous getters (`getAllProjects()`, `getFeaturedProjects()`, `getProfile()`, `getAllSkills()`, `getAllExperiences()`, `getAllSpokenLanguages()`).
-- Content is **bilingual by design**: every text field is an En/Es pair (`titleEn`/`titleEs`). Language switch only re-renders.
+- The `api/` segment is the **data access layer**: the `*.ts` files in `api/` import the JSON and expose plain synchronous getters (`getAllProjects()`, `getFeaturedProjects()`, `getProfile()`, `getSkillGroups()`, `getCoreSkills()`, `getAllExperiences()`, `getAllSpokenLanguages()`). A slice's `index.ts` exports only the getters other layers use (`getAllSkills()` stays internal to the skill slice).
+- Content is **bilingual by design**: every translatable text field is an En/Es pair (`titleEn`/`titleEs`). Technologies, skill categories (translated through i18n), URLs, `logoText` and `alternateName` hold a single value. Language switch only re-renders.
 - Adding/editing content = **editing JSON** (data change, not code change). No CMS, no admin panel.
-- Data integrity is enforced by co-located tests (`entities/<entity>/api/data.test.ts`): they validate the field contract, ordering, and that every referenced image exists in `public/images/`.
-- All images are **self-hosted** under `frontend/public/images/`. External image hosts are forbidden (enforced by data-integrity tests).
+- Data integrity is enforced by co-located tests (`entities/<entity>/api/data.test.ts`): they validate the field contract, ordering, that every referenced image exists in `public/images/`, and that no project image ships unused.
+- All images are **self-hosted** in `frontend/public/`: content images under `images/` (project folders, `profile/`, `no-image.svg`), icons under `icons/`, the social preview and the profile fallback at the root. External image hosts are forbidden (enforced by data-integrity tests and by the CSP's `img-src 'self'`).
 
 ## Image Strategy
 
-- **Format:** WebP (Baseline widely available), quality 82 for project screenshots, 85 for the profile photo. No PNG/JPEG payloads in the bundle (except `og-cover.jpg` for social crawlers, which reject WebP).
-- **Two variants per project image:**
-  - `<name>-800.webp` — covers and gallery thumbnails (`Project.imageUrls`)
-  - `<name>-full.webp` — lightbox fullscreen view (`Project.imageUrlsFull`, optional fallback to `imageUrls`)
-  - Thumbnails reuse the `-800` file, so they hit the same cache entry as the card cover.
-- **Social preview:** `public/og-cover.jpg` (1200×630) referenced from `index.html` `og:image`.
-- **Fallbacks:** `images/no-image.svg` (general), `profile-fallback.webp` (profile). Both local.
-- **No layout shift (CLS):** every `ImageWithFallback` usage MUST pass `aspectRatio` (project covers `16/9`, profile photo `2/3`) so the container reserves space while the image loads.
-- **Lazy loading:** `loading="lazy"` on all below-the-fold images (project covers, profile photo). Nothing image-like sits above the fold (LCP is the hero text), so no `fetchpriority="high"` is needed; never combine `fetchpriority` with `loading="lazy"`.
-- When adding/replacing images: generate both WebP variants (e.g. `sharp resize 800` + full-size, q82), update `data.json`, and run `pnpm test` (integrity tests check every referenced file exists on disk).
-- **Cache immutability:** Vercel serves `/assets/*`, `/images/*` and `/favicon.ico` immutable for 1 year (`vercel.json`). Vite hashes JS/CSS filenames, so they refresh every build; image filenames do not. When replacing an image's content, **rename the file** (bump the numeric prefix) and update `data.json`. `index.html` stays `max-age=0, must-revalidate` so deployments are picked up immediately.
+- **Format:** WebP (Baseline widely available), quality 82 for project screenshots, 85 for the profile photo. No PNG/JPEG payloads in the bundle, except the social preview JPEG (social crawlers reject WebP) and the icons.
+- **Project image model:** `Project.images` is an ordered list of `ProjectImage` objects (`base`, `fullWidth`, `altEn`, `altEs`); the first one is the card cover. Never reintroduce parallel URL arrays. Variant URLs are derived from `base` only through `projectImageUrl(image, variant)` and the cover sources only through `projectCoverSources(project)` (`entities/project/model/projectImages.ts`); do not build `-800`/`-full`/`-thumb` paths by hand.
+- **Covers:** the card shows its cover at `PROJECT_COVER_RATIO` (16:9) and crops anything else, so every cover is composed at exactly that ratio: a real product screenshot cropped to its content, or extended with rows of the screenshot's own plain background when it is too short. Never upscale, never put browser chrome in a screenshot, and keep logos in the gallery rather than on the cover. `data.test.ts` checks the ratio of all three variants.
+- **Three variants per project image**, all sharing `base`:
+  - `<base>-thumb.webp` — 160 px wide, gallery thumbnail strip
+  - `<base>-800.webp` — 800 px wide, card cover
+  - `<base>-full.webp` — original size, fullscreen gallery; also the high-density candidate of the cover `srcset` when `fullWidth` > 800 (never offer a `w` descriptor larger than the file)
+- **Alt texts:** every project image carries `altEn`/`altEs` describing what the screenshot shows (≤ 250 characters, EN and ES different, strictly parallel in meaning). Write them by looking at the image; the gallery shows the alt under the image as a caption, and the cover uses the first image's alt.
+- **Social preview:** `public/og-cover-typographic.jpg` (1200×630 JPEG, quality 85): the GONZALO.DEV wordmark, name, role and main stack in Inter on the dark theme's hero gradient, no photo, at least 64 px from every edge, with name and role inside the central 630×630 square for previews that crop it square. It is rendered from an HTML page in headless Edge. `index.html` references it from `og:image` and `twitter:image` by a root-relative path; the build makes both absolute (`SITE_URL`) and refuses any other form. `og:image:alt` and `twitter:image:alt` carry the same text and describe what the image shows. Social platforms cache previews by URL, so a changed image gets a new file name.
+- **Icons:** `public/icons/` holds the GONZALO.DEV monogram (a white "G" and a `#90caf9` dot on the hero gradient): `gonzalo-dev.svg` (preferred), `gonzalo-dev.ico` (16, 32 and 48 px; linked with `sizes="32x32"` so browsers still pick the SVG) and `gonzalo-dev-180.png` (opaque, full-bleed apple-touch icon). The icon is the portfolio's own; never reuse another product's icon. `tooling/hosting/vercelConfig.test.ts` checks that every icon and social image `index.html` links exists in `public/`.
+- **Fallbacks:** `images/no-image.svg` (project), `profile-fallback.webp` (profile). Both local; `ImageWithFallback` picks one by its required `type`.
+- **No layout shift (CLS):** `ImageWithFallback` requires `aspectRatio` (project covers `PROJECT_COVER_RATIO`, profile photo `2/3`) so the container reserves space while the image loads.
+- **Lazy loading:** `loading="lazy"` on below-the-fold images only. The LCP image of a route that shows one above the fold is rendered with `loading="eager"` + `fetchpriority="high"` and preloaded by the route shell with the exact same sources through `RouteSpec.lcpImage` (`tooling/agent-files/routes.ts`, asserted in `shell.test.ts`): the first project cover on `/projects` (`ProjectCard` `priority`) and the profile photo on `/about`. Home featured cards and the Home profile photo sit below the hero and stay lazy. Never combine `fetchpriority` with `loading="lazy"`.
+- When adding/replacing images: generate the three WebP variants with ffmpeg + libwebp at q82 (`scale='min(160,iw)':-2`, `scale='min(800,iw)':-2` and full size; the exact commands are in `OPERATIONS.md` → *Add images*), record `fullWidth` and both alt texts in `data.json`, and run `pnpm test` (integrity tests check that every variant exists on disk with the width `fullWidth` implies). **Never upscale:** when the source is 800 px wide or narrower, the `-800` variant has the size of the `-full` one (same rule for `-thumb` below 160 px); `min(…, iw)` guarantees it. Do not document or run `npx` image tools: ffmpeg downloads nothing.
+- **Cache immutability:** Vercel serves `/assets/*`, `/images/*` and `/icons/*` immutable for 1 year (`vercel.json`). Vite hashes JS/CSS filenames, so they refresh every build; image filenames do not. When replacing an image's content, **rename the file**: keep the numeric prefix (it is the gallery position), change the descriptive part, and rename the `-thumb`, `-800` and `-full` variants together so they keep one base name; then update `base` in `data.json`. A changed icon likewise gets new file names in `public/icons/` and new links in `index.html`. `index.html` stays `max-age=0, must-revalidate` so deployments are picked up immediately.
+
+## Project Links and Cards
+
+- `Project.links` is an ordered list of `ProjectLink` (`{ kind, url }`); never add per-link fields such as `githubUrl`/`liveUrl` back to `Project`.
+- `PROJECT_LINK_KINDS` (`entities/project/model/projectLinks.ts`) is the single registry of link kinds: each entry holds its i18n label key and its emphasis (`primary` = filled button, `secondary` = text button). The icon lives in `LINK_ICONS` (`ProjectCard.tsx`), because icons are UI.
+- Adding a kind = one registry entry + its `projects.links.<kind>` label in `shared/config/i18n.ts` (EN and ES) + its twin label in `tooling/agent-files/labels.ts` (`links.<kind>`) + its icon. Card, twin and `llms.txt` logic never branch on a kind. `labels.test.ts` enforces the label parity; the `Record<ProjectLinkKind, …>` types enforce the icon and twin label.
+- Twins list every link with the registry labels in data order; `llms.txt` links the title to the first primary link and appends the others.
+- Project data tests require registered kinds, `https` URLs and no repeated URL within a project.
+- Cards show the first paragraph of the description (`splitDescription`) and reveal the rest with a *Read more* button (`aria-expanded`, `aria-controls`); the collapsed part stays findable with `hidden="until-found"` (`useFindableDisclosure`). Never put a fixed-height scroll box inside a card.
+- Card action buttons and the Read more button carry `aria-describedby` pointing at the card title, so repeated labels ("Visit Site") keep their context for assistive technology.
+- The card title is an `h3` under a section heading (Home) and an `h2` when the cards sit right under the page `h1` (`/projects` passes `titleComponent="h2"`).
 
 ## Routing
 
 - **Library**: React Router DOM (version in `package.json`)
-- **Pattern**: `React.lazy()` for all page components (code-splitting)
+- **Single route list**: `APP_ROUTES` (`shared/config/routes.ts`, `{ id, path }` in menu order). The router (`app/routing/AppRouter.tsx`), both navigation menus and the build-time route shells (`tooling/agent-files/routes.ts`, whose `SHELLS` is a `Record<RouteId, …>`) derive from it. Adding a page = one `APP_ROUTES` entry + its `nav.<id>` label + its loader and skeleton in `AppRouter` + its shell; TypeScript flags every missing piece.
+- **Pattern**: `React.lazy()` for all page components (code-splitting); each page loader is declared once in `PAGE_LOADERS` and reused by the idle prefetch. Page slices export only their default component.
 - **Layouts**: all pages wrapped in `PublicLayout` (Navbar + Footer + Outlet)
 - **Fallback**: `<Suspense>` with page-specific skeleton loaders
-- Routes: `/`, `/about`, `/skills`, `/experience`, `/projects`, `/contact`; catch-all redirects to `/`
+- **Route changes**: `useRouteChangeFocus` (`app/layouts/lib/`) scrolls a new page to the top and moves the focus to `<main id="main-content">`, except on back/forward (the browser restores those) and hash-only changes (skip link, return to top).
+- **Canonical links**: `useCanonicalLinks` (`app/layouts/lib/`, called once in `PublicLayout`) points the canonical link, `og:url` and both markdown alternates at the current page after every client-side navigation; it only updates tags the route shell has (the dev server and `404.html` have none).
+- Routes: `/`, `/about`, `/skills`, `/experience`, `/projects`, `/contact`. Any other address is a real 404: Vercel serves `404.html` (status 404, `noindex`), whose app sends the visitor home through the router's catch-all (`*` → `/`). Never add a catch-all rewrite to `vercel.json`: it answers missing assets and images with the home page and status 200.
 
 ## State Management
 
 - **No global server state** and **no Zustand**. Content is read synchronously via the entity getters.
 - **React Context** is used for cross-cutting UI state only:
-  - **Theme** (`features/theme-switch/`): `light | dark | glass`. Persisted to `localStorage: themeMode`. MUI `ThemeProvider` wraps app.
-  - **Language** (`features/language-switch/`): `en | es`. Persisted to `localStorage: language`. i18next `changeLanguage` on toggle.
-  - **Notifications** (`features/notifications/`): MUI Snackbar + Alert for form feedback.
+  - **Theme** (`features/theme-switch/`): `ColorMode` = `light | dark | glass` (`COLOR_MODES` in `shared/config/theme.ts`). Until the visitor picks one, the theme follows the operating system (`prefers-color-scheme`, live); only an explicit choice (`setColorMode`) is saved to `localStorage: themeMode`. MUI `ThemeProvider` wraps the app with the single `CssBaseline` (`enableColorScheme`, so scrollbars and form controls follow the theme).
+  - **Language** (`features/language-switch/`): `Language` = `en | es` (`SUPPORTED_LANGUAGES` in `shared/config/language.ts`). Only an explicit choice (`setLanguage`) or a `?lang=` link is saved to `localStorage: language`; the provider then drops the `lang` parameter from the address. i18next `changeLanguage` and `<html lang>` follow the context.
+  - **Notifications** (`features/notifications/`): MUI Snackbar + Alert for form feedback. The notifier signature is `ShowNotification` (`shared/lib`).
+- **Storage**: never touch `localStorage` directly. Use `readStorage`/`writeStorage` (`shared/lib/storage.ts`): browsers that block site data throw on any access, and a preference must never blank the page. Validate what you read (only known modes and languages).
 
 ## Content Fetching Pattern
 
@@ -84,18 +103,42 @@ const { data: projects } = useContent(() => getAllProjects());
 ## i18n
 
 - **Languages**: English (`en`), Spanish (`es`)
-- **Detection**: localStorage → navigator.language → fallback `en`
+- **Detection** (`resolveInitialLanguage`, before the first render): `?lang=es|en` → saved choice → `navigator.language` → fallback `en`; anything but `en`/`es` (after dropping the region) is ignored. `?lang=` makes shareable Spanish links; there are no `/es/` routes: Spanish is applied in the browser and is not indexable. SEO metadata, canonical URLs and `og:locale` (`en_US`, no `og:locale:alternate`) stay English.
+- **Language menu**: options are endonyms (`English`, `Español`) with their `lang` attribute, never translated names.
+- **Dates and numbers**: use `formatMonthYear`/`formatPeriod`/`formatPercent` (`shared/lib/localeFormat.ts`) in the UI and the twins alike. Content dates are ISO `YYYY-MM-DD`, formatted in UTC as short month and year (`Mar 2025 – Jun 2025`, `mar 2025 – Actualidad`); Spanish percentages carry a non-breaking space (`80 %`).
 - **Translation files**: inline in `shared/config/i18n.ts`. UI strings only; content text lives in the JSON data (En/Es fields).
 - Keep `i18n.ts` pruned: a key must be reachable from code via `t()`/`i18n.t()`; remove unused keys when touching components.
 - Bilingual content fields (En/Es) are resolved with `getLocalizedText(language, en, es)` from `@/shared/lib`. Do not re-implement the En/Es fallback inline.
+- Content is never duplicated in `i18n.ts`: pages render profile/project/experience text straight from the JSON, with no `|| t(...)` fallback. The entity `data.test.ts` files require both sides of every rendered En/Es pair instead.
+- `t()` calls never pass inline default text: use `t('key')` or `t('key', { vars })`. `shared/config/i18n.test.ts` fails when the English and Spanish key sets differ or a static key used in `src/` is missing in either locale.
+- Spanish copy targets Spain (`es_ES`) and uses sentence case for headings, buttons and titles (only the first word and proper nouns capitalised); English UI headings use Title Case. Keep EN and ES strictly parallel in meaning.
+- `technologies` arrays (projects, experience) are shown untranslated in both languages, so they hold technology names only, never phrases, with their official casing (`TypeScript`, `Spring Boot`, `Tailwind CSS`, `Node.js`). A localisation chip is written `i18n (<language codes>)`, e.g. `i18n (EN/ES)`.
+- Content values that are single-language keys (skill `category`) are translated through i18n (`skills.categories.<Category>`) and mirrored in the twin labels (`tooling/agent-files/labels.ts`); `labels.test.ts` fails if a category of `SKILL_CATEGORY_ORDER` lacks either.
+- The *Open to work* / *Disponible* badge is UI, not data: `StatusBadge` with `common.openToWork` on the Home hero and the Experience page, mirrored as `**Open to work**` in those two twins (`openToWorkLine`, `TWIN_LABELS.openToWork`). Showing or hiding it changes those three places and `twins.test.ts` together.
+
+## Skills
+
+- `SKILL_CATEGORY_ORDER` (`entities/skill/model/categories.ts`) is the closed list of categories and their display order (development stacks first). `getSkillGroups()` groups skills in that order for the Skills page and its twin; the skill data test rejects unknown categories.
+- Core competencies (About page and its twin) come only from `getCoreSkills()`: the Frontend, Backend, Database, Mobile and Desktop skills with `level` ≥ `CORE_SKILL_LEVEL` (70). Never filter by level anywhere else.
 
 ## Theming
 
 - **Three modes**: `light`, `dark`, `glass` (Liquid Glass aesthetic)
-- **Glass mode**: MUI dark base + glass morphism effects (backdrop-filter blur, neon colors, text shadows)
+- **Glass mode**: MUI dark base + glass morphism effects (backdrop-filter blur, neon colors, text shadows). The navbar uses the theme's dark translucent `MuiAppBar` with light text. Only contained buttons (neon tint + turquoise border) and outlined buttons (plain glass) get a glass surface; text buttons stay transparent so the button hierarchy survives.
 - **Theme factory**: `createAppTheme(mode)` in `shared/config/theme.ts`
 - **Glass constants**: `glassColors`, `glassEffects` in `shared/config/glassStyles.ts`
+- **First paint**: an inline script in `index.html` applies the saved or system mode's `background.default`, `color-scheme` and `theme-color` before the JavaScript loads (no white flash in dark and glass); `ThemeProvider` removes those inline styles on mount and `CssBaseline` owns the page colours from then on. The script mirrors `ThemeProvider` and `createAppTheme`: `ThemeProvider.test.tsx` runs it for every mode, and the CSP allows it by hash (see Security).
 - **Neon colors**: turquoise `#5DE0E6`, violet `#8A6EFF`, pink `#FF7B9C`
+- **Contrast**: text meets 4.5:1 and outlines 3:1 in all three modes. Text placed on a gradient gets a solid surface (hero *Download CV*, `StatusBadge`); the hero gradient start is chosen per mode (`HERO_GRADIENT_START`); outlined inputs use the stronger `MuiOutlinedInput` border from the theme.
+
+## Accessibility
+
+- Headings follow the outline: one `h1` per page, then `h2`/`h3` without gaps. Set `component` whenever the MUI variant would emit the wrong level (`subtitle1`/`subtitle2` render `h6`, `h5` renders `h5`); plain text such as skill names and companies uses `component="p"`.
+- The desktop links and the drawer list each sit in a `<nav aria-label>`; the current page carries `aria-current="page"` (plus an underline or `selected`, not colour alone). The menu button exposes `aria-expanded`/`aria-controls` and the drawer is named.
+- The language and theme selectors are menu buttons (`aria-haspopup="menu"`, `aria-expanded`, `aria-controls`, menu labelled by its button, `menuitemradio` + `aria-checked` items). Below `sm` they show only the icon, so their `aria-label` is the name and it contains the visible text (`Language: English (EN)`, `Theme: Dark`).
+- The fixed header never covers the focus (`scroll-padding-top` in `app/styles/index.css`). The return-to-top link appears after scrolling (`.visible`) and is always reachable by keyboard.
+- Forms validate in the site language (`noValidate` + translated `helperText`, focus on the first invalid field), declare `autoComplete` for personal data, and mark the busy submit button with `aria-disabled` (never `disabled`, which drops the focus).
+- Print ("Save as PDF") renders black text on white without the header in every theme (`@media print` in `app/styles/index.css`).
 
 ## Testing
 
@@ -103,30 +146,41 @@ const { data: projects } = useContent(() => getAllProjects());
 - **Environment**: jsdom
 - **Mocks**: `vi.mock` at module level, `vi.fn()` for spies
 - **Conventions**: co-located tests (`*.test.ts(x)` next to source), `describe`/`it` blocks, mocks before imports
-- **MUI mock**: Provides minimal stubs for MUI (`@mui/material`, `@mui/icons-material`) used during testing (aliased in `vitest.config.ts`).
+- **Real MUI**: MUI renders in jsdom, so there is no global MUI mock; component tests render the real providers they need (`MemoryRouter`, `LanguageProvider`, `ThemeProvider`) and query by role and accessible name. Assertions use plain DOM APIs (`getAttribute`, `textContent`); jest-dom is not a dependency. jsdom has no `matchMedia` or `scrollTo`: stub them per test (`vi.stubGlobal`, `vi.spyOn`).
 - **Content integrity tests**: `entities/<entity>/api/data.test.ts` validate the static JSON (contract, ordering, images exist via `import.meta.glob`).
 - **Run**: `pnpm test` (CI: `frontend-ci.yml`)
-- **Local gate**: a Husky pre-commit hook (installed by the `prepare` script on `pnpm install`) runs `lint-staged` — ESLint over staged `*.ts`/`*.tsx` files.
+- **Local gate**: a Husky pre-commit hook (installed by the `prepare` script on `pnpm install`; after `pnpm install --ignore-scripts`, run `pnpm run prepare`) runs `lint-staged` — ESLint over staged `*.ts`/`*.tsx` files.
 
 ## Build & Deploy
 
-- **Build**: `tsc -b && vite build` with chunk splitting: `react-vendor` (react, react-dom, react-router-dom), `mui-vendor` (@mui/material, @mui/icons-material)
+- **Build**: `tsc -b && vite build`. `tsconfig.json` is a solution file: `tsc -b` type-checks `tsconfig.app.json` (`src` and `tooling`, browser libs) and `tsconfig.node.json` (`vite.config.ts`, `vitest.config.ts`, Node libs).
+- **Chunks** (`build.rolldownOptions.output.codeSplitting`): `react-vendor` (react, react-dom, scheduler, react-router, react-router-dom) and `mui-vendor` (only the `@mui/*` and `@emotion/*` modules of the first render, `tags: ['$initial']`); MUI components used by a single page (Timeline, TextField, Dialog) stay in that page's chunk. Do not go back to `manualChunks`: Rolldown deprecates it and it pulled React into `mui-vendor`.
 - **TypeScript side-by-side layout**: `typescript` is aliased to `@typescript/typescript6` — the programmatic API that typescript-eslint consumes, exposing `tsc6` — while `@typescript/native` provides the native compiler that `tsc` (and therefore `pnpm build`) resolves to. Do not collapse them into a single `typescript` dependency until typescript-eslint supports the native compiler API.
-- **Dev**: Vite dev server (port 5173); no API proxy needed
-- **Prod**: Vercel (root dir `frontend/`) with SPA rewrites (`vercel.json`); no `/api` proxy
+- **Dev**: Vite dev server on `localhost:5173` (`pnpm dev --host` to open it from a phone on the LAN); no API proxy needed. It serves the agent files but not the route shells: check shell metadata with `pnpm build && pnpm preview` at the trailing-slash address (`/about/`).
+- **Prod**: Vercel (root dir `frontend/`) with no rewrites: every route is a file of its own and any other address gets `404.html`; no `/api` proxy
+- **CI** (`.github/workflows/frontend-ci.yml`): `ubuntu-24.04`, `permissions: contents: read`, `pnpm install --frozen-lockfile --ignore-scripts`, lint → test → `pnpm build`. It reports on every push but does not gate the deploy (no branch protection, no Vercel deployment checks): Vercel builds each push itself, and only type or build errors stop it. Actions are pinned to full commit SHAs with the release in a comment; to upgrade one, resolve the new tag with `gh api repos/<owner>/<repo>/git/ref/tags/<tag>` (dereference annotated tags) and update both.
+- **Line endings**: `.gitattributes` keeps LF in every checkout (`* text=auto eol=lf`); the CSP hash of the inline script depends on it.
 
 ## Agent-Readable Output
 
-- `tooling/agent-files/` generates `llms.txt`, `robots.txt`, `sitemap.xml`, one English and one Spanish markdown twin per route, and one HTML shell per route (own title, description, canonical and markdown alternates).
-- It runs as a Vite plugin (`vitePlugin.ts`, wired in `vite.config.ts`): `pnpm build` emits the files into `dist/`; `pnpm dev` serves them from middleware. **Nothing generated is committed to git.**
+- `tooling/agent-files/` generates `llms.txt`, `robots.txt`, `sitemap.xml`, one English and one Spanish markdown twin per route, one HTML shell per route, the home page included (own title, description, `og:*`, canonical, markdown alternates with `hreflang="en"`/`"es"`, JSON-LD and a `<noscript>` fallback that links the twins), and `404.html` (`noindex`, no canonical).
+- Every shell is built from the built `index.html` (`buildRouteShell`): the title, description and Open Graph texts come from `routes.ts`, so the values in `index.html` only serve the dev server. Do not bring back `<meta name="title">` or `og:locale:alternate`.
+- The shells carry metadata only (their body is the empty app root plus the `<noscript>` text): readers without JavaScript get the content from the twins, never claim otherwise.
+- It runs as a Vite plugin (`vitePlugin.ts`, wired in `vite.config.ts`): `pnpm build` emits everything into `dist/`; `pnpm dev` serves `llms.txt`, `robots.txt`, `sitemap.xml` and the twins from middleware, while the shells and `404.html` exist only in the build output. **Nothing generated is committed to git.**
 - Content comes from the entity getters and `shared/lib/richText.ts`; shell metadata mirrors `seo.*` in `shared/config/i18n.ts` and twin labels mirror UI strings. Tests enforce both parities, link integrity across generated files, and deterministic output.
-- Base URL (`BASE_URL`) and the route table live in `tooling/agent-files/routes.ts`. Adding a route to the SPA router requires adding it here too; the generator and its tests then cover it.
-- `src/shared/lib/richText.ts` is the single normalization ruleset shared by `RichTextRenderer` and the twins; change it only in both consumers' interest.
+- The site address is `SITE_URL`/`absoluteUrl` (`shared/config/site.ts`) and twin file names come from `markdownTwinPath` (`shared/config/routes.ts`), shared by the build and `useCanonicalLinks`. The route shells live in `tooling/agent-files/routes.ts`; `ROUTES` is derived from `APP_ROUTES`, so a new page cannot be missing its shell (the `SHELLS` record is keyed by `RouteId`).
+- `src/shared/lib/richText.ts` is the single ruleset shared by `RichTextRenderer` and the twins: `normalizeRichText` for line breaks and `parseBulletLine` for bullet lines (`●•◦▪` anywhere, `-`/`*` only at the start of a line). Change it only in both consumers' interest.
+- Twins format dates, percentages, skill groups and core competencies with the same helpers as the pages (`localeFormat.ts`, `getSkillGroups`, `getCoreSkills`), so page and twin never disagree.
+- Every twin ends with `## Pages` (links to the other twins in its language) and never skips a heading level: project and experience entries are `##` on their pages, featured projects `###` under Home's `## Featured Projects`.
+- Structured data is one `@graph` on every shell: `WebSite` (`/#website`) and `Person` (`/#person`, with `knowsAbout` = `getCoreSkills()`, `knowsLanguage` from the spoken languages and `homeLocation`). Derive every value from the data; never hand-write it.
+- The markdown twins are served with `X-Robots-Tag: noindex` (`vercel.json`): agents read them, search engines index the HTML pages. `sitemap.xml` has no `<lastmod>` on purpose: builds run on shallow clones, where git dates are wrong, and a wrong date is worse than none.
+- `tooling/font-preload/` (build only) adds `<link rel="preload" as="font" crossorigin>` for Inter's latin file to `index.html` before the shells are copied, so every page inherits it; the build fails if the file is missing.
 
 ## Security
 
-- **Scripts**: esbuild's build script is approved in-repo via `only-built-dependencies[]=esbuild` (`frontend/.npmrc`) and `pnpm-workspace.yaml` (`allowBuilds`/`onlyBuiltDependencies`); a pnpm security requirement.
-- **Contact form**: EmailJS in the browser (keys are public by design); no secrets stored in the repo. The network call lives in `features/contact-form/api/contactApi.ts` and is bounded by a 15s timeout; form state and notifications live in `features/contact-form/model/useContactForm.ts`.
+- **Scripts**: esbuild's build script is approved in-repo by `allowBuilds: { esbuild: true }` in `frontend/pnpm-workspace.yaml`, the only build-approval setting pnpm 11+ reads; every other dependency's install script stays blocked. Never add a package there without reviewing its install scripts. `frontend/.npmrc` and the `onlyBuiltDependencies` list are pnpm 10 leftovers that pnpm 11+ ignores, kept only until a Vercel build log confirms the pinned pnpm runs the install; then delete both. No environment variable is involved (`PNPM_APPROVE_BUILDS` is not a pnpm setting).
+- **Contact form**: EmailJS in the browser (keys are public by design); no secrets stored in the repo. The network call lives in `features/contact-form/api/contactApi.ts`: the SDK is imported on submit (it touches `localStorage` while loading, which throws when site data is blocked), sends with `blockHeadless` and a 10 s `limitRate`, and is bounded by a 15 s timeout that raises `ContactTimeoutError` (the message may still arrive, so the visitor is told not to resend). Fields are trimmed and validated before sending (`model/validation.ts`); form state, the single-flight guard and notifications live in `features/contact-form/model/useContactForm.ts`. Every failure message offers the owner's email.
+- **Content-Security-Policy** (`vercel.json`, every response): `default-src 'self'`; `script-src 'self'` plus the `sha256` of the pre-paint script in `index.html`; `style-src 'self' 'unsafe-inline'` (Emotion injects styles); `img-src 'self'` and `font-src 'self'` (no `data:` URLs, no external hosts); `connect-src 'self' https://api.emailjs.com`; `object-src 'none'`; `base-uri`/`form-action 'self'`; `frame-ancestors 'none'`. JSON-LD blocks are data, not scripts, and need no hash. Editing that inline script changes its hash: `tooling/hosting/vercelConfig.test.ts` fails and prints the value to put in the policy. Add a host only when the built site needs it.
 - No authentication surface exists in this app
 
 ## File Organization (FSD)
