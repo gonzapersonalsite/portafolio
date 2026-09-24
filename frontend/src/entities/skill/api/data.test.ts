@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import data from './data.json'
+import { SKILL_CATEGORY_ORDER } from '../model/categories'
 
 describe('static skill content', () => {
     it('has skills across several categories', () => {
@@ -13,7 +14,7 @@ describe('static skill content', () => {
             expect(skill.nameEs.length).toBeGreaterThan(0)
             expect(skill.level).toBeGreaterThanOrEqual(0)
             expect(skill.level).toBeLessThanOrEqual(100)
-            expect(skill.category.length).toBeGreaterThan(0)
+            expect(SKILL_CATEGORY_ORDER, `${skill.nameEn}: unknown category ${skill.category}`).toContain(skill.category)
             expect(typeof skill.order).toBe('number')
         }
     })

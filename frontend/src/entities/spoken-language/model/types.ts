@@ -4,6 +4,5 @@ export interface SpokenLanguage {
     nameEs: string;
     levelEn: string;
     levelEs: string;
-    proficiency: number;
     order: number;
 }

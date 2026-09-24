@@ -1,48 +1,55 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ThemeProvider as MuiThemeProvider, CssBaseline } from '@mui/material';
-import { createAppTheme } from '@/shared/config';
-import { ColorModeContext, type ColorMode } from '../model/ThemeContext';
+import { COLOR_MODES, createAppTheme, type ColorMode } from '@/shared/config';
+import { readStorage, writeStorage } from '@/shared/lib';
+import { ColorModeContext } from '../model/ThemeContext';
 
+const THEME_STORAGE_KEY = 'themeMode';
+const LIGHT_SCHEME_QUERY = '(prefers-color-scheme: light)';
+
+const readSavedMode = (): ColorMode | null => {
+    const saved = readStorage(THEME_STORAGE_KEY);
+    return COLOR_MODES.find((mode) => mode === saved) ?? null;
+};
+
+const lightSchemeQuery = (): MediaQueryList | null =>
+    typeof window.matchMedia === 'function' ? window.matchMedia(LIGHT_SCHEME_QUERY) : null;
+
+// Dark unless the system explicitly asks for light.
+const systemModeOf = (query: MediaQueryList | null): ColorMode => (query?.matches ? 'light' : 'dark');
+
+// Until the visitor picks a theme, the site follows the operating system, including when it
+// switches between light and dark on a schedule. Only an explicit choice is saved.
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [mode, setMode] = useState<ColorMode>(() => {
-        const savedMode = localStorage.getItem('themeMode') as ColorMode;
-        const validModes: ColorMode[] = ['light', 'dark', 'glass'];
-        
-        if (savedMode && validModes.includes(savedMode)) {
-            return savedMode;
-        }
-
-        if (typeof window !== 'undefined' && window.matchMedia) {
-            const isLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-            return isLight ? 'light' : 'dark';
-        }
-        
-        return 'dark';
-    });
+    const [savedMode, setSavedMode] = useState<ColorMode | null>(readSavedMode);
+    const [systemMode, setSystemMode] = useState<ColorMode>(() => systemModeOf(lightSchemeQuery()));
+    const mode = savedMode ?? systemMode;
 
     useEffect(() => {
-        localStorage.setItem('themeMode', mode);
-    }, [mode]);
+        const query = lightSchemeQuery();
+        if (query === null) return;
 
-    const colorMode = useMemo(
-        () => ({
-            mode,
-            toggleColorMode: (newMode?: ColorMode) => {
-                if (newMode) {
-                    setMode(newMode);
-                } else {
-                    setMode((prevMode) => {
-                        if (prevMode === 'light') return 'dark';
-                        if (prevMode === 'dark') return 'glass';
-                        return 'light';
-                    });
-                }
-            },
-        }),
-        [mode]
-    );
+        const followSystem = () => setSystemMode(systemModeOf(query));
+        query.addEventListener('change', followSystem);
+        return () => query.removeEventListener('change', followSystem);
+    }, []);
+
+    const setColorMode = useCallback((next: ColorMode) => {
+        setSavedMode(next);
+        writeStorage(THEME_STORAGE_KEY, next);
+    }, []);
+
+    const colorMode = useMemo(() => ({ mode, setColorMode }), [mode, setColorMode]);
 
     const theme = useMemo(() => createAppTheme(mode), [mode]);
+
+    // index.html paints the page background and colour scheme on <html> before the app loads.
+    // From the first render on, CssBaseline owns them and follows every theme change.
+    useEffect(() => {
+        const root = document.documentElement.style;
+        root.removeProperty('background-color');
+        root.removeProperty('color-scheme');
+    }, []);
 
     useEffect(() => {
         document
@@ -53,7 +60,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return (
         <ColorModeContext.Provider value={colorMode}>
             <MuiThemeProvider theme={theme}>
-                <CssBaseline />
+                {/* enableColorScheme makes scrollbars and native form controls follow the theme. */}
+                <CssBaseline enableColorScheme />
                 {children}
             </MuiThemeProvider>
         </ColorModeContext.Provider>

@@ -2,39 +2,65 @@
 <html lang="en">
 
 <head>
-  <!-- Charset y Viewport -->
+  <!-- Charset and viewport -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <!-- Core App Tags -->
-  <title>Gonzalo Martinez | Full Stack Developer & Web App Specialist</title>
-  
+
+  <!-- Core App Tags: the build writes each page's own title, description and Open Graph texts
+       from tooling/agent-files/routes.ts; the values here only serve the dev server. -->
+  <title>Gonzalo Martínez | Junior Full Stack Developer</title>
+
   <!-- SEO Meta Tags -->
-  <meta name="description" content="Portfolio of Gonzalo Martinez, a Full Stack Developer specialized in React, Java Spring Boot and modern web architectures. Based in Palma de Mallorca, Spain." />
+  <meta name="description" content="Portfolio of Gonzalo Martínez, Junior Full Stack Developer in Palma de Mallorca, Spain: web, desktop and mobile apps with React, TypeScript, Spring Boot, .NET and Flutter." />
   <meta name="author" content="Gonzalo Martínez García" />
   <meta name="copyright" content="© 2026 Gonzalo Martínez García. All rights reserved." />
-  <meta name="theme-color" content="#121212" />
 
-  <!-- Open Graph -->
-  <meta name="title" content="Gonzalo Martinez | Full Stack Developer & Web App Specialist" />
-  <meta property="og:title" content="Gonzalo Martinez | Full Stack Developer & Web App Specialist" />
-  <meta property="og:description" content="Portfolio of Gonzalo Martinez, a Full Stack Developer specialized in React, Java Spring Boot and modern web architectures. Based in Palma de Mallorca, Spain." />
-  <meta property="og:image" content="https://mi-portafolio-gonzalo.vercel.app/og-cover.jpg" />
+  <!-- Theme: paint the saved or system theme before the app loads, so dark and glass visitors
+       never see a white page. It mirrors ThemeProvider and createAppTheme (ThemeProvider.test.tsx
+       runs it). Any change to it needs its new hash in the CSP of vercel.json
+       (tooling/hosting/vercelConfig.test.ts prints the expected value). -->
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#121212" />
+  <script>
+    (function () {
+      var backgrounds = { light: '#f5f5f5', dark: '#121212', glass: '#030314' };
+      var mode = null;
+      try {
+        mode = localStorage.getItem('themeMode');
+      } catch (blocked) {
+        // Site data is blocked: follow the system.
+      }
+      if (!Object.prototype.hasOwnProperty.call(backgrounds, mode)) {
+        mode = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      var root = document.documentElement.style;
+      root.backgroundColor = backgrounds[mode];
+      root.colorScheme = mode === 'light' ? 'light' : 'dark';
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', backgrounds[mode]);
+    })();
+  </script>
+
+  <!-- Open Graph: image paths are root-relative; the build makes them absolute. -->
+  <meta property="og:title" content="Gonzalo Martínez | Junior Full Stack Developer" />
+  <meta property="og:description" content="Portfolio of Gonzalo Martínez, Junior Full Stack Developer in Palma de Mallorca, Spain: web, desktop and mobile apps with React, TypeScript, Spring Boot, .NET and Flutter." />
+  <meta property="og:image" content="/og-cover-typographic.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://mi-portafolio-gonzalo.vercel.app/" />
+  <meta property="og:url" content="/" />
   <meta property="og:locale" content="en_US" />
-  <meta property="og:locale:alternate" content="es_ES" />
-  <meta property="og:image:alt" content="Gonzalo Martinez, Full Stack Developer & Web App Specialist" />
+  <meta property="og:image:alt" content="GONZALO.DEV card: Gonzalo Martínez, Junior Full Stack Developer, with React, TypeScript, Spring Boot, .NET and Flutter" />
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content="https://mi-portafolio-gonzalo.vercel.app/og-cover.jpg" />
+  <meta name="twitter:image" content="/og-cover-typographic.jpg" />
+  <meta name="twitter:image:alt" content="GONZALO.DEV card: Gonzalo Martínez, Junior Full Stack Developer, with React, TypeScript, Spring Boot, .NET and Flutter" />
 
-  <!-- Favicon -->
-  <link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <!-- Icons: the GONZALO.DEV monogram. /icons/ is cached immutable (vercel.json), so a new icon
+       needs new file names. The ICO keeps sizes="32x32" so browsers prefer the SVG. -->
+  <link rel="icon" href="/icons/gonzalo-dev.ico" sizes="32x32" />
+  <link rel="icon" href="/icons/gonzalo-dev.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/icons/gonzalo-dev-180.png" />
 </head>
 
 <body>

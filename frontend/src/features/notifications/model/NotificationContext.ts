@@ -1,8 +1,8 @@
 import { createContext, useContext } from 'react';
-import type { AlertColor } from '@mui/material';
+import type { ShowNotification } from '@/shared/lib';
 
 export interface NotificationContextType {
-    showNotification: (message: string, severity?: AlertColor, duration?: number) => void;
+    showNotification: ShowNotification;
 }
 
 export const NotificationContext = createContext<NotificationContextType | undefined>(undefined);

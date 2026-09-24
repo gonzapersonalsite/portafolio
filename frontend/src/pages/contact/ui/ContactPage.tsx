@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Typography, Grid, Paper, IconButton, Stack, useTheme } from '@mui/material';
+import { Box, Container, Typography, Grid, Paper, IconButton, Link, Stack, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import EmailIcon from '@mui/icons-material/Email';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
@@ -9,7 +9,20 @@ import { ContactForm } from '@/features/contact-form';
 import { useNotification } from '@/features/notifications';
 import { useLanguage } from '@/features/language-switch';
 import { getProfile } from '@/entities/profile';
-import { useContent, usePageMeta } from '@/shared/lib';
+import { getLocalizedText, useContent, usePageMeta } from '@/shared/lib';
+
+// Fixed 48px circles: padding around an inline SVG made them taller than wide.
+const iconCircleSx = {
+    width: 48,
+    height: 48,
+    flexShrink: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '50%',
+    bgcolor: 'primary.main',
+    color: 'primary.contrastText',
+} as const;
 
 const ContactPage: React.FC = () => {
     const { language } = useLanguage();
@@ -17,6 +30,7 @@ const ContactPage: React.FC = () => {
     const theme = useTheme();
     const { showNotification } = useNotification();
     const { data: profile } = useContent(() => getProfile());
+    const [emailUser, emailDomain] = profile.email.split('@');
 
     usePageMeta({
         title: t('seo.contact.title'),
@@ -32,54 +46,61 @@ const ContactPage: React.FC = () => {
         <Box sx={{ py: 8 }}>
             <Container maxWidth="lg">
                 <Typography variant="overline" color="primary" sx={{ fontWeight: 'bold' }}>
-                    {t('nav.contact', "CONTACT")}
+                    {t('nav.contact')}
                 </Typography>
                 <Typography variant="h2" component="h1" gutterBottom sx={{ mb: 6, fontWeight: 800 }}>
-                    {t('contact.heading', "Get In Touch")}
+                    {t('contact.heading')}
                 </Typography>
 
                 <Grid container spacing={6}>
                     <Grid size={{ xs: 12, md: 5 }}>
                         <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
-                                {t('contact.subtitle', "Let's work together")}
+                            <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 600 }}>
+                                {t('contact.subtitle')}
                             </Typography>
                             <Typography variant="body1" color="text.secondary" sx={{ mb: 4, fontSize: '1.1rem' }}>
-                                {t('contact.description', "I am open to new professional opportunities. If you have a project or a job offer, I would love to hear from you.")}
+                                {t('contact.description')}
                             </Typography>
 
                             <Stack spacing={3} sx={{ mb: 6 }}>
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                                    <Paper elevation={0} sx={{ p: 1.5, borderRadius: '50%', bgcolor: 'primary.main', color: 'white' }}>
-                                        <EmailIcon />
-                                    </Paper>
-                                    <Box>
+                                    <Box sx={iconCircleSx}>
+                                        <EmailIcon aria-hidden="true" />
+                                    </Box>
+                                    <Box sx={{ minWidth: 0 }}>
                                         <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
-                                            {t('contact.email', "Email")}
+                                            {t('contact.email')}
                                         </Typography>
-                                        <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                                            {profile.email}
-                                        </Typography>
+                                        {/* On narrow phones the address breaks after the "@" (the <wbr>) instead
+                                            of widening the page; overflowWrap is the last resort. */}
+                                        <Link
+                                            href={`mailto:${profile.email}`}
+                                            variant="body1"
+                                            underline="hover"
+                                            sx={{ fontWeight: 500, overflowWrap: 'anywhere' }}
+                                        >
+                                            {emailUser}@<wbr />{emailDomain}
+                                        </Link>
                                     </Box>
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                                    <Paper elevation={0} sx={{ p: 1.5, borderRadius: '50%', bgcolor: 'primary.main', color: 'white' }}>
-                                        <LocationOnIcon />
-                                    </Paper>
+                                    <Box sx={iconCircleSx}>
+                                        <LocationOnIcon aria-hidden="true" />
+                                    </Box>
                                     <Box>
                                         <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
-                                            {t('contact.location', "Location")}
+                                            {t('contact.location')}
                                         </Typography>
                                         <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                                            {language === 'en' ? profile?.locationEn : profile?.locationEs}
+                                            {getLocalizedText(language, profile.locationEn, profile.locationEs)}
                                         </Typography>
                                     </Box>
                                 </Box>
                             </Stack>
 
                             <Box>
-                                <Typography variant="subtitle2" gutterBottom sx={{ mb: 2 }}>
-                                    {t('contact.social', "FOLLOW ME")}
+                                <Typography variant="subtitle2" component="h3" gutterBottom sx={{ mb: 2 }}>
+                                    {t('contact.social')}
                                 </Typography>
                                 <Stack direction="row" spacing={2}>
                                     {socialLinks.map((link) => (

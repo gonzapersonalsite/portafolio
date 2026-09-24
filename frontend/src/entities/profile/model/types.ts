@@ -2,8 +2,6 @@ export interface Profile {
     id: string;
     greetingEn: string;
     greetingEs: string;
-    titleEn: string;
-    titleEs: string;
     subtitleEn: string;
     subtitleEs: string;
     descriptionEn: string;
@@ -21,6 +19,7 @@ export interface Profile {
     cvUrl: string;
     fullNameEn: string;
     fullNameEs: string;
+    alternateName: string;
     email: string;
     githubUrl: string;
     linkedinUrl: string;

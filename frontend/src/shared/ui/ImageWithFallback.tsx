@@ -2,25 +2,26 @@ import React, { useState } from 'react';
 import { Box, Skeleton } from '@mui/material';
 import type { BoxProps } from '@mui/material';
 
+const FALLBACK_URLS = {
+    profile: '/profile-fallback.webp',
+    project: '/images/no-image.svg',
+} as const;
+
 interface ImageWithFallbackProps extends BoxProps<'img'> {
     src?: string;
     alt: string;
-    fallbackSrc?: string;
-    type?: 'profile' | 'project' | 'general';
-    aspectRatio?: string;
-    objectPosition?: string;
-    referrerPolicy?: React.HTMLAttributeReferrerPolicy;
+    type: keyof typeof FALLBACK_URLS;
+    // Reserves the box before the image loads, so nothing shifts (CLS).
+    aspectRatio: string;
 }
 
 const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
     src,
     alt,
-    fallbackSrc,
-    type = 'general',
+    type,
     aspectRatio,
-    objectPosition = 'center',
     sx,
-    referrerPolicy,
+    srcSet,
     ...props
 }) => {
     const [hasError, setHasError] = useState(false);
@@ -30,15 +31,6 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
         if (img) {
             setIsLoading(!img.complete);
         }
-    };
-
-    const getFallbackUrl = () => {
-        if (fallbackSrc) return fallbackSrc;
-        
-        if (type === 'profile') {
-            return "/profile-fallback.webp";
-        }
-        return "/images/no-image.svg";
     };
 
     const handleError = () => {
@@ -52,72 +44,29 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
         setIsLoading(false);
     };
 
-    const finalSrc = hasError || !src ? getFallbackUrl() : src;
-
-    if (aspectRatio) {
-        return (
-            <Box 
-                sx={[
-                    { 
-                        position: 'relative', 
-                        width: '100%', 
-                        aspectRatio,
-                        overflow: 'hidden'
-                    },
-                    ...(Array.isArray(sx) ? sx : [sx])
-                ]} 
-            >
-                {isLoading && (
-                    <Skeleton
-                        variant="rectangular"
-                        width="100%"
-                        height="100%"
-                        sx={{ position: 'absolute', top: 0, left: 0 }}
-                    />
-                )}
-                <Box
-                    component="img"
-                    src={finalSrc}
-                    alt={alt}
-                    onError={handleError}
-                    onLoad={handleLoad}
-                    ref={onImageRef}
-                    referrerPolicy={referrerPolicy}
-                    {...props}
-                    sx={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        objectPosition,
-                        opacity: isLoading ? 0 : 1,
-                        transition: 'opacity 0.3s ease-in-out',
-                    }}
-                />
-            </Box>
-        );
-    }
+    const showFallback = hasError || !src;
+    const finalSrc = showFallback ? FALLBACK_URLS[type] : src;
+    // A srcset wins over src, so it has to go as well for the fallback to show.
+    const finalSrcSet = showFallback ? undefined : srcSet;
 
     return (
-        <Box 
+        <Box
             sx={[
-                { 
-                    position: 'relative', 
-                    display: 'inline-block', 
+                {
+                    position: 'relative',
                     width: '100%',
-                    overflow: 'hidden' 
+                    aspectRatio,
+                    overflow: 'hidden'
                 },
                 ...(Array.isArray(sx) ? sx : [sx])
             ]}
         >
-             {isLoading && (
+            {isLoading && (
                 <Skeleton
                     variant="rectangular"
                     width="100%"
                     height="100%"
-                    sx={{ position: 'absolute', top: 0, left: 0, minHeight: '200px' }} 
+                    sx={{ position: 'absolute', top: 0, left: 0 }}
                 />
             )}
             <Box
@@ -127,13 +76,15 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
                 onError={handleError}
                 onLoad={handleLoad}
                 ref={onImageRef}
-                referrerPolicy={referrerPolicy}
+                srcSet={finalSrcSet}
                 {...props}
                 sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
                     width: '100%',
-                    height: 'auto',
+                    height: '100%',
                     objectFit: 'cover',
-                    objectPosition,
                     opacity: isLoading ? 0 : 1,
                     transition: 'opacity 0.3s ease-in-out',
                 }}

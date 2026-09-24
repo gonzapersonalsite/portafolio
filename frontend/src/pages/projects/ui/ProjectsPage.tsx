@@ -20,28 +20,28 @@ const ProjectsPage: React.FC = () => {
         <Box sx={{ py: 8 }}>
             <Container maxWidth="lg">
                 <Typography variant="overline" color="primary" sx={{ fontWeight: 'bold' }}>
-                    {t('nav.projects', "PORTFOLIO")}
+                    {t('nav.projects')}
                 </Typography>
                 <Typography variant="h2" component="h1" gutterBottom sx={{ mb: 6, fontWeight: '800' }}>
-                    {t('projects.heading', "All Projects")}
+                    {t('projects.heading')}
                 </Typography>
 
-                <Grid container spacing={4}>
-                    {(projects ?? []).map((project) => (
-                        <Grid size={{ xs: 12, md: 6, lg: 4 }} key={project.id}>
-                            <ProjectCard project={project} />
-                        </Grid>
-                    ))}
-                    {(projects ?? []).length === 0 && (
-                        <Grid size={{ xs: 12 }}>
-                            <EmptyState
-                                title={t('emptyState.projects.title', 'Building the Future')}
-                                description={t('emptyState.projects.description', 'No projects here yet, but great things are in the making.')}
-                                icon={<RocketLaunchIcon />}
-                            />
-                        </Grid>
-                    )}
-                </Grid>
+                {projects.length > 0 ? (
+                    <Grid container component="ul" spacing={4} sx={{ listStyle: 'none', p: 0, m: 0 }}>
+                        {projects.map((project, index) => (
+                            <Grid component="li" size={{ xs: 12, md: 6, lg: 4 }} key={project.id}>
+                                {/* The first cover sits above the fold and is preloaded by the route shell. */}
+                                <ProjectCard project={project} priority={index === 0} titleComponent="h2" />
+                            </Grid>
+                        ))}
+                    </Grid>
+                ) : (
+                    <EmptyState
+                        title={t('emptyState.projects.title')}
+                        description={t('emptyState.projects.description')}
+                        icon={<RocketLaunchIcon />}
+                    />
+                )}
             </Container>
         </Box>
     );

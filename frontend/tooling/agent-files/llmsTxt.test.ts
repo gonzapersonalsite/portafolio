@@ -15,8 +15,8 @@ describe('buildLlmsTxt', () => {
   it('summarizes the site and links every English twin', () => {
     const llms = buildLlmsTxt();
 
-    expect(llms.startsWith('# Gonzalo Martinez\n')).toBe(true);
-    expect(llms).toContain('> Full Stack Developer');
+    expect(llms.startsWith('# Gonzalo Martínez\n')).toBe(true);
+    expect(llms).toContain('> Junior Full Stack Developer');
     expect(llms).toContain('Palma de Mallorca');
 
     for (const path of ENGLISH_TWINS) {
@@ -41,6 +41,20 @@ describe('buildLlmsTxt', () => {
     expect(llms).toContain('- [Gonzalo Apps – App Hub](https://gonzaloapps.es/)');
     expect(llms).toContain('- Email: gonzalomartinezg2001@gmail.com');
     expect(llms).toContain('- GitHub: https://github.com/gonzapersonalsite');
-    expect(llms).toContain('- LinkedIn: http://www.linkedin.com/in/');
+    expect(llms).toContain('- LinkedIn: https://www.linkedin.com/in/');
+  });
+
+  it('describes each project by type and main stack, links its first primary link and keeps the rest', () => {
+    const llms = buildLlmsTxt();
+
+    expect(llms).toContain(
+      '- [Kanban Board App](https://kanban-board-app-kappa.vercel.app/): Web App — React, TypeScript, Vite, Feature-Sliced Design ([Repository](https://github.com/gonzapersonalsite/kanban-board-app))',
+    );
+    expect(llms).toContain(
+      '- [License Generator](https://github.com/gonzapersonalsite/LicenseGenerator-Docs-/releases/latest): Desktop App — ',
+    );
+    expect(llms).toContain('([Documentation](https://github.com/gonzapersonalsite/LicenseGenerator-Docs-))');
+    // No primary link: the title stays plain and the documentation link is kept.
+    expect(llms).toMatch(/^- NutriManager: Desktop App — .+ \(\[Documentation\]\(https:\/\/github\.com\/gonzapersonalsite\/NutriManager-Docs-\)\)$/m);
   });
 });

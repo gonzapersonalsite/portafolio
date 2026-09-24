@@ -1,15 +1,31 @@
-import React, { useState } from 'react';
+import React, { useId, useState } from 'react';
 import { Button, Menu, MenuItem, Typography, Box } from '@mui/material';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import { useColorMode } from '../model/ThemeContext';
 import { useTranslation } from 'react-i18next';
+import { COLOR_MODES, type ColorMode } from '@/shared/config';
+import { useColorMode } from '../model/ThemeContext';
+
+const MODE_ICONS: Record<ColorMode, React.ReactElement> = {
+    light: <LightModeIcon fontSize="small" />,
+    dark: <DarkModeIcon fontSize="small" />,
+    glass: <AutoAwesomeIcon fontSize="small" />,
+};
 
 const ThemeSelector: React.FC = () => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const { mode, toggleColorMode } = useColorMode();
+    const { mode, setColorMode } = useColorMode();
     const { t } = useTranslation();
+    const buttonId = useId();
+    const menuId = useId();
+    const open = Boolean(anchorEl);
+
+    const modeLabels: Record<ColorMode, string> = {
+        light: t('common.theme.light'),
+        dark: t('common.theme.dark'),
+        glass: t('common.theme.glass'),
+    };
 
     const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -19,62 +35,61 @@ const ThemeSelector: React.FC = () => {
         setAnchorEl(null);
     };
 
-    const handleThemeChange = (selectedMode: 'light' | 'dark' | 'glass') => {
+    const handleThemeChange = (selectedMode: ColorMode) => {
         if (mode !== selectedMode) {
-            toggleColorMode(selectedMode);
+            setColorMode(selectedMode);
         }
         handleClose();
     };
 
-    const getIcon = () => {
-        if (mode === 'glass') return <AutoAwesomeIcon fontSize="small" />;
-        return mode === 'dark' ? <DarkModeIcon fontSize="small" /> : <LightModeIcon fontSize="small" />;
-    };
-
     return (
         <>
+            {/* Below sm only the icon is shown, so the aria-label is the name; it keeps the visible label. */}
             <Button
+                id={buttonId}
                 onClick={handleOpen}
                 color="inherit"
-                startIcon={getIcon()}
-                sx={{ minWidth: 'auto', px: 1 }}
+                startIcon={MODE_ICONS[mode]}
+                aria-label={t('common.themeButton', { mode: modeLabels[mode] })}
+                aria-haspopup="menu"
+                aria-expanded={open}
+                aria-controls={open ? menuId : undefined}
+                sx={{
+                    minWidth: 'auto',
+                    px: 1,
+                    // MUI's default icon margins (-4px / 8px) only make sense next to the text.
+                    '& .MuiButton-startIcon': { ml: { xs: 0, sm: -0.5 }, mr: { xs: 0, sm: 1 } },
+                }}
             >
-                <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
-                    {mode.toUpperCase()}
+                <Typography
+                    component="span"
+                    variant="caption"
+                    sx={{ color: 'inherit', fontWeight: 'bold', textTransform: 'uppercase', display: { xs: 'none', sm: 'inline' } }}
+                >
+                    {modeLabels[mode]}
                 </Typography>
             </Button>
             <Menu
+                id={menuId}
                 anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
+                open={open}
                 onClose={handleClose}
+                slotProps={{ list: { 'aria-labelledby': buttonId } }}
             >
-                <MenuItem
-                    onClick={() => handleThemeChange('light')}
-                    selected={mode === 'light'}
-                >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <LightModeIcon fontSize="small" />
-                        {t('common.theme.light')}
-                    </Box>
-                </MenuItem>
-                <MenuItem
-                    onClick={() => handleThemeChange('dark')}
-                    selected={mode === 'dark'}
-                >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <DarkModeIcon fontSize="small" />
-                        {t('common.theme.dark')}
-                    </Box>
-                </MenuItem>
-                <MenuItem
-                    onClick={() => handleThemeChange('glass')}
-                    selected={mode === 'glass'}
-                >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <AutoAwesomeIcon fontSize="small" />
-                        {t('common.theme.glass', 'Liquid Glass')}
-                    </Box>
-                </MenuItem>
+                {COLOR_MODES.map((option) => (
+                    <MenuItem
+                        key={option}
+                        role="menuitemradio"
+                        aria-checked={mode === option}
+                        selected={mode === option}
+                        onClick={() => handleThemeChange(option)}
+                    >
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            {MODE_ICONS[option]}
+                            {modeLabels[option]}
+                        </Box>
+                    </MenuItem>
+                ))}
             </Menu>
         </>
     );

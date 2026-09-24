@@ -10,9 +10,11 @@ import { keyframes } from '@emotion/react';
 import { ProjectCard, getFeaturedProjects } from '@/entities/project';
 import { getProfile } from '@/entities/profile';
 import { useLanguage } from '@/features/language-switch';
+import { useColorMode } from '@/features/theme-switch';
 import { Link as RouterLink } from 'react-router-dom';
+import type { ColorMode } from '@/shared/config';
 import { getLocalizedText, useContent, usePageMeta } from '@/shared/lib';
-import { ImageWithFallback, RichTextRenderer, EmptyState } from '@/shared/ui';
+import { ImageWithFallback, RichTextRenderer, EmptyState, StatusBadge } from '@/shared/ui';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
 const float = keyframes`
@@ -21,9 +23,18 @@ const float = keyframes`
   100% { transform: translateY(0px); }
 `;
 
+// Where the hero gradient starts (top left, behind the greeting and the buttons). Dark enough in
+// the dark themes for white text to pass 4.5:1; glass keeps its violet.
+const HERO_GRADIENT_START: Record<ColorMode, string> = {
+    light: '#42a5f5',
+    dark: '#0d47a1',
+    glass: '#4b35b8',
+};
+
 const HomePage: React.FC = () => {
     const { t } = useTranslation();
     const { language } = useLanguage();
+    const { mode } = useColorMode();
     const theme = useTheme();
 
     usePageMeta({
@@ -41,9 +52,7 @@ const HomePage: React.FC = () => {
                     minHeight: '90vh',
                     display: 'flex',
                     alignItems: 'center',
-                    background: theme.palette.mode === 'dark'
-                        ? `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.background.default} 100%)`
-                        : `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.background.default} 100%)`,
+                    background: `linear-gradient(135deg, ${HERO_GRADIENT_START[mode]} 0%, ${theme.palette.background.default} 100%)`,
                     position: 'relative'
                 }}
             >
@@ -55,7 +64,7 @@ const HomePage: React.FC = () => {
                                 color="text.primary"
                                 sx={{ letterSpacing: 2, fontWeight: 'bold' }}
                             >
-                                {getLocalizedText(language, profile?.greetingEn, profile?.greetingEs)}
+                                {getLocalizedText(language, profile.greetingEn, profile.greetingEs)}
                             </Typography>
                             <Typography
                                 variant="h2"
@@ -70,15 +79,18 @@ const HomePage: React.FC = () => {
                                     WebkitTextFillColor: 'transparent',
                                 }}
                             >
-                                {getLocalizedText(language, profile?.fullNameEn, profile?.fullNameEs) || t('home.name')}
+                                {getLocalizedText(language, profile.fullNameEn, profile.fullNameEs)}
                             </Typography>
-                            <Typography variant="h4" component="p" color="text.secondary" gutterBottom sx={{ mb: 4 }}>
-                                {getLocalizedText(language, profile?.subtitleEn, profile?.subtitleEs) || t('home.jobTitle')}
+                            <Typography variant="h4" component="p" color="text.secondary" gutterBottom sx={{ mb: 2 }}>
+                                {getLocalizedText(language, profile.subtitleEn, profile.subtitleEs)}
                             </Typography>
+                            <Box sx={{ mb: 4 }}>
+                                <StatusBadge label={t('common.openToWork')} />
+                            </Box>
                             
                             <Box sx={{ maxWidth: 600, mb: 4 }}>
                                 <RichTextRenderer 
-                                    text={getLocalizedText(language, profile?.descriptionEn, profile?.descriptionEs) || t('home.description')}
+                                    text={getLocalizedText(language, profile.descriptionEn, profile.descriptionEs)}
                                 />
                             </Box>
 
@@ -93,6 +105,7 @@ const HomePage: React.FC = () => {
                                 >
                                     {t('home.cta')}
                                 </Button>
+                                {/* A solid surface: outlined text straight on the gradient falls below 4.5:1. */}
                                 <Button
                                     variant="outlined"
                                     size="large"
@@ -101,6 +114,7 @@ const HomePage: React.FC = () => {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     disabled={!profile.cvUrl}
+                                    sx={mode === 'glass' ? undefined : { bgcolor: 'background.paper', '&:hover': { bgcolor: 'background.paper' } }}
                                 >
                                     {t('home.resume')}
                                 </Button>
@@ -162,8 +176,8 @@ const HomePage: React.FC = () => {
 
             <Box sx={{ py: 8, bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : 'grey.50' }}>
                 <Container maxWidth="lg">
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 6 }}>
-                        <Typography variant="h3" component="h2" sx={{ fontWeight: '800' }}>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, justifyContent: 'space-between', alignItems: 'center', mb: 6 }}>
+                        <Typography variant="h3" component="h2" sx={{ fontWeight: '800', fontSize: { xs: '1.75rem', sm: '2rem' } }}>
                             {t('projects.featured')}
                         </Typography>
                         <Button
@@ -172,26 +186,26 @@ const HomePage: React.FC = () => {
                             nativeButton={false}
                             to="/projects"
                             size="large"
+                            sx={{ whiteSpace: 'nowrap', flexShrink: 0 }}
                         >
                             {t('projects.viewAll')}
                         </Button>
                     </Box>
-                    <Grid container spacing={4}>
-                        {featuredProjects.map((project) => (
-                            <Grid size={{ xs: 12, md: 6, lg: 4 }} key={project.id}>
-                                <ProjectCard project={project} />
-                            </Grid>
-                        ))}
-                        {featuredProjects.length === 0 && (
-                            <Grid size={{ xs: 12 }}>
-                                <EmptyState
-                                    title={t('emptyState.featured.title', 'Highlights Coming Soon')}
-                                    description={t('emptyState.featured.description', 'Curating the best projects to showcase here.')}
-                                    icon={<RocketLaunchIcon />}
-                                />
-                            </Grid>
-                        )}
-                    </Grid>
+                    {featuredProjects.length > 0 ? (
+                        <Grid container component="ul" spacing={4} sx={{ listStyle: 'none', p: 0, m: 0 }}>
+                            {featuredProjects.map((project) => (
+                                <Grid component="li" size={{ xs: 12, md: 6, lg: 4 }} key={project.id}>
+                                    <ProjectCard project={project} />
+                                </Grid>
+                            ))}
+                        </Grid>
+                    ) : (
+                        <EmptyState
+                            title={t('emptyState.featured.title')}
+                            description={t('emptyState.featured.description')}
+                            icon={<RocketLaunchIcon />}
+                        />
+                    )}
                 </Container>
             </Box>
 
@@ -199,8 +213,8 @@ const HomePage: React.FC = () => {
                 <Grid container spacing={6} sx={{ alignItems: 'center' }}>
                     <Grid size={{ xs: 12, md: 6 }}>
                         <ImageWithFallback
-                            src={profile?.imageUrl}
-                            alt={getLocalizedText(language, profile?.fullNameEn, profile?.fullNameEs) || 'Profile'}
+                            src={profile.imageUrl}
+                            alt={getLocalizedText(language, profile.fullNameEn, profile.fullNameEs)}
                             type="profile"
                             aspectRatio="2/3"
                             loading="lazy"
@@ -218,14 +232,14 @@ const HomePage: React.FC = () => {
                     </Grid>
                     <Grid size={{ xs: 12, md: 6 }}>
                         <Typography variant="overline" color="secondary" sx={{ fontWeight: 'bold', letterSpacing: 1.5 }}>
-                            {t('about.subtitle', "WHO I AM")}
+                            {t('about.subtitle')}
                         </Typography>
                         <Typography variant="h3" component="h2" gutterBottom sx={{ mb: 3, fontWeight: 'bold' }}>
-                            {getLocalizedText(language, profile?.aboutTitleEn, profile?.aboutTitleEs) || t('about.title')}
+                            {getLocalizedText(language, profile.aboutTitleEn, profile.aboutTitleEs)}
                         </Typography>
                         <Box sx={{ mb: 3, '& p': { fontSize: '1.1rem' } }}>
                             <RichTextRenderer 
-                                text={getLocalizedText(language, profile?.aboutSummaryEn, profile?.aboutSummaryEs) || t('about.summary')}
+                                text={getLocalizedText(language, profile.aboutSummaryEn, profile.aboutSummaryEs)}
                             />
                         </Box>
                         <Button
@@ -236,7 +250,7 @@ const HomePage: React.FC = () => {
                             nativeButton={false}
                             to="/about"
                         >
-                            {t('about.more', "More About Me")}
+                            {t('about.more')}
                         </Button>
                     </Grid>
                 </Grid>

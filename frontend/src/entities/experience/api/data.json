@@ -1,33 +1,26 @@
 [
   {
-    "id": "ab537619-98ed-4a69-adf8-c1b4922b93dd",
-    "companyEn": "Actively seeking",
-    "companyEs": "En búsqueda activa",
-    "positionEn": "Junior developer in active job search",
-    "positionEs": "Desarrollador junior en búsqueda activa",
-    "startDate": "2026-06-10",
-    "descriptionEn": "Actively looking for my first opportunity as a junior developer while continuing to learn and work on personal projects.",
-    "descriptionEs": "En búsqueda activa de mi primera oportunidad como desarrollador junior mientras continúo formándome y trabajando en proyectos personales.",
-    "technologies": []
-  },
-  {
     "id": "1e1bae7c-afd2-4fcd-9532-ae1642391db2",
     "companyEn": "Globatecnic Instalaciones",
     "companyEs": "Globatecnic Instalaciones",
     "positionEn": "Platform & DevOps Architect",
-    "positionEs": "Arquitecto de Plataforma y DevOps (perfil híbrido: arquitectura + desarrollo + automatización)",
+    "positionEs": "Arquitecto de Plataforma y DevOps",
     "startDate": "2026-05-04",
     "endDate": "2026-06-04",
-    "descriptionEn": "I designed, implemented, and single-handedly deployed the entire Globatecnic microservices ecosystem on Proxmox VE, starting from a company with no prior infrastructure (everything from scratch): architecture, on-premise infrastructure, IAM, CI/CD, and all backend and frontend microservices.\n\nDistributed architecture with 5 independent microservices and a database per service, applying Clean Architecture / Hexagonal architecture in Java Spring Boot backends and Feature-Sliced Design in React TypeScript frontends.\n\nCorporate identity system (IAM) with JWT, RBAC (7 granular permissions), rate limiting, and brute-force protection. Transactional Outbox pattern with RabbitMQ for asynchronous synchronization between services.\n\nEmployee portal (clock-in/out with geolocation, PDF export) and administration portal (orders, proposals, attendance queries, PDF files), both as PWAs.\n\nOn-premise infrastructure on Proxmox VE with VLAN (DMZ + internal network), Nginx Proxy Manager as reverse proxy, 3 PostgreSQL 17 instances, and a shared Docker network between services.\n\nFull CI/CD pipeline in Forgejo Actions (built from scratch): testing, multi-stage Docker builds, publishing to a private registry, and automated deployment to production.\n\n500+ automated tests (JUnit 5 + Vitest + Testing Library), technical documentation (ADRs, runbooks, architecture diagrams), and data seeding scripts.",
-    "descriptionEs": "Diseñé, implementé y desplegué en solitario el ecosistema completo de microservicios de Globatecnic sobre Proxmox VE, partiendo de una empresa sin infraestructura previa (todo desde 0): arquitectura, infraestructura on-premise, IAM, CI/CD y todos los microservicios backend y frontend.\n\nArquitectura distribuida con 5 microservicios independientes y base de datos por servicio, aplicando Clean Architecture / Hexagonal en backends Java Spring Boot y Feature-Sliced Design en frontends React con TypeScript.\n\nSistema de identidad corporativa (IAM) con JWT, RBAC (7 permisos granulares), rate limiting y protección anti-fuerza bruta. Patrón Transactional Outbox con RabbitMQ para sincronización asíncrona entre servicios.\n\nPortal de empleados (fichajes con geolocalización, exportación PDF) y portal de administración (pedidos, propuestas, consulta de fichajes, ficheros PDF), ambos como PWA.\n\nInfraestructura on-premise sobre Proxmox VE con VLAN (DMZ + red interna), reverse proxy Nginx Proxy Manager, 3 instancias PostgreSQL 17 y red Docker compartida entre servicios.\n\nPipeline CI/CD completo en Forgejo Actions (desde 0): test, build multi-stage Docker, publicación en registry privado y despliegue automático en producción.\n\n500+ tests automatizados (JUnit 5 + Vitest + Testing Library), documentación técnica (ADR, runbooks, diagramas de arquitectura) y scripts de poblado de datos.",
+    "descriptionEn": "Hybrid role covering architecture, development and automation. I designed, implemented, and single-handedly deployed the entire Globatecnic microservices ecosystem on Proxmox VE, starting from a company with no prior infrastructure (everything from scratch): architecture, on-premise infrastructure, IAM, CI/CD, and all backend and frontend microservices.\n\nDistributed architecture with 5 independent microservices and a database per service, applying Clean Architecture / Hexagonal architecture in Java Spring Boot backends and Feature-Sliced Design in React TypeScript frontends.\n\nCorporate identity system (IAM) with JWT, RBAC (7 granular permissions), rate limiting, and brute-force protection. Transactional Outbox pattern with RabbitMQ for asynchronous synchronization between services.\n\nEmployee portal (clock-in/out with geolocation, PDF export) and administration portal (orders, proposals, attendance queries, PDF files), both as PWAs.\n\nOn-premise infrastructure on Proxmox VE with VLAN (DMZ + internal network), Nginx Proxy Manager as reverse proxy, 3 PostgreSQL 17 instances, and a shared Docker network between services.\n\nFull CI/CD pipeline in Forgejo Actions (built from scratch): testing, multi-stage Docker builds, publishing to a private registry, and automated deployment to production.\n\n500+ automated tests (JUnit 5 + Vitest + Testing Library), technical documentation (ADRs, runbooks, architecture diagrams), and data seeding scripts.",
+    "descriptionEs": "Perfil híbrido: arquitectura, desarrollo y automatización. Diseñé, implementé y desplegué en solitario el ecosistema completo de microservicios de Globatecnic sobre Proxmox VE, partiendo de una empresa sin infraestructura previa (todo desde 0): arquitectura, infraestructura on-premise, IAM, CI/CD y todos los microservicios backend y frontend.\n\nArquitectura distribuida con 5 microservicios independientes y base de datos por servicio, aplicando Clean Architecture / Hexagonal en backends Java Spring Boot y Feature-Sliced Design en frontends React con TypeScript.\n\nSistema de identidad corporativa (IAM) con JWT, RBAC (7 permisos granulares), rate limiting y protección anti-fuerza bruta. Patrón Transactional Outbox con RabbitMQ para sincronización asíncrona entre servicios.\n\nPortal de empleados (fichajes con geolocalización, exportación PDF) y portal de administración (pedidos, propuestas, consulta de fichajes, ficheros PDF), ambos como PWA.\n\nInfraestructura on-premise sobre Proxmox VE con VLAN (DMZ + red interna), reverse proxy Nginx Proxy Manager, 3 instancias PostgreSQL 17 y red Docker compartida entre servicios.\n\nPipeline CI/CD completo en Forgejo Actions (desde 0): test, build multi-stage Docker, publicación en registry privado y despliegue automático en producción.\n\n500+ tests automatizados (JUnit 5 + Vitest + Testing Library), documentación técnica (ADR, runbooks, diagramas de arquitectura) y scripts de poblado de datos.",
     "technologies": [
       "Java",
+      "Spring Boot",
       "React",
-      "Vite",
-      "Typescript",
+      "TypeScript",
+      "PostgreSQL",
+      "RabbitMQ",
+      "Docker",
       "Proxmox VE",
-      "Forgejo",
-      "CI/CD"
+      "Forgejo Actions",
+      "JUnit 5",
+      "Vitest"
     ]
   },
   {
@@ -35,20 +28,20 @@
     "companyEn": "Mistertransfer",
     "companyEs": "Mistertransfer",
     "positionEn": "Internship – Higher Vocational Training (CFGS)",
-    "positionEs": "Prácticas Formativas CFGS",
+    "positionEs": "Prácticas formativas (CFGS)",
     "startDate": "2025-03-24",
     "endDate": "2025-06-16",
     "descriptionEn": "During my internship at Mistertransfer I worked on the following tasks:\\n\\n● Development and maintenance of software in a microservices environment.\\n● Use of Java Spring Boot for the back end and JavaScript/TypeScript with Quasar (Vue) for the front end.\\n● Deployment in Docker containers, Git management, and service migration and integration tasks.\\n● Task organization and tracking using Jira and Git.",
-    "descriptionEs": "Durante mis prácticas en Mistertransfer realicé las siguientes tareas:\\n\\n● Desarrollo y mantenimiento de software en entorno de microservicios\\n● Uso de Java Spring Boot como back-end y JavaScript/TypeScript con Quasar (Vue) como front-end.\\n● Despliegue en contenedores Docker, gestión de Git y tareas de migración e integración de servicios.\\n● Organización y seguimiento de tareas con Jira y Git.",
+    "descriptionEs": "Durante mis prácticas en Mistertransfer realicé las siguientes tareas:\\n\\n● Desarrollo y mantenimiento de software en un entorno de microservicios.\\n● Uso de Java Spring Boot como backend y JavaScript/TypeScript con Quasar (Vue) como frontend.\\n● Despliegue en contenedores Docker, gestión de Git y tareas de migración e integración de servicios.\\n● Organización y seguimiento de tareas con Jira y Git.",
     "technologies": [
       "Java",
-      "Spring boot",
+      "Spring Boot",
       "MongoDB",
       "JHipster",
       "Quasar",
       "Vue",
-      "Javascript",
-      "Typescript",
+      "JavaScript",
+      "TypeScript",
       "Nginx",
       "Docker"
     ]
@@ -58,17 +51,15 @@
     "companyEn": "Informática JJ",
     "companyEs": "Informática JJ",
     "positionEn": "Internship – Intermediate Vocational Training (CFGM)",
-    "positionEs": "Prácticas Formativas CFGM",
+    "positionEs": "Prácticas formativas (CFGM)",
     "startDate": "2022-05-24",
     "endDate": "2022-06-16",
     "descriptionEn": "During my internship at Informática JJ I worked on the following tasks:\\n\\n● Repair, diagnosis and maintenance of hardware and software on desktop and laptop computers.\\n● Development of skills in troubleshooting technical issues and customer support.\\n● Remote support for incident resolution using AnyDesk.",
     "descriptionEs": "Durante mis prácticas en Informática JJ realicé las siguientes tareas:\\n\\n● Reparación, diagnóstico y mantenimiento de hardware y software en ordenadores y portátiles.\\n● Desarrollo de habilidades en resolución de problemas técnicos y atención al cliente.\\n● Atención remota para la resolución de incidencias mediante AnyDesk.",
     "technologies": [
-      "Manejo en Linux",
+      "Linux",
       "Windows",
-      "AnyDesk",
-      "Diagnóstico de incidencias",
-      "Instalación de software y sistemas operativos"
+      "AnyDesk"
     ]
   }
 ]

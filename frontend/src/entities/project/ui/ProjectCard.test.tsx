@@ -1,0 +1,38 @@
+import { beforeEach, describe, expect, it } from 'vitest'
+import { render, screen, within } from '@testing-library/react'
+import { ProjectCard, getAllProjects } from '@/entities/project'
+import { i18n } from '@/shared/config'
+
+const kanban = getAllProjects().find((project) => project.links.length > 1)
+
+describe('ProjectCard', () => {
+  beforeEach(async () => {
+    await i18n.changeLanguage('en')
+  })
+
+  it('names the card with its title at the requested heading level', () => {
+    if (!kanban) throw new Error('expected a project with several links')
+    render(<ProjectCard project={kanban} titleComponent="h2" />)
+
+    const card = screen.getByRole('article', { name: kanban.titleEn })
+    expect(within(card).getByRole('heading', { level: 2 }).textContent).toBe(kanban.titleEn)
+  })
+
+  it('follows the interface language', async () => {
+    if (!kanban) throw new Error('expected a project with several links')
+    await i18n.changeLanguage('es')
+    render(<ProjectCard project={kanban} />)
+
+    expect(screen.getByRole('heading', { level: 3 }).textContent).toBe(kanban.titleEs)
+  })
+
+  it('renders one button per link, in data order, described by the card title', () => {
+    if (!kanban) throw new Error('expected a project with several links')
+    render(<ProjectCard project={kanban} />)
+
+    const links = screen.getAllByRole('link')
+    expect(links.map((link) => link.getAttribute('href'))).toEqual(kanban.links.map((link) => link.url))
+    const titleId = screen.getByRole('heading', { level: 3 }).id
+    expect(links.every((link) => link.getAttribute('aria-describedby') === titleId)).toBe(true)
+  })
+})

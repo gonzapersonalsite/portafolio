@@ -5,7 +5,6 @@
     "nameEs": "Español",
     "levelEn": "Native",
     "levelEs": "Nativo",
-    "proficiency": 100,
     "order": 1
   },
   {
@@ -14,7 +13,6 @@
     "nameEs": "Catalán",
     "levelEn": "Intermediate",
     "levelEs": "Intermedio",
-    "proficiency": 75,
     "order": 2
   },
   {
@@ -23,7 +21,6 @@
     "nameEs": "Inglés",
     "levelEn": "Basic",
     "levelEs": "Básico",
-    "proficiency": 30,
     "order": 3
   }
 ]

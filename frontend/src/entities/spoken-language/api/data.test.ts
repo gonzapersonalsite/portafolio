@@ -9,9 +9,9 @@ describe('static spoken-language content', () => {
     it('satisfies the field contract', () => {
         for (const lang of data) {
             expect(lang.nameEn.length).toBeGreaterThan(0)
+            expect(lang.nameEs.length).toBeGreaterThan(0)
             expect(lang.levelEn.length).toBeGreaterThan(0)
-            expect(lang.proficiency).toBeGreaterThanOrEqual(0)
-            expect(lang.proficiency).toBeLessThanOrEqual(100)
+            expect(lang.levelEs.length).toBeGreaterThan(0)
             expect(typeof lang.order).toBe('number')
         }
     })

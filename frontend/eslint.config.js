@@ -22,8 +22,6 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      'react-hooks/set-state-in-effect': 'off',
-      'react-hooks/incompatible-library': 'off',
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'fsd-lint/forbidden-imports': 'error',
       'fsd-lint/no-relative-imports': 'error',

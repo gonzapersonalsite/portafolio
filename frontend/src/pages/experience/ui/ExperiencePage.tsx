@@ -6,9 +6,9 @@ import BusinessIcon from '@mui/icons-material/Business';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { getAllExperiences } from '@/entities/experience';
 import { useLanguage } from '@/features/language-switch';
-import { RichTextRenderer, ScrollableContent, EmptyState } from '@/shared/ui';
+import { RichTextRenderer, EmptyState, StatusBadge } from '@/shared/ui';
 import ExploreIcon from '@mui/icons-material/Explore';
-import { useContent, usePageMeta } from '@/shared/lib';
+import { formatPeriod, getLocalizedText, useContent, usePageMeta } from '@/shared/lib';
 
 const ExperiencePage: React.FC = () => {
     const { t } = useTranslation();
@@ -26,13 +26,16 @@ const ExperiencePage: React.FC = () => {
         <Box sx={{ py: 8 }}>
             <Container maxWidth="lg">
                 <Typography variant="overline" color="primary" sx={{ fontWeight: 'bold' }}>
-                    {t('nav.experience', "EXPERIENCE")}
+                    {t('nav.experience')}
                 </Typography>
-                <Typography variant="h2" component="h1" gutterBottom sx={{ mb: 6, fontWeight: '800' }}>
-                    {t('experience.heading', "Work History")}
+                <Typography variant="h2" component="h1" gutterBottom sx={{ fontWeight: '800' }}>
+                    {t('experience.heading')}
                 </Typography>
+                <Box sx={{ mb: 6 }}>
+                    <StatusBadge label={t('common.openToWork')} />
+                </Box>
 
-                {(experiences ?? []).length > 0 ? (
+                {experiences.length > 0 ? (
                     <Timeline
                         position="right"
                         sx={{
@@ -42,73 +45,82 @@ const ExperiencePage: React.FC = () => {
                             p: 0
                         }}
                     >
-                        {(experiences ?? []).map((exp, index) => (
-                            <TimelineItem key={exp.id}>
-                                <TimelineOppositeContent color="text.secondary" sx={{ py: '12px', px: 2, display: { xs: 'none', md: 'block' } }}>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-                                        <CalendarMonthIcon fontSize="small" />
-                                        <Typography variant="body2" sx={{ whiteSpace: 'nowrap', fontWeight: 'bold' }}>
-                                            {exp.startDate} — {exp.endDate || t('common.present', 'Present')}
-                                        </Typography>
-                                    </Box>
-                                </TimelineOppositeContent>
-
-                                <TimelineSeparator>
-                                    <TimelineDot color={index === 0 ? "primary" : "grey"} variant={index === 0 ? "filled" : "outlined"}>
-                                        <BusinessIcon />
-                                    </TimelineDot>
-                                    {index < (experiences ?? []).length - 1 && <TimelineConnector />}
-                                </TimelineSeparator>
-
-                                <TimelineContent sx={{ py: '12px', px: 2 }}>
-                                    <Paper
-                                        elevation={0}
-                                        sx={{
-                                            p: 3,
-                                            mb: 4,
-                                            width: '100%',
-                                            bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : 'grey.50',
-                                            border: `1px solid ${theme.palette.divider}`,
-                                            borderRadius: 2,
-                                            transition: 'transform 0.2s',
-                                            '&:hover': {
-                                                transform: 'translateY(-2px)',
-                                                boxShadow: theme.shadows[4]
-                                            }
-                                        }}
-                                    >
-                                        <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', gap: 1, mb: 1, color: 'text.secondary' }}>
+                        {experiences.map((exp, index) => {
+                            const period = formatPeriod(exp.startDate, exp.endDate, language, t('common.present'));
+                            return (
+                                <TimelineItem key={exp.id}>
+                                    <TimelineOppositeContent color="text.secondary" sx={{ py: '12px', px: 2, display: { xs: 'none', md: 'block' } }}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
                                             <CalendarMonthIcon fontSize="small" />
-                                            <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
-                                                {exp.startDate} — {exp.endDate || t('common.present', 'Present')}
+                                            <Typography variant="body2" sx={{ whiteSpace: 'nowrap', fontWeight: 'bold' }}>
+                                                {period}
                                             </Typography>
                                         </Box>
+                                    </TimelineOppositeContent>
 
-                                        <Typography variant="h6" component="h3" color="primary" sx={{ fontWeight: 'bold' }}>
-                                            {language === 'en' ? exp.positionEn : exp.positionEs}
-                                        </Typography>
-                                        <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: '500' }}>
-                                            @{language === 'en' ? exp.companyEn : exp.companyEs}
-                                        </Typography>
-                                        <Box sx={{ mt: 2, mb: 2 }}>
-                                            <ScrollableContent maxHeight="200px">
-                                                <RichTextRenderer text={language === 'en' ? exp.descriptionEn : exp.descriptionEs} />
-                                            </ScrollableContent>
-                                        </Box>
-                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
-                                            {Array.from(new Set(exp.technologies || [])).map(tech => (
-                                                <Chip key={tech} label={tech} size="small" variant="outlined" />
-                                            ))}
-                                        </Box>
-                                    </Paper>
-                                </TimelineContent>
-                            </TimelineItem>
-                        ))}
+                                    <TimelineSeparator>
+                                        <TimelineDot color={index === 0 ? "primary" : "grey"} variant={index === 0 ? "filled" : "outlined"}>
+                                            <BusinessIcon />
+                                        </TimelineDot>
+                                        {index < experiences.length - 1 && <TimelineConnector />}
+                                    </TimelineSeparator>
+
+                                    {/* minWidth 0 lets the card shrink to the phone width instead of overflowing. */}
+                                    <TimelineContent sx={{ py: '12px', px: 2, minWidth: 0 }}>
+                                        <Paper
+                                            elevation={0}
+                                            sx={{
+                                                p: 3,
+                                                mb: 4,
+                                                width: '100%',
+                                                bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : 'grey.50',
+                                                border: `1px solid ${theme.palette.divider}`,
+                                                borderRadius: 2,
+                                                transition: 'transform 0.2s',
+                                                '&:hover': {
+                                                    transform: 'translateY(-2px)',
+                                                    boxShadow: theme.shadows[4]
+                                                }
+                                            }}
+                                        >
+                                            <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', gap: 1, mb: 1, color: 'text.secondary' }}>
+                                                <CalendarMonthIcon fontSize="small" />
+                                                <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
+                                                    {period}
+                                                </Typography>
+                                            </Box>
+
+                                            <Typography variant="h6" component="h2" color="primary" sx={{ fontWeight: 'bold' }}>
+                                                {getLocalizedText(language, exp.positionEn, exp.positionEs)}
+                                            </Typography>
+                                            <Typography variant="subtitle1" component="p" gutterBottom sx={{ fontWeight: '500' }}>
+                                                {getLocalizedText(language, exp.companyEn, exp.companyEs)}
+                                            </Typography>
+                                            <Box sx={{ mt: 2, mb: 2 }}>
+                                                <RichTextRenderer text={getLocalizedText(language, exp.descriptionEn, exp.descriptionEs)} />
+                                            </Box>
+                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
+                                                {exp.technologies.map((tech) => (
+                                                    <Chip
+                                                        key={tech}
+                                                        label={tech}
+                                                        size="small"
+                                                        variant="outlined"
+                                                        // Long names wrap inside the chip instead of widening the card.
+                                                        sx={{ maxWidth: '100%', height: 'auto', '& .MuiChip-label': { whiteSpace: 'normal', py: 0.25 } }}
+                                                    />
+                                                ))}
+                                            </Box>
+                                        </Paper>
+                                    </TimelineContent>
+                                </TimelineItem>
+                            );
+                        })}
                     </Timeline>
                 ) : (
                     <EmptyState
-                        title={t('emptyState.experience.title', 'The Journey Begins')}
-                        description={t('emptyState.experience.description', 'Every expert was once a beginner. My professional path starts here.')}
+                        title={t('emptyState.experience.title')}
+                        description={t('emptyState.experience.description')}
                         icon={<ExploreIcon />}
                     />
                 )}

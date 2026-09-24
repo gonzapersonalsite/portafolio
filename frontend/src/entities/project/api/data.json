@@ -1,81 +1,213 @@
 [
   {
-    "id": "licence-generator",
-    "titleEn": "LicenseGenerator",
-    "titleEs": "LicenseGenerator",
-    "descriptionEn": "License Generator is a desktop application designed to centralize and automate the licensing lifecycle for independent software products, letting developers manage multiple applications from a single interface.\\n\\nBuilt with C# 12 on .NET 8 and Avalonia UI, following the MVVM pattern with CommunityToolkit.Mvvm. Licenses are signed with RSA-2048 using the open PEM (PKCS#8) standard, with optional hardware binding (HWID) and expiration dates for time-based subscription models.\\n\\nOnce a license is issued, the system produces a Base64-encoded JSON payload that any client application can validate offline, regardless of the language it was written in. The application includes a complete history of issued licenses and a built-in localization system.\\n\\nThe distribution pipeline produces obfuscated, self-contained executables, and free Windows and Linux builds are available from the release page; the tool runs entirely offline and private keys never leave the developer's machine.",
-    "descriptionEs": "License Generator es una aplicación de escritorio diseñada para centralizar y automatizar el ciclo de vida del licenciamiento de productos de software independientes, permitiendo a los desarrolladores gestionar múltiples aplicaciones desde una sola interfaz.\\n\\nConstruida con C# 12 sobre .NET 8 y Avalonia UI, siguiendo el patrón MVVM con CommunityToolkit.Mvvm. Las licencias se firman con RSA-2048 usando el estándar abierto PEM (PKCS#8), con vinculación opcional a hardware (HWID) y fechas de expiración para modelos de suscripción.\\n\\nUna vez emitida, la licencia es un payload JSON codificado en Base64 que cualquier aplicación cliente puede validar offline, sin importar el lenguaje en el que esté escrita. La aplicación incluye un historial completo de licencias emitidas y un sistema de localización integrado.\\n\\nEl pipeline de distribución genera ejecutables ofuscados y autocontenidos, y hay compilaciones gratuitas para Windows y Linux disponibles en la página de descargas; la herramienta funciona íntegramente offline y las claves privadas nunca salen de la máquina del desarrollador.",
+    "id": "quotidia",
+    "titleEn": "Quotidia – Daily Planner",
+    "titleEs": "Quotidia – Planificador diario",
+    "descriptionEn": "Quotidia is an offline-first daily planner for Android built with Flutter: tasks, events, goals, a journal and day plans with time blocks, with no account, no analytics and no ads. Optional sync between the user's own devices goes through a private folder in their own Google Drive, with no server of mine in between. It is in pre-release and not on Google Play yet; its public page is on gonzaloapps.es, published by the Gonzalo Apps project.\\n\\nAny reminder can ring as an alarm: it sounds even when the phone is on silent, goes off at the exact minute and can take over the lock screen, thanks to a native Kotlin runtime bridged to Dart with Pigeon and tested on a Galaxy S24 Ultra and on Android 8.0 to 14 and 16 emulators.\\n\\nThe code is organized by feature in layers (Riverpod, Drift over SQLite, go_router), and every push passes a local pipeline with more than 30 custom contract checkers, per-layer coverage floors and more than 4,000 automated tests; more than 70 architecture decision records document the design. The source code is private; I can walk you through it on request.",
+    "descriptionEs": "Quotidia es un planificador diario offline-first para Android hecho con Flutter: tareas, eventos, metas, un diario y el plan del día con bloques de tiempo, sin cuenta, sin analítica y sin anuncios. La sincronización opcional entre los dispositivos del propio usuario pasa por una carpeta privada de su Google Drive, sin ningún servidor mío de por medio. Está en prelanzamiento y todavía no figura en Google Play; su página pública está en gonzaloapps.es, publicada por el proyecto Gonzalo Apps.\\n\\nCualquier recordatorio puede sonar como alarma: suena aunque el móvil esté en silencio, se activa al minuto exacto y puede ocupar la pantalla de bloqueo, gracias a un runtime nativo en Kotlin conectado con Dart mediante Pigeon y probado en un Galaxy S24 Ultra y en emuladores de Android 8.0 a 14 y 16.\\n\\nEl código se organiza por funcionalidades y en capas (Riverpod, Drift sobre SQLite, go_router), y cada push pasa un pipeline local con más de 30 checkers de contratos propios, cobertura mínima por capa y más de 4.000 tests automatizados; más de 70 registros de decisiones de arquitectura (ADR) documentan el diseño. El código fuente es privado; si te interesa, te lo enseño.",
+    "technologies": [
+      "Flutter",
+      "Dart",
+      "Kotlin",
+      "Pigeon",
+      "Riverpod",
+      "Drift (SQLite)",
+      "go_router",
+      "Google Drive API",
+      "i18n (EN/ES)"
+    ],
+    "images": [
+      {
+        "base": "/images/projects/quotidia/00-quotidia_cover",
+        "fullWidth": 1920,
+        "altEn": "Three Quotidia screens on a green background: the day plan, a reminder set to ring as an alarm, and the full-screen alarm that can be stopped or snoozed without unlocking the phone.",
+        "altEs": "Tres pantallas de Quotidia sobre fondo verde: el plan del día, un recordatorio configurado para sonar como alarma y la alarma a pantalla completa, que se detiene o se pospone sin desbloquear el móvil."
+      },
+      {
+        "base": "/images/projects/quotidia/01-quotidia_daily-plan",
+        "fullWidth": 1350,
+        "altEn": "Quotidia's Today screen: two events and three tasks placed in time blocks across the day.",
+        "altEs": "Pantalla Hoy de Quotidia: dos eventos y tres tareas colocadas en bloques de tiempo a lo largo del día."
+      },
+      {
+        "base": "/images/projects/quotidia/02-quotidia_alarm-choice",
+        "fullWidth": 1350,
+        "altEn": "Editing an event in Quotidia: the reminder one hour before is switched on to sound as an alarm, while the one a day before arrives as a notification.",
+        "altEs": "Edición de un evento en Quotidia: el recordatorio de una hora antes está activado para sonar como alarma y el de un día antes llega como notificación."
+      },
+      {
+        "base": "/images/projects/quotidia/03-quotidia_alarm-ringing",
+        "fullWidth": 1350,
+        "altEn": "Quotidia's full-screen alarm at 8:30 AM for an event that starts in one hour, with buttons to stop it or snooze it for 5 minutes.",
+        "altEs": "Alarma a pantalla completa de Quotidia a las 8:30 para un evento que empieza en una hora, con botones para detenerla o posponerla 5 minutos."
+      },
+      {
+        "base": "/images/projects/quotidia/04-quotidia_overview",
+        "fullWidth": 1350,
+        "altEn": "Quotidia's overview screen: a summary of the last 7 days, with 9 of 9 scheduled tasks done, and a look ahead at the next 7, built from the user's own records.",
+        "altEs": "Pantalla de resumen de Quotidia: balance de los últimos 7 días, con 9 de 9 tareas programadas hechas, y previsión de los próximos 7 a partir de los propios registros del usuario."
+      },
+      {
+        "base": "/images/projects/quotidia/05-quotidia_calendar-month",
+        "fullWidth": 1350,
+        "altEn": "Quotidia's calendar in month view for September 2026, with repeating events on most days and buttons to switch to week or year view.",
+        "altEs": "Calendario de Quotidia en vista mensual de septiembre de 2026, con eventos repetidos en la mayoría de los días y botones para cambiar a vista semanal o anual."
+      },
+      {
+        "base": "/images/projects/quotidia/06-quotidia_tasks",
+        "fullWidth": 1350,
+        "altEn": "Quotidia's task list filtered by date, with a search box, status filters and tasks showing their duration and high, medium or low priority.",
+        "altEs": "Lista de tareas de Quotidia filtrada por fecha, con buscador, filtros de estado y tareas con su duración y prioridad alta, media o baja."
+      },
+      {
+        "base": "/images/projects/quotidia/07-quotidia_goals",
+        "fullWidth": 1350,
+        "altEn": "Quotidia's goals screen: goals filtered by area and status, each with a progress ring of completed milestones and a target date.",
+        "altEs": "Pantalla de metas de Quotidia: metas filtradas por área y estado, cada una con un anillo de progreso de hitos completados y una fecha objetivo."
+      },
+      {
+        "base": "/images/projects/quotidia/08-quotidia_journal",
+        "fullWidth": 1350,
+        "altEn": "Quotidia's journal: dated entries with a title, a short text and a mood icon, plus search by title or content.",
+        "altEs": "Diario de Quotidia: entradas fechadas con título, un texto breve y un icono de estado de ánimo, y búsqueda por título o contenido."
+      }
+    ],
+    "links": [
+      {
+        "kind": "site",
+        "url": "https://gonzaloapps.es/apps/quotidia/"
+      }
+    ],
+    "type": "MOBILE",
+    "featured": true,
+    "order": 1
+  },
+  {
+    "id": "license-generator",
+    "titleEn": "License Generator",
+    "titleEs": "License Generator",
+    "descriptionEn": "License Generator is a desktop application designed to centralize and automate the licensing lifecycle for independent software products, letting developers manage multiple applications from a single interface.\\n\\nBuilt with C# 12 on .NET 8 and Avalonia UI, following the MVVM pattern with CommunityToolkit.Mvvm. Licenses are signed with RSA-2048 using the open PEM (PKCS#8) standard, with optional hardware binding (HWID) and expiration dates for time-based subscription models.\\n\\nOnce a license is issued, the system produces a Base64-encoded JSON payload that any client application can validate offline, regardless of the language it was written in. The application includes a complete history of issued licenses and an interface localized into five languages (English, Spanish, German, Portuguese and Chinese).\\n\\nThe distribution pipeline produces obfuscated, self-contained executables, and Windows and Linux builds are available from the release page; the tool runs entirely offline and private keys never leave the developer's machine. The source code is private; the public repository holds its documentation, and I can walk you through the code on request.",
+    "descriptionEs": "License Generator es una aplicación de escritorio diseñada para centralizar y automatizar el ciclo de vida del licenciamiento de productos de software independientes, permitiendo a los desarrolladores gestionar múltiples aplicaciones desde una sola interfaz.\\n\\nConstruida con C# 12 sobre .NET 8 y Avalonia UI, siguiendo el patrón MVVM con CommunityToolkit.Mvvm. Las licencias se firman con RSA-2048 usando el estándar abierto PEM (PKCS#8), con vinculación opcional a hardware (HWID) y fechas de expiración para modelos de suscripción.\\n\\nUna vez emitida, la licencia es un payload JSON codificado en Base64 que cualquier aplicación cliente puede validar offline, sin importar el lenguaje en el que esté escrita. La aplicación incluye un historial completo de licencias emitidas y una interfaz traducida a cinco idiomas (inglés, español, alemán, portugués y chino).\\n\\nEl pipeline de distribución genera ejecutables ofuscados y autocontenidos, y hay compilaciones para Windows y Linux disponibles en la página de descargas; la herramienta funciona íntegramente offline y las claves privadas nunca salen de la máquina del desarrollador. El código fuente es privado; el repositorio público contiene su documentación y, si te interesa, te enseño el código.",
     "technologies": [
       ".NET 8 SDK (C# 12)",
       "Avalonia UI",
       "CommunityToolkit.Mvvm",
-      "RSA-2048 (PEM)",
+      "Microsoft Dependency Injection",
+      "RSA-2048",
       "Obfuscar",
-      "Self-Contained Publishing",
-      "i18n (Localization System)"
+      "i18n (EN/ES/DE/PT/ZH)"
     ],
-    "imageUrls": [
-      "/images/projects/licence-generator/00-Logo_Licence_Generator-800.webp",
-      "/images/projects/licence-generator/01-licensegenerator_dashboard-800.webp",
-      "/images/projects/licence-generator/02-licensegenerator_apps-800.webp",
-      "/images/projects/licence-generator/03-licensegenerator_license-800.webp",
-      "/images/projects/licence-generator/04-licensegenerator_history-800.webp",
-      "/images/projects/licence-generator/05-licensegenerator-settings-800.webp"
+    "images": [
+      {
+        "base": "/images/projects/license-generator/00-licensegenerator_generate-license",
+        "fullWidth": 1280,
+        "altEn": "License Generator's license generation screen: a license for NutriManager with the customer's name, the machine ID and no expiration, signed and shown in Base64 ready to copy, next to a success notice.",
+        "altEs": "Pantalla de generación de licencias de License Generator: una licencia para NutriManager con el nombre del cliente, el ID de máquina y sin caducidad, firmada y mostrada en Base64 lista para copiar, junto a un aviso de éxito."
+      },
+      {
+        "base": "/images/projects/license-generator/01-licensegenerator_logo",
+        "fullWidth": 512,
+        "altEn": "License Generator logo: a license card with a check mark, a QR code and a gold key.",
+        "altEs": "Logotipo de License Generator: una tarjeta de licencia con una marca de verificación, un código QR y una llave dorada."
+      },
+      {
+        "base": "/images/projects/license-generator/02-licensegenerator_dashboard",
+        "fullWidth": 1280,
+        "altEn": "License Generator dashboard in dark mode: counters for applications and issued licenses, the last license generated, and a sidebar to manage apps, generate licenses, view the history and change settings.",
+        "altEs": "Panel de License Generator en modo oscuro: contadores de aplicaciones y licencias emitidas, la última licencia generada y una barra lateral para gestionar aplicaciones, generar licencias, ver el historial y cambiar los ajustes."
+      },
+      {
+        "base": "/images/projects/license-generator/03-licensegenerator_apps",
+        "fullWidth": 1280,
+        "altEn": "License Generator applications screen: a form to register a new application and create its RSA keys, and the list of registered applications with copy, keys and delete actions.",
+        "altEs": "Pantalla de aplicaciones de License Generator: un formulario para registrar una aplicación nueva y crear sus claves RSA, y la lista de aplicaciones registradas con acciones para copiar, ver las claves y eliminar."
+      },
+      {
+        "base": "/images/projects/license-generator/04-licensegenerator_history",
+        "fullWidth": 1279,
+        "altEn": "License Generator history: a searchable table of issued licenses with application, customer, hardware ID and expiration, and actions to copy or delete each one.",
+        "altEs": "Historial de License Generator: una tabla con buscador de las licencias emitidas, con aplicación, cliente, ID de hardware y caducidad, y acciones para copiar o eliminar cada una."
+      },
+      {
+        "base": "/images/projects/license-generator/05-licensegenerator-settings",
+        "fullWidth": 1280,
+        "altEn": "License Generator settings: theme, font scale and language, a desktop shortcut, a link to the integration documentation, and backup export and import.",
+        "altEs": "Ajustes de License Generator: tema, escala de fuente e idioma, acceso directo en el escritorio, enlace a la documentación de integración y exportación e importación de copias de seguridad."
+      }
     ],
-    "githubUrl": "https://github.com/gonzapersonalsite/LicenseGenerator-Docs-",
-    "liveUrl": "https://github.com/gonzapersonalsite/LicenseGenerator-Docs-/releases/tag/LicenseGenerator-1.0.3.0",
+    "links": [
+      {
+        "kind": "download",
+        "url": "https://github.com/gonzapersonalsite/LicenseGenerator-Docs-/releases/latest"
+      },
+      {
+        "kind": "documentation",
+        "url": "https://github.com/gonzapersonalsite/LicenseGenerator-Docs-"
+      }
+    ],
     "type": "DESKTOP",
     "featured": true,
-    "order": 1,
-    "imageUrlsFull": [
-      "/images/projects/licence-generator/00-Logo_Licence_Generator-full.webp",
-      "/images/projects/licence-generator/01-licensegenerator_dashboard-full.webp",
-      "/images/projects/licence-generator/02-licensegenerator_apps-full.webp",
-      "/images/projects/licence-generator/03-licensegenerator_license-full.webp",
-      "/images/projects/licence-generator/04-licensegenerator_history-full.webp",
-      "/images/projects/licence-generator/05-licensegenerator-settings-full.webp"
-    ]
+    "order": 2
   },
   {
     "id": "developer-site",
     "titleEn": "Gonzalo Apps – App Hub",
     "titleEs": "Gonzalo Apps – Hub de aplicaciones",
-    "descriptionEn": "Gonzalo Apps is the public home for commercial applications: a multilingual storefront where each product gets its own page, legal documents, screenshots and store links.\\n\\nRather than building pages by hand, the site is generated by a custom static-site generator written in Dart: it reads a JSON registry and each app's legal markdown, and emits deterministic HTML that is reviewed before every commit and served from Cloudflare Pages with no build step and zero JavaScript.\\n\\nEvery page is published in English and Spanish, with PWA manifests per app, a sitemap, and llms.txt markdown twins so AI agents read the same content as humans.\\n\\nThe generator enforces its own rules — no link that does not resolve, no document that was not declared, no partial publication — so the published site can never drift from what was reviewed.",
-    "descriptionEs": "Gonzalo Apps es la casa pública de las aplicaciones comerciales: un escaparate multilingüe donde cada producto tiene su propia página, sus documentos legales, capturas y enlaces a las tiendas.\\n\\nEn lugar de crear páginas a mano, el sitio lo genera un generador estático propio escrito en Dart: lee un registro JSON y los documentos legales en markdown de cada aplicación, y emite HTML determinista que se revisa antes de cada commit y se sirve desde Cloudflare Pages sin paso de build y sin una línea de JavaScript.\\n\\nCada página se publica en inglés y español, con manifiestos PWA por aplicación, sitemap y copias markdown vía llms.txt para que los agentes de IA lean el mismo contenido que los humanos.\\n\\nEl generador impone sus propias reglas — ningún enlace que no resuelva, ningún documento no declarado, ninguna publicación parcial — de modo que el sitio publicado nunca puede desviarse de lo que fue revisado.",
+    "descriptionEn": "Gonzalo Apps is the public home for my applications: a bilingual showcase where each product gets its own page, screenshots and legal documents, plus store links once it is live on a store.\\n\\nRather than building pages by hand, the site is generated by a custom static-site generator written in Dart: it reads a JSON registry and each app's legal markdown, and emits deterministic HTML that is reviewed before every commit and served from Cloudflare Pages with no build step and zero JavaScript.\\n\\nEvery page is published in English and Spanish, with PWA manifests per app, a sitemap, and llms.txt markdown twins so AI agents read the same content as humans.\\n\\nThe generator enforces its own rules — no link that does not resolve, no document that was not declared, no partial publication — so the published site can never drift from what was reviewed. The source code is private; I can walk you through it on request.",
+    "descriptionEs": "Gonzalo Apps es la web pública de mis aplicaciones: un escaparate bilingüe donde cada producto tiene su propia página, capturas y documentos legales, y enlaces a las tiendas en cuanto está disponible en ellas.\\n\\nEn lugar de crear páginas a mano, el sitio lo genera un generador estático propio escrito en Dart: lee un registro JSON y los documentos legales en markdown de cada aplicación, y emite HTML determinista que se revisa antes de cada commit y se sirve desde Cloudflare Pages sin paso de build y sin una línea de JavaScript.\\n\\nCada página se publica en inglés y español, con manifiestos PWA por aplicación, sitemap y copias markdown vía llms.txt para que los agentes de IA lean el mismo contenido que los humanos.\\n\\nEl generador impone sus propias reglas — ningún enlace que no resuelva, ningún documento no declarado, ninguna publicación parcial — de modo que el sitio publicado nunca puede desviarse de lo que fue revisado. El código fuente es privado; si te interesa, te lo enseño.",
     "technologies": [
       "Dart",
       "Cloudflare Pages",
-      "HTML + CSS (zero JS)",
+      "HTML",
+      "CSS",
       "PWA Web Manifest",
       "i18n (EN/ES)",
-      "llms.txt v2",
+      "llms.txt",
       "PowerShell",
       "Git Hooks"
     ],
-    "imageUrls": [
-      "/images/projects/developer-site/00-developer-site_home-800.webp",
-      "/images/projects/developer-site/01-developer-site_apps-800.webp",
-      "/images/projects/developer-site/02-developer-site_quotidia-800.webp",
-      "/images/projects/developer-site/03-developer-site_es-800.webp"
+    "images": [
+      {
+        "base": "/images/projects/developer-site/00-developer-site_home-banner",
+        "fullWidth": 928,
+        "altEn": "Gonzalo Apps home page in English: the gonzaloapps.es software studio banner and an applications section listing Quotidia.",
+        "altEs": "Página de inicio de Gonzalo Apps en inglés: el banner del estudio de software gonzaloapps.es y una sección de aplicaciones con Quotidia."
+      },
+      {
+        "base": "/images/projects/developer-site/01-developer-site_apps",
+        "fullWidth": 1440,
+        "altEn": "Gonzalo Apps applications page, listing Quotidia with its short description.",
+        "altEs": "Página de aplicaciones de Gonzalo Apps, con Quotidia y su descripción breve."
+      },
+      {
+        "base": "/images/projects/developer-site/02-developer-site_quotidia-gallery",
+        "fullWidth": 1440,
+        "altEn": "Quotidia's page on Gonzalo Apps: the app icon, its tagline and a screenshot carousel.",
+        "altEs": "Página de Quotidia en Gonzalo Apps: el icono de la aplicación, su lema y un carrusel de capturas."
+      },
+      {
+        "base": "/images/projects/developer-site/03-developer-site_es",
+        "fullWidth": 1440,
+        "altEn": "Gonzalo Apps home page in Spanish, with the same banner and the Quotidia entry translated.",
+        "altEs": "Página de inicio de Gonzalo Apps en español, con el mismo banner y la ficha de Quotidia traducida."
+      }
     ],
-    "githubUrl": "https://github.com/gonzapersonalsite/developer-site",
-    "liveUrl": "https://gonzaloapps.es/",
+    "links": [
+      {
+        "kind": "site",
+        "url": "https://gonzaloapps.es/"
+      }
+    ],
     "type": "WEB",
     "featured": true,
-    "order": 2,
-    "imageUrlsFull": [
-      "/images/projects/developer-site/00-developer-site_home-full.webp",
-      "/images/projects/developer-site/01-developer-site_apps-full.webp",
-      "/images/projects/developer-site/02-developer-site_quotidia-full.webp",
-      "/images/projects/developer-site/03-developer-site_es-full.webp"
-    ]
+    "order": 3
   },
   {
     "id": "kanban-board",
     "titleEn": "Kanban Board App",
-    "titleEs": "Aplicación de Tablero Kanban",
-    "descriptionEn": "A Trello-style Kanban application focused on visual task and board management in a smooth, purely client-side experience.\\n\\nBuilt with React + TypeScript under Feature-Sliced Design to keep the codebase modular and scalable. It uses Zustand with local persistence for state management, React Router for board-based navigation, and @dnd-kit for drag-and-drop interactions.\\n\\nIt includes multi-board support with a dedicated calendar view, task editing with due dates, internationalization, and a light/dark theme switcher.\\n\\nThe project follows best practices with automated testing, accessibility details, responsive behavior, and a clean architecture.",
-    "descriptionEs": "Una aplicación Kanban inspirada en herramientas como Trello y centrada en la gestión visual de tareas y tableros en una experiencia fluida, totalmente del lado del cliente.\\n\\nConstruida con React + TypeScript bajo Feature-Sliced Design para mantener el código modular y escalable. Utiliza Zustand con persistencia local para la gestión del estado, React Router para la navegación por tableros y @dnd-kit para las interacciones drag and drop.\\n\\nIncluye soporte multi-tablero con una vista de calendario dedicada, edición de tareas con fechas límite, internacionalización y un selector de tema claro/oscuro.\\n\\nEl proyecto sigue buenas prácticas con testing automatizado, detalles de accesibilidad, comportamiento responsive y una arquitectura limpia.",
+    "titleEs": "Aplicación de tablero Kanban",
+    "descriptionEn": "A Trello-style Kanban application focused on visual task and board management in a smooth, purely client-side experience.\\n\\nBuilt with React + TypeScript under Feature-Sliced Design to keep the codebase modular and scalable. It uses Zustand with local persistence for state management, React Router for board-based navigation, and @dnd-kit for drag-and-drop interactions.\\n\\nIt includes multi-board support with a dedicated calendar view, task editing with due dates, JSON backup export and import with version validation, a light/dark theme and its own lightweight i18n layer in English, Spanish and German.\\n\\nIt is covered by unit and component tests (Vitest + Testing Library), with a router-level error boundary and pre-commit linting.",
+    "descriptionEs": "Una aplicación Kanban inspirada en herramientas como Trello y centrada en la gestión visual de tareas y tableros en una experiencia fluida, totalmente del lado del cliente.\\n\\nConstruida con React + TypeScript bajo Feature-Sliced Design para mantener el código modular y escalable. Utiliza Zustand con persistencia local para la gestión del estado, React Router para la navegación por tableros y @dnd-kit para las interacciones drag and drop.\\n\\nIncluye soporte multitablero con una vista de calendario dedicada, edición de tareas con fechas límite, exportación e importación de copias de seguridad en JSON con validación de versión, tema claro/oscuro y una capa de i18n ligera y propia en inglés, español y alemán.\\n\\nEstá cubierta por tests unitarios y de componentes (Vitest + Testing Library), con un error boundary a nivel de router y linting antes de cada commit.",
     "technologies": [
       "React",
       "TypeScript",
@@ -85,31 +217,50 @@
       "React Router",
       "@dnd-kit",
       "CSS Modules",
+      "i18n (EN/ES/DE)",
       "Vitest",
       "Testing Library"
     ],
-    "imageUrls": [
-      "/images/projects/kanban-board/00-kanban-board-800.webp",
-      "/images/projects/kanban-board/01-kanban-calendar-800.webp",
-      "/images/projects/kanban-board/02-kanban-edit-task-800.webp"
+    "images": [
+      {
+        "base": "/images/projects/kanban-board/00-kanban_board-light",
+        "fullWidth": 1920,
+        "altEn": "Kanban board in light mode with To do, In progress and Done columns holding seven sample tasks, each with a short description, some with due-date badges (due today, overdue), and a field to add a column.",
+        "altEs": "Tablero Kanban en modo claro con las columnas To do, In progress y Done y siete tareas de ejemplo, cada una con una breve descripción y algunas con avisos de vencimiento (vence hoy, vencida), y un campo para añadir columnas."
+      },
+      {
+        "base": "/images/projects/kanban-board/01-kanban_calendar-dark",
+        "fullWidth": 1920,
+        "altEn": "Calendar view of the Kanban app in dark mode: a month grid starting on Monday, with the sample tasks placed on their due dates and color-coded as overdue, due today or upcoming.",
+        "altEs": "Vista de calendario de la aplicación Kanban en modo oscuro: una cuadrícula mensual que empieza en lunes, con las tareas de ejemplo colocadas en su fecha de vencimiento y con un color según estén vencidas, venzan hoy o estén próximas."
+      },
+      {
+        "base": "/images/projects/kanban-board/02-kanban_edit-task-light",
+        "fullWidth": 1920,
+        "altEn": "Task editing dialog over the board in light mode, showing a sample task's title, description and due date, with buttons to cancel or save.",
+        "altEs": "Diálogo de edición de una tarea sobre el tablero en modo claro, con el título, la descripción y la fecha de vencimiento de una tarea de ejemplo y botones para cancelar o guardar."
+      }
     ],
-    "githubUrl": "https://github.com/gonzapersonalsite/kanban-board-app",
-    "liveUrl": "https://kanban-board-app-kappa.vercel.app/",
+    "links": [
+      {
+        "kind": "site",
+        "url": "https://kanban-board-app-kappa.vercel.app/"
+      },
+      {
+        "kind": "repository",
+        "url": "https://github.com/gonzapersonalsite/kanban-board-app"
+      }
+    ],
     "type": "WEB",
-    "featured": true,
-    "order": 3,
-    "imageUrlsFull": [
-      "/images/projects/kanban-board/00-kanban-board-full.webp",
-      "/images/projects/kanban-board/01-kanban-calendar-full.webp",
-      "/images/projects/kanban-board/02-kanban-edit-task-full.webp"
-    ]
+    "featured": false,
+    "order": 4
   },
   {
     "id": "nutrimanager",
     "titleEn": "NutriManager",
     "titleEs": "NutriManager",
-    "descriptionEn": "NutriManager is a desktop application designed to centralize the common tasks of a nutritionist's office. A licence is required to try it and access its features; contact me with interest and I will gladly provide it.\\n\\nBuilt with C# 12 on .NET 8 and Avalonia UI, following the MVVM pattern. It manages a local SQLite database through Entity Framework Core, integrating patient records and clinical histories with per-case pathology management.\\n\\nIt covers the full dietary planning workflow: an ingredient database used to create recipes, which are organized into personalized weekly diets, with automated caloric and macronutrient calculations based on standard industry formulas such as Harris-Benedict. Once the plan is ready, it generates a professional PDF for the patient with QuestPDF.\\n\\nThe distribution pipeline produces obfuscated, self-contained executables, and the software is protected by an RSA-2048 digital licensing system bound to hardware, managed through the License Generator project.",
-    "descriptionEs": "NutriManager es una aplicación de escritorio diseñada para centralizar las tareas habituales de la consulta de un nutricionista. Se requiere una licencia para probarla y acceder a sus funciones; contacta conmigo si te interesa y te la proporcionaré encantado.\\n\\nConstruida con C# 12 sobre .NET 8 y Avalonia UI, siguiendo el patrón MVVM. Gestiona una base de datos SQLite local a través de Entity Framework Core, integrando los historiales clínicos de los pacientes con la gestión de patologías específicas de cada caso.\\n\\nCubre el flujo completo de planificación dietética: una base de datos de ingredientes con la que se crean recetas, que se organizan en dietas semanales personalizadas, con cálculos calóricos y de macronutrientes automatizados según fórmulas estándar del sector como Harris-Benedict. Una vez listo el plan, genera un PDF profesional para el paciente con QuestPDF.\\n\\nEl pipeline de distribución produce ejecutables ofuscados y autocontenidos, y el software está protegido por un sistema de licenciamiento digital RSA-2048 vinculado al hardware, gestionado a través del proyecto License Generator.",
+    "descriptionEn": "NutriManager is a desktop application designed to centralize the common tasks of a nutritionist's office. A license is required to try it and access its features; contact me if you are interested and I will gladly provide one.\\n\\nBuilt with C# 12 on .NET 8 and Avalonia UI, following the MVVM pattern. It manages a local SQLite database through Entity Framework Core, integrating patient records and clinical histories with per-case pathology management.\\n\\nIt covers the full dietary planning workflow: an ingredient database used to create recipes, which are organized into personalized weekly diets, with automated caloric and macronutrient calculations based on standard industry formulas such as Harris-Benedict. Once the plan is ready, it generates a professional PDF for the patient with QuestPDF.\\n\\nThe distribution pipeline produces obfuscated, self-contained executables, and the software is protected by an RSA-2048 digital licensing system bound to hardware, managed through the License Generator project. The source code is private; the public repository holds its documentation, and I can walk you through the code on request.",
+    "descriptionEs": "NutriManager es una aplicación de escritorio diseñada para centralizar las tareas habituales de la consulta de un nutricionista. Se requiere una licencia para probarla y acceder a sus funciones; contacta conmigo si te interesa y te la proporcionaré encantado.\\n\\nConstruida con C# 12 sobre .NET 8 y Avalonia UI, siguiendo el patrón MVVM. Gestiona una base de datos SQLite local a través de Entity Framework Core, integrando los historiales clínicos de los pacientes con la gestión de patologías específicas de cada caso.\\n\\nCubre el flujo completo de planificación dietética: una base de datos de ingredientes con la que se crean recetas, que se organizan en dietas semanales personalizadas, con cálculos calóricos y de macronutrientes automatizados según fórmulas estándar del sector como Harris-Benedict. Una vez listo el plan, genera un PDF profesional para el paciente con QuestPDF.\\n\\nEl pipeline de distribución produce ejecutables ofuscados y autocontenidos, y el software está protegido por un sistema de licenciamiento digital RSA-2048 vinculado al hardware, gestionado a través del proyecto License Generator. El código fuente es privado; el repositorio público contiene su documentación y, si te interesa, te enseño el código.",
     "technologies": [
       ".NET 8 SDK (C# 12)",
       "Avalonia UI",
@@ -120,70 +271,109 @@
       "CommunityToolkit.Mvvm",
       "RSA-2048",
       "Obfuscar",
-      "Self-Contained Publishing",
-      "JSON Localization System"
+      "i18n (EN/ES)"
     ],
-    "imageUrls": [
-      "/images/projects/nutrimanager/00-Logo_NutriManager-800.webp",
-      "/images/projects/nutrimanager/01-nutrimanager_welcome-800.webp",
-      "/images/projects/nutrimanager/02-nutrimanager_patients-800.webp",
-      "/images/projects/nutrimanager/03-nutrimanager_diets-800.webp",
-      "/images/projects/nutrimanager/04-nutrimanager-diet-800.webp"
+    "images": [
+      {
+        "base": "/images/projects/nutrimanager/00-nutrimanager_patients",
+        "fullWidth": 1280,
+        "altEn": "NutriManager patient list with one patient's record open: personal data and calculated nutritional data such as BMI, nutritional status and daily calorie needs.",
+        "altEs": "Lista de pacientes de NutriManager con la ficha de un paciente abierta: datos personales y datos nutricionales calculados como el IMC, el estado nutricional y las necesidades calóricas diarias."
+      },
+      {
+        "base": "/images/projects/nutrimanager/01-nutrimanager_logo",
+        "fullWidth": 1280,
+        "altEn": "NutriManager logo: a leaf and a rising bar chart next to the app name.",
+        "altEs": "Logotipo de NutriManager: una hoja y un gráfico de barras ascendente junto al nombre de la aplicación."
+      },
+      {
+        "base": "/images/projects/nutrimanager/02-nutrimanager_welcome-screen",
+        "fullWidth": 600,
+        "altEn": "NutriManager activation window: the computer's request code and a field to enter the license key (interface in Spanish).",
+        "altEs": "Ventana de activación de NutriManager: el código de solicitud del equipo y un campo para introducir la clave de licencia (interfaz en español)."
+      },
+      {
+        "base": "/images/projects/nutrimanager/03-nutrimanager_diets",
+        "fullWidth": 1280,
+        "altEn": "NutriManager diet assignment: a dialog to start the diet from a template or create a new one.",
+        "altEs": "Asignación de dietas en NutriManager: un diálogo para partir de una plantilla o crear una dieta nueva."
+      },
+      {
+        "base": "/images/projects/nutrimanager/04-nutrimanager-diet",
+        "fullWidth": 1280,
+        "altEn": "Creating a weekly diet in NutriManager: recipes for each meal and day with their calories and macronutrients, and a weekly summary of daily averages.",
+        "altEs": "Creación de una dieta semanal en NutriManager: recetas para cada comida y día con sus calorías y macronutrientes, y un resumen semanal de medias diarias."
+      }
     ],
-    "githubUrl": "https://github.com/gonzapersonalsite/NutriManager-Docs-",
-    "liveUrl": "https://github.com/gonzapersonalsite/NutriManager-Docs-",
+    "links": [
+      {
+        "kind": "documentation",
+        "url": "https://github.com/gonzapersonalsite/NutriManager-Docs-"
+      }
+    ],
     "type": "DESKTOP",
     "featured": false,
-    "order": 4,
-    "imageUrlsFull": [
-      "/images/projects/nutrimanager/00-Logo_NutriManager-full.webp",
-      "/images/projects/nutrimanager/01-nutrimanager_welcome-full.webp",
-      "/images/projects/nutrimanager/02-nutrimanager_patients-full.webp",
-      "/images/projects/nutrimanager/03-nutrimanager_diets-full.webp",
-      "/images/projects/nutrimanager/04-nutrimanager-diet-full.webp"
-    ]
+    "order": 5
   },
   {
     "id": "pokedex",
     "titleEn": "Pokédex",
     "titleEs": "Pokédex",
-    "descriptionEn": "An interactive Pokédex built as a modern frontend application that consumes the public PokeAPI.\\n\\nDeveloped with React + TypeScript following Feature-Sliced Design with a container/presentational split to keep the code organized and scalable. It implements TanStack Query for API requests with intelligent caching and Zustand with persistence for local state.\\n\\nIt features autocomplete search, type filtering, a favorites system that persists in localStorage, and detailed evolution modals with intra-modal navigation. It includes light/dark theme support, global toast notifications, and PWA installation capability.\\n\\nThe project follows best practices with unit testing, responsive design, and accessibility, demonstrating modern and well-structured frontend development.",
-    "descriptionEs": "Una Pokédex interactiva desarrollada como aplicación frontend moderna que consume la API pública de PokeAPI.\\n\\nDesarrollada con React + TypeScript siguiendo Feature-Sliced Design con una separación container/presentational para mantener el código organizado y escalable. Implementa TanStack Query para las peticiones a la API con caché inteligente y Zustand con persistencia para el estado local.\\n\\nOfrece búsqueda con autocompletado, filtrado por tipos, un sistema de favoritos que persiste en localStorage y modales de detalle con cadena de evoluciones y navegación intra-modal. Incluye soporte de tema claro/oscuro, notificaciones toast globales y capacidad de instalación como PWA.\\n\\nEl proyecto sigue buenas prácticas con testing unitario, diseño responsive y accesibilidad, demostrando un desarrollo frontend moderno y bien estructurado.",
+    "descriptionEn": "An interactive Pokédex built as a modern frontend application that consumes the public PokeAPI.\\n\\nDeveloped with React + TypeScript, using a structure inspired by Feature-Sliced Design and a container/presentational split to keep the code organized and scalable. It implements TanStack Query for API requests with intelligent caching and Zustand with persistence for local state.\\n\\nIt features autocomplete search, type filtering, a favorites system that persists in localStorage, and detailed evolution modals with intra-modal navigation. It includes light/dark theme support, global toast notifications, and an installable PWA that caches PokeAPI responses for offline use (Workbox, network-first).\\n\\nThe project follows best practices with unit testing, responsive design, and accessibility, demonstrating modern and well-structured frontend development.",
+    "descriptionEs": "Una Pokédex interactiva desarrollada como aplicación frontend moderna que consume la API pública de PokeAPI.\\n\\nDesarrollada con React + TypeScript, con una estructura inspirada en Feature-Sliced Design y una separación container/presentational para mantener el código organizado y escalable. Implementa TanStack Query para las peticiones a la API con caché inteligente y Zustand con persistencia para el estado local.\\n\\nOfrece búsqueda con autocompletado, filtrado por tipos, un sistema de favoritos que persiste en localStorage y modales de detalle con cadena de evoluciones y navegación intra-modal. Incluye soporte de tema claro/oscuro, notificaciones toast globales y una PWA instalable que guarda en caché las respuestas de PokeAPI para usarlas sin conexión (Workbox, network-first).\\n\\nEl proyecto sigue buenas prácticas con testing unitario, diseño responsive y accesibilidad, demostrando un desarrollo frontend moderno y bien estructurado.",
     "technologies": [
       "React",
       "TypeScript",
       "Vite",
-      "Feature-Sliced Design",
+      "Headless UI",
       "TanStack Query",
-      "Zustand (persist)",
-      "TailwindCSS",
+      "Zustand",
+      "Tailwind CSS",
       "Heroicons",
-      "PWA",
+      "PWA (Workbox)",
       "Vitest",
       "Testing Library"
     ],
-    "imageUrls": [
-      "/images/projects/pokedex/00-pokedex-800.webp",
-      "/images/projects/pokedex/01-pokedex-800.webp",
-      "/images/projects/pokedex/02-pokedex-list-800.webp"
+    "images": [
+      {
+        "base": "/images/projects/pokedex/00-pokedex_list",
+        "fullWidth": 976,
+        "altEn": "Pokédex home page: search by name or ID, filters for every type and a grid of Pokémon cards with their types and a favorite button.",
+        "altEs": "Página de inicio de la Pokédex: búsqueda por nombre o ID, filtros para cada tipo y una cuadrícula de tarjetas de Pokémon con sus tipos y un botón de favoritos."
+      },
+      {
+        "base": "/images/projects/pokedex/01-pokedex_bulbasaur-detail",
+        "fullWidth": 659,
+        "altEn": "Pokédex detail card for Bulbasaur (#001) inside a red Pokédex frame: Grass and Poison types, height and weight.",
+        "altEs": "Ficha de Bulbasaur (#001) dentro de un marco rojo de Pokédex: tipos Planta y Veneno, altura y peso."
+      },
+      {
+        "base": "/images/projects/pokedex/02-pokedex_charizard-detail",
+        "fullWidth": 654,
+        "altEn": "Pokédex detail card for Charizard (#006): Fire and Flying types, height, weight and weaknesses, with arrows to move to the previous or next Pokémon.",
+        "altEs": "Ficha de Charizard (#006) en la Pokédex: tipos Fuego y Volador, altura, peso y debilidades, con flechas para pasar al Pokémon anterior o al siguiente."
+      }
     ],
-    "githubUrl": "https://github.com/gonzapersonalsite/Pokedex",
-    "liveUrl": "https://pokedex-pokeapi-gonzalo.vercel.app/",
+    "links": [
+      {
+        "kind": "site",
+        "url": "https://pokedex-pokeapi-gonzalo.vercel.app/"
+      },
+      {
+        "kind": "repository",
+        "url": "https://github.com/gonzapersonalsite/Pokedex"
+      }
+    ],
     "type": "WEB",
-    "featured": true,
-    "order": 5,
-    "imageUrlsFull": [
-      "/images/projects/pokedex/00-pokedex-full.webp",
-      "/images/projects/pokedex/01-pokedex-full.webp",
-      "/images/projects/pokedex/02-pokedex-list-full.webp"
-    ]
+    "featured": false,
+    "order": 6
   },
   {
     "id": "portfolio",
     "titleEn": "Professional portfolio",
     "titleEs": "Portafolio profesional",
-    "descriptionEn": "A modern, bilingual portfolio built as a fully static frontend: no backend, no database, and no servers to maintain. The whole site is served from a CDN, so it loads instantly and has zero running cost.\n\nBuilt with React + TypeScript under Feature-Sliced Design to keep the codebase modular and scalable. Content is modeled as data: projects, skills, experience, and profile live in versioned JSON files validated by automated tests, and every image is self-hosted.\n\nIt features three theme modes including a visionOS-inspired Liquid Glass design, instant Spanish/English switching for both interface and content, an interactive project gallery with zoom, and a contact form powered by EmailJS directly from the browser.\n\nDeployed on Vercel with a CI/CD pipeline that runs typecheck, lint, and tests on every push.",
-    "descriptionEs": "Un portafolio moderno y bilingüe construido como frontend totalmente estático: sin backend, sin base de datos y sin servidores que mantener. Todo el sitio se sirve desde una CDN, por lo que carga al instante y no tiene coste de funcionamiento.\n\nDesarrollado con React + TypeScript bajo Feature-Sliced Design para mantener el código modular y escalable. El contenido se modela como datos: proyectos, habilidades, experiencia y perfil viven en ficheros JSON versionados y validados con tests automatizados, y todas las imágenes están autohospedadas.\n\nIncluye tres modos de tema, entre ellos un diseño Liquid Glass inspirado en visionOS, cambio instantáneo español/inglés tanto de interfaz como de contenido, una galería de proyectos interactiva con zoom y un formulario de contacto impulsado por EmailJS directamente desde el navegador.\n\nDesplegado en Vercel con un pipeline CI/CD que ejecuta typecheck, lint y tests en cada push.",
+    "descriptionEn": "A modern, bilingual portfolio built as a fully static frontend: no backend, no database, and no servers to maintain. The whole site is served from a CDN, so it loads instantly and has zero running cost.\n\nBuilt with React + TypeScript under Feature-Sliced Design to keep the codebase modular and scalable. Content is modeled as data: projects, skills, experience, and profile live in versioned JSON files validated by automated tests, and every image is self-hosted.\n\nIt features three theme modes including a visionOS-inspired Liquid Glass design, instant Spanish/English switching for both interface and content, an interactive project gallery with zoom, and a contact form powered by EmailJS directly from the browser.\n\nAt build time it also generates llms.txt, a sitemap, English and Spanish markdown twins of every page and one HTML shell per route with its own metadata and structured data, so AI agents read the same content as visitors.\n\nDeployed on Vercel; a GitHub Actions pipeline runs typecheck, lint, tests and a production build on every push and pull request to main.",
+    "descriptionEs": "Un portafolio moderno y bilingüe construido como frontend totalmente estático: sin backend, sin base de datos y sin servidores que mantener. Todo el sitio se sirve desde una CDN, por lo que carga al instante y no tiene coste de funcionamiento.\n\nDesarrollado con React + TypeScript bajo Feature-Sliced Design para mantener el código modular y escalable. El contenido se modela como datos: proyectos, habilidades, experiencia y perfil viven en ficheros JSON versionados y validados con tests automatizados, y todas las imágenes están autohospedadas.\n\nIncluye tres modos de tema, entre ellos un diseño Liquid Glass inspirado en visionOS, cambio instantáneo español/inglés tanto de interfaz como de contenido, una galería de proyectos interactiva con zoom y un formulario de contacto impulsado por EmailJS directamente desde el navegador.\n\nEn build genera además llms.txt, un sitemap, copias markdown en inglés y español de cada página y un shell HTML por ruta con sus propios metadatos y datos estructurados, para que los agentes de IA lean el mismo contenido que los visitantes.\n\nDesplegado en Vercel; un pipeline de GitHub Actions ejecuta typecheck, lint, tests y build de producción en cada push y pull request a main.",
     "technologies": [
       "React",
       "TypeScript",
@@ -192,24 +382,48 @@
       "Feature-Sliced Design",
       "i18next",
       "EmailJS",
-      "Vercel"
+      "Vitest",
+      "GitHub Actions",
+      "llms.txt"
     ],
-    "imageUrls": [
-      "/images/projects/portfolio/00-portada_portafolio-800.webp",
-      "/images/projects/portfolio/01-portfolio_projects-800.webp",
-      "/images/projects/portfolio/02-portfolio_about-800.webp",
-      "/images/projects/portfolio/03-portfolio_experience-800.webp"
+    "images": [
+      {
+        "base": "/images/projects/portfolio/00-portfolio_home-en",
+        "fullWidth": 1440,
+        "altEn": "Portfolio home page in dark mode: greeting, name, role, an open-to-work badge, a short introduction and buttons to view the projects and download the CV, next to a card with three role chips.",
+        "altEs": "Página de inicio del portafolio en modo oscuro: saludo, nombre, puesto, un distintivo de disponibilidad para trabajar, una breve presentación y botones para ver los proyectos y descargar el CV, junto a una tarjeta con tres etiquetas de perfil."
+      },
+      {
+        "base": "/images/projects/portfolio/01-portfolio_projects-en",
+        "fullWidth": 1440,
+        "altEn": "Portfolio projects page in dark mode: the first three project cards, each with a cover image, its type, a short description with a Read More button and technology chips.",
+        "altEs": "Página de proyectos del portafolio en modo oscuro: las tres primeras tarjetas de proyecto, cada una con imagen de portada, tipo, una descripción breve con un botón para leer más y etiquetas de tecnologías."
+      },
+      {
+        "base": "/images/projects/portfolio/02-portfolio_about-en",
+        "fullWidth": 1440,
+        "altEn": "Portfolio About page in dark mode: profile photo with a Download CV button, a headline, a short introduction and a personal motto.",
+        "altEs": "Página Sobre mí del portafolio en modo oscuro: foto de perfil con un botón para descargar el CV, un titular, una breve presentación y una frase personal."
+      },
+      {
+        "base": "/images/projects/portfolio/03-portfolio_experience-en",
+        "fullWidth": 1440,
+        "altEn": "Portfolio experience page in dark mode: the Work History heading with an open-to-work badge and a timeline entry with dates, position, company and description.",
+        "altEs": "Página de experiencia del portafolio en modo oscuro: el encabezado del historial laboral con un distintivo de disponibilidad para trabajar y una entrada de la línea temporal con fechas, puesto, empresa y descripción."
+      }
     ],
-    "githubUrl": "https://github.com/gonzapersonalsite/portafolio",
-    "liveUrl": "https://mi-portafolio-gonzalo.vercel.app/",
+    "links": [
+      {
+        "kind": "site",
+        "url": "https://mi-portafolio-gonzalo.vercel.app/"
+      },
+      {
+        "kind": "repository",
+        "url": "https://github.com/gonzapersonalsite/portafolio"
+      }
+    ],
     "type": "WEB",
     "featured": false,
-    "order": 6,
-    "imageUrlsFull": [
-      "/images/projects/portfolio/00-portada_portafolio-full.webp",
-      "/images/projects/portfolio/01-portfolio_projects-full.webp",
-      "/images/projects/portfolio/02-portfolio_about-full.webp",
-      "/images/projects/portfolio/03-portfolio_experience-full.webp"
-    ]
+    "order": 7
   }
 ]

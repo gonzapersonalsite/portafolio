@@ -41,8 +41,8 @@
   },
   {
     "id": "b725ff13-58d2-4ce2-9225-80da4e3f7695",
-    "nameEn": "Cascading Style Sheets (CSS)",
-    "nameEs": "Hojas de estilos en cascada (CSS)",
+    "nameEn": "CSS3",
+    "nameEs": "CSS3",
     "level": 95,
     "category": "Frontend",
     "order": 6
@@ -57,8 +57,8 @@
   },
   {
     "id": "f73138bf-acd2-4548-bc32-eb763e12481f",
-    "nameEn": "Tailwind",
-    "nameEs": "Tailwind",
+    "nameEn": "Tailwind CSS",
+    "nameEs": "Tailwind CSS",
     "level": 65,
     "category": "Frontend",
     "order": 8
@@ -81,8 +81,8 @@
   },
   {
     "id": "8eb1a601-6cd2-4343-b730-8286a7d0d6e2",
-    "nameEn": "Node",
-    "nameEs": "Node",
+    "nameEn": "Node.js",
+    "nameEs": "Node.js",
     "level": 50,
     "category": "Backend",
     "order": 11
@@ -113,8 +113,8 @@
   },
   {
     "id": "1ec108dd-ff8d-42d2-8df9-5a6956d51326",
-    "nameEn": "CI/CD (pipelines with GitLab)",
-    "nameEs": "CI/CD (pipelines con GitLab)",
+    "nameEn": "CI/CD (GitHub Actions, Forgejo Actions)",
+    "nameEs": "CI/CD (GitHub Actions, Forgejo Actions)",
     "level": 55,
     "category": "Tools",
     "order": 15
@@ -138,7 +138,7 @@
   {
     "id": "3923ddf4-65fa-4e09-b22c-e14ca96a7e94",
     "nameEn": "Hardware repair",
-    "nameEs": "Reparación hardware",
+    "nameEs": "Reparación de hardware",
     "level": 70,
     "category": "Other",
     "order": 18
@@ -233,8 +233,8 @@
   },
   {
     "id": "a4ee9472-2454-4520-b005-79f84d6b3db2",
-    "nameEn": "OS Installation",
-    "nameEs": "Instalación SO",
+    "nameEn": "OS installation",
+    "nameEs": "Instalación de sistemas operativos",
     "level": 90,
     "category": "Tools",
     "order": 30
@@ -260,7 +260,47 @@
     "nameEn": "Proxmox VE",
     "nameEs": "Proxmox VE",
     "level": 50,
-    "category": "Other",
+    "category": "Tools",
     "order": 33
+  },
+  {
+    "id": "99acad4b-5804-4bdd-95d6-3972f9c839cb",
+    "nameEn": "Flutter",
+    "nameEs": "Flutter",
+    "level": 70,
+    "category": "Mobile",
+    "order": 34
+  },
+  {
+    "id": "2f45f3ee-0350-431a-8dea-1d1fb2e9df25",
+    "nameEn": "Dart",
+    "nameEs": "Dart",
+    "level": 70,
+    "category": "Mobile",
+    "order": 35
+  },
+  {
+    "id": "3f7d88d9-d7c6-46a9-b16e-27ed7e3c4e7c",
+    "nameEn": "Kotlin",
+    "nameEs": "Kotlin",
+    "level": 55,
+    "category": "Mobile",
+    "order": 36
+  },
+  {
+    "id": "5bab6b88-2730-4b54-9bb5-5dd7abc5ad8b",
+    "nameEn": "C# / .NET",
+    "nameEs": "C# / .NET",
+    "level": 70,
+    "category": "Desktop",
+    "order": 37
+  },
+  {
+    "id": "16148a81-e7f8-4361-bbaa-9361e18087cd",
+    "nameEn": "Avalonia UI",
+    "nameEs": "Avalonia UI",
+    "level": 65,
+    "category": "Desktop",
+    "order": 38
   }
 ]

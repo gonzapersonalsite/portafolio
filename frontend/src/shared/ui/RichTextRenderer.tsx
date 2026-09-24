@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Box, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import CircleIcon from '@mui/icons-material/Circle';
-import { normalizeRichText } from '@/shared/lib';
+import { normalizeRichText, parseBulletLine } from '@/shared/lib';
 
 interface RichTextRendererProps {
     text: string;
@@ -50,10 +50,10 @@ const RichTextRenderer: React.FC<RichTextRendererProps> = ({ text, variant = 'bo
 
     lines.forEach((line, index) => {
         const trimmed = line.trim();
-        const bulletMatch = trimmed.match(/^([●•*◦▪-])\s*(.*)/);
-        
-        if (bulletMatch) {
-            currentList.push(bulletMatch[2]);
+        const bullet = parseBulletLine(trimmed);
+
+        if (bullet !== null) {
+            currentList.push(bullet);
         } else {
             flushList(index);
             

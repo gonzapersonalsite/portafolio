@@ -1,9 +1,30 @@
 import { createTheme, type ThemeOptions } from '@mui/material/styles';
 import { glassColors, glassEffects } from '@/shared/config/glassStyles';
 
-const getThemeOptions = (mode: 'light' | 'dark' | 'glass'): ThemeOptions => {
+export const COLOR_MODES = ['light', 'dark', 'glass'] as const;
+
+export type ColorMode = (typeof COLOR_MODES)[number];
+
+// The glass look for filled and outlined buttons. Text buttons (nav links, card links) stay
+// transparent so the three variants keep their hierarchy.
+const glassButtonVariant = (background: string, hoverBackground: string, border: string) => ({
+    backdropFilter: glassEffects.blur,
+    background,
+    border,
+    boxShadow: glassEffects.innerBoxShadow,
+    color: glassColors.text.primary,
+    transition: 'all 0.3s ease',
+    '&:hover': {
+        background: hoverBackground,
+        boxShadow: `0 0 20px ${glassColors.neon.turquoise}`,
+        transform: 'translateY(-2px)',
+    },
+});
+
+const getThemeOptions = (mode: ColorMode): ThemeOptions => {
     const isGlass = mode === 'glass';
     const muiMode = isGlass ? 'dark' : (mode === 'light' ? 'light' : 'dark');
+    const inputBorderColor = muiMode === 'light' ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.45)';
     
     return {
         palette: {
@@ -91,18 +112,35 @@ const getThemeOptions = (mode: 'light' | 'dark' | 'glass'): ThemeOptions => {
                         borderRadius: 8,
                         padding: '10px 20px',
                         ...(isGlass && {
-                            backdropFilter: glassEffects.blur,
-                            background: `linear-gradient(135deg, ${glassColors.background.glassStart}, ${glassColors.background.glassEnd})`,
-                            border: glassEffects.border,
-                            boxShadow: glassEffects.innerBoxShadow,
-                            color: glassColors.text.primary,
-                            transition: 'all 0.3s ease',
-                            '&:hover': {
-                                background: `linear-gradient(135deg, ${glassColors.background.glassEnd}, ${glassColors.background.glassStart})`,
-                                boxShadow: `0 0 20px ${glassColors.neon.turquoise}`,
-                                transform: 'translateY(-2px)',
-                            },
+                            // The primary action gets a neon tint so it stands out from the outlined one.
+                            '&.MuiButton-contained': glassButtonVariant(
+                                `linear-gradient(135deg, ${glassColors.neon.turquoise}33, ${glassColors.neon.violet}33)`,
+                                `linear-gradient(135deg, ${glassColors.neon.turquoise}4D, ${glassColors.neon.violet}4D)`,
+                                `1px solid ${glassColors.neon.turquoise}80`,
+                            ),
+                            '&.MuiButton-outlined': glassButtonVariant(
+                                `linear-gradient(135deg, ${glassColors.background.glassStart}, ${glassColors.background.glassEnd})`,
+                                `linear-gradient(135deg, ${glassColors.background.glassEnd}, ${glassColors.background.glassStart})`,
+                                glassEffects.border,
+                            ),
                         }),
+                    },
+                },
+            },
+            // MUI's default outline (23% opacity) is below the 3:1 non-text contrast minimum.
+            MuiOutlinedInput: {
+                styleOverrides: {
+                    root: {
+                        // MUI resets the hover colour on touch screens (a tap leaves :hover on); keep the
+                        // stronger border there too, without touching the focused, error and disabled colours.
+                        '@media (hover: none)': {
+                            '&:hover:not(.Mui-focused):not(.Mui-error):not(.Mui-disabled) .MuiOutlinedInput-notchedOutline': {
+                                borderColor: inputBorderColor,
+                            },
+                        },
+                    },
+                    notchedOutline: {
+                        borderColor: inputBorderColor,
                     },
                 },
             },
@@ -200,8 +238,6 @@ const getThemeOptions = (mode: 'light' | 'dark' | 'glass'): ThemeOptions => {
     };
 };
 
-export const createAppTheme = (mode: 'light' | 'dark' | 'glass') => {
+export const createAppTheme = (mode: ColorMode) => {
     return createTheme(getThemeOptions(mode));
 };
-
-export default createAppTheme;

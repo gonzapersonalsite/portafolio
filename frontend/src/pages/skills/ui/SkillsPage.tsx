@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Box, Container, Typography, Grid, LinearProgress, Paper, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { getAllSkills } from '@/entities/skill';
+import { getSkillGroups } from '@/entities/skill';
 import { useLanguage } from '@/features/language-switch';
 import { EmptyState } from '@/shared/ui';
 import PsychologyIcon from '@mui/icons-material/Psychology';
-import { useContent, usePageMeta } from '@/shared/lib';
+import { formatPercent, getLocalizedText, useContent, usePageMeta } from '@/shared/lib';
 
 const SkillsPage: React.FC = () => {
     const { t } = useTranslation();
@@ -17,33 +17,21 @@ const SkillsPage: React.FC = () => {
         description: t('seo.skills.description'),
     });
 
-    const { data: skills } = useContent(() => getAllSkills());
-
-    const skillsByCategory = useMemo(() => {
-        if (!skills) return {};
-        const groups: { [key: string]: typeof skills } = {};
-        skills.forEach(skill => {
-            if (!groups[skill.category]) {
-                groups[skill.category] = [];
-            }
-            groups[skill.category].push(skill);
-        });
-        return groups;
-    }, [skills]);
+    const { data: skillGroups } = useContent(() => getSkillGroups());
 
     return (
         <Box sx={{ py: 8 }}>
             <Container maxWidth="lg">
                 <Typography variant="overline" color="primary" sx={{ fontWeight: 'bold' }}>
-                    {t('nav.skills', "SKILLS")}
+                    {t('nav.skills')}
                 </Typography>
                 <Typography variant="h2" component="h1" gutterBottom sx={{ mb: 6, fontWeight: '800' }}>
-                    {t('skills.heading', "Technical Expertise")}
+                    {t('skills.heading')}
                 </Typography>
 
                 <Grid container spacing={4}>
-                    {(skills ?? []).length > 0 ? (
-                        Object.entries(skillsByCategory).map(([category, categorySkills]) => (
+                    {skillGroups.length > 0 ? (
+                        skillGroups.map(({ category, skills }) => (
                             <Grid size={{ xs: 12, md: 6 }} key={category}>
                                 <Paper
                                     elevation={0}
@@ -55,24 +43,25 @@ const SkillsPage: React.FC = () => {
                                         border: `1px solid ${theme.palette.divider}`
                                     }}
                                 >
-                                    <Typography variant="h5" gutterBottom color="primary" sx={{ mb: 3, fontWeight: 'bold' }}>
-                                        {category}
+                                    <Typography variant="h5" component="h2" gutterBottom color="primary" sx={{ mb: 3, fontWeight: 'bold' }}>
+                                        {t(`skills.categories.${category}`)}
                                     </Typography>
                                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                        {categorySkills.map((skill) => (
+                                        {skills.map((skill) => (
                                             <Box key={skill.id}>
-                                                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                                                    <Typography variant="subtitle1" sx={{ fontWeight: '600' }}>
-                                                        {language === 'en' ? skill.nameEn : skill.nameEs}
+                                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 2, mb: 1 }}>
+                                                    <Typography variant="subtitle1" component="p" sx={{ fontWeight: '600' }}>
+                                                        {getLocalizedText(language, skill.nameEn, skill.nameEs)}
                                                     </Typography>
-                                                    <Typography variant="body2" color="text.secondary">
-                                                        {skill.level}%
+                                                    <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'nowrap' }}>
+                                                        {formatPercent(skill.level, language)}
                                                     </Typography>
                                                 </Box>
+                                                {/* Decorative: the name and the percentage above already say it all. */}
                                                 <LinearProgress
                                                     variant="determinate"
                                                     value={skill.level}
-                                                    aria-label={language === 'en' ? skill.nameEn : skill.nameEs}
+                                                    aria-hidden="true"
                                                     sx={{
                                                         height: 8,
                                                         borderRadius: 4,
@@ -92,8 +81,8 @@ const SkillsPage: React.FC = () => {
                     ) : (
                         <Grid size={{ xs: 12 }}>
                             <EmptyState
-                                title={t('emptyState.skills.title', 'Unlocking Potential')}
-                                description={t('emptyState.skills.description', 'Skills are being honed and added. Stay tuned for updates.')}
+                                title={t('emptyState.skills.title')}
+                                description={t('emptyState.skills.description')}
                                 icon={<PsychologyIcon />}
                             />
                         </Grid>

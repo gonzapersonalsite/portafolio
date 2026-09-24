@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "description": "Portafolio Profesional Full Stack. PROPRIETARY SOFTWARE. © 2026 Gonzalo Martínez García. ALL RIGHTS RESERVED. UNAUTHORIZED COPYING, MODIFICATION, OR DISTRIBUTION IS STRICTLY PROHIBITED.",
+  "description": "Static bilingual (EN/ES) portfolio of Gonzalo Martínez: React, TypeScript and MUI. PROPRIETARY SOFTWARE. © 2026 Gonzalo Martínez García. ALL RIGHTS RESERVED. UNAUTHORIZED COPYING, MODIFICATION, OR DISTRIBUTION IS STRICTLY PROHIBITED.",
   "private": true,
   "version": "1.0.2",
   "license": "UNLICENSED",
@@ -34,7 +34,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@types/node": "^24.12.3",
     "@types/react": "^19.3.0",

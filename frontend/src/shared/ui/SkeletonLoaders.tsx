@@ -24,7 +24,7 @@ export const HeroSkeleton: React.FC = () => (
     </Box>
 );
 
-export const ProjectCardSkeleton: React.FC = () => (
+const ProjectCardSkeleton: React.FC = () => (
     <Box sx={{ height: '100%', borderRadius: 4, overflow: 'hidden', border: '1px solid', borderColor: 'divider' }}>
         <Skeleton animation="wave" variant="rectangular" width="100%" sx={{ pt: '56.25%' }} />
         <Box sx={{ p: 3 }}>
@@ -40,9 +40,11 @@ export const ProjectCardSkeleton: React.FC = () => (
     </Box>
 );
 
-export const ProjectGridSkeleton: React.FC = ({ count = 6 }: { count?: number }) => (
+const PROJECT_SKELETON_COUNT = 6;
+
+export const ProjectGridSkeleton: React.FC = () => (
     <Grid container spacing={4}>
-        {Array.from(new Array(count)).map((_, index) => (
+        {Array.from({ length: PROJECT_SKELETON_COUNT }, (_, index) => (
             <Grid size={{ xs: 12, md: 6, lg: 4 }} key={index}>
                 <ProjectCardSkeleton />
             </Grid>

@@ -2,35 +2,51 @@ import React, { Suspense, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Box, Container } from '@mui/material';
 import { PublicLayout } from '@/app/layouts';
+import { APP_ROUTES, type RouteId } from '@/shared/config';
 import {
     HeroSkeleton, PageHeaderSkeleton, SkillsSkeleton, ExperienceSkeleton,
     ProjectGridSkeleton, AboutSkeleton, ContactSkeleton
 } from '@/shared/ui';
 
-// Public Pages
-const HomePage = React.lazy(() => import('@/pages/home'));
-const AboutPage = React.lazy(() => import('@/pages/about'));
-const SkillsPage = React.lazy(() => import('@/pages/skills'));
-const ExperiencePage = React.lazy(() => import('@/pages/experience'));
-const ProjectsPage = React.lazy(() => import('@/pages/projects'));
-const ContactPage = React.lazy(() => import('@/pages/contact'));
+type PageModule = { default: React.ComponentType };
+
+// Each page chunk is loaded from one place: React.lazy renders it and the idle prefetch warms it.
+const PAGE_LOADERS: Record<RouteId, () => Promise<PageModule>> = {
+    home: () => import('@/pages/home'),
+    about: () => import('@/pages/about'),
+    skills: () => import('@/pages/skills'),
+    experience: () => import('@/pages/experience'),
+    projects: () => import('@/pages/projects'),
+    contact: () => import('@/pages/contact'),
+};
+
+const PageLoader = ({ children }: { children: React.ReactNode }) => (
+    <Box sx={{ py: 8 }}>
+        <Container maxWidth="lg">
+            <PageHeaderSkeleton />
+            {children}
+        </Container>
+    </Box>
+);
+
+const PAGE_SKELETONS: Record<RouteId, React.ReactNode> = {
+    home: <HeroSkeleton />,
+    about: <PageLoader><AboutSkeleton /></PageLoader>,
+    skills: <PageLoader><SkillsSkeleton /></PageLoader>,
+    experience: <PageLoader><ExperienceSkeleton /></PageLoader>,
+    projects: <PageLoader><ProjectGridSkeleton /></PageLoader>,
+    contact: <PageLoader><ContactSkeleton /></PageLoader>,
+};
+
+const PAGES = APP_ROUTES.map((route) => ({ ...route, Page: React.lazy(PAGE_LOADERS[route.id]) }));
 
 // Warm the lazy page chunks while the browser is idle so navigation feels instant.
-const pageLoaders = [
-    () => import('@/pages/home'),
-    () => import('@/pages/about'),
-    () => import('@/pages/skills'),
-    () => import('@/pages/experience'),
-    () => import('@/pages/projects'),
-    () => import('@/pages/contact'),
-];
-
 function usePrefetchPages() {
     useEffect(() => {
         let cancelled = false;
         const run = () => {
             if (!cancelled) {
-                pageLoaders.forEach((load) => void load());
+                Object.values(PAGE_LOADERS).forEach((load) => void load());
             }
         };
 
@@ -50,39 +66,18 @@ function usePrefetchPages() {
     }, []);
 }
 
-const PageLoader = ({ children }: { children: React.ReactNode }) => (
-    <Box sx={{ py: 8 }}>
-        <Container maxWidth="lg">
-            <PageHeaderSkeleton />
-            {children}
-        </Container>
-    </Box>
-);
-
 export default function AppRouter() {
     usePrefetchPages();
 
     return (
         <Routes>
             <Route path="/" element={<PublicLayout />}>
-                <Route index element={
-                    <Suspense fallback={<HeroSkeleton />}><HomePage /></Suspense>
-                } />
-                <Route path="about" element={
-                    <Suspense fallback={<PageLoader><AboutSkeleton /></PageLoader>}><AboutPage /></Suspense>
-                } />
-                <Route path="skills" element={
-                    <Suspense fallback={<PageLoader><SkillsSkeleton /></PageLoader>}><SkillsPage /></Suspense>
-                } />
-                <Route path="experience" element={
-                    <Suspense fallback={<PageLoader><ExperienceSkeleton /></PageLoader>}><ExperiencePage /></Suspense>
-                } />
-                <Route path="projects" element={
-                    <Suspense fallback={<PageLoader><ProjectGridSkeleton /></PageLoader>}><ProjectsPage /></Suspense>
-                } />
-                <Route path="contact" element={
-                    <Suspense fallback={<PageLoader><ContactSkeleton /></PageLoader>}><ContactPage /></Suspense>
-                } />
+                {PAGES.map(({ id, path, Page }) => {
+                    const element = <Suspense fallback={PAGE_SKELETONS[id]}><Page /></Suspense>;
+                    return path === '/'
+                        ? <Route key={id} index element={element} />
+                        : <Route key={id} path={path} element={element} />;
+                })}
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

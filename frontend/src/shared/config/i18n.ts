@@ -1,5 +1,13 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { readStorage } from '@/shared/lib';
+import {
+    LANGUAGE_QUERY_PARAM,
+    LANGUAGE_STORAGE_KEY,
+    SUPPORTED_LANGUAGES,
+    resolveInitialLanguage,
+    type Language,
+} from './language';
 
 const resources = {
     en: {
@@ -12,13 +20,12 @@ const resources = {
                 projects: 'Projects',
                 contact: 'Contact',
                 openMenu: 'Open menu',
+                menu: 'Menu',
+                main: 'Main navigation',
             },
             home: {
                 cta: 'View Projects',
                 resume: 'Download CV',
-                name: 'Gonzalo Martinez',
-                jobTitle: 'Junior Full Stack Developer',
-                description: 'Junior Full Stack Developer. I learn fast, adapt to new technologies, and enjoy creating useful and maintainable web solutions.',
                 chips: {
                     frontend: 'Frontend Developer',
                     backend: 'Backend Architect',
@@ -28,18 +35,22 @@ const resources = {
             },
             about: {
                 subtitle: 'WHO I AM',
-                jobTitle: 'Junior Full Stack Developer',
-                summary: 'My journey began with a strong interest in understanding how systems work, which led me to complete a degree in Microcomputer Systems and Networks. Later, I specialized in Web Application Development and discovered that what I enjoy most is building complete applications, from front-end to back-end.\n\nToday I am looking for my first opportunity as a junior Full Stack developer, open to learning new technologies, contributing value to the team, and growing step by step, whether in frontend, backend, or full stack roles.',
-                title: 'Junior Full Stack Developer',
-                philosophy: 'I like to write clear code, understand the why behind things, and leave every project a little better than it was. I prefer simple solutions, honest feedback, and teams where you can learn out loud without fear of being wrong.',
-                sentence: 'I am the person who double-checks if the fridge is closed; I like to make sure everything is in its place before considering something finished.',
                 skills: 'Core Competencies',
                 languages: 'Languages',
                 more: 'More About Me',
                 sentenceTitle: 'A sentence that defines me'
             },
             skills: {
-                heading: 'Technical Expertise'
+                heading: 'Technical Expertise',
+                categories: {
+                    Backend: 'Backend',
+                    Frontend: 'Frontend',
+                    Database: 'Databases',
+                    Tools: 'Tools',
+                    Other: 'Other',
+                    Mobile: 'Mobile',
+                    Desktop: 'Desktop'
+                }
             },
             experience: {
                 heading: 'Work History',
@@ -48,7 +59,16 @@ const resources = {
                 heading: 'All Projects',
                 featured: 'Featured Projects',
                 viewAll: 'View All',
-                viewLive: 'View Live',
+                readMore: 'Read More',
+                showLess: 'Show Less',
+                featuredBadge: 'Featured project',
+                links: {
+                    site: 'Visit Site',
+                    download: 'Download',
+                    googlePlay: 'Google Play',
+                    repository: 'Repository',
+                    documentation: 'Documentation'
+                },
                 openGallery: 'Open image gallery for {{title}}',
                 gallery: {
                     close: 'Close gallery',
@@ -57,7 +77,9 @@ const resources = {
                     resetZoom: 'Reset zoom',
                     previousImage: 'Previous image',
                     nextImage: 'Next image',
-                    thumbnail: 'View image {{index}} of {{total}} for {{title}}'
+                    thumbnail: 'View image {{index}} of {{total}} ({{title}})',
+                    counter: 'Image {{index}} of {{total}}',
+                    viewer: 'Image viewer'
                 },
                 types: {
                     WEB: 'Web App',
@@ -68,7 +90,7 @@ const resources = {
             },
             contact: {
                 subtitle: 'Feel free to reach out',
-                heading: 'Get In Touch',
+                heading: 'Get in Touch',
                 description: 'I am open to new professional opportunities. If you have a project or a job offer, I would love to hear from you.',
                 email: 'Email',
                 location: 'Location',
@@ -79,7 +101,12 @@ const resources = {
                     message: 'Message',
                     submit: 'Send Message',
                     success: 'Message sent successfully!',
-                    emailJsNotConfigured: 'EmailJS not configured correctly. Please check your environment variables.'
+                    required: 'This field is required.',
+                    invalidEmail: 'Enter a valid email address, for example name@example.com.',
+                    tooLong: 'Use {{max}} characters or fewer.',
+                    timeout: 'The form did not answer in time, and your message may have been sent anyway. To avoid a duplicate, please email me directly at {{email}} instead of resending it.',
+                    unavailable: 'The contact form is not available right now. Please email me directly at {{email}}.',
+                    sendFailed: 'Your message could not be sent. Please try again or email me directly at {{email}}.'
                 }
             },
             emptyState: {
@@ -101,51 +128,51 @@ const resources = {
                 }
             },
             common: {
-                error: 'An error occurred',
                 present: 'Present',
                 sending: 'Sending...',
+                close: 'Close',
+                openToWork: 'Open to work',
                 skipToContent: 'Skip to main content',
                 returnToTop: 'Return to top',
+                languageButton: 'Language: {{name}} ({{code}})',
+                themeButton: 'Theme: {{mode}}',
                 theme: {
                     light: 'Light',
                     dark: 'Dark',
                     glass: 'Liquid Glass'
                 },
-                languages: {
-                    en: 'English',
-                    es: 'Spanish'
-                },
                 errorBoundaryTitle: 'Something went wrong',
                 errorBoundaryDescription: 'An unexpected error occurred. Please try refreshing the page.',
-                errorBoundaryRefresh: 'Refresh Page'
+                errorBoundaryRefresh: 'Refresh Page',
+                errorBoundaryHome: 'Go to Home Page'
             },
             footer: {
                 rights: 'All rights reserved.',
             },
             seo: {
                 home: {
-                    title: 'Gonzalo Martinez | Full Stack Developer & Web App Specialist',
-                    description: 'Portfolio of Gonzalo Martinez, a Full Stack Developer specialized in React, Java Spring Boot and modern web architectures. Based in Palma de Mallorca, Spain.'
+                    title: 'Gonzalo Martínez | Junior Full Stack Developer',
+                    description: 'Portfolio of Gonzalo Martínez, Junior Full Stack Developer in Palma de Mallorca, Spain: web, desktop and mobile apps with React, TypeScript, Spring Boot, .NET and Flutter.'
                 },
                 about: {
-                    title: 'About Me | Gonzalo Martinez',
-                    description: 'Learn about Gonzalo Martinez, a Full Stack Developer based in Palma de Mallorca, Spain. Discover my journey, philosophy, skills and professional background.'
+                    title: 'About Me | Gonzalo Martínez',
+                    description: 'Learn about Gonzalo Martínez, a Junior Full Stack Developer based in Palma de Mallorca, Spain: his journey, philosophy, skills and professional background.'
                 },
                 skills: {
-                    title: 'Skills | Gonzalo Martinez',
-                    description: 'Explore the technical skills of Gonzalo Martinez, a Full Stack Developer proficient in React, TypeScript, Java, Spring Boot and modern web technologies.'
+                    title: 'Skills | Gonzalo Martínez',
+                    description: 'Explore the technical skills of Gonzalo Martínez, a Junior Full Stack Developer working with React, TypeScript, Java and Spring Boot, plus .NET, Flutter and Kotlin for desktop and mobile.'
                 },
                 experience: {
-                    title: 'Experience | Gonzalo Martinez',
-                    description: 'View the professional experience of Gonzalo Martinez, a Full Stack Developer with expertise in web application development and modern architectures.'
+                    title: 'Experience | Gonzalo Martínez',
+                    description: 'Professional experience of Gonzalo Martínez, Junior Full Stack Developer: microservices with Java Spring Boot and React, IAM, CI/CD and on-premise infrastructure.'
                 },
                 projects: {
-                    title: 'Projects | Gonzalo Martinez',
-                    description: 'Browse portfolio projects by Gonzalo Martinez, showcasing web applications built with React, TypeScript, Java and modern development stacks.'
+                    title: 'Projects | Gonzalo Martínez',
+                    description: 'Browse portfolio projects by Gonzalo Martínez, showcasing web, desktop and mobile applications built with React, TypeScript, .NET and Flutter.'
                 },
                 contact: {
-                    title: 'Contact | Gonzalo Martinez',
-                    description: 'Get in touch with Gonzalo Martinez for professional opportunities, collaborations, or project inquiries. Based in Palma de Mallorca, Spain.'
+                    title: 'Contact | Gonzalo Martínez',
+                    description: 'Get in touch with Gonzalo Martínez for professional opportunities, collaborations, or project inquiries. Based in Palma de Mallorca, Spain.'
                 }
             }
         },
@@ -154,19 +181,18 @@ const resources = {
         translation: {
             nav: {
                 home: 'Inicio',
-                about: 'Sobre Mí',
+                about: 'Sobre mí',
                 skills: 'Habilidades',
                 experience: 'Experiencia',
                 projects: 'Proyectos',
                 contact: 'Contacto',
                 openMenu: 'Abrir menú',
+                menu: 'Menú',
+                main: 'Navegación principal',
             },
             home: {
-                cta: 'Ver Proyectos',
+                cta: 'Ver proyectos',
                 resume: 'Descargar CV',
-                name: 'Gonzalo Martinez',
-                jobTitle: 'Desarrollador Full Stack junior',
-                description: 'Desarrollador Full Stack junior. Aprendo rápido, me adapto a nuevas tecnologías y disfruto creando soluciones web útiles y mantenibles.',
                 chips: {
                     frontend: 'Desarrollador Frontend',
                     backend: 'Arquitecto Backend',
@@ -176,27 +202,40 @@ const resources = {
             },
             about: {
                 subtitle: 'QUIÉN SOY',
-                jobTitle: 'Desarrollador Full Stack junior',
-                summary: 'Mi trayectoria empezó con un fuerte interés por entender cómo funcionan los sistemas, lo que me llevó a completar un grado en Sistemas Microinformáticos y Redes. Después me especialicé en Desarrollo de Aplicaciones Web y descubrí que lo que más disfruto es construir aplicaciones completas, desde el front‑end hasta el back‑end.\n\nHoy busco mi primera oportunidad como desarrollador Full Stack junior, abierto a aprender nuevas tecnologías, aportar valor al equipo y crecer paso a paso, ya sea en roles de frontend, backend o full stack.',
-                title: 'Desarrollador Full Stack junior',
-                philosophy: 'Me gusta escribir código claro, entender el porqué de las cosas y dejar cada proyecto un poco mejor de lo que estaba. Prefiero soluciones sencillas, feedback honesto y equipos donde se pueda aprender en voz alta sin miedo a equivocarse.',
-                sentence: 'Soy la persona que revisa dos veces si ha cerrado bien la nevera; me gusta asegurarme de que todo queda en su sitio antes de dar algo por terminado.',
-                skills: 'Competencias Principales',
+                skills: 'Competencias principales',
                 languages: 'Idiomas',
-                more: 'Más Sobre Mí',
+                more: 'Más sobre mí',
                 sentenceTitle: 'Una frase que me define'
             },
             skills: {
-                heading: 'Experiencia Técnica'
+                heading: 'Conocimientos técnicos',
+                categories: {
+                    Backend: 'Backend',
+                    Frontend: 'Frontend',
+                    Database: 'Bases de datos',
+                    Tools: 'Herramientas',
+                    Other: 'Otros',
+                    Mobile: 'Móvil',
+                    Desktop: 'Escritorio'
+                }
             },
             experience: {
-                heading: 'Historial Laboral',
+                heading: 'Historial laboral',
             },
             projects: {
-                heading: 'Todos los Proyectos',
-                featured: 'Proyectos Destacados',
-                viewAll: 'Ver Todos',
-                viewLive: 'Ver Demo',
+                heading: 'Todos los proyectos',
+                featured: 'Proyectos destacados',
+                viewAll: 'Ver todos',
+                readMore: 'Leer más',
+                showLess: 'Mostrar menos',
+                featuredBadge: 'Proyecto destacado',
+                links: {
+                    site: 'Visitar web',
+                    download: 'Descargar',
+                    googlePlay: 'Google Play',
+                    repository: 'Repositorio',
+                    documentation: 'Documentación'
+                },
                 openGallery: 'Abrir galería de imágenes de {{title}}',
                 gallery: {
                     close: 'Cerrar galería',
@@ -205,18 +244,20 @@ const resources = {
                     resetZoom: 'Restablecer zoom',
                     previousImage: 'Imagen anterior',
                     nextImage: 'Imagen siguiente',
-                    thumbnail: 'Ver imagen {{index}} de {{total}} de {{title}}'
+                    thumbnail: 'Ver imagen {{index}} de {{total}} ({{title}})',
+                    counter: 'Imagen {{index}} de {{total}}',
+                    viewer: 'Visor de imágenes'
                 },
                 types: {
-                    WEB: 'App Web',
-                    DESKTOP: 'App de Escritorio',
-                    MOBILE: 'App Móvil',
+                    WEB: 'App web',
+                    DESKTOP: 'App de escritorio',
+                    MOBILE: 'App móvil',
                     OTHER: 'Otro'
                 }
             },
             contact: {
-                subtitle: 'No dudes en comunicarte',
-                heading: 'Contacto',
+                subtitle: 'No dudes en escribirme',
+                heading: 'Ponte en contacto',
                 description: 'Estoy abierto a nuevas oportunidades profesionales. Si tienes un proyecto o una oferta de trabajo, me encantaría escucharte.',
                 email: 'Correo',
                 location: 'Ubicación',
@@ -225,94 +266,99 @@ const resources = {
                     name: 'Nombre',
                     email: 'Correo',
                     message: 'Mensaje',
-                    submit: 'Enviar Mensaje',
+                    submit: 'Enviar mensaje',
                     success: '¡Mensaje enviado con éxito!',
-                    emailJsNotConfigured: 'EmailJS no está configurado correctamente. Por favor, revisa tus variables de entorno.'
+                    required: 'Este campo es obligatorio.',
+                    invalidEmail: 'Introduce un correo electrónico válido, por ejemplo nombre@ejemplo.com.',
+                    tooLong: 'Usa {{max}} caracteres como máximo.',
+                    timeout: 'El formulario no ha respondido a tiempo y puede que el mensaje se haya enviado igualmente. Para no duplicarlo, escríbeme directamente a {{email}} en lugar de volver a enviarlo.',
+                    unavailable: 'El formulario de contacto no está disponible en este momento. Escríbeme directamente a {{email}}.',
+                    sendFailed: 'No se ha podido enviar el mensaje. Inténtalo de nuevo o escríbeme directamente a {{email}}.'
                 }
             },
             emptyState: {
                 projects: {
-                    title: 'Construyendo el Futuro',
+                    title: 'Construyendo el futuro',
                     description: 'Aún no hay proyectos aquí, pero grandes cosas se están gestando.'
                 },
                 featured: {
-                    title: 'Destacados Próximamente',
+                    title: 'Destacados próximamente',
                     description: 'Seleccionando los mejores proyectos para mostrar aquí.'
                 },
                 experience: {
-                    title: 'El Viaje Comienza',
+                    title: 'El viaje comienza',
                     description: 'Todo experto fue una vez principiante. Mi trayectoria profesional empieza aquí.'
                 },
                 skills: {
-                    title: 'Desbloqueando Potencial',
+                    title: 'Desbloqueando potencial',
                     description: 'Las habilidades se están perfeccionando y añadiendo. Mantente al tanto.'
                 }
             },
             common: {
-                error: 'Ocurrió un error',
-                present: 'Presente',
+                present: 'Actualidad',
                 sending: 'Enviando...',
+                close: 'Cerrar',
+                openToWork: 'Disponible',
                 skipToContent: 'Saltar al contenido',
                 returnToTop: 'Volver arriba',
+                languageButton: 'Idioma: {{name}} ({{code}})',
+                themeButton: 'Tema: {{mode}}',
                 theme: {
                     light: 'Claro',
                     dark: 'Oscuro',
                     glass: 'Liquid Glass'
                 },
-                languages: {
-                    en: 'Inglés',
-                    es: 'Español'
-                },
-                errorBoundaryTitle: 'Algo salió mal',
-                errorBoundaryDescription: 'Ocurrió un error inesperado. Por favor, intenta recargar la página.',
-                errorBoundaryRefresh: 'Recargar Página'
+                errorBoundaryTitle: 'Algo ha ido mal',
+                errorBoundaryDescription: 'Se ha producido un error inesperado. Prueba a recargar la página.',
+                errorBoundaryRefresh: 'Recargar página',
+                errorBoundaryHome: 'Ir a la página de inicio'
             },
             footer: {
                 rights: 'Todos los derechos reservados.',
             },
             seo: {
                 home: {
-                    title: 'Gonzalo Martinez | Desarrollador Full Stack',
-                    description: 'Portafolio de Gonzalo Martinez, un Desarrollador Full Stack especializado en React, Java Spring Boot y arquitecturas web modernas. En Palma de Mallorca, España.'
+                    title: 'Gonzalo Martínez | Desarrollador Full Stack junior',
+                    description: 'Portafolio de Gonzalo Martínez, desarrollador Full Stack junior en Palma de Mallorca, España: aplicaciones web, de escritorio y móviles con React, TypeScript, Spring Boot, .NET y Flutter.'
                 },
                 about: {
-                    title: 'Sobre Mí | Gonzalo Martinez',
-                    description: 'Conoce a Gonzalo Martinez, un Desarrollador Full Stack en Palma de Mallorca, España. Descubre mi trayectoria, filosofía, habilidades y experiencia profesional.'
+                    title: 'Sobre mí | Gonzalo Martínez',
+                    description: 'Conoce a Gonzalo Martínez, desarrollador Full Stack junior en Palma de Mallorca, España: su trayectoria, filosofía, habilidades y experiencia profesional.'
                 },
                 skills: {
-                    title: 'Habilidades | Gonzalo Martinez',
-                    description: 'Explora las habilidades técnicas de Gonzalo Martinez, un Desarrollador Full Stack con experiencia en React, TypeScript, Java, Spring Boot y tecnologías web modernas.'
+                    title: 'Habilidades | Gonzalo Martínez',
+                    description: 'Explora las habilidades técnicas de Gonzalo Martínez, desarrollador Full Stack junior que trabaja con React, TypeScript, Java y Spring Boot, además de .NET, Flutter y Kotlin para escritorio y móvil.'
                 },
                 experience: {
-                    title: 'Experiencia | Gonzalo Martinez',
-                    description: 'Conoce la experiencia profesional de Gonzalo Martinez, un Desarrollador Full Stack con experiencia en desarrollo de aplicaciones web y arquitecturas modernas.'
+                    title: 'Experiencia | Gonzalo Martínez',
+                    description: 'Experiencia profesional de Gonzalo Martínez, desarrollador Full Stack junior: microservicios con Java Spring Boot y React, IAM, CI/CD e infraestructura on-premise.'
                 },
                 projects: {
-                    title: 'Proyectos | Gonzalo Martinez',
-                    description: 'Explora los proyectos de Gonzalo Martinez, que muestran aplicaciones web construidas con React, TypeScript, Java y stacks de desarrollo modernos.'
+                    title: 'Proyectos | Gonzalo Martínez',
+                    description: 'Explora los proyectos de Gonzalo Martínez, que muestran aplicaciones web, de escritorio y móviles construidas con React, TypeScript, .NET y Flutter.'
                 },
                 contact: {
-                    title: 'Contacto | Gonzalo Martinez',
-                    description: 'Ponte en contacto con Gonzalo Martinez para oportunidades profesionales, colaboraciones o consultas sobre proyectos. En Palma de Mallorca, España.'
+                    title: 'Contacto | Gonzalo Martínez',
+                    description: 'Ponte en contacto con Gonzalo Martínez para oportunidades profesionales, colaboraciones o consultas sobre proyectos. En Palma de Mallorca, España.'
                 }
             }
         },
     },
 };
 
-const getInitialLanguage = () => {
-    const savedLanguage = localStorage.getItem('language');
-    if (savedLanguage) return savedLanguage;
-
-    const systemLang = navigator.language.split('-')[0];
-    return ['en', 'es'].includes(systemLang) ? systemLang : 'en';
-};
+const getInitialLanguage = (): Language =>
+    resolveInitialLanguage({
+        query: new URLSearchParams(window.location.search).get(LANGUAGE_QUERY_PARAM),
+        stored: readStorage(LANGUAGE_STORAGE_KEY),
+        browser: navigator.language,
+    });
 
 i18n
     .use(initReactI18next)
     .init({
         resources,
         lng: getInitialLanguage(),
+        supportedLngs: SUPPORTED_LANGUAGES,
         fallbackLng: 'en',
         interpolation: {
             escapeValue: false,

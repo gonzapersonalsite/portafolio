@@ -1,5 +1,8 @@
 export { getLocalizedText } from './getLocalizedText';
-export { normalizeRichText } from './richText';
+export { formatMonthYear, formatPercent, formatPeriod } from './localeFormat';
+export type { ShowNotification } from './notification';
+export { normalizeRichText, parseBulletLine } from './richText';
+export { readStorage, writeStorage } from './storage';
 export { useContent } from './useContent';
+export { useFindableDisclosure } from './useFindableDisclosure';
 export { usePageMeta } from './usePageMeta';
-export type { PageMetaOptions } from './usePageMeta';

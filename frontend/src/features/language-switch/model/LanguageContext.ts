@@ -1,11 +1,10 @@
 import { createContext, useContext } from 'react';
-
-export type Language = 'en' | 'es';
+import type { Language } from '@/shared/config';
 
 export interface LanguageContextType {
     language: Language;
-    toggleLanguage: () => void;
-    setLanguage: (lang: Language) => void;
+    // The visitor's explicit choice: it is applied and saved for later visits.
+    setLanguage: (language: Language) => void;
 }
 
 export const LanguageContext = createContext<LanguageContextType | undefined>(undefined);

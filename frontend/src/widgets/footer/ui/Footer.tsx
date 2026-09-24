@@ -8,7 +8,7 @@ import { useLanguage } from '@/features/language-switch';
 import { useColorMode } from '@/features/theme-switch';
 import { getProfile } from '@/entities/profile';
 import { glassColors, glassEffects } from '@/shared/config';
-import { useContent } from '@/shared/lib';
+import { getLocalizedText, useContent } from '@/shared/lib';
 
 const Footer: React.FC = () => {
     const { t } = useTranslation();
@@ -19,6 +19,7 @@ const Footer: React.FC = () => {
     const isGlass = mode === 'glass';
 
     const { data: profile } = useContent(() => getProfile());
+    const fullName = getLocalizedText(language, profile.fullNameEn, profile.fullNameEs);
 
     const socialLinks = {
         github: profile.githubUrl,
@@ -29,6 +30,8 @@ const Footer: React.FC = () => {
     const textColor = isGlass ? glassColors.text.primary : 'text.primary';
     const secondaryTextColor = isGlass ? glassColors.text.secondary : 'text.secondary';
 
+    // Deliberate easter egg for developers who open the console: the running version and commit.
+    // It is the only console output in production, kept on purpose (docs/MIGRATION_PLAN.md).
     useEffect(() => {
         console.info(
             `%c🚀 Portafolio v${__APP_VERSION__} (%c${__COMMIT_HASH__}%c)`,
@@ -66,10 +69,10 @@ const Footer: React.FC = () => {
                 >
                     <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
                         <Typography variant="h6" component="p" sx={{ color: textColor, fontWeight: 'bold' }}>
-                            {language === 'en' ? profile.fullNameEn : profile.fullNameEs}
+                            {fullName}
                         </Typography>
                         <Typography variant="body2" sx={{ color: secondaryTextColor }}>
-                            Full Stack Developer
+                            {getLocalizedText(language, profile.subtitleEn, profile.subtitleEs)}
                         </Typography>
                     </Box>
 
@@ -115,7 +118,7 @@ const Footer: React.FC = () => {
                         {socialLinks.email && (
                             <IconButton
                                 href={socialLinks.email}
-                                aria-label="Email"
+                                aria-label={t('contact.email')}
                                 color="inherit"
                                 sx={{ 
                                     transition: 'all 0.3s ease',
@@ -132,7 +135,7 @@ const Footer: React.FC = () => {
                     </Box>
 
                     <Typography variant="body2" sx={{ color: secondaryTextColor, textAlign: 'center' }}>
-                        © {currentYear} {language === 'en' ? profile.fullNameEn : profile.fullNameEs}. {t('footer.rights', 'All rights reserved.')}
+                        © {currentYear} {fullName}. {t('footer.rights')}
                         <Box component="span" sx={{ display: 'block', mt: 0.5, fontSize: '0.7rem' }}>
                             v{__APP_VERSION__} · {__COMMIT_HASH__}
                         </Box>

@@ -1,8 +1,6 @@
-
 export const glassColors = {
   background: {
     deep: '#030314',
-    surface: '#0A0A1A',
     glassStart: 'rgba(12, 20, 35, 0.25)',
     glassEnd: 'rgba(20, 25, 45, 0.25)',
   },

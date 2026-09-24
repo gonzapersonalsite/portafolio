@@ -1,9 +1,11 @@
 import React, { useState, useCallback } from 'react';
 import { Snackbar, Alert, type AlertColor, useTheme } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { NotificationContext } from '../model/NotificationContext';
 
 export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const theme = useTheme();
+    const { t } = useTranslation();
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
     const [severity, setSeverity] = useState<AlertColor>('info');
@@ -31,7 +33,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                 sx={{ mt: 7, zIndex: theme.zIndex.snackbar + 100 }}
             >
-                <Alert onClose={handleClose} severity={severity} variant="filled" sx={{ width: '100%', boxShadow: theme.shadows[3], borderRadius: `${theme.shape.borderRadius}px` }}>
+                <Alert onClose={handleClose} closeText={t('common.close')} severity={severity} variant="filled" sx={{ width: '100%', boxShadow: theme.shadows[3], borderRadius: `${theme.shape.borderRadius}px` }}>
                     {message}
                 </Alert>
             </Snackbar>

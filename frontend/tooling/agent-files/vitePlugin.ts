@@ -1,7 +1,10 @@
 import type { Plugin } from 'vite';
 import { buildAgentFiles } from './generate.ts';
 import { HOME_ROUTE, htmlFileOf, ROUTES } from './routes.ts';
-import { buildRouteShell, injectAgentBlock } from './shell.ts';
+import { buildNotFoundPage, buildRouteShell } from './shell.ts';
+
+// Vercel serves this file, with status 404, for any address that matches no file.
+const NOT_FOUND_FILE = '404.html';
 
 export function agentFilesPlugin(): Plugin {
   return {
@@ -28,8 +31,9 @@ export function agentFilesPlugin(): Plugin {
         throw new Error('agent-files: index.html asset not found in the bundle');
       }
 
-      const rootHtml = injectAgentBlock(index.source.toString(), HOME_ROUTE);
-      index.source = rootHtml;
+      // Every shell starts from the built index.html (with its script, style and font tags).
+      const template = index.source.toString();
+      index.source = buildRouteShell(template, HOME_ROUTE);
 
       for (const route of ROUTES) {
         if (route.id === HOME_ROUTE.id) continue;
@@ -37,9 +41,11 @@ export function agentFilesPlugin(): Plugin {
         this.emitFile({
           type: 'asset',
           fileName: htmlFileOf(route),
-          source: buildRouteShell(rootHtml, route),
+          source: buildRouteShell(template, route),
         });
       }
+
+      this.emitFile({ type: 'asset', fileName: NOT_FOUND_FILE, source: buildNotFoundPage(template) });
 
       for (const file of buildAgentFiles()) {
         this.emitFile({

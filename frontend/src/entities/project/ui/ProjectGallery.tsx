@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Dialog, IconButton } from '@mui/material';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Box, Dialog, DialogTitle, IconButton, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -7,78 +7,175 @@ import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import { useTranslation } from 'react-i18next';
+import { fitSize, type Size } from '../lib/fitSize';
 
-interface ProjectGalleryProps {
-    open: boolean;
-    onClose: () => void;
-    imageUrls: string[];
-    imageUrlsFull?: string[];
-    title: string;
+export interface GallerySlide {
+    src: string;
+    thumbSrc: string;
+    alt: string;
 }
 
-const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrls, imageUrlsFull, title }) => {
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [zoomLevel, setZoomLevel] = useState(1);
+interface ProjectGalleryProps {
+    title: string;
+    slides: GallerySlide[];
+    onClose: () => void;
+}
+
+const MAX_ZOOM = 4;
+const ZOOM_STEP = 0.5;
+const PAN_STEP_PX = 80;
+
+// While zoomed, the arrow keys pan the image instead of changing it.
+const PAN_DIRECTIONS: Record<string, readonly [number, number]> = {
+    ArrowLeft: [-1, 0],
+    ArrowRight: [1, 0],
+    ArrowUp: [0, -1],
+    ArrowDown: [0, 1],
+};
+
+// White icons on a dark translucent background stay legible over light and dark screenshots.
+const controlSx = {
+    color: 'common.white',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    border: '1px solid rgba(255, 255, 255, 0.5)',
+    '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.8)' },
+} as const;
+
+const groupedControlSx = {
+    color: 'common.white',
+    borderRadius: 0,
+    '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.8)' },
+    '&.Mui-disabled': { color: 'rgba(255, 255, 255, 0.3)' },
+} as const;
+
+const ProjectGallery: React.FC<ProjectGalleryProps> = ({ title, slides, onClose }) => {
     const { t } = useTranslation();
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [zoomLevel, setZoomLevel] = useState(1);
+    const [naturalSize, setNaturalSize] = useState<(Size & { src: string }) | null>(null);
+    const [viewportSize, setViewportSize] = useState<Size | null>(null);
+    const [dragging, setDragging] = useState(false);
+    const viewportRef = useRef<HTMLDivElement | null>(null);
+    const thumbnailRefs = useRef<Array<HTMLElement | null>>([]);
+    // Point of the image, as a fraction of the scrollable area, that stays centred across zoom changes.
+    const focalPoint = useRef({ x: 0.5, y: 0.5 });
+    const dragStart = useRef<{ x: number; y: number; left: number; top: number } | null>(null);
 
-    useEffect(() => {
-        if (open) {
-            setCurrentImageIndex(0);
-            setZoomLevel(1);
+    const total = slides.length;
+    const slide = slides[currentIndex];
+    const zoomed = zoomLevel > 1;
+    const fittedSize =
+        naturalSize?.src === slide.src && viewportSize ? fitSize(naturalSize, viewportSize) : null;
+
+    const changeZoom = (next: (current: number) => number) => {
+        const viewport = viewportRef.current;
+        if (viewport) {
+            focalPoint.current = {
+                x: (viewport.scrollLeft + viewport.clientWidth / 2) / viewport.scrollWidth,
+                y: (viewport.scrollTop + viewport.clientHeight / 2) / viewport.scrollHeight,
+            };
         }
-    }, [open]);
+        setZoomLevel((current) => Math.min(Math.max(next(current), 1), MAX_ZOOM));
+    };
+    const zoomIn = () => changeZoom((current) => current + ZOOM_STEP);
+    const zoomOut = () => changeZoom((current) => current - ZOOM_STEP);
+    const resetZoom = () => changeZoom(() => 1);
+
+    const showImage = (index: number) => {
+        setCurrentIndex(index);
+        setZoomLevel(1);
+    };
+    const stepImage = (delta: number) => {
+        setCurrentIndex((current) => (current + delta + total) % total);
+        setZoomLevel(1);
+    };
+
+    // The image is sized from its fitted size, so the zoomed overflow can be scrolled to on every side.
+    useLayoutEffect(() => {
+        const viewport = viewportRef.current;
+        if (!viewport) return;
+        viewport.scrollLeft = focalPoint.current.x * viewport.scrollWidth - viewport.clientWidth / 2;
+        viewport.scrollTop = focalPoint.current.y * viewport.scrollHeight - viewport.clientHeight / 2;
+    }, [zoomLevel]);
+
+    // Measures the space available to the image. A callback ref, because the dialog mounts its
+    // content after the first commit. The border box ignores scrollbars, so showing them while
+    // zoomed does not feed back into the fitted size.
+    const attachViewport = useCallback((viewport: HTMLDivElement | null) => {
+        viewportRef.current = viewport;
+        if (!viewport) return;
+        const observer = new ResizeObserver(() => {
+            const style = getComputedStyle(viewport);
+            setViewportSize({
+                width: viewport.offsetWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight),
+                height: viewport.offsetHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom),
+            });
+        });
+        observer.observe(viewport, { box: 'border-box' });
+        return () => {
+            observer.disconnect();
+            viewportRef.current = null;
+        };
+    }, []);
+
+    // Arrow keys and buttons change the image without touching the strip; keep the active
+    // thumbnail in view when the strip overflows (phones with many images).
+    useEffect(() => {
+        thumbnailRefs.current[currentIndex]?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
+    }, [currentIndex]);
 
     useEffect(() => {
-        if (!open || !imageUrls || imageUrls.length === 0) return;
-
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'ArrowLeft' && imageUrls.length > 1) {
-                setCurrentImageIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
-                setZoomLevel(1);
-            } else if (event.key === 'ArrowRight' && imageUrls.length > 1) {
-                setCurrentImageIndex((prev) => (prev + 1) % imageUrls.length);
-                setZoomLevel(1);
+            const panDirection = PAN_DIRECTIONS[event.key];
+            if (zoomed && panDirection) {
+                event.preventDefault();
+                viewportRef.current?.scrollBy({ left: panDirection[0] * PAN_STEP_PX, top: panDirection[1] * PAN_STEP_PX });
+            } else if (event.key === 'ArrowLeft' && total > 1) {
+                stepImage(-1);
+            } else if (event.key === 'ArrowRight' && total > 1) {
+                stepImage(1);
             } else if (event.key === '+' || event.key === '=') {
-                setZoomLevel((prev) => Math.min(prev + 0.5, 4));
+                zoomIn();
             } else if (event.key === '-') {
-                setZoomLevel((prev) => Math.max(prev - 0.5, 1));
+                zoomOut();
             } else if (event.key === '0') {
-                setZoomLevel(1);
+                resetZoom();
             }
         };
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [open, imageUrls]);
+    });
 
-    const handleCloseGallery = () => {
-        onClose();
+    // Mouse drag pans the zoomed image; touch screens already pan the scroll container natively.
+    const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+        const viewport = viewportRef.current;
+        if (!zoomed || !viewport || event.pointerType !== 'mouse' || event.button !== 0) return;
+        dragStart.current = { x: event.clientX, y: event.clientY, left: viewport.scrollLeft, top: viewport.scrollTop };
+        viewport.setPointerCapture(event.pointerId);
+        setDragging(true);
+    };
+    const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+        const start = dragStart.current;
+        const viewport = viewportRef.current;
+        if (!start || !viewport) return;
+        viewport.scrollLeft = start.left - (event.clientX - start.x);
+        viewport.scrollTop = start.top - (event.clientY - start.y);
+    };
+    const handlePointerEnd = () => {
+        dragStart.current = null;
+        setDragging(false);
     };
 
-    const handleNextImage = () => {
-        setCurrentImageIndex((prev) => (prev + 1) % imageUrls.length);
-        setZoomLevel(1);
-    };
-
-    const handlePrevImage = () => {
-        setCurrentImageIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
-        setZoomLevel(1);
-    };
-
-    const handleZoomIn = () => setZoomLevel(prev => Math.min(prev + 0.5, 4));
-    const handleZoomOut = () => setZoomLevel(prev => Math.max(prev - 0.5, 1));
-    const handleResetZoom = () => setZoomLevel(1);
-
-    if (!imageUrls || imageUrls.length === 0) {
-        return null;
-    }
+    const imageSize: React.CSSProperties = fittedSize
+        ? { width: fittedSize.width * zoomLevel, height: fittedSize.height * zoomLevel }
+        : { maxWidth: viewportSize?.width ?? '100%', maxHeight: viewportSize?.height ?? '100%' };
 
     return (
-        <Dialog 
-            open={open} 
-            onClose={handleCloseGallery}
+        <Dialog
+            open
+            onClose={onClose}
             fullScreen
-            aria-label={title}
             slotProps={{
                 paper: {
                     sx: {
@@ -90,165 +187,178 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
                 }
             }}
         >
-            <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
-                <Box sx={{ 
-                    position: 'absolute', 
-                    top: 16, 
-                    right: 16, 
-                    display: 'flex',
-                    gap: 1,
-                    zIndex: 1300
-                }}>
-                    <Box sx={{ 
-                        display: 'flex', 
-                        backgroundColor: 'rgba(255,255,255,0.1)', 
-                        borderRadius: 2,
-                        overflow: 'hidden',
-                        mr: 2
-                    }}>
+            <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', color: 'common.white' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, px: 2, py: 1.5 }}>
+                    <DialogTitle
+                        sx={{ flex: 1, minWidth: 0, p: 0, fontSize: { xs: '1rem', sm: '1.25rem' }, fontWeight: 700 }}
+                    >
+                        {title}
+                    </DialogTitle>
+                    <Box sx={{ ...controlSx, display: 'flex', borderRadius: 2, overflow: 'hidden', flexShrink: 0 }}>
                         <IconButton
-                            onClick={handleZoomOut}
-                            disabled={zoomLevel <= 1}
-                            aria-label={t('projects.gallery.zoomOut', { defaultValue: 'Zoom out' })}
-                            sx={{ color: 'white', borderRadius: 0, '&:hover': { backgroundColor: 'rgba(255,255,255,0.2)' }, '&.Mui-disabled': { color: 'rgba(255,255,255,0.3)' } }}
+                            onClick={zoomOut}
+                            disabled={!zoomed}
+                            aria-label={t('projects.gallery.zoomOut')}
+                            sx={groupedControlSx}
                         >
                             <ZoomOutIcon />
                         </IconButton>
                         <IconButton
-                            onClick={handleResetZoom}
-                            disabled={zoomLevel === 1}
-                            aria-label={t('projects.gallery.resetZoom', { defaultValue: 'Reset zoom' })}
-                            sx={{ color: 'white', borderRadius: 0, '&:hover': { backgroundColor: 'rgba(255,255,255,0.2)' }, '&.Mui-disabled': { color: 'rgba(255,255,255,0.3)' } }}
+                            onClick={resetZoom}
+                            disabled={!zoomed}
+                            aria-label={t('projects.gallery.resetZoom')}
+                            sx={groupedControlSx}
                         >
                             <RestartAltIcon />
                         </IconButton>
                         <IconButton
-                            onClick={handleZoomIn}
-                            disabled={zoomLevel >= 4}
-                            aria-label={t('projects.gallery.zoomIn', { defaultValue: 'Zoom in' })}
-                            sx={{ color: 'white', borderRadius: 0, '&:hover': { backgroundColor: 'rgba(255,255,255,0.2)' }, '&.Mui-disabled': { color: 'rgba(255,255,255,0.3)' } }}
+                            onClick={zoomIn}
+                            disabled={zoomLevel >= MAX_ZOOM}
+                            aria-label={t('projects.gallery.zoomIn')}
+                            sx={groupedControlSx}
                         >
                             <ZoomInIcon />
                         </IconButton>
                     </Box>
-                    
                     <IconButton
-                        onClick={handleCloseGallery}
-                        size="large"
-                        aria-label={t('projects.gallery.close', { defaultValue: 'Close gallery' })}
-                        sx={{ 
-                            color: 'white', 
-                            backgroundColor: 'rgba(255,255,255,0.1)',
-                            '&:hover': { backgroundColor: 'rgba(255,255,255,0.2)' }
-                        }}
+                        onClick={onClose}
+                        aria-label={t('projects.gallery.close')}
+                        sx={{ ...controlSx, flexShrink: 0 }}
                     >
-                        <CloseIcon fontSize="large" />
+                        <CloseIcon />
                     </IconButton>
                 </Box>
-                <Box sx={{ 
-                    flex: 1, 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center', 
-                    position: 'relative',
-                    px: { xs: 2, md: 8 },
-                    py: 2,
-                    overflow: 'auto'
-                }}>
-                    {imageUrls.length > 1 && (
-                        <IconButton 
-                            onClick={handlePrevImage}
-                            size="large"
-                            aria-label={t('projects.gallery.previousImage', { defaultValue: 'Previous image' })}
-                            sx={{ 
-                                position: 'absolute', 
-                                left: { xs: 8, md: 24 }, 
-                                color: 'white', 
-                                backgroundColor: 'rgba(255,255,255,0.1)', 
-                                '&:hover': { backgroundColor: 'rgba(255,255,255,0.2)' }, 
-                                zIndex: 10 
+
+                <Box sx={{ flex: 1, minHeight: 0, position: 'relative', display: 'flex' }}>
+                    <Box
+                        ref={attachViewport}
+                        role="region"
+                        aria-label={t('projects.gallery.viewer')}
+                        tabIndex={zoomed ? 0 : -1}
+                        onPointerDown={handlePointerDown}
+                        onPointerMove={handlePointerMove}
+                        onPointerUp={handlePointerEnd}
+                        onPointerCancel={handlePointerEnd}
+                        sx={{
+                            flex: 1,
+                            minWidth: 0,
+                            display: 'flex',
+                            overflow: 'auto',
+                            overscrollBehavior: 'contain',
+                            px: { xs: 2, md: 12 },
+                            py: 2,
+                            cursor: zoomed ? (dragging ? 'grabbing' : 'grab') : 'default',
+                            '&:focus-visible': { outline: '2px solid white', outlineOffset: -2 },
+                        }}
+                    >
+                        <img
+                            key={slide.src}
+                            src={slide.src}
+                            alt={slide.alt}
+                            draggable={false}
+                            onLoad={(event) => {
+                                const image = event.currentTarget;
+                                setNaturalSize({ src: slide.src, width: image.naturalWidth, height: image.naturalHeight });
                             }}
-                        >
-                            <ArrowBackIosNewIcon fontSize="large" />
-                        </IconButton>
-                    )}
-                    
-                    <Box sx={{
-                        width: '100%',
-                        height: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}>
-                        <img 
-                            src={(imageUrlsFull && imageUrlsFull[currentImageIndex]) || imageUrls[currentImageIndex]} 
-                            alt={`${title} - ${currentImageIndex + 1}/${imageUrls.length}`}
-                            style={{ 
-                                maxWidth: '100%', 
-                                maxHeight: '100%', 
-                                objectFit: 'contain',
+                            onClick={zoomed ? undefined : zoomIn}
+                            style={{
+                                ...imageSize,
+                                // Auto margins centre the image while it fits and, unlike flex
+                                // centring, never push the zoomed overflow out of scroll reach.
+                                margin: 'auto',
+                                flexShrink: 0,
+                                display: 'block',
                                 filter: 'drop-shadow(0px 10px 20px rgba(0,0,0,0.5))',
-                                transform: `scale(${zoomLevel})`,
-                                transition: 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                                transformOrigin: 'center center',
-                                cursor: zoomLevel === 1 ? 'zoom-in' : 'grab'
+                                cursor: zoomed ? undefined : 'zoom-in',
                             }}
-                            onClick={zoomLevel === 1 ? handleZoomIn : undefined}
                         />
                     </Box>
-                    
-                    {imageUrls.length > 1 && (
-                        <IconButton 
-                            onClick={handleNextImage}
-                            size="large"
-                            aria-label={t('projects.gallery.nextImage', { defaultValue: 'Next image' })}
-                            sx={{ 
-                                position: 'absolute', 
-                                right: { xs: 8, md: 24 }, 
-                                color: 'white', 
-                                backgroundColor: 'rgba(255,255,255,0.1)', 
-                                '&:hover': { backgroundColor: 'rgba(255,255,255,0.2)' }, 
-                                zIndex: 10 
-                            }}
-                        >
-                            <ArrowForwardIosIcon fontSize="large" />
-                        </IconButton>
+
+                    {total > 1 && (
+                        <>
+                            <IconButton
+                                onClick={() => stepImage(-1)}
+                                size="large"
+                                aria-label={t('projects.gallery.previousImage')}
+                                sx={{
+                                    ...controlSx,
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: { xs: 8, md: 24 },
+                                    transform: 'translateY(-50%)',
+                                }}
+                            >
+                                <ArrowBackIosNewIcon fontSize="large" />
+                            </IconButton>
+                            <IconButton
+                                onClick={() => stepImage(1)}
+                                size="large"
+                                aria-label={t('projects.gallery.nextImage')}
+                                sx={{
+                                    ...controlSx,
+                                    position: 'absolute',
+                                    top: '50%',
+                                    right: { xs: 8, md: 24 },
+                                    transform: 'translateY(-50%)',
+                                }}
+                            >
+                                <ArrowForwardIosIcon fontSize="large" />
+                            </IconButton>
+                        </>
                     )}
                 </Box>
-                {imageUrls.length > 1 && (
-                    <Box sx={{ 
-                        height: '100px', 
-                        display: 'flex', 
-                        justifyContent: 'center',
+
+                <Box role="status" sx={{ px: 2, py: 1, textAlign: 'center' }}>
+                    <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                        {t('projects.gallery.counter', { index: currentIndex + 1, total })}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.85)', maxWidth: 720, mx: 'auto' }}>
+                        {slide.alt}
+                    </Typography>
+                </Box>
+
+                {total > 1 && (
+                    <Box sx={{
+                        height: '100px',
+                        flexShrink: 0,
+                        display: 'flex',
                         alignItems: 'center',
-                        gap: 2, 
-                        overflowX: 'auto', 
-                        p: 2, 
+                        gap: 2,
+                        overflowX: 'auto',
+                        overflowY: 'hidden',
+                        overscrollBehaviorX: 'contain',
+                        p: 2,
+                        scrollPaddingInline: (theme) => theme.spacing(2),
                         backgroundColor: 'rgba(0,0,0,0.4)',
-                        borderTop: '1px solid rgba(255,255,255,0.1)'
+                        borderTop: '1px solid rgba(255,255,255,0.1)',
+                        // Auto margins center the strip while it fits and collapse to zero once it
+                        // overflows; justifyContent: 'center' would push the first thumbnails out of
+                        // scroll reach on narrow screens.
+                        '& > :first-of-type': { marginInlineStart: 'auto' },
+                        '& > :last-of-type': { marginInlineEnd: 'auto' }
                     }}>
-                        {imageUrls.map((url, idx) => (
-                            <Box 
+                        {slides.map((thumbnail, idx) => (
+                            <Box
                                 component="button"
                                 type="button"
-                                key={idx} 
-                                onClick={() => setCurrentImageIndex(idx)}
+                                key={thumbnail.src}
+                                ref={(element: HTMLElement | null) => { thumbnailRefs.current[idx] = element; }}
+                                onClick={() => showImage(idx)}
                                 aria-label={t('projects.gallery.thumbnail', {
                                     index: idx + 1,
-                                    total: imageUrls.length,
-                                    title,
-                                    defaultValue: 'View image {{index}} of {{total}} for {{title}}'
+                                    total,
+                                    title
                                 })}
-                                aria-pressed={currentImageIndex === idx}
-                                sx={{ 
-                                    width: 80, 
-                                    height: 56, 
+                                aria-pressed={currentIndex === idx}
+                                sx={{
+                                    width: 80,
+                                    height: 56,
                                     cursor: 'pointer',
-                                    opacity: currentImageIndex === idx ? 1 : 0.4,
-                                    border: currentImageIndex === idx ? '2px solid white' : '2px solid transparent',
+                                    opacity: currentIndex === idx ? 1 : 0.4,
+                                    border: currentIndex === idx ? '2px solid white' : '2px solid transparent',
                                     borderRadius: 1,
                                     transition: 'all 0.2s ease-in-out',
-                                    backgroundImage: `url(${url})`,
+                                    backgroundImage: `url(${thumbnail.thumbSrc})`,
                                     backgroundSize: 'cover',
                                     backgroundPosition: 'center',
                                     flexShrink: 0,
@@ -263,7 +373,7 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ open, onClose, imageUrl
                                         outline: '2px solid white',
                                         outlineOffset: 2,
                                     }
-                                }} 
+                                }}
                             />
                         ))}
                     </Box>

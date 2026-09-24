@@ -1,4 +1,4 @@
-import { normalizeRichText } from '../../src/shared/lib/richText.ts';
+import { normalizeRichText, parseBulletLine } from '../../src/shared/lib/richText.ts';
 
 // Mirrors RichTextRenderer: every non-empty line is its own paragraph and
 // consecutive bullet lines become a single tight markdown list.
@@ -17,9 +17,9 @@ export const richTextToBlocks = (text: string): string[] => {
     const line = rawLine.trim();
     if (line === '') continue;
 
-    const bullet = line.match(/^[●•*◦▪-]\s*(.*)$/);
-    if (bullet) {
-      bullets.push(bullet[1]);
+    const bullet = parseBulletLine(line);
+    if (bullet !== null) {
+      bullets.push(bullet);
       continue;
     }
 

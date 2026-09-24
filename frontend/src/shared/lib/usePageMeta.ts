@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export interface PageMetaOptions {
+interface PageMetaOptions {
   title: string;
   description?: string;
 }

@@ -1,10 +1,10 @@
 import { createContext, useContext } from 'react';
-
-export type ColorMode = 'light' | 'dark' | 'glass';
+import type { ColorMode } from '@/shared/config';
 
 export interface ColorModeContextType {
     mode: ColorMode;
-    toggleColorMode: (newMode?: ColorMode) => void;
+    // The visitor's explicit choice: it is applied and saved for later visits.
+    setColorMode: (mode: ColorMode) => void;
 }
 
 export const ColorModeContext = createContext<ColorModeContextType | undefined>(undefined);

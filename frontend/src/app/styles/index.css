@@ -9,10 +9,23 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* The fixed header (56px on phones, 64px from 600px) would cover whatever the browser scrolls
+   into view when it takes the focus; keep that space clear (WCAG 2.4.11). */
+html {
+  scroll-padding-top: 72px;
+}
+
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+}
+
+/* Shown only without JavaScript (the route shells' <noscript>). */
+.noscript-fallback {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 24px 16px;
 }
 
 .skip-link {
@@ -53,10 +66,16 @@ body {
   transition: opacity 0.3s, transform 0.3s;
 }
 
-.return-to-top:focus,
-.return-to-top:hover {
+/* Shown once the visitor has scrolled down (PublicLayout adds .visible); keyboard users can
+   always reach it. */
+.return-to-top.visible,
+.return-to-top:focus-visible {
   opacity: 1;
   pointer-events: auto;
+}
+
+.return-to-top:hover,
+.return-to-top:focus-visible {
   transform: scale(1.1);
   background: #1976d2;
 }
@@ -112,26 +131,6 @@ body {
   background: radial-gradient(circle at 50% 50%, transparent 0%, #0A0A1A 100%);
 }
 
-.glass-text-turquoise {
-  text-shadow: 0 0 30px #5DE0E6;
-  color: rgba(255, 255, 255, 0.98);
-}
-
-.glass-text-violet {
-  text-shadow: 0 0 30px #8A6EFF;
-  color: rgba(255, 255, 255, 0.98);
-}
-
-.glass-text-pink {
-  text-shadow: 0 0 30px #FF7B9C;
-  color: rgba(255, 255, 255, 0.98);
-}
-
-.return-to-top:focus-visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -140,5 +139,43 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Printing and "Save as PDF" (often how a candidate page reaches an applicant tracking system):
+   black text on white paper whatever the theme, without the fixed chrome. */
+@media print {
+  header,
+  .skip-link,
+  .return-to-top,
+  .liquid-glass-bg {
+    display: none !important;
+  }
+
+  html,
+  body,
+  main,
+  .MuiPaper-root,
+  .MuiCard-root,
+  .MuiChip-root {
+    background: #fff !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  body * {
+    color: #000 !important;
+    -webkit-text-fill-color: #000 !important;
+    text-shadow: none !important;
+  }
+
+  /* The glass chips have a white hairline border that vanishes on paper. */
+  .MuiChip-root {
+    border: 1px solid #999 !important;
+  }
+
+  .MuiCard-root,
+  .MuiTimelineItem-root {
+    break-inside: avoid;
   }
 }
