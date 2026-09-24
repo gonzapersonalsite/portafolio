@@ -2,7 +2,7 @@
   "name": "frontend",
   "description": "Static bilingual (EN/ES) portfolio of Gonzalo Martínez: React, TypeScript and MUI. PROPRIETARY SOFTWARE. © 2026 Gonzalo Martínez García. ALL RIGHTS RESERVED. UNAUTHORIZED COPYING, MODIFICATION, OR DISTRIBUTION IS STRICTLY PROHIBITED.",
   "private": true,
-  "version": "1.0.2",
+  "version": "1.1.0",
   "license": "UNLICENSED",
   "packageManager": "pnpm@12.4.1",
   "engines": {
