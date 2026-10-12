@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
-import { Snackbar, Alert, type AlertColor, useTheme } from '@mui/material';
+import { Snackbar, Alert, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import type { NotificationSeverity } from '@/shared/lib';
 import { NotificationContext } from '../model/NotificationContext';
 
 export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -8,10 +9,10 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     const { t } = useTranslation();
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
-    const [severity, setSeverity] = useState<AlertColor>('info');
+    const [severity, setSeverity] = useState<NotificationSeverity>('info');
     const [duration, setDuration] = useState(10000);
 
-    const showNotification = useCallback((msg: string, sev: AlertColor = 'info', dur: number = 10000) => {
+    const showNotification = useCallback((msg: string, sev: NotificationSeverity = 'info', dur: number = 10000) => {
         setMessage(msg);
         setSeverity(sev);
         setDuration(dur);

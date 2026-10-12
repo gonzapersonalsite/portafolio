@@ -1,5 +1,5 @@
 import { createTheme, type ThemeOptions } from '@mui/material/styles';
-import { glassColors, glassEffects } from '@/shared/config/glassStyles';
+import { glassColors, glassEffects } from './glassStyles';
 
 export const COLOR_MODES = ['light', 'dark', 'glass'] as const;
 

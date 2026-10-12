@@ -1,9 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { AppProviders, AppRouter } from '@/app'
+import { AppProviders } from './providers'
+import AppRouter from './routing/AppRouter'
 import { ErrorBoundary } from '@/shared/ui'
 import '@fontsource-variable/inter'
-import '@/app/styles/index.css'
+import './styles/index.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

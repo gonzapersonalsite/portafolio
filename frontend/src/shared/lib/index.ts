@@ -1,6 +1,6 @@
 export { getLocalizedText } from './getLocalizedText';
 export { formatMonthYear, formatPercent, formatPeriod } from './localeFormat';
-export type { ShowNotification } from './notification';
+export type { NotificationSeverity, ShowNotification } from './notification';
 export { normalizeRichText, parseBulletLine } from './richText';
 export { readStorage, writeStorage } from './storage';
 export { useContent } from './useContent';

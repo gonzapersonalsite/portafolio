@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Box, Container } from '@mui/material';
-import { PublicLayout } from '@/app/layouts';
+import { PublicLayout } from '../layouts';
 import { APP_ROUTES, type RouteId } from '@/shared/config';
 import {
     HeroSkeleton, PageHeaderSkeleton, SkillsSkeleton, ExperienceSkeleton,
