@@ -72,8 +72,8 @@ pnpm dev
 
 ### Puertas de calidad
 ```bash
-pnpm lint     # ESLint (reglas FSD + TS)
-pnpm test     # Vitest (unit + integridad del contenido)
+pnpm lint     # ESLint: reglas de arquitectura (FSD) + TS; cualquier aviso lo hace fallar
+pnpm test     # Vitest: unit, integridad del contenido y tests de las reglas de arquitectura
 pnpm build    # Compilación TypeScript + build de producción con Vite
 ```
 

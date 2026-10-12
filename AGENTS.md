@@ -3,9 +3,10 @@
 This repository contains a **static portfolio frontend** (`frontend/`). There is no backend.
 
 To ensure you use the correct context, rules, and skills, read the frontend rules before touching any code:
-👉 `frontend/AGENTS.md` (FSD contract, immutable template)
-👉 `frontend/.agents/skills/portfolio-conventions/SKILL.md` (project conventions: static content model, images, project links, i18n, theming, accessibility, testing, build and security)
-👉 `frontend/.agents/skills/react-fsd-maintainer/SKILL.md` (canonical FSD rules)
+👉 `frontend/AGENTS.md` (frontend contract: stack, quality baseline, gates and where each rule lives)
+👉 `ARCHITECTURE.md` → *Feature-Sliced Design Rules* (the architecture of `frontend/src`: layers, slices, imports, styles, data and network, each rule with what enforces it)
+👉 `frontend/.agents/skills/portfolio-conventions/SKILL.md` (project conventions: static content model, images, project links, i18n, theming, accessibility, test tooling and practices, build and security)
+👉 `frontend/.agents/skills/react-fsd-maintainer/SKILL.md` (procedures: create a slice, move code down a layer, fix an architecture finding of the lint)
 
 ## Quick facts
 

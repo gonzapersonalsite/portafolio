@@ -13,7 +13,7 @@ Este documento ofrece un análisis detallado de los patrones arquitectónicos y 
 El proyecto es una **aplicación frontend totalmente estática**. No hay backend, no hay base de datos y no hay runtime de servidor: solo assets estáticos servidos por una CDN.
 
 ### ⚛️ Arquitectura del frontend
-- **Feature-Sliced Design (FSD):** código organizado en 6 capas canónicas — `app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/` — con reglas de importación estrictas aplicadas por `eslint-plugin-fsd-lint`.
+- **Feature-Sliced Design (FSD):** código organizado en 6 capas canónicas — `app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/` — con las reglas de importación y de ubicación de [Reglas de Feature-Sliced Design](#-reglas-de-feature-sliced-design), que hace cumplir ESLint y demuestra `frontend/eslint.config.test.ts`.
 - **Modelo de contenido estático:** todo el contenido de negocio (perfil, proyectos, habilidades, experiencias, idiomas hablados) vive en JSON bilingües dentro del segmento `api/` de cada entidad (`frontend/src/entities/<entidad>/api/data.json`). El contenido se lee de forma síncrona en runtime y lo valida la suite de tests.
 - **Gestión de estado:** React Context API para el estado de interfaz transversal: tema, idioma y notificaciones. No existe estado de servidor. El tema sigue al sistema operativo hasta que el visitante elige uno; solo se guardan las elecciones explícitas, mediante un helper de almacenamiento que mantiene la página en marcha cuando el navegador bloquea los datos del sitio.
 - **Localización dinámica:** sistema centralizado i18next para traducción de la interfaz en tiempo real; los campos de contenido son pares bilingües En/Es en los JSON de datos. El idioma sale de un enlace `?lang=es|en`, después de la elección guardada del visitante y, si no hay, del navegador; las URLs y sus metadatos SEO siguen en inglés (sin rutas `/es/`), así que los buscadores solo indexan la versión en inglés. Las fechas y los porcentajes se formatean según el idioma con los mismos helpers en las páginas y en las copias markdown (`Mar 2025 – Jun 2025`, `mar 2025 – jun 2025`, `80 %` en español).
@@ -29,7 +29,7 @@ El proyecto es una **aplicación frontend totalmente estática**. No hay backend
 - El formulario de contacto funciona íntegramente en el navegador mediante **EmailJS**; no hay gestión de correo en servidor. El SDK solo se carga al enviar un mensaje, los campos se validan en el idioma del visitante y, si no hay respuesta en 15 segundos, se le pide que escriba por correo en lugar de reenviar (puede que el mensaje llegue igualmente).
 
 ### 🔒 Seguridad
-- No hay backend ni superficie de autenticación. Vercel envía en cada respuesta una Content-Security-Policy estricta (scripts solo del propio sitio más el script de tema en línea por su hash, peticiones de red solo a EmailJS) y las cabeceras de endurecimiento habituales; ver la [Guía de operaciones](OPERATIONS.md).
+- No hay backend ni superficie de autenticación. Vercel envía en cada respuesta una Content-Security-Policy estricta (scripts solo del propio sitio más el script de tema en línea por su hash, peticiones de red solo al propio sitio y a EmailJS) y las cabeceras de endurecimiento habituales; ver la [Guía de operaciones](OPERATIONS.md).
 
 ## 📊 Arquitectura de un vistazo
 
@@ -38,6 +38,8 @@ El proyecto es una **aplicación frontend totalmente estática**. No hay backend
 ```mermaid
 flowchart TB
     app[app] --> pages[pages]
+    app --> widgets
+    app --> features
     app --> shared[shared]
     pages --> widgets[widgets]
     pages --> features[features]
@@ -82,6 +84,71 @@ El mismo contenido de las entidades alimenta un generador en build (`frontend/to
 - `404.html` (`noindex`, sin canonical), que Vercel sirve con estado 404 para cualquier otra dirección; con JavaScript, la app de esa página lleva al visitante al inicio.
 
 `pnpm dev` sirve `llms.txt`, `robots.txt`, `sitemap.xml` y las copias markdown por middleware; los shells HTML por ruta, su bloque de cabecera (canonical, alternates, JSON-LD) y `404.html` solo los genera `pnpm build` (compruébalos con `pnpm preview` en la dirección con barra final, p. ej. `/about/`). `pnpm build` lo emite todo en `dist/`. Los tests fijan el contenido, la paridad de metadatos con i18n y que todo enlace interno resuelva a un fichero generado.
+
+---
+
+## 🧱 Reglas de Feature-Sliced Design
+
+Esta sección manda sobre la forma del código de `src`: dónde va cada cosa, qué puede importar qué y cómo llega el código a la red. Cómo trabajan los agentes en el repositorio lo dicen `AGENTS.md` y `frontend/AGENTS.md`; las convenciones propias del proyecto (contenido, imágenes, i18n, temas, accesibilidad), la skill `portfolio-conventions`. Las rutas de esta sección son relativas a `frontend/`.
+
+**Cada regla dice qué la hace cumplir.** Las que hace cumplir el lint tienen en `eslint.config.test.ts` el fichero más pequeño que las rompe, y ese test falla si alguien relaja la regla en `eslint.config.js`. Las reglas `fsd/` solo leen imports estáticos (`import … from`): un `import()` dinámico o una reexportación (`export … from`) que cruza una capa, un slice o una API pública es convención, porque fsd-lint 1.2.1 no los lee. Un comentario no apaga ninguna: el lint da por aviso un comentario `eslint-disable`, y `pnpm lint` falla con cualquier aviso, así que una excepción vive en `eslint.config.js`, junto a su decisión. Las que dicen *convención* no las comprueba nada: las sostiene la revisión del diff, y se convierten en regla de lint con su caso en cuanto alguien encuentra cómo.
+
+### Capas
+
+`src` contiene estas seis carpetas y nada más, de arriba abajo:
+
+| Capa | Qué contiene |
+|---|---|
+| `app` | La entrada (`src/app/main.tsx`) y las declaraciones ambientales de Vite (`src/app/vite-env.d.ts`), los providers, el router, el layout público y los estilos globales |
+| `pages` | Una pantalla entera: compone lo de debajo y guarda el código que solo usa ella |
+| `widgets` | Un bloque de interfaz grande que usan las páginas o el layout público de `app` (`navbar`, `footer`) |
+| `features` | Una acción del usuario con valor propio (`contact-form`, `language-switch`, `theme-switch`, `notifications`) |
+| `entities` | Un concepto del negocio: sus tipos, sus reglas, su contenido estático y su vista (`profile`, `project`, `skill`, `experience`, `spoken-language`) |
+| `shared` | Lo que no sabe nada del negocio: la configuración, utilidades, la UI base |
+
+- **Una capa solo importa de las que tiene debajo.** Lo hace cumplir `fsd/forbidden-imports`.
+- **Dos slices de la misma capa no se importan entre sí.** Si los dos necesitan algo, ese algo baja a una capa inferior. Lo hace cumplir `fsd/no-cross-slice-dependency`.
+- **No hay más capas.** Un fichero de código fuera de esas seis carpetas, o suelto en la raíz de `src`, es un error de `no-restricted-syntax`; carpetas como `services`, `hooks` o `utils` en la raíz no existen.
+- **En `src` el código es TypeScript en `.ts` y `.tsx`**, los únicos ficheros que leen estas reglas: un `.js`, `.jsx`, `.mjs`, `.cjs`, `.mts` o `.cts` es un error de `no-restricted-syntax`, o un error de parseo si contiene sintaxis de TypeScript o JSX.
+- `app` y `shared` no tienen slices, por convención: sus carpetas internas son segmentos (`app/providers`, `app/routing`, `app/layouts`, `app/styles`; `shared/config`, `shared/lib`, `shared/ui`). `app/layouts` separa su vista (`ui`) de sus hooks (`lib`), y ese `lib` sigue las reglas de los segmentos de lógica de más abajo.
+- **El código de build queda fuera de las capas (decisión).** `tooling/` (el generador de ficheros para agentes, la precarga de la fuente y los tests del hosting) lee directamente el contenido y los helpers de `src` para publicarlos, y la configuración de la raíz (`vite.config.ts`, que carga ese tooling, `vitest.config.ts` y `eslint.config.test.ts`) no es código de la aplicación, así que las reglas de Feature-Sliced Design solo se aplican a `src`. Las reglas de tests de más abajo se aplican a todos los tests, los de `tooling/` incluidos.
+
+### Slices y segmentos
+
+Un slice es una carpeta dentro de `pages`, `widgets`, `features` o `entities` (`src/entities/<slice>/`), con nombre en kebab-case. Dentro, solo los segmentos que tengan algo:
+
+| Segmento | Qué contiene |
+|---|---|
+| `ui` | Componentes `.tsx` y los estilos que necesitan |
+| `model` | Tipos, reglas de negocio como funciones puras, hooks, contextos y estado |
+| `api` | El acceso a datos del slice: su contenido estático (`data.json`) y los getters síncronos que lo leen, o la llamada a un SDK externo |
+| `lib` | Utilidades internas del slice |
+| `config` | Constantes del slice |
+
+- **Desde fuera, a un slice solo se entra por su `<slice>/index.ts`**, que exporta a propósito lo que es público y nada más: ni un fichero interno ni un segmento (`@/entities/<slice>`, nunca `@/entities/<slice>/model`). Lo hace cumplir `fsd/no-public-api-sidestep`, páginas incluidas. A `shared` se entra por segmento (`@/shared/config`, `@/shared/lib`, `@/shared/ui`), por convención.
+- **Entre slices se importa con el alias `@/`**, y lo hace cumplir `fsd/no-relative-imports`. **Dentro de un slice, y dentro de `app` o de un segmento de `shared`, con rutas relativas**, por convención: entrar en el propio slice por el alias, y más aún por su `<slice>/index.ts`, crea un ciclo de imports que el lint no ve. `@/` apunta a `src/` (`tsconfig.app.json`, `vite.config.ts` y `vitest.config.ts`).
+- **En `model`, `api` y `lib` no hay UI**: ni ficheros `.tsx`, ni imports, estáticos o dinámicos, de un segmento `ui`, de estilos, de cualquier entrada de `react-dom`, de los runtimes de JSX o de MUI y Emotion enteros (`@mui/*`, `@emotion/*`, tipos incluidos: un tipo que necesite la vista lo declara la lógica, como `NotificationSeverity` en `src/shared/lib`); ni `createElement`, `cloneElement` o React entero (por defecto, como espacio de nombres o dinámico): de React, un segmento de lógica importa por nombre lo que es lógica, como sus hooks. Lo hacen cumplir `no-restricted-imports` y `no-restricted-syntax` sobre esos segmentos; un segmento `api` sigue importando su `data.json` y cargando un SDK bajo demanda. Que no llegue un componente a un `model` por la API pública de otro slice es convención: el lint ve rutas, no qué exporta cada una. Sus tests sí pueden renderizar.
+- **Los tests van al lado de lo que prueban**, como `<fichero>.test.ts` o `<fichero>.test.tsx`, por convención. Las reglas de imports de Feature-Sliced Design no se les aplican: un test puede entrar en el slice que prueba.
+- **Todo test corre.** `.skip`, `.todo`, `skipIf` y `runIf` son errores de `no-restricted-properties` en todos los tests, los de `tooling/` incluidos; Vitest rechaza un `.only` commiteado (`allowOnly: false`) y hace fallar un test que no comprueba nada (`expect.requireAssertions`), los dos en `vitest.config.ts`.
+
+### Dónde va el código nuevo
+
+Primero, en la página que lo usa. Baja cuando aparece el segundo consumidor, y no antes: a `widgets` si es un bloque de interfaz, a `features` si es una acción del usuario, a `entities` si es un concepto del negocio, y a `shared` si no sabe nada del negocio. Bajar código es un cambio con su propio diff, que deja los imports por la `<slice>/index.ts` del nuevo sitio. Es convención; el lint solo impide que una capa use lo que tiene encima.
+
+### Estilos
+
+- Los componentes se estilan con la prop `sx` de MUI y el tema (`createAppTheme` en `src/shared/config/theme.ts`); una hoja de estilos que necesite un componente va a su lado, en su segmento `ui`. Que no se importen MUI, Emotion ni hojas de estilos desde `model`, `api` ni `lib` lo hace cumplir el lint; el resto es convención.
+- La hoja de estilos de toda la aplicación (`src/app/styles/index.css`: variables raíz, el margen de scroll, los enlaces de salto y de vuelta arriba, el fondo animado de cristal y la impresión) la importa la entrada y nadie más, por convención.
+
+### Datos y red
+
+- **El flujo va en una dirección:** la vista (`ui`) usa el modelo (`model`) y el contenido que expone el slice, y el contenido sale del segmento `api`. Que la vista no salte al `api` de su slice es convención.
+- **`src` no envía peticiones propias (decisión).** `fetch`, `XMLHttpRequest`, `window.fetch`, `globalThis.fetch` y `self.fetch` son errores de `no-restricted-globals` y `no-restricted-properties` en cualquier parte de `src`, salvo los tests: el sitio es estático y no tiene cliente HTTP que eximir. La única llamada de red es la del SDK de EmailJS: `src/features/contact-form/api/contactApi.ts` lo carga al enviar un mensaje y acota el envío con un tiempo límite (ver [Contacto](#-contacto)); una llamada de red nueva es una decisión del dueño, y el `connect-src` de la Content-Security-Policy solo admite el propio origen del sitio y `https://api.emailjs.com`. Que el SDK solo se cargue desde ese segmento `api` es convención.
+- **Las reglas de negocio son funciones puras**, con su test en el mismo cambio: en `model` o `lib` (`validateContactMessage`, `splitDescription`), o en los getters de un segmento `api` cuando seleccionan el contenido del propio slice (`getCoreSkills`); un hook o un provider que guarda estado las llama en lugar de repetirlas (`useContactForm`). Convención.
+
+### Nombres
+
+Por convención: componentes en PascalCase (`<slice>/ui/ProjectCard.tsx`), hooks en camelCase con `use` delante (`<slice>/model/useContactForm.ts`), slices en kebab-case (`<capa>/contact-form`) y segmentos en minúsculas.
 
 ---
 

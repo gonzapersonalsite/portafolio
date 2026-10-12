@@ -13,7 +13,7 @@ This document provides a detailed analysis of the architectural patterns and tec
 The project is a **fully static frontend application**. There is no backend, no database, and no server runtime — only static assets served by a CDN.
 
 ### ⚛️ Frontend Architecture
-- **Feature-Sliced Design (FSD):** Codebase organized into 6 canonical layers — `app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/` — with strict import rules enforced by `eslint-plugin-fsd-lint`.
+- **Feature-Sliced Design (FSD):** Codebase organized into 6 canonical layers — `app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/` — with the import and placement rules of [Feature-Sliced Design Rules](#-feature-sliced-design-rules), enforced by ESLint and proved by `frontend/eslint.config.test.ts`.
 - **Static Content Model:** All business content (profile, projects, skills, experiences, spoken languages) lives in bilingual JSON files inside each entity's `api/` segment (`frontend/src/entities/<entity>/api/data.json`). Content is read synchronously at runtime and is validated by the test suite.
 - **State Management:** React Context API for cross-cutting UI state: theme, language and notifications. No server state exists. The theme follows the operating system until the visitor picks one; only explicit choices are saved, through a storage helper that keeps the page working when the browser blocks site data.
 - **Dynamic Localization:** Centralized i18next system for real-time interface translation; content fields are bilingual En/Es pairs in the JSON data. The language comes from a `?lang=es|en` link, then the visitor's saved choice, then the browser; the URLs and their SEO metadata stay English (no `/es/` routes), so search engines index the English version only. Dates and percentages are formatted per language by the same helpers in the pages and the markdown twins (`Mar 2025 – Jun 2025`, `mar 2025 – jun 2025`, `80 %` in Spanish).
@@ -29,7 +29,7 @@ The project is a **fully static frontend application**. There is no backend, no 
 - The contact form runs entirely in the browser via **EmailJS**; there is no server-side mail handling. The SDK is loaded only when a message is sent, fields are validated in the visitor's language, and after 15 seconds without an answer the visitor is asked to email instead of resending (the message may still arrive).
 
 ### 🔒 Security
-- There is no backend and no authentication surface. Vercel sends a strict Content-Security-Policy on every response (scripts only from the site plus the inline theme script by its hash, network requests only to EmailJS) and the usual hardening headers; see the [Operations Guide](OPERATIONS.md).
+- There is no backend and no authentication surface. Vercel sends a strict Content-Security-Policy on every response (scripts only from the site plus the inline theme script by its hash, network requests only to the site itself and EmailJS) and the usual hardening headers; see the [Operations Guide](OPERATIONS.md).
 
 ## 📊 Architecture at a Glance
 
@@ -38,6 +38,8 @@ The project is a **fully static frontend application**. There is no backend, no 
 ```mermaid
 flowchart TB
     app[app] --> pages[pages]
+    app --> widgets
+    app --> features
     app --> shared[shared]
     pages --> widgets[widgets]
     pages --> features[features]
@@ -82,6 +84,71 @@ The same entity data feeds a build-time generator (`frontend/tooling/agent-files
 - `404.html` (`noindex`, no canonical), which Vercel serves with status 404 for any other address; with JavaScript, the app on that page sends the visitor home.
 
 `pnpm dev` serves `llms.txt`, `robots.txt`, `sitemap.xml` and the markdown twins through middleware; the per-route HTML shells, their head block (canonical, alternates, JSON-LD) and `404.html` are only produced by `pnpm build` (check them with `pnpm preview` at the trailing-slash address, e.g. `/about/`). `pnpm build` emits everything into `dist/`. Unit tests pin content, metadata parity with i18n and that every internal link resolves to a generated file.
+
+---
+
+## 🧱 Feature-Sliced Design Rules
+
+This section governs the shape of the code in `src`: where each thing goes, what may import what and how the code reaches the network. How agents work in the repository is in `AGENTS.md` and `frontend/AGENTS.md`; the project's own conventions (content, images, i18n, theming, accessibility) are in the `portfolio-conventions` skill. Paths in this section are relative to `frontend/`.
+
+**Each rule says what enforces it.** A rule the lint enforces has, in `eslint.config.test.ts`, the smallest file that breaks it, and that test fails if someone relaxes the rule in `eslint.config.js`. The `fsd/` rules read static imports only (`import … from`): a dynamic `import()` or a re-export (`export … from`) that crosses a layer, a slice or a public API is a convention, because fsd-lint 1.2.1 does not read them. No comment switches a rule off: the lint reports an `eslint-disable` comment as a warning, and `pnpm lint` fails on any warning, so an exception lives in `eslint.config.js`, next to its decision. A rule marked *convention* is checked by nothing: the review of the diff holds it, and it becomes a lint rule with its case as soon as someone finds how.
+
+### Layers
+
+`src` holds these six folders and nothing else, from top to bottom:
+
+| Layer | What it holds |
+|---|---|
+| `app` | The entry point (`src/app/main.tsx`) and Vite's ambient declarations (`src/app/vite-env.d.ts`), the providers, the router, the public layout and the global styles |
+| `pages` | A whole screen: it composes what is below and keeps the code only it uses |
+| `widgets` | A large UI block that pages or the public layout of `app` use (`navbar`, `footer`) |
+| `features` | A user action with value of its own (`contact-form`, `language-switch`, `theme-switch`, `notifications`) |
+| `entities` | A business concept: its types, its rules, its static content and its view (`profile`, `project`, `skill`, `experience`, `spoken-language`) |
+| `shared` | What knows nothing of the business: configuration, utilities, the base UI |
+
+- **A layer imports only from the layers below it.** Enforced by `fsd/forbidden-imports`.
+- **Two slices of the same layer do not import each other.** If both need something, that something moves down to a lower layer. Enforced by `fsd/no-cross-slice-dependency`.
+- **There are no other layers.** A code file outside those six folders, or loose at the root of `src`, is a `no-restricted-syntax` error; folders such as `services`, `hooks` or `utils` at the root do not exist.
+- **Code in `src` is TypeScript in `.ts` and `.tsx` files**, the only files these rules read: a `.js`, `.jsx`, `.mjs`, `.cjs`, `.mts` or `.cts` file is a `no-restricted-syntax` error, or a parsing error when it holds TypeScript or JSX syntax.
+- `app` and `shared` have no slices, by convention: their inner folders are segments (`app/providers`, `app/routing`, `app/layouts`, `app/styles`; `shared/config`, `shared/lib`, `shared/ui`). `app/layouts` splits its view (`ui`) from its hooks (`lib`), and that `lib` keeps the rules of the logic segments below.
+- **Build-time code is outside the layers (decision).** `tooling/` (the agent-file generator, the font preload and the hosting tests) reads the content and the helpers of `src` directly to publish them, and the configuration at the root (`vite.config.ts`, which loads that tooling, `vitest.config.ts` and `eslint.config.test.ts`) is not application code, so the Feature-Sliced Design rules apply to `src` only. The test rules below apply to every test, `tooling/` included.
+
+### Slices and segments
+
+A slice is a folder inside `pages`, `widgets`, `features` or `entities` (`src/entities/<slice>/`), named in kebab-case. Inside it, only the segments that hold something:
+
+| Segment | What it holds |
+|---|---|
+| `ui` | `.tsx` components and the styles they need |
+| `model` | Types, business rules as pure functions, hooks, contexts and state |
+| `api` | The slice's data access: its static content (`data.json`) and the synchronous getters that read it, or the call to an external SDK |
+| `lib` | The slice's internal utilities |
+| `config` | The slice's constants |
+
+- **From outside, a slice is entered only through its `<slice>/index.ts`**, which exports on purpose what is public and nothing else: neither an internal file nor a segment (`@/entities/<slice>`, never `@/entities/<slice>/model`). Enforced by `fsd/no-public-api-sidestep`, pages included. `shared` is entered by segment (`@/shared/config`, `@/shared/lib`, `@/shared/ui`), by convention.
+- **Between slices, imports use the `@/` alias**, enforced by `fsd/no-relative-imports`. **Inside a slice, and inside `app` or a segment of `shared`, they use relative paths**, by convention: entering one's own slice through the alias, and even more through its `<slice>/index.ts`, creates an import cycle the lint does not see. `@/` points at `src/` (`tsconfig.app.json`, `vite.config.ts` and `vitest.config.ts`).
+- **There is no UI in `model`, `api` and `lib`**: no `.tsx` files and no import, static or dynamic, of a `ui` segment, of styles, of any entry of `react-dom`, of the JSX runtimes or of MUI and Emotion as a whole (`@mui/*`, `@emotion/*`, types included: a type the view needs is declared by the logic, as `NotificationSeverity` in `src/shared/lib`); no `createElement`, `cloneElement` or React as a whole (default, namespace or dynamic import): from React, a logic segment imports by name what is logic, such as its hooks. Enforced by `no-restricted-imports` and `no-restricted-syntax` on those segments; an `api` segment still imports its `data.json` and loads an SDK on demand. That a component does not reach a `model` through another slice's public API is convention: the lint sees paths, not what each one exports. Their tests may render.
+- **Tests sit next to what they test**, as `<file>.test.ts` or `<file>.test.tsx`, by convention. The Feature-Sliced Design import rules do not apply to them: a test may enter the slice it tests.
+- **Every test runs.** `.skip`, `.todo`, `skipIf` and `runIf` are `no-restricted-properties` errors in every test, those of `tooling/` included; Vitest rejects a committed `.only` (`allowOnly: false`) and fails a test that asserts nothing (`expect.requireAssertions`), both in `vitest.config.ts`.
+
+### Where new code goes
+
+First, in the page that uses it. It moves down when a second consumer appears, and not before: to `widgets` if it is a UI block, to `features` if it is a user action, to `entities` if it is a business concept, and to `shared` if it knows nothing of the business. Moving code down is a change with its own diff, which leaves the imports going through the new place's `<slice>/index.ts`. This is convention; the lint only stops a layer from using what is above it.
+
+### Styles
+
+- Components style themselves with MUI's `sx` prop and the theme (`createAppTheme` in `src/shared/config/theme.ts`); a stylesheet a component needs lives next to it, in its `ui` segment. That neither MUI, Emotion nor a stylesheet is imported from `model`, `api` or `lib` is enforced by the lint; the rest is convention.
+- The application-wide stylesheet (`src/app/styles/index.css`: root variables, scroll padding, the skip and return-to-top links, the animated glass background and print) is imported by the entry point and nobody else, by convention.
+
+### Data and network
+
+- **The flow goes one way:** the view (`ui`) uses the model (`model`) and the content the slice exposes, and the content comes from the `api` segment. That a view does not jump to its slice's `api` is convention.
+- **`src` sends no request of its own (decision).** `fetch`, `XMLHttpRequest`, `window.fetch`, `globalThis.fetch` and `self.fetch` are `no-restricted-globals` and `no-restricted-properties` errors anywhere in `src`, tests aside: the site is static and has no HTTP client to exempt. The only network call is the EmailJS SDK, loaded on submit by `src/features/contact-form/api/contactApi.ts` and bounded by a timeout (see [Contact](#-contact)); a new network call is an owner decision, and the Content-Security-Policy's `connect-src` allows only the site's own origin and `https://api.emailjs.com`. That the SDK is loaded only from that `api` segment is convention.
+- **Business rules are pure functions**, with their test in the same change: in `model` or `lib` (`validateContactMessage`, `splitDescription`), or in the getters of an `api` segment when they select the slice's own content (`getCoreSkills`); a hook or a provider that keeps state calls them instead of repeating them (`useContactForm`). Convention.
+
+### Naming
+
+By convention: components in PascalCase (`<slice>/ui/ProjectCard.tsx`), hooks in camelCase with `use` in front (`<slice>/model/useContactForm.ts`), slices in kebab-case (`<layer>/contact-form`) and segments in lowercase.
 
 ---
 

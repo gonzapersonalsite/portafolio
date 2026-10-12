@@ -28,7 +28,7 @@ Detalles del pipeline:
 
 ### 🌐 Configuración del hosting (`frontend/vercel.json`)
 - **Sin rewrites:** cada ruta es un fichero HTML propio. Cualquier otra dirección, incluido un asset o una imagen que no existen, recibe `404.html` con estado 404 (la app de esa página lleva al visitante al inicio). No hay `/favicon.ico`: las páginas enlazan los iconos de `/icons/`.
-- **Cabeceras de seguridad:** `Content-Security-Policy`, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy` y `Permissions-Policy` en cada respuesta. La CSP permite scripts del propio sitio más el script de tema incrustado en `index.html` (por su hash `sha256`), estilos en línea (Emotion), imágenes y fuentes solo del propio sitio y peticiones de red solo a EmailJS.
+- **Cabeceras de seguridad:** `Content-Security-Policy`, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy` y `Permissions-Policy` en cada respuesta. La CSP permite scripts del propio sitio más el script de tema incrustado en `index.html` (por su hash `sha256`), estilos en línea (Emotion), imágenes y fuentes solo del propio sitio y peticiones de red solo al propio sitio y a EmailJS.
   - Si editas el script incrustado en `index.html`, `pnpm test` falla e imprime su nuevo valor `'sha256-…'`: ponlo en la CSP.
   - Un servicio de terceros nuevo (analítica, fuentes, embeds) necesita su host en la directiva de la CSP que corresponda o el navegador lo bloquea. La barra de herramientas de Vercel también queda bloqueada, solo en los despliegues de preview.
 - **Caché:** `/assets/*`, `/images/*` y `/icons/*` son inmutables durante un año (ver *Inmutabilidad de caché* más abajo); `index.html` siempre se revalida.
@@ -63,12 +63,12 @@ El servidor de desarrollo solo escucha en `localhost`; ejecuta `pnpm dev --host`
 
 ### Puertas de calidad
 ```bash
-pnpm lint     # ESLint: reglas FSD + TS
-pnpm test     # Vitest: unit + integridad del contenido
+pnpm lint     # ESLint: reglas de arquitectura (FSD) + TS; cualquier aviso lo hace fallar
+pnpm test     # Vitest: unit, integridad del contenido y tests de las reglas de arquitectura
 pnpm build    # Compilación TypeScript + build de producción con Vite
 ```
 
-`pnpm build` también alimenta `pnpm preview`, que sirve el bundle de producción en local; abre el shell de una ruta en su dirección con barra final (p. ej. `/about/`). Un hook de Husky en pre-commit (`.husky/pre-commit`, instalado por el script `prepare`) ejecuta `lint-staged`: ESLint sobre los ficheros `*.ts`/`*.tsx` en stage.
+`pnpm build` también alimenta `pnpm preview`, que sirve el bundle de producción en local; abre el shell de una ruta en su dirección con barra final (p. ej. `/about/`). Un hook de Husky en pre-commit (`.husky/pre-commit`, instalado por el script `prepare`) ejecuta `lint-staged`: ESLint sobre los ficheros `*.ts`/`*.tsx` en stage, que falla con cualquier aviso como `pnpm lint`. Las reglas de arquitectura y qué hace cumplir cada una están en la [Guía de arquitectura](ARCHITECTURE.md#-reglas-de-feature-sliced-design).
 
 ---
 

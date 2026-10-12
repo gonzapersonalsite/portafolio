@@ -1,13 +1,13 @@
 ---
 name: portfolio-conventions
-description: Project conventions of the static bilingual portfolio (stack, static JSON content model, images, project links and cards, routing, state, i18n, skill categories, theming, accessibility, testing, build and deploy, agent-readable output, security). Use before changing code, content, tests or build tooling in frontend/, together with react-fsd-maintainer.
+description: Project conventions of the static bilingual portfolio (stack, static JSON content model, images, project links and cards, routing, state, i18n, skill categories, theming, accessibility, testing, build and deploy, agent-readable output, security). Use before changing code, content, tests or build tooling in frontend/, together with the architecture in ARCHITECTURE.md.
 ---
 
 # portfolio-conventions
 
 ## Purpose
 
-This skill documents project-specific decisions for the Portfolio application. It extends the base FSD contract (`AGENTS.md`) and the `react-fsd-maintainer` skill with choices made specifically for this codebase. Always load alongside `react-fsd-maintainer` when working on this project.
+This skill documents project-specific decisions for the Portfolio application. The architecture of `src` (layers, slices, imports, styles, data and network, and what enforces each rule) is not repeated here: it lives in `ARCHITECTURE.md` → *Feature-Sliced Design Rules* at the repository root, and the `react-fsd-maintainer` skill holds the procedures that apply it. Load this skill alongside them when working on this project.
 
 ## Stack
 
@@ -87,7 +87,7 @@ The portfolio is a **fully static frontend**. There is no backend, no HTTP clien
 - **React Context** is used for cross-cutting UI state only:
   - **Theme** (`features/theme-switch/`): `ColorMode` = `light | dark | glass` (`COLOR_MODES` in `shared/config/theme.ts`). Until the visitor picks one, the theme follows the operating system (`prefers-color-scheme`, live); only an explicit choice (`setColorMode`) is saved to `localStorage: themeMode`. MUI `ThemeProvider` wraps the app with the single `CssBaseline` (`enableColorScheme`, so scrollbars and form controls follow the theme).
   - **Language** (`features/language-switch/`): `Language` = `en | es` (`SUPPORTED_LANGUAGES` in `shared/config/language.ts`). Only an explicit choice (`setLanguage`) or a `?lang=` link is saved to `localStorage: language`; the provider then drops the `lang` parameter from the address. i18next `changeLanguage` and `<html lang>` follow the context.
-  - **Notifications** (`features/notifications/`): MUI Snackbar + Alert for form feedback. The notifier signature is `ShowNotification` (`shared/lib`).
+  - **Notifications** (`features/notifications/`): MUI Snackbar + Alert for form feedback. The notifier signature is `ShowNotification`, with its `NotificationSeverity` (`shared/lib`, free of MUI); the provider passes the severity to the Alert as is.
 - **Storage**: never touch `localStorage` directly. Use `readStorage`/`writeStorage` (`shared/lib/storage.ts`): browsers that block site data throw on any access, and a preference must never blank the page. Validate what you read (only known modes and languages).
 
 ## Content Fetching Pattern
@@ -150,15 +150,16 @@ const { data: projects } = useContent(() => getAllProjects());
 - **Framework**: Vitest + @testing-library/react (versions in `package.json`)
 - **Environment**: jsdom
 - **Mocks**: `vi.mock` at module level, `vi.fn()` for spies
-- **Conventions**: co-located tests (`*.test.ts(x)` next to source), `describe`/`it` blocks, mocks before imports
+- **Conventions**: tests next to what they test (`ARCHITECTURE.md` → *Feature-Sliced Design Rules*), `describe`/`it` blocks, mocks before imports
 - **Real MUI**: MUI renders in jsdom, so there is no global MUI mock; component tests render the real providers they need (`MemoryRouter`, `LanguageProvider`, `ThemeProvider`) and query by role and accessible name. Assertions use plain DOM APIs (`getAttribute`, `textContent`); jest-dom is not a dependency. jsdom has no `matchMedia` or `scrollTo`: stub them per test (`vi.stubGlobal`, `vi.spyOn`).
 - **Content integrity tests**: `entities/<entity>/api/data.test.ts` validate the static JSON (contract, ordering, images exist via `import.meta.glob`).
 - **Run**: `pnpm test` (CI: `frontend-ci.yml`)
-- **Local gate**: a Husky pre-commit hook (installed by the `prepare` script on `pnpm install`; after `pnpm install --ignore-scripts`, run `pnpm run prepare`) runs `lint-staged` — ESLint over staged `*.ts`/`*.tsx` files.
+- **Every test runs, and the architecture rules are tested**: see `ARCHITECTURE.md` → *Feature-Sliced Design Rules*.
+- **Local gate**: a Husky pre-commit hook (installed by the `prepare` script on `pnpm install`; after `pnpm install --ignore-scripts`, run `pnpm run prepare`) runs `lint-staged` — ESLint over staged `*.ts`/`*.tsx` files, failing on any warning like `pnpm lint`.
 
 ## Build & Deploy
 
-- **Build**: `tsc -b && vite build`. `tsconfig.json` is a solution file: `tsc -b` type-checks `tsconfig.app.json` (`src` and `tooling`, browser libs) and `tsconfig.node.json` (`vite.config.ts`, `vitest.config.ts`, Node libs).
+- **Build**: `tsc -b && vite build`. `tsconfig.json` is a solution file: `tsc -b` type-checks `tsconfig.app.json` (`src` and `tooling`, browser libs) and `tsconfig.node.json` (the configuration files at the root that its `include` lists, Node libs).
 - **Chunks** (`build.rolldownOptions.output.codeSplitting`): `react-vendor` (react, react-dom, scheduler, react-router, react-router-dom) and `mui-vendor` (only the `@mui/*` and `@emotion/*` modules of the first render, `tags: ['$initial']`); MUI components used by a single page (Timeline, TextField, Dialog) stay in that page's chunk. Do not go back to `manualChunks`: Rolldown deprecates it and it pulled React into `mui-vendor`.
 - **TypeScript side-by-side layout**: `typescript` is aliased to `@typescript/typescript6` — the programmatic API that typescript-eslint consumes, exposing `tsc6` — while `@typescript/native` provides the native compiler that `tsc` (and therefore `pnpm build`) resolves to. Do not collapse them into a single `typescript` dependency until typescript-eslint supports the native compiler API.
 - **Dev**: Vite dev server on `localhost:5173` (`pnpm dev --host` to open it from a phone on the LAN); no API proxy needed. It serves the agent files but not the route shells: check shell metadata with `pnpm build && pnpm preview` at the trailing-slash address (`/about/`).
@@ -190,10 +191,8 @@ const { data: projects } = useContent(() => getAllProjects());
 
 ## File Organization (FSD)
 
-See `AGENTS.md` and `react-fsd-maintainer/SKILL.md` for the canonical FSD layer hierarchy and import rules.
-
-**Template supersession (deliberate):** the HTTP/API two-layer pattern and the store examples in those template files are generic and do not apply to this repository — there is no backend and no `shared/api/`. FSD boundaries govern `src/` only; `tooling/**` is build-time code and is exempted from the `fsd-lint` rules in `eslint.config.js` on purpose. Do not remove that exemption.
+The layers, slices, imports and their enforcement live in `ARCHITECTURE.md` → *Feature-Sliced Design Rules*, this repository's two deliberate decisions included.
 
 ## Peer Skills
 
-- `react-fsd-maintainer`: Canonical FSD architecture rules (loaded from template, immutable)
+- `react-fsd-maintainer`: procedures to create a slice, move code down a layer and fix an architecture finding of the lint; the rules themselves are in `ARCHITECTURE.md`.

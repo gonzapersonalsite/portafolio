@@ -72,8 +72,8 @@ pnpm dev
 
 ### Quality Gates
 ```bash
-pnpm lint     # ESLint (FSD rules + TS rules)
-pnpm test     # Vitest (unit + content-integrity tests)
+pnpm lint     # ESLint: architecture (FSD) rules + TS rules; any warning fails it
+pnpm test     # Vitest: unit, content-integrity and architecture-rule tests
 pnpm build    # TypeScript compilation + Vite production build
 ```
 
