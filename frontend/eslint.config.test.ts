@@ -85,6 +85,24 @@ describe('the layers of Feature-Sliced Design', () => {
       "import HomePage from '@/pages/home/ui/HomePage'\nexport const Page = HomePage\n",
       'fsd/no-public-api-sidestep',
     ],
+    [
+      'a dynamic import of a sibling of its own layer',
+      'src/features/contact-form/model/lazy.ts',
+      "export const load = () => import('@/features/theme-switch')\n",
+      'fsd/no-cross-slice-dependency',
+    ],
+    [
+      'a dynamic relative import that leaves its slice',
+      'src/features/contact-form/ui/lazy.ts',
+      "export const load = () => import('../../../entities/project')\n",
+      'fsd/no-relative-imports',
+    ],
+    [
+      'a dynamic deep import into a slice',
+      'src/pages/home/ui/lazy.ts',
+      "export const load = () => import('@/entities/project/model/projectLinks')\n",
+      'fsd/no-public-api-sidestep',
+    ],
     ['a folder of src that is not a layer', 'src/services/api.ts', 'export const api = 1\n', 'no-restricted-syntax'],
     [
       'a file at the root of src',
