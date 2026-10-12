@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import path from 'path'
 import { execSync } from 'child_process'
 import { agentFilesPlugin } from './tooling/agent-files/vitePlugin.ts'
 import { fontPreloadPlugin } from './tooling/font-preload/vitePlugin.ts'
@@ -20,11 +19,8 @@ export default defineConfig({
     __COMMIT_HASH__: JSON.stringify(commitHash),
   },
   plugins: [react(), fontPreloadPlugin(), agentFilesPlugin()],
-  resolve: {
-    alias: {
-      '@': path.resolve(import.meta.dirname, './src'),
-    },
-  },
+  // The '@/' alias lives in tsconfig.app.json only: Vite reads it from there.
+  resolve: { tsconfigPaths: true },
   // Local only; `pnpm dev --host` exposes it on the LAN to test on a phone.
   server: {
     port: 5173,

@@ -1,14 +1,10 @@
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
-import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
-  resolve: {
-    alias: [
-      { find: '@', replacement: path.resolve(import.meta.dirname, './src') },
-    ],
-  },
+  // The '@/' alias lives in tsconfig.app.json only: Vitest reads it from there.
+  resolve: { tsconfigPaths: true },
   test: {
     globals: true,
     environment: 'jsdom',
