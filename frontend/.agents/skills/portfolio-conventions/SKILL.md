@@ -1,3 +1,8 @@
+---
+name: portfolio-conventions
+description: Project conventions of the static bilingual portfolio (stack, static JSON content model, images, project links and cards, routing, state, i18n, skill categories, theming, accessibility, testing, build and deploy, agent-readable output, security). Use before changing code, content, tests or build tooling in frontend/, together with react-fsd-maintainer.
+---
+
 # portfolio-conventions
 
 ## Purpose

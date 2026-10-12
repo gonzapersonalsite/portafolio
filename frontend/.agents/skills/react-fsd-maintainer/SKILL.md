@@ -1,3 +1,8 @@
+---
+name: react-fsd-maintainer
+description: Feature-Sliced Design rules for this React project (the six layers, slice and segment anatomy, co-located CSS, public API, import rules, API call layers, fsd-lint) with a layer decision tree and a new-slice checklist. Use when creating a feature, entity, widget or page, moving code between layers, reviewing code for architectural compliance, or deciding where new code belongs.
+---
+
 # react-fsd-maintainer
 
 ## Purpose

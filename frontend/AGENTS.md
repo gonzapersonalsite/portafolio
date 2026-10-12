@@ -1,11 +1,11 @@
-# AGENTS.md — React FSD Template
+# AGENTS.md — Portafolio frontend
 
 ## Project Identity
 | Property   | Value                                            |
 |------------|--------------------------------------------------|
 | Stack      | React, TypeScript, Vite, ESLint (flat), pnpm — see package.json for versions |
 | Architecture | Feature-Sliced Design (FSD)                     |
-| Purpose    | Template: every project spawned from this MUST preserve FSD integrity across its entire lifecycle. No architectural drift allowed. |
+| Purpose    | Static bilingual (EN/ES) portfolio of Gonzalo Martínez, the only project of the Portafolio repository (repository context and skills index: `../AGENTS.md`). Spawned from the React FSD template: it MUST preserve FSD integrity across its entire lifecycle. No architectural drift allowed. |
 
 ---
 
