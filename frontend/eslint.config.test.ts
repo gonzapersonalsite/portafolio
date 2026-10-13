@@ -1,5 +1,7 @@
 // @vitest-environment node
-import { readFileSync } from 'node:fs'
+import { lstatSync, mkdtempSync, readFileSync, rmdirSync, symlinkSync, unlinkSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { ESLint, type Linter } from 'eslint'
 import { beforeAll, describe, expect, it } from 'vitest'
 
@@ -105,6 +107,12 @@ describe('the layers of Feature-Sliced Design', () => {
     ],
     ['a folder of src that is not a layer', 'src/services/api.ts', 'export const api = 1\n', 'no-restricted-syntax'],
     [
+      'a folder of src that is not a layer, re-exporting',
+      'src/services/index.ts',
+      "export { api } from './api'\n",
+      'no-restricted-syntax',
+    ],
+    [
       'a file at the root of src',
       'src/utils.ts',
       'export const twice = (n: number) => n * 2\n',
@@ -151,11 +159,225 @@ describe('the layers of Feature-Sliced Design', () => {
   })
 
   it('leaves a test free of the import rules of the layers', async () => {
-    // A layer above, a sibling slice, a deep import and a relative path out of the slice.
+    // A layer above, a sibling slice, a deep import and a relative path out of the slice,
+    // imported, re-exported and imported dynamically.
     const code =
-      "import { Navbar } from '@/widgets/navbar'\nimport { useColorMode } from '@/features/theme-switch'\nimport { PROJECT_LINK_KINDS } from '@/entities/project/model/projectLinks'\nimport { ProjectCard } from '../../../entities/project'\nexport const parts = [Navbar, useColorMode, PROJECT_LINK_KINDS, ProjectCard]\n"
+      "import { Navbar } from '@/widgets/navbar'\nimport { useColorMode } from '@/features/theme-switch'\nimport { PROJECT_LINK_KINDS } from '@/entities/project/model/projectLinks'\nimport { ProjectCard } from '../../../entities/project'\nexport const parts = [Navbar, useColorMode, PROJECT_LINK_KINDS, ProjectCard]\nexport { Footer } from '@/widgets/footer'\nexport { useLanguage } from '@/features/language-switch'\nexport { ThemeContext } from '@/features/theme-switch/model/ThemeContext'\nexport { splitDescription } from '../../../entities/project/lib/splitDescription'\nexport const load = () => import('@/widgets/footer')\n"
 
     expect(await reportsOn('src/features/contact-form/ui/ContactForm.extra.test.tsx', code)).toEqual([])
+  })
+})
+
+// The checks of fsd-gaps/boundaries a file breaks: one local rule, a message per check.
+async function gapChecksBrokenBy(path: string, code: string): Promise<string[]> {
+  const messages = await lint(path, code)
+  return messages
+    .filter((message) => message.severity === 2 && message.ruleId === 'fsd-gaps/boundaries')
+    .map((message) => message.messageId ?? message.message)
+    .sort()
+}
+
+describe('the layers over what fsd-lint 1.2.1 does not read: re-exports and a dynamic import()', () => {
+  it.each([
+    [
+      'a re-export from a layer above',
+      'src/entities/project/model/contact.ts',
+      "export { ContactForm } from '@/features/contact-form'\n",
+      ['reExportFromAbove'],
+    ],
+    [
+      'a re-export of everything from a layer above',
+      'src/entities/project/model/contact.ts',
+      "export * from '@/features/contact-form'\n",
+      ['reExportFromAbove'],
+    ],
+    [
+      'a relative re-export from a layer above',
+      'src/entities/project/model/contact.ts',
+      "export { ContactForm } from '../../../features/contact-form'\n",
+      ['reExportFromAbove', 'reExportOutOfSlice'],
+    ],
+    [
+      'a re-export from a sibling of its own layer',
+      'src/features/contact-form/model/theme.ts',
+      "export { useColorMode } from '@/features/theme-switch'\n",
+      ['reExportFromSibling'],
+    ],
+    [
+      'a relative re-export from a sibling of its own layer',
+      'src/features/contact-form/model/theme.ts',
+      "export { useColorMode } from '../../theme-switch'\n",
+      ['reExportFromSibling', 'reExportOutOfSlice'],
+    ],
+    [
+      'a re-export of a segment instead of the slice',
+      'src/pages/home/model/parts.ts',
+      "export { getAllProjects } from '@/entities/project/api'\n",
+      ['reExportPastPublicApi'],
+    ],
+    [
+      'a deep re-export from an entity',
+      'src/pages/home/ui/Board.tsx',
+      "export { PROJECT_LINK_KINDS } from '@/entities/project/model/projectLinks'\n",
+      ['reExportPastPublicApi'],
+    ],
+    [
+      'a deep re-export from a feature',
+      'src/pages/contact/model/parts.ts',
+      "export { default as ContactForm } from '@/features/contact-form/ui/ContactForm'\n",
+      ['reExportPastPublicApi'],
+    ],
+    [
+      'a deep re-export from a widget',
+      'src/pages/home/model/parts.ts',
+      "export { default as Navbar } from '@/widgets/navbar/ui/Navbar'\n",
+      ['reExportPastPublicApi'],
+    ],
+    [
+      'a deep re-export from a page',
+      'src/app/routing/pages.ts',
+      "export { default as HomePage } from '@/pages/home/ui/HomePage'\n",
+      ['reExportPastPublicApi'],
+    ],
+    [
+      'a relative re-export that leaves its slice',
+      'src/features/contact-form/model/parts.ts',
+      "export { PROJECT_LINK_KINDS } from '../../../entities/project/model/projectLinks'\n",
+      ['reExportOutOfSlice'],
+    ],
+    [
+      'a relative re-export that leaves src',
+      'src/shared/config/build.ts',
+      "export { default } from '../../../vite.config'\n",
+      ['reExportOutOfSlice'],
+    ],
+    [
+      'a dynamic import of a layer above',
+      'src/entities/project/model/lazy.ts',
+      "export const load = () => import('@/features/contact-form')\n",
+      ['dynamicImportFromAbove'],
+    ],
+    [
+      'a dynamic relative import of a layer above',
+      'src/entities/project/model/lazy.ts',
+      "export const load = () => import('../../../features/contact-form')\n",
+      ['dynamicImportFromAbove'],
+    ],
+    [
+      'a re-export from a layer above, after a doubled slash',
+      'src/entities/project/model/contact.ts',
+      "export { ContactForm } from '@//features/contact-form'\n",
+      ['reExportFromAbove'],
+    ],
+    [
+      'a re-export from a layer above, through a dot segment',
+      'src/shared/config/app.ts',
+      "export * from '@/./app/main'\n",
+      ['reExportFromAbove'],
+    ],
+    [
+      'a re-export from a sibling, reached through another layer',
+      'src/features/contact-form/model/theme.ts',
+      "export { useColorMode } from '@/shared/../features/theme-switch'\n",
+      ['reExportFromSibling'],
+    ],
+    [
+      'a dynamic import of a layer above, after a doubled slash',
+      'src/entities/project/model/lazy.ts',
+      "export const load = () => import('@//features/contact-form')\n",
+      ['dynamicImportFromAbove'],
+    ],
+    [
+      'a deep re-export from a widget, after a doubled slash',
+      'src/pages/home/model/parts.ts',
+      "export { default as Navbar } from '@//widgets/navbar/ui/Navbar'\n",
+      ['reExportPastPublicApi'],
+    ],
+    [
+      'a re-export from a layer above, out of src and back in',
+      'src/entities/project/model/contact.ts',
+      "export { ContactForm } from '@/../src/features/contact-form'\n",
+      ['reExportFromAbove'],
+    ],
+    [
+      'a dynamic relative import of a layer above, out of src and back in',
+      'src/entities/project/model/lazy.ts',
+      "export const load = () => import('../../../../src/features/contact-form')\n",
+      ['dynamicImportFromAbove'],
+    ],
+  ])('rejects %s', async (_case, path, code, checks) => {
+    expect(await gapChecksBrokenBy(path, code)).toEqual(checks)
+  })
+
+  it('accepts re-exports that go down the layers through each public API', async () => {
+    // The public API named as fsd-lint takes it in an import: the folder, with or without
+    // a trailing slash, or its index bare, with .ts or with the .js TypeScript resolves.
+    const code =
+      "export { ProjectCard } from '@/entities/project'\nexport * from '@/features/contact-form'\nexport { useContent } from '@/shared/lib'\nexport type { Project } from '@/entities/project/index'\nexport { getAllProjects } from '@/entities/project/index.ts'\nexport { getFeaturedProjects } from '@/entities/project/index.js'\nexport { ContactForm } from '@/features/contact-form/'\n"
+
+    expect(await reportsOn('src/pages/home/model/parts.ts', code)).toEqual([])
+  })
+
+  it('accepts a re-export through a public API named with a doubled slash', async () => {
+    // TypeScript resolves '@/widgets//navbar' to the slice itself.
+    const code = "export { Navbar } from '@/widgets//navbar'\n"
+
+    expect(await reportsOn('src/pages/home/model/parts.ts', code)).toEqual([])
+  })
+
+  it('leaves alone what the alias does not place in src: a scoped package and a path out of src', async () => {
+    // '@app/tokens' is a package, not the alias, and '@/../app/config' resolves outside src.
+    const code = "export { tokens } from '@app/tokens'\nexport { config } from '@/../app/config'\n"
+
+    expect(await reportsOn('src/entities/project/model/contact.ts', code)).toEqual([])
+  })
+
+  it('accepts the index of a slice re-exporting its own segments', async () => {
+    const code =
+      "export { getAllProjects, getFeaturedProjects } from './api/projectApi'\nexport { default as ProjectCard } from './ui/ProjectCard'\nexport type { Project } from './model/types'\n"
+
+    expect(await reportsOn('src/entities/project/index.ts', code)).toEqual([])
+  })
+
+  it('accepts relative re-exports between the segments of a layer without slices', async () => {
+    expect(await reportsOn('src/shared/lib/index.ts', "export { APP_ROUTES } from '../config'\n")).toEqual([])
+  })
+
+  it('leaves to convention a re-export into its own slice through the alias', async () => {
+    // A cycle the lint does not see, as an import of its own slice through the alias.
+    const code = "export { PROJECT_LINK_KINDS } from '@/entities/project/model/projectLinks'\n"
+
+    expect(await reportsOn('src/entities/project/index.ts', code)).toEqual([])
+  })
+
+  it('accepts a dynamic import down the layers and inside its slice', async () => {
+    const code =
+      "export const loadForm = () => import('@/features/contact-form')\nexport const loadPage = () => import('./HomePage')\n"
+
+    expect(await reportsOn('src/pages/home/ui/lazy.ts', code)).toEqual([])
+  })
+
+  it('leaves alone a dynamic import whose path is computed, which no rule can read', async () => {
+    const code = 'export const load = (module: string) => import(module)\n'
+
+    expect(await reportsOn('src/shared/lib/load.ts', code)).toEqual([])
+  })
+
+  it('holds in a project reached through a link or a junction', async () => {
+    // Node loads eslint.config.js by its real path, and ESLint names a file by the path it reached it by.
+    const folder = mkdtempSync(join(tmpdir(), 'fsd-gaps-'))
+    const project = join(folder, 'project')
+    try {
+      symlinkSync(import.meta.dirname, project, 'junction')
+      const throughLink = new ESLint({ cwd: project })
+      const [result] = await throughLink.lintText("export * from '@/app/main'\n", { filePath: 'src/shared/lib/up.ts' })
+
+      expect(result.messages.map((message) => message.messageId)).toEqual(['reExportFromAbove'])
+    } finally {
+      // unlink removes the link itself, never what it points to.
+      if (lstatSync(project, { throwIfNoEntry: false })) unlinkSync(project)
+      rmdirSync(folder)
+    }
   })
 })
 

@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import js from '@eslint/js';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import prettierConfig from 'eslint-config-prettier';
@@ -6,9 +8,19 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import fsdGaps from './eslint-fsd-gaps.js';
 
-// The layers of Feature-Sliced Design, the only folders src/ holds.
+// The layers of Feature-Sliced Design, the only folders src/ holds, from the top down.
 const LAYERS = ['app', 'pages', 'widgets', 'features', 'entities', 'shared'];
+// The layers split into slices, each entered through its index.ts only.
+const SLICED_LAYERS = ['pages', 'widgets', 'features', 'entities'];
+// src/ and its alias, which tsconfig.app.json alone declares ("@/*": ["./src/*"]). It is read as JSON,
+// so a comment in it stops the lint here.
+const SRC = fileURLToPath(new URL('src', import.meta.url));
+const { paths } = JSON.parse(readFileSync(new URL('tsconfig.app.json', import.meta.url), 'utf8')).compilerOptions;
+const SRC_ALIAS = Object.keys(paths)
+  .find((alias) => paths[alias].includes('./src/*'))
+  ?.replace('*', '');
 // Feature-Sliced Design governs the application in src/ only: tooling/ and the
 // configuration at the root are not application code (ARCHITECTURE.md).
 const SOURCES = 'src/**/*.{ts,tsx}';
@@ -71,11 +83,17 @@ export default defineConfig([
       'fsd/forbidden-imports': 'error',
       'fsd/no-cross-slice-dependency': 'error',
       'fsd/no-relative-imports': 'error',
-      // A slice of pages, widgets, features or entities is entered through its index.ts only.
-      'fsd/no-public-api-sidestep': [
-        'error',
-        { layers: ['pages', 'widgets', 'features', 'entities'], publicApi: { allowSegmentImports: false } },
-      ],
+      'fsd/no-public-api-sidestep': ['error', { layers: SLICED_LAYERS, publicApi: { allowSegmentImports: false } }],
+    },
+  },
+  {
+    // fsd-lint 1.2.1 reads no re-export (export … from), and fsd/forbidden-imports no dynamic import():
+    // the local rule holds the same boundaries over them (eslint-fsd-gaps.js).
+    files: [SOURCES],
+    ignores: [TESTS],
+    plugins: { 'fsd-gaps': fsdGaps },
+    rules: {
+      'fsd-gaps/boundaries': ['error', { root: SRC, alias: SRC_ALIAS, layers: LAYERS, slicedLayers: SLICED_LAYERS }],
     },
   },
   {
