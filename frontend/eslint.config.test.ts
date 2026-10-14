@@ -363,6 +363,35 @@ describe('the layers over what fsd-lint 1.2.1 does not read: re-exports and a dy
     expect(await reportsOn('src/shared/lib/load.ts', code)).toEqual([])
   })
 
+  // Left to convention: every rule reads the path of an import() only when it is a string literal, and none
+  // reads a type that imports. A rule that starts reading them turns its case red, and the convention goes.
+  it.each([
+    [
+      'a_dynamic_import_of_a_layer_above_whose_path_is_a_template_literal',
+      'src/entities/project/model/lazy.ts',
+      'export const load = () => import(`@/features/contact-form`)\n',
+    ],
+    [
+      'a_dynamic_import_of_a_sibling_slice_whose_path_is_a_template_literal',
+      'src/features/contact-form/model/lazy.ts',
+      'export const load = () => import(`@/features/theme-switch`)\n',
+    ],
+    [
+      'a_type_that_imports_a_layer_above_with_typeof_import',
+      'src/entities/project/model/form.ts',
+      "export type Form = typeof import('@/features/contact-form')\n",
+    ],
+    [
+      'a_type_that_imports_a_layer_above_with_import_type',
+      'src/shared/lib/project.ts',
+      "export type Project = import('@/entities/project').Project\n",
+    ],
+  ])('leaves_to_convention_%s_which_no_rule_reads', async (_case, path, code) => {
+    const reports = await reportsOn(path, code)
+
+    expect(reports).toEqual([])
+  })
+
   it('holds in a project reached through a link or a junction', async () => {
     // Node loads eslint.config.js by its real path, and ESLint names a file by the path it reached it by.
     const folder = mkdtempSync(join(tmpdir(), 'fsd-gaps-'))
@@ -553,6 +582,14 @@ describe('no UI in the model, api and lib segments', () => {
     )
 
     expect(broken.filter((rule) => rule === 'no-restricted-syntax')).toHaveLength(2)
+  })
+
+  it('leaves_to_convention_a_dynamic_import_of_ui_whose_path_is_a_template_literal_which_no_rule_reads', async () => {
+    const code = 'export const load = () => import(`../ui/ContactForm`)\n'
+
+    const reports = await reportsOn('src/features/contact-form/model/lazy.ts', code)
+
+    expect(reports).toEqual([])
   })
 
   it.each([
