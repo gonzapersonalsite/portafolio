@@ -105,31 +105,25 @@
         "altEs": "Pantalla de generación de licencias de License Generator: una licencia para NutriManager con el nombre del cliente, el ID de máquina y sin caducidad, firmada y mostrada en Base64 lista para copiar, junto a un aviso de éxito."
       },
       {
-        "base": "/images/projects/license-generator/01-licensegenerator_logo",
-        "fullWidth": 512,
-        "altEn": "License Generator logo: a license card with a check mark, a QR code and a gold key.",
-        "altEs": "Logotipo de License Generator: una tarjeta de licencia con una marca de verificación, un código QR y una llave dorada."
-      },
-      {
-        "base": "/images/projects/license-generator/02-licensegenerator_dashboard",
+        "base": "/images/projects/license-generator/01-licensegenerator_dashboard",
         "fullWidth": 1280,
         "altEn": "License Generator dashboard in dark mode: counters for applications and issued licenses, the last license generated, and a sidebar to manage apps, generate licenses, view the history and change settings.",
         "altEs": "Panel de License Generator en modo oscuro: contadores de aplicaciones y licencias emitidas, la última licencia generada y una barra lateral para gestionar aplicaciones, generar licencias, ver el historial y cambiar los ajustes."
       },
       {
-        "base": "/images/projects/license-generator/03-licensegenerator_apps",
+        "base": "/images/projects/license-generator/02-licensegenerator_apps",
         "fullWidth": 1280,
         "altEn": "License Generator applications screen: a form to register a new application and create its RSA keys, and the list of registered applications with copy, keys and delete actions.",
         "altEs": "Pantalla de aplicaciones de License Generator: un formulario para registrar una aplicación nueva y crear sus claves RSA, y la lista de aplicaciones registradas con acciones para copiar, ver las claves y eliminar."
       },
       {
-        "base": "/images/projects/license-generator/04-licensegenerator_history",
+        "base": "/images/projects/license-generator/03-licensegenerator_history",
         "fullWidth": 1279,
         "altEn": "License Generator history: a searchable table of issued licenses with application, customer, hardware ID and expiration, and actions to copy or delete each one.",
         "altEs": "Historial de License Generator: una tabla con buscador de las licencias emitidas, con aplicación, cliente, ID de hardware y caducidad, y acciones para copiar o eliminar cada una."
       },
       {
-        "base": "/images/projects/license-generator/05-licensegenerator-settings",
+        "base": "/images/projects/license-generator/04-licensegenerator-settings",
         "fullWidth": 1280,
         "altEn": "License Generator settings: theme, font scale and language, a desktop shortcut, a link to the integration documentation, and backup export and import.",
         "altEs": "Ajustes de License Generator: tema, escala de fuente e idioma, acceso directo en el escritorio, enlace a la documentación de integración y exportación e importación de copias de seguridad."
@@ -281,25 +275,19 @@
         "altEs": "Lista de pacientes de NutriManager con la ficha de un paciente abierta: datos personales y datos nutricionales calculados como el IMC, el estado nutricional y las necesidades calóricas diarias."
       },
       {
-        "base": "/images/projects/nutrimanager/01-nutrimanager_logo",
-        "fullWidth": 1280,
-        "altEn": "NutriManager logo: a leaf and a rising bar chart next to the app name.",
-        "altEs": "Logotipo de NutriManager: una hoja y un gráfico de barras ascendente junto al nombre de la aplicación."
-      },
-      {
-        "base": "/images/projects/nutrimanager/02-nutrimanager_welcome-screen",
+        "base": "/images/projects/nutrimanager/01-nutrimanager_welcome-screen",
         "fullWidth": 600,
         "altEn": "NutriManager activation window: the computer's request code and a field to enter the license key (interface in Spanish).",
         "altEs": "Ventana de activación de NutriManager: el código de solicitud del equipo y un campo para introducir la clave de licencia (interfaz en español)."
       },
       {
-        "base": "/images/projects/nutrimanager/03-nutrimanager_diets",
+        "base": "/images/projects/nutrimanager/02-nutrimanager_diets",
         "fullWidth": 1280,
         "altEn": "NutriManager diet assignment: a dialog to start the diet from a template or create a new one.",
         "altEs": "Asignación de dietas en NutriManager: un diálogo para partir de una plantilla o crear una dieta nueva."
       },
       {
-        "base": "/images/projects/nutrimanager/04-nutrimanager-diet",
+        "base": "/images/projects/nutrimanager/03-nutrimanager-diet",
         "fullWidth": 1280,
         "altEn": "Creating a weekly diet in NutriManager: recipes for each meal and day with their calories and macronutrients, and a weekly summary of daily averages.",
         "altEs": "Creación de una dieta semanal en NutriManager: recetas para cada comida y día con sus calorías y macronutrientes, y un resumen semanal de medias diarias."
