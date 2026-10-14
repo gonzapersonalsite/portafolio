@@ -79,7 +79,11 @@ const resources = {
                     nextImage: 'Next image',
                     thumbnail: 'View image {{index}} of {{total}} ({{title}})',
                     counter: 'Image {{index}} of {{total}}',
-                    viewer: 'Image viewer'
+                    viewer: 'Image viewer',
+                    loading: 'Loading image…',
+                    loaded: 'Image loaded.',
+                    loadError: 'This image could not be loaded.',
+                    retry: 'Try again'
                 },
                 types: {
                     WEB: 'Web App',
@@ -252,7 +256,11 @@ const resources = {
                     nextImage: 'Imagen siguiente',
                     thumbnail: 'Ver imagen {{index}} de {{total}} ({{title}})',
                     counter: 'Imagen {{index}} de {{total}}',
-                    viewer: 'Visor de imágenes'
+                    viewer: 'Visor de imágenes',
+                    loading: 'Cargando imagen…',
+                    loaded: 'Imagen cargada.',
+                    loadError: 'No se ha podido cargar esta imagen.',
+                    retry: 'Reintentar'
                 },
                 types: {
                     WEB: 'App web',

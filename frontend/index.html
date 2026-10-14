@@ -61,10 +61,52 @@
   <link rel="icon" href="/icons/gonzalo-dev.ico" sizes="32x32" />
   <link rel="icon" href="/icons/gonzalo-dev.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/icons/gonzalo-dev-180.png" />
+  <!-- Available before the app CSS/JS. Scoped to the temporary root content that React replaces. -->
+  <style>
+    .app-startup {
+      box-sizing: border-box;
+      min-height: calc(100svh - 16px);
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 1.5rem;
+      padding: 2rem 1rem;
+      color: CanvasText;
+      font: 1rem/1.5 system-ui, sans-serif;
+      text-align: center;
+    }
+    .app-startup-brand { margin: 0; font-size: 1.125rem; font-weight: 750; letter-spacing: 0.08em; }
+    .app-startup-brand span { opacity: 0.75; }
+    .app-startup progress {
+      appearance: none;
+      box-sizing: border-box;
+      width: 2rem;
+      height: 2rem;
+      border: 3px solid color-mix(in srgb, currentColor 20%, transparent);
+      border-top-color: currentColor;
+      border-radius: 50%;
+      background: transparent;
+      color: inherit;
+    }
+    .app-startup progress::-webkit-progress-bar { display: none; }
+    .app-startup progress::-webkit-progress-value { display: none; }
+    .app-startup progress::-moz-progress-bar { display: none; }
+    @keyframes startup-spin { to { transform: rotate(1turn); } }
+    @media (prefers-reduced-motion: no-preference) {
+      .app-startup progress { animation: startup-spin 1s linear infinite; }
+    }
+    @media print { .app-startup progress { display: none; } }
+  </style>
+  <noscript><style>.app-startup { display: none; }</style></noscript>
 </head>
 
 <body>
-  <div id="root"></div>
+  <div id="root">
+    <main class="app-startup">
+      <p class="app-startup-brand">GONZALO<span>.DEV</span></p>
+      <progress aria-label="Loading portfolio"></progress>
+    </main>
+  </div>
   <script type="module" src="/src/app/main.tsx"></script>
 </body>
 

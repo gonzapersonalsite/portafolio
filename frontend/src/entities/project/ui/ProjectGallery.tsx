@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Box, Dialog, DialogTitle, IconButton, Typography } from '@mui/material';
+import React, { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { Box, Button, CircularProgress, Dialog, DialogTitle, IconButton, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -20,6 +20,11 @@ interface ProjectGalleryProps {
     slides: GallerySlide[];
     onClose: () => void;
 }
+
+type ImageState = { src: string; attempt: number } & (
+    | { status: 'loading' | 'error' }
+    | { status: 'loaded'; size: Size }
+);
 
 const MAX_ZOOM = 4;
 const ZOOM_STEP = 0.5;
@@ -52,22 +57,59 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ title, slides, onClose 
     const { t } = useTranslation();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [zoomLevel, setZoomLevel] = useState(1);
-    const [naturalSize, setNaturalSize] = useState<(Size & { src: string }) | null>(null);
+    const [attempt, setAttempt] = useState(0);
+    const [imageState, setImageState] = useState<ImageState>({ src: slides[0].src, attempt: 0, status: 'loading' });
     const [viewportSize, setViewportSize] = useState<Size | null>(null);
     const [dragging, setDragging] = useState(false);
     const viewportRef = useRef<HTMLDivElement | null>(null);
+    const imageRef = useRef<HTMLImageElement | null>(null);
+    const retryButtonRef = useRef<HTMLButtonElement | null>(null);
+    const closeButtonRef = useRef<HTMLButtonElement | null>(null);
     const thumbnailRefs = useRef<Array<HTMLElement | null>>([]);
+    const progressId = useId();
     // Point of the image, as a fraction of the scrollable area, that stays centred across zoom changes.
     const focalPoint = useRef({ x: 0.5, y: 0.5 });
     const dragStart = useRef<{ x: number; y: number; left: number; top: number } | null>(null);
 
     const total = slides.length;
     const slide = slides[currentIndex];
-    const zoomed = zoomLevel > 1;
+    const currentImage = imageState.src === slide.src && imageState.attempt === attempt;
+    const imageStatus = currentImage ? imageState.status : 'loading';
+    const imageStatusLabel = t({
+        loading: 'projects.gallery.loading',
+        loaded: 'projects.gallery.loaded',
+        error: 'projects.gallery.loadError',
+    }[imageStatus]);
+    const imageReady = imageStatus === 'loaded';
+    const zoomed = imageReady && zoomLevel > 1;
     const fittedSize =
-        naturalSize?.src === slide.src && viewportSize ? fitSize(naturalSize, viewportSize) : null;
+        currentImage && imageState.status === 'loaded' && viewportSize ? fitSize(imageState.size, viewportSize) : null;
+
+    const moveFocusFromRetry = useCallback(() => {
+        // The retry button disappears after success or navigation; preserve a stable focus target.
+        if (retryButtonRef.current === document.activeElement) closeButtonRef.current?.focus();
+    }, []);
+
+    const settleImage = useCallback((image: HTMLImageElement, status: 'loaded' | 'error') => {
+        // An earlier image or retry can finish after the visitor has moved on.
+        if (imageRef.current !== image) return;
+        if (status === 'loaded') {
+            moveFocusFromRetry();
+            setImageState({ src: slide.src, attempt, status, size: { width: image.naturalWidth, height: image.naturalHeight } });
+        } else {
+            setImageState({ src: slide.src, attempt, status });
+        }
+    }, [slide.src, attempt, moveFocusFromRetry]);
+
+    const attachImage = useCallback((image: HTMLImageElement | null) => {
+        imageRef.current = image;
+        // Cached resources may already be complete; a broken image is also "complete".
+        if (image?.complete) settleImage(image, image.naturalWidth > 0 ? 'loaded' : 'error');
+        return () => { if (imageRef.current === image) imageRef.current = null; };
+    }, [settleImage]);
 
     const changeZoom = (next: (current: number) => number) => {
+        if (!imageReady) return;
         const viewport = viewportRef.current;
         if (viewport) {
             focalPoint.current = {
@@ -82,12 +124,16 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ title, slides, onClose 
     const resetZoom = () => changeZoom(() => 1);
 
     const showImage = (index: number) => {
-        setCurrentIndex(index);
+        if (index !== currentIndex) {
+            moveFocusFromRetry();
+            setCurrentIndex(index);
+            setAttempt(0);
+            setImageState({ src: slides[index].src, attempt: 0, status: 'loading' });
+        }
         setZoomLevel(1);
     };
     const stepImage = (delta: number) => {
-        setCurrentIndex((current) => (current + delta + total) % total);
-        setZoomLevel(1);
+        showImage((currentIndex + delta + total) % total);
     };
 
     // The image is sized from its fitted size, so the zoomed overflow can be scrolled to on every side.
@@ -197,7 +243,7 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ title, slides, onClose 
                     <Box sx={{ ...controlSx, display: 'flex', borderRadius: 2, overflow: 'hidden', flexShrink: 0 }}>
                         <IconButton
                             onClick={zoomOut}
-                            disabled={!zoomed}
+                            disabled={!imageReady || !zoomed}
                             aria-label={t('projects.gallery.zoomOut')}
                             sx={groupedControlSx}
                         >
@@ -205,7 +251,7 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ title, slides, onClose 
                         </IconButton>
                         <IconButton
                             onClick={resetZoom}
-                            disabled={!zoomed}
+                            disabled={!imageReady || !zoomed}
                             aria-label={t('projects.gallery.resetZoom')}
                             sx={groupedControlSx}
                         >
@@ -213,7 +259,7 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ title, slides, onClose 
                         </IconButton>
                         <IconButton
                             onClick={zoomIn}
-                            disabled={zoomLevel >= MAX_ZOOM}
+                            disabled={!imageReady || zoomLevel >= MAX_ZOOM}
                             aria-label={t('projects.gallery.zoomIn')}
                             sx={groupedControlSx}
                         >
@@ -221,6 +267,7 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ title, slides, onClose 
                         </IconButton>
                     </Box>
                     <IconButton
+                        ref={closeButtonRef}
                         onClick={onClose}
                         aria-label={t('projects.gallery.close')}
                         sx={{ ...controlSx, flexShrink: 0 }}
@@ -234,6 +281,8 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ title, slides, onClose 
                         ref={attachViewport}
                         role="region"
                         aria-label={t('projects.gallery.viewer')}
+                        aria-busy={imageStatus === 'loading'}
+                        aria-describedby={imageStatus === 'loading' ? progressId : undefined}
                         tabIndex={zoomed ? 0 : -1}
                         onPointerDown={handlePointerDown}
                         onPointerMove={handlePointerMove}
@@ -252,15 +301,14 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ title, slides, onClose 
                         }}
                     >
                         <img
-                            key={slide.src}
+                            key={`${slide.src}:${attempt}`}
+                            ref={attachImage}
                             src={slide.src}
                             alt={slide.alt}
                             draggable={false}
-                            onLoad={(event) => {
-                                const image = event.currentTarget;
-                                setNaturalSize({ src: slide.src, width: image.naturalWidth, height: image.naturalHeight });
-                            }}
-                            onClick={zoomed ? undefined : zoomIn}
+                            onLoad={(event) => settleImage(event.currentTarget, 'loaded')}
+                            onError={(event) => settleImage(event.currentTarget, 'error')}
+                            onClick={!imageReady || zoomed ? undefined : zoomIn}
                             style={{
                                 ...imageSize,
                                 // Auto margins centre the image while it fits and, unlike flex
@@ -268,11 +316,45 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ title, slides, onClose 
                                 margin: 'auto',
                                 flexShrink: 0,
                                 display: 'block',
+                                visibility: imageReady ? 'visible' : 'hidden',
                                 filter: 'drop-shadow(0px 10px 20px rgba(0,0,0,0.5))',
                                 cursor: zoomed ? undefined : 'zoom-in',
                             }}
                         />
                     </Box>
+
+                    {!imageReady && (
+                        <Box sx={{
+                            position: 'absolute', inset: 0, px: 8, display: 'flex',
+                            flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2,
+                            textAlign: 'center',
+                            // A landscape phone leaves little height between the toolbar and captions.
+                            '@media (max-height: 450px)': { flexDirection: 'row', gap: 1 },
+                        }}>
+                            {imageStatus === 'loading' && (
+                                <CircularProgress
+                                    id={progressId}
+                                    aria-label={t('projects.gallery.loading')}
+                                    color="inherit"
+                                    size={36}
+                                    disableShrink
+                                    sx={{ flexShrink: 0, '@media (prefers-reduced-motion: reduce)': { animation: 'none' } }}
+                                />
+                            )}
+                            <Typography>{imageStatusLabel}</Typography>
+                            {(imageStatus === 'error' || attempt > 0) && (
+                                <Button
+                                    ref={retryButtonRef}
+                                    onClick={() => { if (imageStatus === 'error') setAttempt((current) => current + 1); }}
+                                    aria-disabled={imageStatus !== 'error'}
+                                    variant="outlined"
+                                    sx={{ ...controlSx, flexShrink: 0, '&[aria-disabled="true"]': { opacity: 0.6 } }}
+                                >
+                                    {t('projects.gallery.retry')}
+                                </Button>
+                            )}
+                        </Box>
+                    )}
 
                     {total > 1 && (
                         <>
@@ -309,6 +391,9 @@ const ProjectGallery: React.FC<ProjectGalleryProps> = ({ title, slides, onClose 
                 </Box>
 
                 <Box role="status" sx={{ px: 2, py: 1, textAlign: 'center' }}>
+                    <Box component="span" sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clipPath: 'inset(50%)' }}>
+                        {imageStatusLabel}
+                    </Box>
                     <Typography variant="body2" sx={{ fontWeight: 700 }}>
                         {t('projects.gallery.counter', { index: currentIndex + 1, total })}
                     </Typography>

@@ -18,10 +18,12 @@ The project is a **fully static frontend application**. There is no backend, no 
 - **State Management:** React Context API for cross-cutting UI state: theme, language and notifications. No server state exists. The theme follows the operating system until the visitor picks one; only explicit choices are saved, through a storage helper that keeps the page working when the browser blocks site data.
 - **Dynamic Localization:** Centralized i18next system for real-time interface translation; content fields are bilingual En/Es pairs in the JSON data. The language comes from a `?lang=es|en` link, then the visitor's saved choice, then the browser; the URLs and their SEO metadata stay English (no `/es/` routes), so search engines index the English version only. Dates and percentages are formatted per language by the same helpers in the pages and the markdown twins (`Mar 2025 – Jun 2025`, `mar 2025 – jun 2025`, `80 %` in Spanish).
 - **Single route list:** `APP_ROUTES` (`frontend/src/shared/config/routes.ts`) feeds the router, both navigation menus and the build-time HTML shells, so a page cannot exist without its shell. Any other address is a real 404 (see below).
+- **Loading feedback:** temporary HTML/CSS in `index.html` shows the portfolio brand and an indeterminate indicator before React runs. Its first render replaces that content; existing Suspense skeletons cover pending route modules. Gallery image loading/error/retry belongs to `entities/project/ui/ProjectGallery.tsx`, independently of the synchronous project data. No new provider, HTTP client or bootstrap entry point is involved.
 
 ### 🖼️ Asset Strategy
 - Content images are **self-hosted** under `frontend/public/images/`: one folder per project slug, the profile photo in `profile/` and the generic `no-image.svg` fallback. The profile fallback (`profile-fallback.webp`) and the social preview (`og-cover-typographic.jpg`) sit at `frontend/public/`, and the GONZALO.DEV icons (SVG, ICO and apple-touch PNG) in `frontend/public/icons/`.
 - Every project image ships in three WebP widths (`-thumb` 160 px, `-800`, `-full`) and records its full width and English/Spanish alt texts in the data. Covers are composed at exactly 16:9, the ratio the cards reserve, so they are never cropped and nothing shifts while they load.
+- The fullscreen gallery keeps one selected full-size image, with browser load/error events and a cache-completion check. Retry is explicit and limited to that image; navigation and close remain usable while loading or after failure, with zoom available only after success. These local resource states do not change the static content model or the project listing.
 - The Inter font is bundled (`@fontsource-variable/inter`) and its latin file is preloaded by the build.
 - External image and font hosts are forbidden: the data-integrity tests reject external image URLs and the Content-Security-Policy would block them.
 
@@ -139,6 +141,7 @@ First, in the page that uses it. It moves down when a second consumer appears, a
 
 - Components style themselves with MUI's `sx` prop and the theme (`createAppTheme` in `src/shared/config/theme.ts`); a stylesheet a component needs lives next to it, in its `ui` segment. That neither MUI, Emotion nor a stylesheet is imported from `model`, `api` or `lib` is enforced by the lint; the rest is convention.
 - The application-wide stylesheet (`src/app/styles/index.css`: root variables, scroll padding, the skip and return-to-top links, the static ambient glass background and print) is imported by the entry point and nobody else, by convention. The glass background uses radial gradients fixed within the viewport.
+- Temporary startup styles live inline in `index.html`, scoped to `.app-startup`, so feedback does not depend on the application stylesheet. They use the prepaint colour scheme and respect reduced motion; they do not style the mounted React application.
 
 ### Data and network
 

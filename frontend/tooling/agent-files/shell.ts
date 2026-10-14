@@ -6,7 +6,7 @@ import { absoluteUrl, HOME_ROUTE, twinPathOf, type ImagePreload, type Locale, ty
 const LOCALES: readonly Locale[] = ['en', 'es'];
 
 const HEAD_END = '</head>';
-const APP_ROOT = '<div id="root"></div>';
+const APP_ROOT = '<div id="root">';
 
 const escapeHtml = (value: string): string =>
   value

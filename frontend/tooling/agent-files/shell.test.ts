@@ -20,6 +20,9 @@ const routeOf = (id: RouteSpec['id']): RouteSpec => {
 const metaContent = (html: string, attribute: 'name' | 'property', name: string): string[] =>
   [...html.matchAll(new RegExp(`<meta ${attribute}="${name}" content="([^"]*)"`, 'g'))].map((match) => match[1]);
 
+const noScriptContent = (html: string): string =>
+  [...html.matchAll(/<noscript>([\s\S]*?)<\/noscript>/g)].map((match) => match[1]).join('\n');
+
 interface StructuredNode {
   '@type': string;
   '@id': string;
@@ -108,13 +111,28 @@ describe('buildRouteShell', () => {
 
   it('tells visitors without JavaScript who this is and where the text version is', () => {
     const shell = buildRouteShell(INDEX_HTML, routeOf('experience'));
-    const noscript = shell.match(/<noscript>([\s\S]*?)<\/noscript>/)?.[1] ?? '';
+    const noscript = noScriptContent(shell);
 
-    expect(shell.indexOf('<noscript>')).toBeLessThan(shell.indexOf('<div id="root"></div>'));
+    expect(shell.indexOf('<noscript>')).toBeLessThan(shell.indexOf('<div id="root">'));
     expect(noscript).toContain('<h1>Gonzalo Martínez</h1>');
     expect(noscript).toContain('href="/experience/index.md"');
     expect(noscript).toContain('href="/experience/index.es.md"');
     expect(noscript).toContain(`href="mailto:${getProfile().email}"`);
+  });
+
+  it('keeps one startup indicator for every route', () => {
+    for (const route of ROUTES) {
+      const document = new DOMParser().parseFromString(buildRouteShell(INDEX_HTML, route), 'text/html');
+      expect(document.querySelectorAll('#root'), route.id).toHaveLength(1);
+      expect(document.querySelectorAll('#root .app-startup'), route.id).toHaveLength(1);
+      expect(document.querySelector('#root progress')?.getAttribute('aria-label'), route.id).toBe('Loading portfolio');
+    }
+  });
+
+  it('rejects missing or duplicate app roots', () => {
+    const marker = '<div id="root">';
+    expect(() => buildRouteShell(INDEX_HTML.replace(marker, ''), HOME_ROUTE)).toThrow(/agent-files/);
+    expect(() => buildRouteShell(INDEX_HTML.replace(marker, `${marker}${marker}`), HOME_ROUTE)).toThrow(/agent-files/);
   });
 
   it('preloads the first project cover on /projects with the sources its <img> uses', () => {
@@ -168,8 +186,9 @@ describe('buildNotFoundPage', () => {
   });
 
   it('still runs the app, which sends the visitor home, and points no-JS visitors to the home twins', () => {
-    expect(page).toContain('<div id="root"></div>');
+    expect(page).toContain('<div id="root">');
     expect(page).toContain(`<title>${HOME_ROUTE.shellTitle}</title>`);
-    expect(page.match(/<noscript>([\s\S]*?)<\/noscript>/)?.[1]).toContain('href="/index.md"');
+    expect(noScriptContent(page)).toContain('href="/index.md"');
+    expect(page).toContain('<progress aria-label="Loading portfolio"></progress>');
   });
 });
