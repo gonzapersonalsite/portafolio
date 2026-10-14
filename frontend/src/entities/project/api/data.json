@@ -86,47 +86,53 @@
     "id": "license-generator",
     "titleEn": "License Generator",
     "titleEs": "License Generator",
-    "descriptionEn": "License Generator is a desktop application designed to centralize and automate the licensing lifecycle for independent software products, letting developers manage multiple applications from a single interface.\\n\\nBuilt with C# 12 on .NET 8 and Avalonia UI, following the MVVM pattern with CommunityToolkit.Mvvm. Licenses are signed with RSA-2048, using PEM-encoded PKCS#8 private keys. They support optional hardware binding (HWID) and expiration dates for time-based subscription models.\\n\\nOnce a license is issued, the system produces a Base64-encoded JSON payload that any client application can validate offline, regardless of the language it was written in. The application includes a complete history of issued licenses and an interface localized into five languages (English, Spanish, German, Portuguese and Chinese).\\n\\nThe distribution pipeline produces obfuscated, self-contained executables, and Windows and Linux builds are available from the release page; the tool runs entirely offline and private keys never leave the developer's machine. The source code is private; the public repository holds its documentation, and I can walk you through the code on request.",
-    "descriptionEs": "License Generator es una aplicación de escritorio diseñada para centralizar y automatizar el ciclo de vida del licenciamiento de productos de software independientes, permitiendo a los desarrolladores gestionar múltiples aplicaciones desde una sola interfaz.\\n\\nConstruida con C# 12 sobre .NET 8 y Avalonia UI, siguiendo el patrón MVVM con CommunityToolkit.Mvvm. Las licencias se firman con RSA-2048, utilizando claves privadas en formato PKCS#8 codificadas como PEM. Admiten vinculación opcional a hardware (HWID) y fechas de expiración para modelos de suscripción.\\n\\nUna vez emitida, la licencia es un payload JSON codificado en Base64 que cualquier aplicación cliente puede validar offline, sin importar el lenguaje en el que esté escrita. La aplicación incluye un historial completo de licencias emitidas y una interfaz traducida a cinco idiomas (inglés, español, alemán, portugués y chino).\\n\\nEl pipeline de distribución genera ejecutables ofuscados y autocontenidos, y hay compilaciones para Windows y Linux disponibles en la página de descargas; la herramienta funciona íntegramente offline y las claves privadas nunca salen de la máquina del desarrollador. El código fuente es privado; el repositorio público contiene su documentación y, si te interesa, te enseño el código.",
+    "descriptionEn": "License Generator is a desktop tool for issuing, inspecting and managing software licenses offline. Built with C#, .NET 10 and Avalonia UI, it lets developers manage several products from one workspace on Windows and Linux.\\n\\nEach product has its own RSA-2048 key pair. Licenses are signed with SHA-256 and can include an expiration date, a hardware identifier (HWID) and optional UserDefined text for features or other client-defined rules. The inspector verifies the signature before displaying signed data, then reports product, hardware and expiration checks separately.\\n\\nThe application includes searchable license history, backup export and import, and an interface in English, Spanish, German, Portuguese and Chinese. Its MVVM presentation, pure domain rules and I/O adapters have separate responsibilities, with automated tests checking the dependency boundaries and license compatibility.\\n\\nWindows and Linux downloads are self-contained: users do not need to install .NET or Docker. The public repository provides operating guides, the signed-data specification and C# verification examples for client integration. The application source remains private; I can walk you through it on request.",
+    "descriptionEs": "License Generator es una herramienta de escritorio para emitir, inspeccionar y gestionar licencias de software sin conexión. Construida con C#, .NET 10 y Avalonia UI, permite a los desarrolladores gestionar varios productos desde un mismo espacio de trabajo en Windows y Linux.\\n\\nCada producto tiene su propio par de claves RSA-2048. Las licencias se firman con SHA-256 y pueden incluir una fecha de caducidad, un identificador de hardware (HWID) y texto opcional UserDefined para funcionalidades u otras reglas definidas por el cliente. El inspector verifica la firma antes de mostrar los datos firmados y después informa por separado de las comprobaciones de producto, hardware y caducidad.\\n\\nLa aplicación incluye historial de licencias con búsqueda, exportación e importación de copias de seguridad e interfaz en inglés, español, alemán, portugués y chino. La presentación MVVM, las reglas puras de dominio y los adaptadores de I/O tienen responsabilidades separadas, con pruebas automáticas que comprueban los límites de dependencias y la compatibilidad de las licencias.\\n\\nLas descargas para Windows y Linux son autocontenidas: los usuarios no necesitan instalar .NET ni Docker. El repositorio público ofrece guías de uso, la especificación de los datos firmados y ejemplos de verificación en C# para integrar las licencias en aplicaciones cliente. El código de la aplicación permanece privado; si te interesa, te lo enseño.",
     "technologies": [
-      ".NET 8 SDK (C# 12)",
+      "C#",
+      ".NET 10",
       "Avalonia UI",
       "CommunityToolkit.Mvvm",
       "Microsoft Dependency Injection",
       "RSA-2048",
-      "Obfuscar",
       "i18n (EN/ES/DE/PT/ZH)"
     ],
     "images": [
       {
-        "base": "/images/projects/license-generator/00-licensegenerator_generate-license",
-        "fullWidth": 1280,
-        "altEn": "License Generator's license generation screen: a license for NutriManager with the customer's name, the machine ID and no expiration, signed and shown in Base64 ready to copy, next to a success notice.",
-        "altEs": "Pantalla de generación de licencias de License Generator: una licencia para NutriManager con el nombre del cliente, el ID de máquina y sin caducidad, firmada y mostrada en Base64 lista para copiar, junto a un aviso de éxito."
+        "base": "/images/projects/license-generator/00-licensegenerator_issue-custom-data",
+        "fullWidth": 1984,
+        "altEn": "License generation in dark mode: a Northstar-Studio demo license with a customer, hardware ID, no expiration and UserDefined text specifying features and a professional plan.",
+        "altEs": "Generación de licencias en modo oscuro: una licencia de ejemplo de Northstar-Studio con cliente, ID de hardware, sin caducidad y texto UserDefined que indica funcionalidades y un plan profesional."
       },
       {
-        "base": "/images/projects/license-generator/01-licensegenerator_dashboard",
-        "fullWidth": 1280,
-        "altEn": "License Generator dashboard in dark mode: counters for applications and issued licenses, the last license generated, and a sidebar to manage apps, generate licenses, view the history and change settings.",
-        "altEs": "Panel de License Generator en modo oscuro: contadores de aplicaciones y licencias emitidas, la última licencia generada y una barra lateral para gestionar aplicaciones, generar licencias, ver el historial y cambiar los ajustes."
+        "base": "/images/projects/license-generator/01-licensegenerator_inspection",
+        "fullWidth": 1636,
+        "altEn": "License inspector: verified signature, matching product and hardware, no expiration, the UTC check time and authenticated fields including signed custom data in format 2.",
+        "altEs": "Inspector de licencias: firma verificada, producto y hardware coincidentes, sin caducidad, hora de comprobación UTC y campos autenticados, incluidos los datos personalizados firmados en formato 2."
       },
       {
-        "base": "/images/projects/license-generator/02-licensegenerator_apps",
-        "fullWidth": 1280,
-        "altEn": "License Generator applications screen: a form to register a new application and create its RSA keys, and the list of registered applications with copy, keys and delete actions.",
-        "altEs": "Pantalla de aplicaciones de License Generator: un formulario para registrar una aplicación nueva y crear sus claves RSA, y la lista de aplicaciones registradas con acciones para copiar, ver las claves y eliminar."
+        "base": "/images/projects/license-generator/02-licensegenerator_workspace",
+        "fullWidth": 1636,
+        "altEn": "License Generator dashboard: shortcuts to generation, inspection and history, one application, two issued licenses, both unexpired, and the most recently generated license.",
+        "altEs": "Panel de License Generator: accesos a generación, inspección e historial, una aplicación, dos licencias emitidas, ambas sin caducar, y la licencia generada más reciente."
       },
       {
-        "base": "/images/projects/license-generator/03-licensegenerator_history",
-        "fullWidth": 1279,
-        "altEn": "License Generator history: a searchable table of issued licenses with application, customer, hardware ID and expiration, and actions to copy or delete each one.",
-        "altEs": "Historial de License Generator: una tabla con buscador de las licencias emitidas, con aplicación, cliente, ID de hardware y caducidad, y acciones para copiar o eliminar cada una."
+        "base": "/images/projects/license-generator/03-licensegenerator_products",
+        "fullWidth": 1636,
+        "altEn": "Application management: a creation form, search and the Northstar-Studio product with two issued licenses and actions to generate a license, copy its ID, open keys or delete it.",
+        "altEs": "Gestión de aplicaciones: formulario de creación, búsqueda y el producto Northstar-Studio con dos licencias emitidas y acciones para generar una licencia, copiar su ID, abrir claves o eliminarlo."
       },
       {
-        "base": "/images/projects/license-generator/04-licensegenerator-settings",
-        "fullWidth": 1280,
-        "altEn": "License Generator settings: theme, font scale and language, a desktop shortcut, a link to the integration documentation, and backup export and import.",
-        "altEs": "Ajustes de License Generator: tema, escala de fuente e idioma, acceso directo en el escritorio, enlace a la documentación de integración y exportación e importación de copias de seguridad."
+        "base": "/images/projects/license-generator/04-licensegenerator_license-history",
+        "fullWidth": 1636,
+        "altEn": "License history: two demo licenses and a search field; the selected row expands to show the complete customer, hardware ID and UserDefined values, with inspection, copy and delete actions.",
+        "altEs": "Historial de licencias: dos licencias de ejemplo y un buscador; la fila seleccionada muestra los valores completos de cliente, ID de hardware y UserDefined, con acciones de inspección, copia y eliminación."
+      },
+      {
+        "base": "/images/projects/license-generator/05-licensegenerator_preferences",
+        "fullWidth": 1636,
+        "altEn": "Settings in dark mode: theme, font scale, language and startup greeting; backup import and export with a private-key warning, desktop shortcut, documentation and logs.",
+        "altEs": "Ajustes en modo oscuro: tema, escala de fuente, idioma y saludo inicial; importación y exportación de copias con advertencia sobre claves privadas, acceso directo, documentación y registros."
       }
     ],
     "links": [
