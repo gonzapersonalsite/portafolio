@@ -193,6 +193,8 @@ const Navbar: React.FC = () => {
                 onClose={handleDrawerToggle}
                 ModalProps={{
                     keepMounted: true,
+                    // Release background ARIA hiding when focus returns, while Slide finishes closing.
+                    closeAfterTransition: false,
                 }}
                 slotProps={{ paper: { id: MOBILE_NAV_ID, 'aria-label': t('nav.menu') } }}
                 sx={{

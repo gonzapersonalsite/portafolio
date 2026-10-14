@@ -55,4 +55,26 @@ describe('Navbar', () => {
     const nav = within(screen.getByRole('banner')).getByRole('navigation', { name: 'Main navigation' })
     expect(within(nav).queryByRole('link', { current: 'page' })).toBeNull()
   })
+
+  it.each(['Escape', 'navigation'] as const)('releases background ARIA hiding when closing via %s', (action) => {
+    const { container } = renderNavbar('/skills')
+    const menuButton = screen.getByRole('button', { name: 'Open menu' })
+    menuButton.focus()
+    fireEvent.click(menuButton)
+
+    const drawer = screen.getByRole('dialog', { name: 'Menu' })
+    expect(drawer.contains(document.activeElement)).toBe(true)
+    expect(container.getAttribute('aria-hidden')).toBe('true')
+
+    if (action === 'Escape') {
+      fireEvent.keyDown(drawer, { key: 'Escape' })
+    } else {
+      fireEvent.click(within(drawer).getByRole('link', { name: 'About' }))
+    }
+
+    expect(menuButton.getAttribute('aria-expanded')).toBe('false')
+    expect(document.activeElement).toBe(menuButton)
+    // Focus must not return to a hidden ancestor during the drawer's exit animation.
+    expect(container.getAttribute('aria-hidden')).toBeNull()
+  })
 })
