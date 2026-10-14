@@ -1,8 +1,9 @@
 import React, { useId, useState } from 'react';
-import { Button, Menu, MenuItem, Typography, Box } from '@mui/material';
+import { Button, Divider, Menu, MenuItem, Typography, Box, useMediaQuery } from '@mui/material';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import CheckIcon from '@mui/icons-material/Check';
 import { useTranslation } from 'react-i18next';
 import { COLOR_MODES, type ColorMode } from '@/shared/config';
 import { useColorMode } from '../model/ThemeContext';
@@ -15,10 +16,13 @@ const MODE_ICONS: Record<ColorMode, React.ReactElement> = {
 
 const ThemeSelector: React.FC = () => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const { mode, setColorMode } = useColorMode();
+    const { mode, setColorMode, animationsPaused, setAnimationsPaused } = useColorMode();
+    const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+    const animationsEnabled = !animationsPaused && !reducedMotion;
     const { t } = useTranslation();
     const buttonId = useId();
     const menuId = useId();
+    const animationsStatusId = useId();
     const open = Boolean(anchorEl);
 
     const modeLabels: Record<ColorMode, string> = {
@@ -74,7 +78,7 @@ const ThemeSelector: React.FC = () => {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                slotProps={{ list: { 'aria-labelledby': buttonId } }}
+                slotProps={{ list: { 'aria-labelledby': buttonId, disabledItemsFocusable: true } }}
             >
                 {COLOR_MODES.map((option) => (
                     <MenuItem
@@ -90,6 +94,31 @@ const ThemeSelector: React.FC = () => {
                         </Box>
                     </MenuItem>
                 ))}
+                <Divider component="li" role="separator" />
+                <MenuItem
+                    role="menuitemcheckbox"
+                    aria-label={t('common.animations.label')}
+                    aria-describedby={animationsStatusId}
+                    aria-checked={animationsEnabled}
+                    disabled={reducedMotion}
+                    sx={{ gap: 1 }}
+                    onClick={() => {
+                        setAnimationsPaused(!animationsPaused);
+                        handleClose();
+                    }}
+                >
+                    <CheckIcon fontSize="small" sx={{ visibility: animationsEnabled ? 'visible' : 'hidden' }} />
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.25 }}>
+                        <Typography component="span" variant="body2">
+                            {t('common.animations.label')}
+                        </Typography>
+                        <Typography id={animationsStatusId} component="span" variant="caption" color="text.secondary">
+                            {reducedMotion
+                                ? t('common.animations.reducedSystem')
+                                : animationsPaused ? t('common.animations.paused') : t('common.animations.enabled')}
+                        </Typography>
+                    </Box>
+                </MenuItem>
             </Menu>
         </>
     );

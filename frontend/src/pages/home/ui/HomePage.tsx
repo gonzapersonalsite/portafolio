@@ -123,7 +123,12 @@ const HomePage: React.FC = () => {
                         <Grid size={{ xs: 12, md: 5 }} sx={{ display: { xs: 'none', md: 'block' } }}>
                             <Box
                                 sx={{
-                                    animation: `${float} 6s ease-in-out infinite`,
+                                    // Share the appearance control with the status dot; system motion preferences win.
+                                    '@media (prefers-reduced-motion: no-preference)': {
+                                        animation: `${float} 6s ease-in-out infinite`,
+                                        animationPlayState: 'var(--decorative-animation-state, paused)',
+                                    },
+                                    '@media print': { animation: 'none' },
                                     position: 'relative',
                                     zIndex: 1
                                 }}

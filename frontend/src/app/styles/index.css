@@ -80,61 +80,25 @@ body {
   background: #1976d2;
 }
 
-@keyframes liquidRotate {
-  0% {
-    transform: rotate(0deg) scale(1);
-  }
-  50% {
-    transform: rotate(180deg) scale(1.5);
-  }
-  100% {
-    transform: rotate(360deg) scale(1);
-  }
-}
-
+/* Ambient light stays within the viewport. Moving a giant layer behind every glass surface
+   forces continuous compositing even while the visitor is reading or opening a menu. */
 .liquid-glass-bg {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   z-index: -1;
-  background: #030314;
-  overflow: hidden;
-}
-
-.liquid-glass-bg::before {
-  content: "";
-  position: absolute;
-  top: -100%;
-  left: -100%;
-  width: 300%;
-  height: 300%;
-  background: radial-gradient(
-    circle at center,
-    rgba(93, 224, 230, 0.15) 0%,
-    rgba(138, 110, 255, 0.1) 25%,
-    rgba(255, 123, 156, 0.05) 50%,
-    transparent 70%
-  );
-  animation: liquidRotate 30s linear infinite;
-  will-change: transform;
-}
-
-.liquid-glass-bg::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at 50% 50%, transparent 0%, #0A0A1A 100%);
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 15% 20%, rgba(93, 224, 230, 0.1), transparent 55%),
+    radial-gradient(ellipse at 85% 65%, rgba(138, 110, 255, 0.12), transparent 55%),
+    radial-gradient(ellipse at 50% 100%, rgba(255, 123, 156, 0.04), transparent 50%),
+    #030314;
 }
 
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
+    /* Preserve animation events used by MUI to detect browser autofill. */
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;

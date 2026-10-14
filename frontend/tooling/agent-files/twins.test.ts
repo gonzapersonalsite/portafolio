@@ -18,7 +18,7 @@ describe('buildTwin', () => {
   it('renders Spanish content in the Spanish twins', () => {
     const markdown = buildTwin('home', 'es');
 
-    expect(markdown).toContain('> Desarrollador Full Stack junior\n\n**Disponible**');
+    expect(markdown).toContain('> Desarrollador Full Stack junior\n\n**Disponible para trabajar**');
     expect(markdown).toContain('### Quotidia – Planificador diario');
     expect(markdown).toContain('](/projects/index.es.md)');
   });
@@ -62,6 +62,7 @@ describe('buildTwin', () => {
       '- Development and maintenance of software in a microservices environment.',
     );
     const spanish = buildTwin('experience', 'es');
+    expect(spanish).toContain('**Disponible para trabajar**');
     expect(spanish).toContain('## Prácticas formativas (CFGS)');
     expect(spanish).toContain('Mistertransfer · mar 2025 – jun 2025');
   });

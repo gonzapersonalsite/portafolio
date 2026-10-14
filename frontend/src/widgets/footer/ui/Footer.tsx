@@ -31,7 +31,7 @@ const Footer: React.FC = () => {
     const secondaryTextColor = isGlass ? glassColors.text.secondary : 'text.secondary';
 
     // Deliberate easter egg for developers who open the console: the running version and commit.
-    // It is the only console output in production, kept on purpose (docs/MIGRATION_PLAN.md).
+    // Kept on purpose (docs/MIGRATION_PLAN.md); failures are reported separately.
     useEffect(() => {
         console.info(
             `%c🚀 Portafolio v${__APP_VERSION__} (%c${__COMMIT_HASH__}%c)`,

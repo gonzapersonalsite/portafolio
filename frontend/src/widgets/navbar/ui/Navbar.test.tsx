@@ -23,17 +23,18 @@ describe('Navbar', () => {
     await i18n.changeLanguage('en')
   })
 
-  it('puts the page links in a named navigation landmark and marks the current page', () => {
-    renderNavbar('/skills')
+  it.each(['/skills', '/skills/', '/SKILLS/'])('marks the current page in the desktop navigation at %s', (path) => {
+    renderNavbar(path)
 
     const nav = within(screen.getByRole('banner')).getByRole('navigation', { name: 'Main navigation' })
     const links = within(nav).getAllByRole('link')
     expect(links.map((link) => link.textContent)).toEqual(['Home', 'About', 'Skills', 'Experience', 'Projects', 'Contact'])
     expect(links.filter((link) => link.getAttribute('aria-current') === 'page').map((link) => link.textContent)).toEqual(['Skills'])
+    expect(within(nav).getByRole('link', { current: 'page' }).getAttribute('href')).toBe('/skills')
   })
 
-  it('opens the mobile menu as a named dialog with the brand and the current page', () => {
-    renderNavbar('/projects')
+  it.each(['/projects', '/projects/', '/PROJECTS/'])('marks the current page in the mobile menu at %s', (path) => {
+    renderNavbar(path)
     const menuButton = screen.getByRole('button', { name: 'Open menu' })
     expect(menuButton.getAttribute('aria-expanded')).toBe('false')
 
@@ -45,5 +46,13 @@ describe('Navbar', () => {
     expect(drawer.querySelector('p')?.textContent).toBe('GONZALO.DEV')
     const current = within(within(drawer).getByRole('navigation')).getByRole('link', { current: 'page' })
     expect(current.textContent).toBe('Projects')
+    expect(current.getAttribute('href')).toBe('/projects')
+  })
+
+  it('does not mark a page for an unknown address sharing a route prefix', () => {
+    renderNavbar('/projects/missing')
+
+    const nav = within(screen.getByRole('banner')).getByRole('navigation', { name: 'Main navigation' })
+    expect(within(nav).queryByRole('link', { current: 'page' })).toBeNull()
   })
 })

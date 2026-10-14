@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import { ContactForm } from '@/features/contact-form'
 import { i18n } from '@/shared/config'
 import { sendContactMessage } from '../api/contactApi'
@@ -47,18 +47,34 @@ describe('ContactForm', () => {
     expect(sendContactMessage).not.toHaveBeenCalled()
   })
 
-  it('keeps the submit button focusable while it sends', async () => {
-    vi.mocked(sendContactMessage).mockReturnValueOnce(new Promise(() => {}))
+  it.each([
+    { outcome: 'success', result: () => Promise.resolve() },
+    { outcome: 'failure', result: () => Promise.reject(new Error('network unavailable')) },
+  ])('keeps fields read-only and focusable until sending ends in $outcome', async ({ result }) => {
+    let finish: () => void
+    const pending = new Promise<void>((resolve) => { finish = resolve }).then(result)
+    vi.mocked(sendContactMessage).mockReturnValueOnce(pending)
     const { container } = renderForm()
     fireEvent.change(screen.getByRole('textbox', { name: /Nombre/ }), { target: { value: 'Ada' } })
     fireEvent.change(screen.getByRole('textbox', { name: /Correo/ }), { target: { value: 'ada@example.com' } })
     fireEvent.change(screen.getByRole('textbox', { name: /Mensaje/ }), { target: { value: 'Hola' } })
 
+    const message = screen.getByRole<HTMLTextAreaElement>('textbox', { name: /Mensaje/ })
+    message.focus()
     fireEvent.submit(formOf(container))
 
     const button = await screen.findByRole('button', { name: /Enviando/ })
     expect(button.hasAttribute('disabled')).toBe(false)
     expect(button.getAttribute('aria-disabled')).toBe('true')
     expect(formOf(container).getAttribute('aria-busy')).toBe('true')
+    const fields = screen.getAllByRole<HTMLInputElement | HTMLTextAreaElement>('textbox')
+    expect(fields.every((field) => field.readOnly && !field.disabled)).toBe(true)
+    expect(document.activeElement).toBe(message)
+
+    await act(async () => { finish() })
+
+    expect(fields.every((field) => !field.readOnly && !field.disabled)).toBe(true)
+    expect(formOf(container).getAttribute('aria-busy')).toBe('false')
+    expect(document.activeElement).toBe(message)
   })
 })

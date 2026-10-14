@@ -26,7 +26,7 @@ The project is a **fully static frontend application**. There is no backend, no 
 - External image and font hosts are forbidden: the data-integrity tests reject external image URLs and the Content-Security-Policy would block them.
 
 ### 📬 Contact
-- The contact form runs entirely in the browser via **EmailJS**; there is no server-side mail handling. The SDK is loaded only when a message is sent, fields are validated in the visitor's language, and after 15 seconds without an answer the visitor is asked to email instead of resending (the message may still arrive).
+- The contact form runs entirely in the browser via **EmailJS**; there is no server-side mail handling. The SDK is loaded only when a message is sent, and one 15-second deadline covers both loading it and waiting for the send. A late SDK load never starts a send after that deadline; if sending has already started, the message may still arrive, so the visitor is asked to email instead of resending. Fields are validated in the visitor's language and remain read-only while sending, preserving focus and preventing edits from being erased by a successful response.
 
 ### 🔒 Security
 - There is no backend and no authentication surface. Vercel sends a strict Content-Security-Policy on every response (scripts only from the site plus the inline theme script by its hash, network requests only to the site itself and EmailJS) and the usual hardening headers; see the [Operations Guide](OPERATIONS.md).
@@ -138,7 +138,7 @@ First, in the page that uses it. It moves down when a second consumer appears, a
 ### Styles
 
 - Components style themselves with MUI's `sx` prop and the theme (`createAppTheme` in `src/shared/config/theme.ts`); a stylesheet a component needs lives next to it, in its `ui` segment. That neither MUI, Emotion nor a stylesheet is imported from `model`, `api` or `lib` is enforced by the lint; the rest is convention.
-- The application-wide stylesheet (`src/app/styles/index.css`: root variables, scroll padding, the skip and return-to-top links, the animated glass background and print) is imported by the entry point and nobody else, by convention.
+- The application-wide stylesheet (`src/app/styles/index.css`: root variables, scroll padding, the skip and return-to-top links, the static ambient glass background and print) is imported by the entry point and nobody else, by convention. The glass background uses radial gradients fixed within the viewport.
 
 ### Data and network
 

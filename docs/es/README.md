@@ -4,7 +4,7 @@
 
 🇺🇸 [English](../../README.md) | **🇪🇸 Español**
 
-**Portafolio profesional** es una aplicación web estática y bilingüe que presenta la trayectoria de Gonzalo Martínez, desarrollador Full Stack junior: proyectos, experiencia, habilidades y perfil, con una interfaz inmersiva y animada.
+**Portafolio profesional** es una aplicación web estática y bilingüe que presenta la trayectoria de Gonzalo Martínez, desarrollador Full Stack junior: proyectos, experiencia, habilidades y perfil, con una interfaz responsive y tres temas visuales.
 
 **Demo en vivo:** [https://mi-portafolio-gonzalo.vercel.app/](https://mi-portafolio-gonzalo.vercel.app/)
 
@@ -23,7 +23,7 @@
 - **Recursos autohospedados:** todas las imágenes, los iconos y la fuente (Inter) se sirven desde el propio sitio — cero hosts de imágenes o fuentes de terceros.
 - **Formulario de contacto:** impulsado por EmailJS (solo navegador, sin backend), que se carga solo al enviar un mensaje.
 - **Diseño responsive:** layouts fluidos optimizados para escritorio, tablet y móvil.
-- **Fondos animados:** animaciones CSS de alto rendimiento para un look moderno e interactivo.
+- **Fondo ambiental Glass:** degradados radiales estáticos aportan profundidad sin animarse continuamente detrás de las superficies de cristal.
 
 ---
 
@@ -46,7 +46,7 @@ El proyecto sigue una **arquitectura de frontend estático** moderna, priorizand
 
 - **Frontend Feature-Sliced:** arquitectura FSD de 6 capas (`app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/`) con límites de importación estrictos aplicados por ESLint.
 - **Modelo de contenido estático:** contenido bilingüe en JSON por entidad, validado por tests de integridad de datos.
-- **Despliegue continuo:** Vercel despliega cada push a `main`; GitHub Actions ejecuta lint, tests y el build de producción en cada cambio.
+- **Despliegue continuo:** Vercel despliega cada push a `main`; GitHub Actions ejecuta lint, tests y el build de producción ante cambios del frontend o del workflow.
 - **Salida para agentes y SEO:** una página HTML por ruta con sus propios metadatos y datos estructurados JSON-LD, además de `llms.txt`, robots/sitemap y copias markdown en inglés y español por ruta, todo generado en build desde el mismo contenido JSON.
 - **Cabeceras de seguridad:** una Content-Security-Policy estricta (el único script en línea se permite por su hash) y las cabeceras de endurecimiento habituales en cada respuesta.
 

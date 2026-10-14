@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { LanguageSelector } from '@/features/language-switch';
 import { ThemeSelector, useColorMode } from '@/features/theme-switch';
 import { getProfile } from '@/entities/profile';
-import { APP_ROUTES, glassColors, glassEffects } from '@/shared/config';
+import { APP_ROUTES, findAppRoute, glassColors, glassEffects } from '@/shared/config';
 import { useContent } from '@/shared/lib';
 
 const MOBILE_NAV_ID = 'mobile-navigation';
@@ -57,6 +57,7 @@ const Navbar: React.FC = () => {
     const { t } = useTranslation();
     const { mode } = useColorMode();
     const { pathname } = useLocation();
+    const currentRoute = findAppRoute(pathname);
     const isGlass = mode === 'glass';
     // In glass mode the bar is the theme's dark translucent AppBar, so its text is light.
     const textColor = isGlass ? glassColors.text.primary : 'inherit';
@@ -70,7 +71,7 @@ const Navbar: React.FC = () => {
     const navItems = APP_ROUTES.map((route) => ({
         path: route.path,
         label: t(`nav.${route.id}`),
-        current: pathname === route.path,
+        current: currentRoute?.id === route.id,
     }));
 
     const drawer = (

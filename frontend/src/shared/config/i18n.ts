@@ -136,6 +136,12 @@ const resources = {
                 returnToTop: 'Return to top',
                 languageButton: 'Language: {{name}} ({{code}})',
                 themeButton: 'Theme: {{mode}}',
+                animations: {
+                    label: 'Animations',
+                    enabled: 'Enabled',
+                    paused: 'Paused',
+                    reducedSystem: 'Disabled by system preference',
+                },
                 theme: {
                     light: 'Light',
                     dark: 'Dark',
@@ -298,11 +304,17 @@ const resources = {
                 present: 'Actualidad',
                 sending: 'Enviando...',
                 close: 'Cerrar',
-                openToWork: 'Disponible',
+                openToWork: 'Disponible para trabajar',
                 skipToContent: 'Saltar al contenido',
                 returnToTop: 'Volver arriba',
                 languageButton: 'Idioma: {{name}} ({{code}})',
                 themeButton: 'Tema: {{mode}}',
+                animations: {
+                    label: 'Animaciones',
+                    enabled: 'Activadas',
+                    paused: 'Pausadas',
+                    reducedSystem: 'Desactivadas por el sistema',
+                },
                 theme: {
                     light: 'Claro',
                     dark: 'Oscuro',

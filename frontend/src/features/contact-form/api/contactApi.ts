@@ -13,7 +13,7 @@ export class ContactNotConfiguredError extends Error {
   }
 }
 
-// The request was not cancelled, only abandoned: the message may still have been delivered.
+// Once sending has started the request is only abandoned, so the message may still arrive.
 export class ContactTimeoutError extends Error {
   constructor(timeoutMs: number) {
     super(`EmailJS request timed out after ${timeoutMs}ms`);
@@ -39,32 +39,33 @@ function getConfig(): EmailJsConfig {
   return { serviceId, templateId, publicKey };
 }
 
-function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const timer = setTimeout(() => reject(new ContactTimeoutError(timeoutMs)), timeoutMs);
+async function withDeadline<T>(operation: () => Promise<T>, deadline: number): Promise<T> {
+  const remainingMs = deadline - performance.now();
+  // Check before starting the operation: a late SDK load must never send a message after expiry.
+  if (remainingMs <= 0) throw new ContactTimeoutError(SEND_TIMEOUT_MS);
 
-    promise.then(
-      (value) => {
-        clearTimeout(timer);
-        resolve(value);
-      },
-      (error: unknown) => {
-        clearTimeout(timer);
-        reject(error);
-      },
-    );
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_resolve, reject) => {
+    timer = setTimeout(() => reject(new ContactTimeoutError(SEND_TIMEOUT_MS)), remainingMs);
   });
+
+  try {
+    return await Promise.race([operation(), timeout]);
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 export async function sendContactMessage(message: ContactMessage): Promise<void> {
   const { serviceId, templateId, publicKey } = getConfig();
+  const deadline = performance.now() + SEND_TIMEOUT_MS;
   // Loaded on submit: the SDK touches localStorage while it loads, which throws when the visitor
   // blocks site data. Loading it here turns that into a send error the form reports, instead of
   // a Contact page that fails to load.
-  const { default: emailjs } = await import('@emailjs/browser');
+  const { default: emailjs } = await withDeadline(() => import('@emailjs/browser'), deadline);
 
-  await withTimeout(
-    emailjs.send(
+  await withDeadline(
+    () => emailjs.send(
       serviceId,
       templateId,
       {
@@ -77,6 +78,6 @@ export async function sendContactMessage(message: ContactMessage): Promise<void>
       },
       { publicKey, blockHeadless: true, limitRate: RATE_LIMIT },
     ),
-    SEND_TIMEOUT_MS,
+    deadline,
   );
 }

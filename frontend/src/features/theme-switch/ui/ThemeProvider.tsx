@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { ThemeProvider as MuiThemeProvider, CssBaseline } from '@mui/material';
+import { ThemeProvider as MuiThemeProvider, CssBaseline, GlobalStyles } from '@mui/material';
 import { COLOR_MODES, createAppTheme, type ColorMode } from '@/shared/config';
 import { readStorage, writeStorage } from '@/shared/lib';
 import { ColorModeContext } from '../model/ThemeContext';
 
 const THEME_STORAGE_KEY = 'themeMode';
+const ANIMATIONS_STORAGE_KEY = 'animationsPaused';
 const LIGHT_SCHEME_QUERY = '(prefers-color-scheme: light)';
 
 const readSavedMode = (): ColorMode | null => {
@@ -23,6 +24,7 @@ const systemModeOf = (query: MediaQueryList | null): ColorMode => (query?.matche
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [savedMode, setSavedMode] = useState<ColorMode | null>(readSavedMode);
     const [systemMode, setSystemMode] = useState<ColorMode>(() => systemModeOf(lightSchemeQuery()));
+    const [animationsPaused, setPaused] = useState(() => readStorage(ANIMATIONS_STORAGE_KEY) === 'true');
     const mode = savedMode ?? systemMode;
 
     useEffect(() => {
@@ -39,7 +41,15 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         writeStorage(THEME_STORAGE_KEY, next);
     }, []);
 
-    const colorMode = useMemo(() => ({ mode, setColorMode }), [mode, setColorMode]);
+    const setAnimationsPaused = useCallback((paused: boolean) => {
+        setPaused(paused);
+        writeStorage(ANIMATIONS_STORAGE_KEY, String(paused));
+    }, []);
+
+    const colorMode = useMemo(
+        () => ({ mode, setColorMode, animationsPaused, setAnimationsPaused }),
+        [mode, setColorMode, animationsPaused, setAnimationsPaused],
+    );
 
     const theme = useMemo(() => createAppTheme(mode), [mode]);
 
@@ -62,6 +72,13 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             <MuiThemeProvider theme={theme}>
                 {/* enableColorScheme makes scrollbars and native form controls follow the theme. */}
                 <CssBaseline enableColorScheme />
+                {/* Shared UI consumes CSS, so it never has to import this feature's context. */}
+                <GlobalStyles styles={{
+                    ':root': { '--decorative-animation-state': animationsPaused ? 'paused' : 'running' },
+                    '@media (prefers-reduced-motion: reduce)': {
+                        ':root': { '--decorative-animation-state': 'paused' },
+                    },
+                }} />
                 {children}
             </MuiThemeProvider>
         </ColorModeContext.Provider>

@@ -5,6 +5,9 @@ export interface ColorModeContextType {
     mode: ColorMode;
     // The visitor's explicit choice: it is applied and saved for later visits.
     setColorMode: (mode: ColorMode) => void;
+    // The visitor's preference; the system's reduced-motion setting always takes priority.
+    animationsPaused: boolean;
+    setAnimationsPaused: (paused: boolean) => void;
 }
 
 export const ColorModeContext = createContext<ColorModeContextType | undefined>(undefined);

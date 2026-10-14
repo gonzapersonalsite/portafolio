@@ -86,7 +86,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, priority = false, ti
                 flexDirection: 'column',
                 borderRadius: 3,
                 overflow: 'hidden',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 '&:hover': {
                     transform: 'translateY(-8px)',
                     boxShadow: (theme) => theme.palette.mode === 'light'
@@ -199,7 +199,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, priority = false, ti
                         position: 'absolute',
                         top: 10,
                         right: 10,
-                        bgcolor: 'background.paper',
+                        // Cover images can be white; a solid surface keeps the label readable in glass.
+                        bgcolor: (theme) => theme.palette.mode === 'light' ? theme.palette.common.white : theme.palette.grey[900],
                         color: 'text.primary',
                         fontWeight: 600,
                         boxShadow: 2,

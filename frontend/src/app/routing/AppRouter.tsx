@@ -46,7 +46,13 @@ function usePrefetchPages() {
         let cancelled = false;
         const run = () => {
             if (!cancelled) {
-                Object.values(PAGE_LOADERS).forEach((load) => void load());
+                APP_ROUTES.forEach(({ id, path }) => {
+                    void PAGE_LOADERS[id]().catch((error: unknown) => {
+                        // A speculative failure must not interrupt the current page. Navigation
+                        // still uses React.lazy, which sends a load failure to the error boundary.
+                        console.warn({ event: 'page-prefetch-failed', route: path, error });
+                    });
+                });
             }
         };
 

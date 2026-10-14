@@ -26,7 +26,7 @@ El proyecto es una **aplicación frontend totalmente estática**. No hay backend
 - Los hosts externos de imágenes y fuentes están prohibidos: los tests de integridad de datos rechazan las URLs de imágenes externas y la Content-Security-Policy las bloquearía.
 
 ### 📬 Contacto
-- El formulario de contacto funciona íntegramente en el navegador mediante **EmailJS**; no hay gestión de correo en servidor. El SDK solo se carga al enviar un mensaje, los campos se validan en el idioma del visitante y, si no hay respuesta en 15 segundos, se le pide que escriba por correo en lugar de reenviar (puede que el mensaje llegue igualmente).
+- El formulario de contacto funciona íntegramente en el navegador mediante **EmailJS**; no hay gestión de correo en servidor. El SDK solo se carga al enviar un mensaje, y un único plazo de 15 segundos cubre tanto su carga como la espera del envío. Una carga tardía del SDK nunca inicia un envío una vez vencido ese plazo; si el envío ya ha empezado, el mensaje puede llegar igualmente, por lo que se pide al visitante que escriba por correo en lugar de reenviar. Los campos se validan en el idioma del visitante y permanecen en solo lectura durante el envío, conservando el foco y evitando que una respuesta exitosa borre cambios posteriores.
 
 ### 🔒 Seguridad
 - No hay backend ni superficie de autenticación. Vercel envía en cada respuesta una Content-Security-Policy estricta (scripts solo del propio sitio más el script de tema en línea por su hash, peticiones de red solo al propio sitio y a EmailJS) y las cabeceras de endurecimiento habituales; ver la [Guía de operaciones](OPERATIONS.md).
@@ -138,7 +138,7 @@ Primero, en la página que lo usa. Baja cuando aparece el segundo consumidor, y 
 ### Estilos
 
 - Los componentes se estilan con la prop `sx` de MUI y el tema (`createAppTheme` en `src/shared/config/theme.ts`); una hoja de estilos que necesite un componente va a su lado, en su segmento `ui`. Que no se importen MUI, Emotion ni hojas de estilos desde `model`, `api` ni `lib` lo hace cumplir el lint; el resto es convención.
-- La hoja de estilos de toda la aplicación (`src/app/styles/index.css`: variables raíz, el margen de scroll, los enlaces de salto y de vuelta arriba, el fondo animado de cristal y la impresión) la importa la entrada y nadie más, por convención.
+- La hoja de estilos de toda la aplicación (`src/app/styles/index.css`: variables raíz, el margen de scroll, los enlaces de salto y de vuelta arriba, el fondo ambiental estático de cristal y la impresión) la importa la entrada y nadie más, por convención. El fondo de cristal usa degradados radiales fijos dentro del viewport.
 
 ### Datos y red
 

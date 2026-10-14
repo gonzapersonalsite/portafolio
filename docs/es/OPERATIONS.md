@@ -19,7 +19,7 @@ El proyecto es **solo estático**: un único despliegue, cero servidores.
 - **Frontend (Vercel):**
   - Vercel despliega automáticamente en cada push a `main` desde el directorio `frontend/`.
   - Vercel detecta pnpm por `pnpm-lock.yaml`; después pnpm cambia a la versión fijada en el campo `packageManager` de `frontend/package.json` (el log del build muestra qué versión se ejecutó).
-  - GitHub Actions ejecuta lint, tests y `pnpm build` (comprobación de tipos + build de producción) en push/PR que toquen `frontend/**`. No bloquea el despliegue de Vercel: el build propio de Vercel (`tsc -b && vite build`) detiene un despliegue ante errores de tipos o de build, pero un fallo de lint o de tests solo aparece como un check fallido, así que ejecuta `pnpm lint && pnpm test` antes de hacer push. El workflow corre en `ubuntu-24.04` con permisos de solo lectura, y sus actions están fijadas por SHA de commit completo con la versión en un comentario. Para actualizar una action, resuelve la nueva etiqueta con `gh api repos/<owner>/<repo>/git/ref/tags/<tag>` (una etiqueta anotada apunta a un objeto tag: síguelo hasta el commit) y cambia el SHA y el comentario a la vez.
+  - GitHub Actions ejecuta lint, tests y `pnpm build` (comprobación de tipos + build de producción) en push/PR que toquen `frontend/**` o `.github/workflows/frontend-ci.yml`. No bloquea el despliegue de Vercel: el build propio de Vercel (`tsc -b && vite build`) detiene un despliegue ante errores de tipos o de build, pero un fallo de lint o de tests solo aparece como un check fallido, así que ejecuta `pnpm lint && pnpm test` antes de hacer push. El workflow corre en `ubuntu-24.04` con permisos de solo lectura, y sus actions están fijadas por SHA de commit completo con la versión en un comentario. Para actualizar una action, resuelve la nueva etiqueta con `gh api repos/<owner>/<repo>/git/ref/tags/<tag>` (una etiqueta anotada apunta a un objeto tag: síguelo hasta el commit) y cambia el SHA y el comentario a la vez.
   - El script de instalación de esbuild se aprueba en el repo con `allowBuilds: { esbuild: true }` en `frontend/pnpm-workspace.yaml`, el ajuste de aprobación de builds de pnpm 11 y posteriores; el script de instalación de cualquier otra dependencia sigue bloqueado. Vercel no necesita configuración extra y CI instala con `--ignore-scripts`.
   - Panel de Vercel: Install Command `pnpm install` y Build Command `pnpm run build`.
 
@@ -100,7 +100,9 @@ El contenido vive en `src/entities/<entidad>/api/data.json`:
 
 **Texto enriquecido:** las descripciones pueden guardar saltos de línea como secuencias literales `\n` y listas como líneas que empiezan por `●` (también `•`, `*`, `◦`, `▪`, `-`). Un `●`, `•`, `◦` o `▪` en mitad de una línea empieza una viñeta nueva; `-` y `*` solo cuentan al principio de la línea, así que "Frontend - React" sigue siendo una sola frase. `src/shared/lib/richText.ts` normaliza ambas convenciones para la UI y las copias markdown generadas.
 
-**Distintivo Disponible:** el hero de inicio y la página de experiencia, y sus copias markdown, muestran *Open to work* / *Disponible* (`common.openToWork` en `src/shared/config/i18n.ts`, `openToWork` en `tooling/agent-files/labels.ts`). No es un campo de datos: para dejar de mostrarlo, quita el `StatusBadge` de `src/pages/home/ui/HomePage.tsx` y `src/pages/experience/ui/ExperiencePage.tsx` y las llamadas a `openToWorkLine` de `tooling/agent-files/twins.ts`, y actualiza `twins.test.ts`.
+**Distintivo Disponible para trabajar:** el hero de inicio y la página de experiencia, y sus copias markdown, muestran *Open to work* / *Disponible para trabajar* (`common.openToWork` en `src/shared/config/i18n.ts`, `openToWork` en `tooling/agent-files/labels.ts`). `StatusBadge` conserva el verde de estado positivo sobre una superficie opaca en los tres temas. No es un campo de datos: para dejar de mostrarlo, quita el `StatusBadge` de `src/pages/home/ui/HomePage.tsx` y `src/pages/experience/ui/ExperiencePage.tsx` y las llamadas a `openToWorkLine` de `tooling/agent-files/twins.ts`, y actualiza `twins.test.ts`.
+
+**Animaciones:** el menú de tema permite pausar o reanudar juntos el punto de disponibilidad y la tarjeta flotante de Inicio. La elección se guarda para futuras visitas; si el navegador bloquea el almacenamiento, sigue funcionando durante la sesión actual. La preferencia de movimiento reducido del sistema tiene prioridad y se explica en el menú. Glass conserva un fondo ambiental estático; la pausa afecta solo a las pequeñas animaciones decorativas.
 
 **Enlaces en español:** la web tiene un único juego de URLs; añade `?lang=es` (o `?lang=en`) a la dirección de cualquier página para compartirla en ese idioma, p. ej. `https://mi-portafolio-gonzalo.vercel.app/about?lang=es`. El idioma queda guardado para ese visitante igual que si lo hubiera elegido en el menú, y el parámetro desaparece de la dirección.
 
@@ -142,6 +144,20 @@ pnpm build
 ```
 
 ### 4. Publicar
+
+Antes de publicar un cambio visual, previsualiza el build de producción y comprueba el menú de tema, la navegación por teclado, la galería de imágenes y el distintivo de disponibilidad en Inicio y Experiencia, en escritorio y anchuras estrechas. Comprueba tanto la pausa de animaciones guardada como el movimiento reducido del sistema. No hace falta enviar mensajes de prueba a EmailJS; su plazo y sus fallos se prueban con un SDK simulado.
+
+La revisión local de interacción del **14 de octubre de 2026** comparó el commit desplegado `11e861c` con el build de producción corregido, en el mismo equipo con Brave a 2550×1215, DPR 1 y la pestaña en primer plano. Se midió la cadencia de renderizado estable con muestras de cuatro segundos de `requestAnimationFrame`; el build final mantenía activos el punto y la tarjeta. Event Timing midió la apertura y el cierre del menú de tema.
+
+| Observación | Antes | Build corregido |
+|---|---|---|
+| Intervalo medio entre fotogramas | 74–81 ms | 5,94 ms |
+| Duración de los clics del menú de tema | 288–296 ms | 32–40 ms |
+| Elementos con desenfoque de fondo en Inicio (incluidos los de fuera de pantalla) | 44 | 6 |
+
+Son muestras locales de diagnóstico, no Core Web Vitals de usuarios reales ni una garantía para todos los dispositivos. La causa principal era el enorme fondo en movimiento detrás de las superficies de cristal. El sustituto ocupa el viewport y permanece estático; las dos pequeñas animaciones se pueden pausar independientemente del tema. No se añadió ninguna dependencia. La revisión también corrigió el plazo y el estado de edición del formulario, la navegación activa en URLs con barra final, los fallos de precarga, el contraste de los iconos sociales al pasar el ratón y textos imprecisos de proyectos. Los límites FSD y su comprobación con lint no necesitaron rediseño.
+
+Cierre de la revisión: pasaron `pnpm lint`, los 334 tests de 45 archivos, `pnpm build` y `git diff --check`. Las comprobaciones en navegador cubrieron el distintivo en los tres temas, Inicio/Experiencia, anchuras de 320 px y 390 px, los controles y la devolución de foco de la galería, la validación del formulario, la pausa/reanudación guardada y los cambios de movimiento reducido en vivo. La explicación de animaciones desactivadas sigue siendo accesible con el teclado del menú. No se desplegó en producción como parte de esta revisión.
 
 Haz commit y push a `main` → Vercel despliega automáticamente; GitHub Actions informa en paralelo de lint, tests y el build de producción con comprobación de tipos (no retiene el despliegue).
 

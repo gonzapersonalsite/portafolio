@@ -4,7 +4,7 @@
 
 🇺🇸 **English** | [🇪🇸 Español](docs/es/README.md)
 
-**Professional Portfolio** is a static, bilingual web application that presents the career of Gonzalo Martínez, Junior Full Stack Developer: projects, experience, skills and profile, with an immersive, animated interface.
+**Professional Portfolio** is a static, bilingual web application that presents the career of Gonzalo Martínez, Junior Full Stack Developer: projects, experience, skills and profile, with a responsive interface and three visual themes.
 
 **Live Demo:** [https://mi-portafolio-gonzalo.vercel.app/](https://mi-portafolio-gonzalo.vercel.app/)
 
@@ -23,7 +23,7 @@
 - **Self-hosted assets:** every image, icon and font (Inter) is served from the site itself — zero third-party image or font hosts.
 - **Contact form:** powered by EmailJS (browser-only, no backend required), loaded only when a message is sent.
 - **Responsive Design:** fluid layouts optimized for desktop, tablet, and mobile devices.
-- **Animated Backgrounds:** high-performance CSS animations for a modern, interactive feel.
+- **Ambient Glass Background:** static radial gradients provide depth without continuously animating behind the glass surfaces.
 
 ---
 
@@ -46,7 +46,7 @@ The project follows a modern **static frontend architecture**, prioritizing main
 
 - **Feature-Sliced Frontend:** 6-layer FSD architecture (`app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/`) with strict import boundaries enforced by ESLint.
 - **Static Content Model:** bilingual content in JSON per entity, validated by data-integrity tests.
-- **Continuous Deployment:** Vercel deploys every push to `main`; GitHub Actions runs lint, tests and the production build on every change.
+- **Continuous Deployment:** Vercel deploys every push to `main`; GitHub Actions runs lint, tests and the production build on frontend or workflow changes.
 - **Agent-Readable Output & SEO:** one HTML page per route with its own metadata and JSON-LD structured data, plus `llms.txt`, robots/sitemap and English/Spanish markdown twins per route, all generated at build time from the same JSON content.
 - **Security Headers:** a strict Content-Security-Policy (the only inline script is allowed by its hash) and the usual hardening headers on every response.
 

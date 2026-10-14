@@ -8,12 +8,11 @@ export type ColorMode = (typeof COLOR_MODES)[number];
 // The glass look for filled and outlined buttons. Text buttons (nav links, card links) stay
 // transparent so the three variants keep their hierarchy.
 const glassButtonVariant = (background: string, hoverBackground: string, border: string) => ({
-    backdropFilter: glassEffects.blur,
     background,
     border,
     boxShadow: glassEffects.innerBoxShadow,
     color: glassColors.text.primary,
-    transition: 'all 0.3s ease',
+    transition: 'transform 0.2s ease',
     '&:hover': {
         background: hoverBackground,
         boxShadow: `0 0 20px ${glassColors.neon.turquoise}`,
@@ -157,7 +156,7 @@ const getThemeOptions = (mode: ColorMode): ThemeOptions => {
                             border: glassEffects.border,
                             position: 'relative',
                             overflow: 'hidden',
-                            transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                            transition: 'transform 0.3s ease',
                             '&:hover': {
                                 transform: 'translateY(-8px)',
                                 boxShadow: `0 20px 40px rgba(0,0,0,0.8), 0 0 20px ${glassColors.neon.violet}40`,
@@ -219,14 +218,16 @@ const getThemeOptions = (mode: ColorMode): ThemeOptions => {
                 styleOverrides: {
                     root: {
                         ...(isGlass && {
-                            backdropFilter: glassEffects.blur,
-                            background: 'rgba(255, 255, 255, 0.05)',
-                            border: '0.5px solid rgba(255, 255, 255, 0.1)',
-                            color: glassColors.text.primary,
-                            '&:hover': {
-                                background: 'rgba(255, 255, 255, 0.1)',
-                                boxShadow: `0 0 10px ${glassColors.neon.pink}`,
-                            }
+                            // Decorative labels use glass; semantic colours (success, error, etc.)
+                            // keep MUI's palette. Informational chips do not advertise a hover action.
+                            variants: [{
+                                props: { color: 'default' },
+                                style: {
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    border: glassEffects.border,
+                                    color: glassColors.text.primary,
+                                },
+                            }],
                         }),
                     },
                 },

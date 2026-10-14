@@ -28,7 +28,7 @@ describe('ExperiencePage', () => {
     renderPage()
 
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Historial laboral')
-    expect(screen.getByText('Disponible')).toBeTruthy()
+    expect(screen.getByText('Disponible para trabajar')).toBeTruthy()
   })
 
   it('gives every role a level-2 heading, the company as text and a localised period', () => {

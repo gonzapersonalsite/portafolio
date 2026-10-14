@@ -11,7 +11,8 @@ interface ContactFormProps {
 
 // noValidate: the browser would word its own error bubbles in the browser's language, not the
 // site's, so the hook validates and the fields show translated messages. `required` stays for
-// the asterisk and aria-required.
+// the asterisk and aria-required. While sending, readOnly preserves focus and prevents a new
+// draft from being erased when the submitted message succeeds.
 const ContactForm: React.FC<ContactFormProps> = ({ onShowNotification }) => {
     const { t } = useTranslation();
     const { formData, fieldErrors, loading, handleChange, handleSubmit } = useContactForm(onShowNotification);
@@ -28,6 +29,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onShowNotification }) => {
                 label={t('contact.form.name')}
                 name="name"
                 autoComplete="name"
+                slotProps={{ input: { readOnly: loading } }}
                 value={formData.name}
                 onChange={handleChange}
                 error={fieldErrors.name !== undefined}
@@ -41,6 +43,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onShowNotification }) => {
                 name="email"
                 type="email"
                 autoComplete="email"
+                slotProps={{ input: { readOnly: loading } }}
                 value={formData.email}
                 onChange={handleChange}
                 error={fieldErrors.email !== undefined}
@@ -52,6 +55,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onShowNotification }) => {
             <TextField
                 label={t('contact.form.message')}
                 name="message"
+                slotProps={{ input: { readOnly: loading } }}
                 value={formData.message}
                 onChange={handleChange}
                 error={fieldErrors.message !== undefined}

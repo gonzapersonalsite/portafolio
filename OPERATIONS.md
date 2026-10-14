@@ -19,7 +19,7 @@ The project is **static-only** — a single deployment, zero servers.
 - **Frontend (Vercel):**
   - Vercel auto-deploys on every push to `main` from the `frontend/` directory.
   - Vercel detects pnpm from `pnpm-lock.yaml`; pnpm then switches to the version pinned in the `packageManager` field of `frontend/package.json` (the build log shows which version ran).
-  - GitHub Actions runs lint, tests and `pnpm build` (type-check + production build) on pushes/PRs touching `frontend/**`. It does not block the Vercel deployment: Vercel's own build (`tsc -b && vite build`) stops a deploy on type or build errors, but a lint or test failure only shows as a failed check, so run `pnpm lint && pnpm test` before pushing. The workflow runs on `ubuntu-24.04` with read-only permissions, and its actions are pinned to full commit SHAs with the release in a comment. To upgrade an action, resolve the new tag with `gh api repos/<owner>/<repo>/git/ref/tags/<tag>` (an annotated tag points to a tag object: follow it to the commit) and replace the SHA and the comment together.
+  - GitHub Actions runs lint, tests and `pnpm build` (type-check + production build) on pushes/PRs touching `frontend/**` or `.github/workflows/frontend-ci.yml`. It does not block the Vercel deployment: Vercel's own build (`tsc -b && vite build`) stops a deploy on type or build errors, but a lint or test failure only shows as a failed check, so run `pnpm lint && pnpm test` before pushing. The workflow runs on `ubuntu-24.04` with read-only permissions, and its actions are pinned to full commit SHAs with the release in a comment. To upgrade an action, resolve the new tag with `gh api repos/<owner>/<repo>/git/ref/tags/<tag>` (an annotated tag points to a tag object: follow it to the commit) and replace the SHA and the comment together.
   - esbuild's install script is approved in-repo by `allowBuilds: { esbuild: true }` in `frontend/pnpm-workspace.yaml`, the build-approval setting of pnpm 11 and later; every other dependency's install script stays blocked. Vercel needs no extra configuration, and CI installs with `--ignore-scripts`.
   - Vercel dashboard: set Install Command to `pnpm install` and Build Command to `pnpm run build`.
 
@@ -100,7 +100,9 @@ Content lives in `src/entities/<entity>/api/data.json`:
 
 **Rich text:** descriptions can store line breaks as literal `\n` sequences and lists as lines starting with `●` (also `•`, `*`, `◦`, `▪`, `-`). A `●`, `•`, `◦` or `▪` in the middle of a line starts a new bullet; `-` and `*` only count at the start of a line, so "Frontend - React" stays one sentence. `src/shared/lib/richText.ts` normalizes both conventions for the UI and the generated markdown twins.
 
-**Open to work badge:** the Home hero and the Experience page, and their markdown twins, show *Open to work* / *Disponible* (`common.openToWork` in `src/shared/config/i18n.ts`, `openToWork` in `tooling/agent-files/labels.ts`). It is not a data field: to stop showing it, remove the `StatusBadge` from `src/pages/home/ui/HomePage.tsx` and `src/pages/experience/ui/ExperiencePage.tsx` and the `openToWorkLine` calls from `tooling/agent-files/twins.ts`, then update `twins.test.ts`.
+**Open to work badge:** the Home hero and the Experience page, and their markdown twins, show *Open to work* / *Disponible para trabajar* (`common.openToWork` in `src/shared/config/i18n.ts`, `openToWork` in `tooling/agent-files/labels.ts`). `StatusBadge` keeps its green success colour on an opaque surface in all three themes. It is not a data field: to stop showing it, remove the `StatusBadge` from `src/pages/home/ui/HomePage.tsx` and `src/pages/experience/ui/ExperiencePage.tsx` and the `openToWorkLine` calls from `tooling/agent-files/twins.ts`, then update `twins.test.ts`.
+
+**Animations:** the theme menu can pause or resume the availability dot and the floating Home card together. The choice is saved for later visits; if site storage is blocked, it still works for the current session. The system's reduced-motion preference takes priority and is explained in the menu. Glass keeps a static ambient background; pausing affects only the small decorative animations.
 
 **Links in Spanish:** the site has one set of URLs; add `?lang=es` (or `?lang=en`) to any page address to share it in that language, e.g. `https://mi-portafolio-gonzalo.vercel.app/about?lang=es`. The visitor's language choice is then saved as if they had picked it in the menu, and the parameter is removed from the address.
 
@@ -142,6 +144,20 @@ pnpm build
 ```
 
 ### 4. Ship
+
+Before shipping a visual change, preview the production build and check the theme menu, keyboard navigation, image gallery, and the availability badge on Home and Experience at desktop and narrow widths. Check both the saved animation pause and the system's reduced-motion setting. No test message needs to be sent to EmailJS; its deadline and failure paths are covered with a mocked SDK.
+
+The local interaction review on **2026-10-14** compared deployed commit `11e861c` with the corrective production build, on the same machine in Brave at 2550×1215, DPR 1, with the tab in the foreground. Four-second `requestAnimationFrame` samples measured steady rendering cadence; the final build kept both the dot and card animations running. Event Timing measured opening and closing the theme menu.
+
+| Observation | Before | Corrective build |
+|---|---|---|
+| Mean frame interval | 74–81 ms | 5.94 ms |
+| Theme-menu click duration | 288–296 ms | 32–40 ms |
+| Elements with backdrop blur on Home (including offscreen) | 44 | 6 |
+
+These are local diagnostic samples, not field Core Web Vitals or a guarantee for every device. The main cause was the oversized moving background behind the glass surfaces. The replacement stays within the viewport and remains static; the two small animations can be paused independently of the theme. No new dependency was added. The review also corrected the contact deadline and editing state, active navigation for trailing-slash URLs, prefetch failure handling, social-icon hover contrast and inaccurate project copy. The FSD boundaries and existing lint enforcement needed no redesign.
+
+Review closure: `pnpm lint`, all 334 tests in 45 files, `pnpm build` and `git diff --check` passed. Browser checks covered the three badge themes, Home/Experience, 320 px and 390 px layouts, gallery controls and focus return, form validation, saved pause/resume and live reduced-motion changes. The disabled motion explanation remains reachable with the menu's keyboard navigation. No production deployment was performed as part of this review.
 
 Commit and push to `main` → Vercel deploys automatically; GitHub Actions reports lint, tests and the type-checked production build alongside it (it does not hold the deploy back).
 

@@ -113,7 +113,7 @@ const ContactPage: React.FC = () => {
                                             aria-label={link.label}
                                             sx={{
                                                 border: `1px solid ${theme.palette.divider}`,
-                                                '&:hover': { bgcolor: 'primary.main', color: 'white', borderColor: 'primary.main' }
+                                                '&:hover': { bgcolor: 'primary.main', color: 'primary.contrastText', borderColor: 'primary.main' }
                                             }}
                                         >
                                             {link.icon}

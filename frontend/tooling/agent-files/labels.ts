@@ -83,7 +83,7 @@ export const TWIN_LABELS: Record<Locale, TwinLabels> = {
   es: {
     technologies: 'Tecnologías',
     pages: 'Páginas',
-    openToWork: 'Disponible',
+    openToWork: 'Disponible para trabajar',
     nav: {
       home: 'Inicio',
       about: 'Sobre mí',

@@ -25,6 +25,9 @@ const renderColorMode = () =>
     wrapper: ({ children }: { children: React.ReactNode }) => <ThemeProvider>{children}</ThemeProvider>,
   })
 
+const animationState = () =>
+  getComputedStyle(document.documentElement).getPropertyValue('--decorative-animation-state').trim()
+
 describe('ThemeProvider', () => {
   beforeEach(() => {
     window.localStorage.clear()
@@ -41,6 +44,42 @@ describe('ThemeProvider', () => {
 
     expect(result.current.mode).toBe('light')
     expect(window.localStorage.getItem('themeMode')).toBeNull()
+    expect(result.current.animationsPaused).toBe(false)
+    expect(animationState()).toBe('running')
+    expect(window.localStorage.getItem('animationsPaused')).toBeNull()
+  })
+
+  it.each([
+    ['true', true, 'paused'],
+    ['false', false, 'running'],
+    ['invalid', false, 'running'],
+  ] as const)('restores the saved animation preference %s', (saved, paused, state) => {
+    fakeSystemScheme(false)
+    window.localStorage.setItem('animationsPaused', saved)
+
+    const { result } = renderColorMode()
+
+    expect(result.current.animationsPaused).toBe(paused)
+    expect(animationState()).toBe(state)
+  })
+
+  it('saves pause and resume independently of the chosen theme', () => {
+    fakeSystemScheme(false)
+    const { result } = renderColorMode()
+
+    act(() => result.current.setAnimationsPaused(true))
+    act(() => result.current.setColorMode('glass'))
+
+    expect(result.current.animationsPaused).toBe(true)
+    expect(animationState()).toBe('paused')
+    expect(window.localStorage.getItem('animationsPaused')).toBe('true')
+
+    act(() => result.current.setAnimationsPaused(false))
+
+    expect(result.current.animationsPaused).toBe(false)
+    expect(animationState()).toBe('running')
+    expect(window.localStorage.getItem('animationsPaused')).toBe('false')
+    expect(result.current.mode).toBe('glass')
   })
 
   it('keeps following the operating system when it switches while nothing is chosen', () => {
@@ -93,8 +132,11 @@ describe('ThemeProvider', () => {
     const { result } = renderColorMode()
 
     act(() => result.current.setColorMode('light'))
+    act(() => result.current.setAnimationsPaused(true))
 
     expect(result.current.mode).toBe('light')
+    expect(result.current.animationsPaused).toBe(true)
+    expect(animationState()).toBe('paused')
   })
 
   it('throws when used outside provider', () => {
