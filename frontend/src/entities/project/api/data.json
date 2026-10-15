@@ -129,10 +129,10 @@
         "altEs": "Historial de licencias: dos licencias de ejemplo y un buscador; la fila seleccionada muestra los valores completos de cliente, ID de hardware y UserDefined, con acciones de inspección, copia y eliminación."
       },
       {
-        "base": "/images/projects/license-generator/05-licensegenerator_preferences",
+        "base": "/images/projects/license-generator/05-licensegenerator_settings",
         "fullWidth": 1636,
-        "altEn": "Settings in dark mode: theme, font scale, language and startup greeting; backup import and export with a private-key warning, desktop shortcut, documentation and logs.",
-        "altEs": "Ajustes en modo oscuro: tema, escala de fuente, idioma y saludo inicial; importación y exportación de copias con advertencia sobre claves privadas, acceso directo, documentación y registros."
+        "altEn": "Settings in dark mode: theme, text size, language and startup greeting with a reset button; local data with a private-key warning and backup export and import; documentation, desktop shortcut and logs.",
+        "altEs": "Ajustes en modo oscuro: tema, tamaño del texto, idioma y saludo inicial con botón para restablecer; datos locales con advertencia sobre claves privadas y copias de seguridad; documentación, acceso directo y registros."
       }
     ],
     "links": [
