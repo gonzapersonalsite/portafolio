@@ -81,12 +81,12 @@ describe('buildTwin', () => {
     const spanish = buildTwin('projects', 'es');
 
     expect(english).toContain(
-      '- [Download](https://github.com/gonzapersonalsite/LicenseGenerator-Docs-/releases/latest)\n- [Documentation](https://github.com/gonzapersonalsite/LicenseGenerator-Docs-)',
+      '- [Download](https://github.com/gonzapersonalsite/license-generator-docs/releases/latest)\n- [Documentation](https://github.com/gonzapersonalsite/license-generator-docs)',
     );
     expect(spanish).toContain(
-      '- [Descargar](https://github.com/gonzapersonalsite/LicenseGenerator-Docs-/releases/latest)\n- [Documentación](https://github.com/gonzapersonalsite/LicenseGenerator-Docs-)',
+      '- [Descargar](https://github.com/gonzapersonalsite/license-generator-docs/releases/latest)\n- [Documentación](https://github.com/gonzapersonalsite/license-generator-docs)',
     );
-    expect(english).toContain('- [Documentation](https://github.com/gonzapersonalsite/NutriManager-Docs-)');
+    expect(english).toContain('- [Documentation](https://github.com/gonzapersonalsite/nutrimanager-docs)');
     expect(english).toContain(
       '- [Visit Site](https://kanban-board-app-kappa.vercel.app/)\n- [Repository](https://github.com/gonzapersonalsite/kanban-board-app)',
     );

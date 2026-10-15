@@ -51,10 +51,10 @@ describe('buildLlmsTxt', () => {
       '- [Kanban Board App](https://kanban-board-app-kappa.vercel.app/): Web App — React, TypeScript, Vite, Feature-Sliced Design ([Repository](https://github.com/gonzapersonalsite/kanban-board-app))',
     );
     expect(llms).toContain(
-      '- [License Generator](https://github.com/gonzapersonalsite/LicenseGenerator-Docs-/releases/latest): Desktop App — ',
+      '- [License Generator](https://github.com/gonzapersonalsite/license-generator-docs/releases/latest): Desktop App — ',
     );
-    expect(llms).toContain('([Documentation](https://github.com/gonzapersonalsite/LicenseGenerator-Docs-))');
+    expect(llms).toContain('([Documentation](https://github.com/gonzapersonalsite/license-generator-docs))');
     // No primary link: the title stays plain and the documentation link is kept.
-    expect(llms).toMatch(/^- NutriManager: Desktop App — .+ \(\[Documentation\]\(https:\/\/github\.com\/gonzapersonalsite\/NutriManager-Docs-\)\)$/m);
+    expect(llms).toMatch(/^- NutriManager: Desktop App — .+ \(\[Documentation\]\(https:\/\/github\.com\/gonzapersonalsite\/nutrimanager-docs\)\)$/m);
   });
 });

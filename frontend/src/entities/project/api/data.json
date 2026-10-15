@@ -138,11 +138,11 @@
     "links": [
       {
         "kind": "download",
-        "url": "https://github.com/gonzapersonalsite/LicenseGenerator-Docs-/releases/latest"
+        "url": "https://github.com/gonzapersonalsite/license-generator-docs/releases/latest"
       },
       {
         "kind": "documentation",
-        "url": "https://github.com/gonzapersonalsite/LicenseGenerator-Docs-"
+        "url": "https://github.com/gonzapersonalsite/license-generator-docs"
       }
     ],
     "type": "DESKTOP",
@@ -302,7 +302,7 @@
     "links": [
       {
         "kind": "documentation",
-        "url": "https://github.com/gonzapersonalsite/NutriManager-Docs-"
+        "url": "https://github.com/gonzapersonalsite/nutrimanager-docs"
       }
     ],
     "type": "DESKTOP",
@@ -355,7 +355,7 @@
       },
       {
         "kind": "repository",
-        "url": "https://github.com/gonzapersonalsite/Pokedex"
+        "url": "https://github.com/gonzapersonalsite/pokedex"
       }
     ],
     "type": "WEB",
@@ -413,7 +413,7 @@
       },
       {
         "kind": "repository",
-        "url": "https://github.com/gonzapersonalsite/portafolio"
+        "url": "https://github.com/gonzapersonalsite/portfolio"
       }
     ],
     "type": "WEB",
