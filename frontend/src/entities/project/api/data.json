@@ -99,37 +99,37 @@
     ],
     "images": [
       {
-        "base": "/images/projects/license-generator/00-licensegenerator_issue-custom-data",
+        "base": "/images/projects/license-generator/00-licensegenerator_hardware-id-license",
         "fullWidth": 1984,
         "altEn": "License generation in dark mode: a Northstar-Studio demo license with a customer, hardware ID, no expiration and UserDefined text specifying features and a professional plan.",
         "altEs": "Generación de licencias en modo oscuro: una licencia de ejemplo de Northstar-Studio con cliente, ID de hardware, sin caducidad y texto UserDefined que indica funcionalidades y un plan profesional."
       },
       {
-        "base": "/images/projects/license-generator/01-licensegenerator_inspection",
+        "base": "/images/projects/license-generator/01-licensegenerator_verified-inspection",
         "fullWidth": 1636,
         "altEn": "License inspector: verified signature, matching product and hardware, no expiration, the UTC check time and authenticated fields including signed custom data in format 2.",
         "altEs": "Inspector de licencias: firma verificada, producto y hardware coincidentes, sin caducidad, hora de comprobación UTC y campos autenticados, incluidos los datos personalizados firmados en formato 2."
       },
       {
-        "base": "/images/projects/license-generator/02-licensegenerator_workspace",
+        "base": "/images/projects/license-generator/02-licensegenerator_overview",
         "fullWidth": 1636,
         "altEn": "License Generator dashboard: shortcuts to generation, inspection and history, one application, two issued licenses, both unexpired, and the most recently generated license.",
         "altEs": "Panel de License Generator: accesos a generación, inspección e historial, una aplicación, dos licencias emitidas, ambas sin caducar, y la licencia generada más reciente."
       },
       {
-        "base": "/images/projects/license-generator/03-licensegenerator_products",
+        "base": "/images/projects/license-generator/03-licensegenerator_signing-keys",
         "fullWidth": 1636,
         "altEn": "Application management: a creation form, search and the Northstar-Studio product with two issued licenses and actions to generate a license, copy its ID, open keys or delete it.",
         "altEs": "Gestión de aplicaciones: formulario de creación, búsqueda y el producto Northstar-Studio con dos licencias emitidas y acciones para generar una licencia, copiar su ID, abrir claves o eliminarlo."
       },
       {
-        "base": "/images/projects/license-generator/04-licensegenerator_license-history",
+        "base": "/images/projects/license-generator/04-licensegenerator_searchable-history",
         "fullWidth": 1636,
         "altEn": "License history: two demo licenses and a search field; the selected row expands to show the complete customer, hardware ID and UserDefined values, with inspection, copy and delete actions.",
         "altEs": "Historial de licencias: dos licencias de ejemplo y un buscador; la fila seleccionada muestra los valores completos de cliente, ID de hardware y UserDefined, con acciones de inspección, copia y eliminación."
       },
       {
-        "base": "/images/projects/license-generator/05-licensegenerator_settings",
+        "base": "/images/projects/license-generator/05-licensegenerator_preferences-and-backup",
         "fullWidth": 1636,
         "altEn": "Settings in dark mode: theme, text size, language and startup greeting with a reset button; local data with a private-key warning and backup export and import; documentation, desktop shortcut and logs.",
         "altEs": "Ajustes en modo oscuro: tema, tamaño del texto, idioma y saludo inicial con botón para restablecer; datos locales con advertencia sobre claves privadas y copias de seguridad; documentación, acceso directo y registros."
