@@ -23,6 +23,42 @@ const metaContent = (html: string, attribute: 'name' | 'property', name: string)
 const noScriptContent = (html: string): string =>
   [...html.matchAll(/<noscript>([\s\S]*?)<\/noscript>/g)].map((match) => match[1]).join('\n');
 
+const jpegSize = (source: Buffer): { width: number; height: number } => {
+  if (source[0] !== 0xff || source[1] !== 0xd8) {
+    throw new Error('expected a JPEG image');
+  }
+
+  let offset = 2;
+  while (offset < source.length) {
+    while (source[offset] === 0xff) offset += 1;
+
+    const marker = source[offset];
+    offset += 1;
+
+    if (marker === 0xd9 || marker === 0xda) {
+      break;
+    }
+
+    const segmentLength = source.readUInt16BE(offset);
+    if (segmentLength < 2) {
+      break;
+    }
+
+    const isStartOfFrame =
+      marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker);
+    if (isStartOfFrame) {
+      return {
+        height: source.readUInt16BE(offset + 3),
+        width: source.readUInt16BE(offset + 5),
+      };
+    }
+
+    offset += segmentLength;
+  }
+
+  throw new Error('JPEG size marker not found');
+};
+
 interface StructuredNode {
   '@type': string;
   '@id': string;
@@ -83,6 +119,17 @@ describe('buildRouteShell', () => {
     expect(metaContent(shell, 'name', 'twitter:image:alt')).toEqual(metaContent(shell, 'property', 'og:image:alt'));
     expect(shell).not.toContain('<meta name="title"');
     expect(shell).not.toContain('og:locale:alternate');
+  });
+
+  it('declares_the_real_width_and_height_of_the_social_image_when_the_shell_is_built', () => {
+    const shell = buildRouteShell(INDEX_HTML, HOME_ROUTE);
+    const [imagePath] = metaContent(shell, 'property', 'og:image');
+    const image = readFileSync(resolve(import.meta.dirname, '../../public', `.${new URL(imagePath).pathname}`));
+    const size = jpegSize(image);
+
+    expect(metaContent(shell, 'property', 'og:image:width')).toEqual([String(size.width)]);
+    expect(metaContent(shell, 'property', 'og:image:height')).toEqual([String(size.height)]);
+    expect(size).toEqual({ width: 1200, height: 630 });
   });
 
   it('describes the site and its owner as one structured-data graph', () => {

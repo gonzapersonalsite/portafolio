@@ -5,6 +5,8 @@ import { buildNotFoundPage, buildRouteShell } from './shell.ts';
 
 // Vercel serves this file, with status 404, for any address that matches no file.
 const NOT_FOUND_FILE = '404.html';
+const decodeAssetSource = (source: string | Uint8Array): string =>
+  typeof source === 'string' ? source : new TextDecoder().decode(source);
 
 export function agentFilesPlugin(): Plugin {
   return {
@@ -32,7 +34,7 @@ export function agentFilesPlugin(): Plugin {
       }
 
       // Every shell starts from the built index.html (with its script, style and font tags).
-      const template = index.source.toString();
+      const template = decodeAssetSource(index.source);
       index.source = buildRouteShell(template, HOME_ROUTE);
 
       for (const route of ROUTES) {
