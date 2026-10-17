@@ -19,12 +19,9 @@ El proyecto es **solo estático**: un único despliegue, cero servidores.
 - **Frontend (Vercel):**
   - Vercel despliega automáticamente en cada push a `main` desde el directorio `frontend/`.
   - Vercel detecta pnpm por `pnpm-lock.yaml`; después pnpm cambia a la versión fijada en el campo `packageManager` de `frontend/package.json` (el log del build muestra qué versión se ejecutó).
-  - GitHub Actions ejecuta lint, tests y `pnpm build` (comprobación de tipos + build de producción) en push/PR que toquen `frontend/**` o `.github/workflows/frontend-ci.yml`. No bloquea el despliegue de Vercel: el build propio de Vercel (`tsc -b && vite build`) detiene un despliegue ante errores de tipos o de build, pero un fallo de lint o de tests solo aparece como un check fallido, así que ejecuta `pnpm lint && pnpm test` antes de hacer push. El workflow corre en `ubuntu-24.04` con permisos de solo lectura, y sus actions están fijadas por SHA de commit completo con la versión en un comentario. Para actualizar una action, resuelve la nueva etiqueta con `gh api repos/<owner>/<repo>/git/ref/tags/<tag>` (una etiqueta anotada apunta a un objeto tag: síguelo hasta el commit) y cambia el SHA y el comentario a la vez.
-  - El script de instalación de esbuild se aprueba en el repo con `allowBuilds: { esbuild: true }` en `frontend/pnpm-workspace.yaml`, el ajuste de aprobación de builds de pnpm 11 y posteriores; el script de instalación de cualquier otra dependencia sigue bloqueado. Vercel no necesita configuración extra y CI instala con `--ignore-scripts`.
+  - La verificación se ejecuta en local antes de subir mediante `.husky/pre-push` (`pnpm lint`, `pnpm test` y `pnpm build`); no hay workflows de GitHub Actions.
+  - El script de instalación de esbuild se aprueba en el repo con `allowBuilds: { esbuild: true }` en `frontend/pnpm-workspace.yaml`, el ajuste de aprobación de builds de pnpm 11 y posteriores; el script de instalación de cualquier otra dependencia sigue bloqueado. Vercel no necesita configuración extra.
   - Panel de Vercel: Install Command `pnpm install` y Build Command `pnpm run build`.
-
-Detalles del pipeline:
-- Workflow: `.github/workflows/frontend-ci.yml`
 
 ### 🌐 Configuración del hosting (`frontend/vercel.json`)
 - **Sin rewrites:** cada ruta es un fichero HTML propio. Cualquier otra dirección, incluido un asset o una imagen que no existen, recibe `404.html` con estado 404 (la app de esa página lleva al visitante al inicio). No hay `/favicon.ico`: las páginas enlazan los iconos de `/icons/`.
@@ -59,7 +56,7 @@ pnpm dev
 
 El servidor de desarrollo solo escucha en `localhost`; ejecuta `pnpm dev --host` para abrirlo desde un móvil en la misma red. También sirve `llms.txt`, `robots.txt`, `sitemap.xml` y las copias markdown; los shells HTML por ruta (títulos, canonical, JSON-LD) y `404.html` solo existen en la salida del build.
 
-`pnpm install` ejecuta solo los scripts de instalación de dependencias aprobados en `pnpm-workspace.yaml` (esbuild) y después el script `prepare` del proyecto, que instala el hook de Git descrito abajo. Con `pnpm install --ignore-scripts` no se ejecuta nada; `pnpm run prepare` instala el hook después.
+`pnpm install` ejecuta solo los scripts de instalación de dependencias aprobados en `pnpm-workspace.yaml` (esbuild) y después el script `prepare` del proyecto, que instala los hooks de Git descritos abajo. Con `pnpm install --ignore-scripts` no se ejecuta nada; `pnpm run prepare` instala los hooks después.
 
 ### Puertas de calidad
 ```bash
@@ -68,7 +65,7 @@ pnpm test     # Vitest: unit, integridad del contenido y tests de las reglas de 
 pnpm build    # Compilación TypeScript + build de producción con Vite
 ```
 
-`pnpm build` también alimenta `pnpm preview`, que sirve el bundle de producción en local; abre el shell de una ruta en su dirección con barra final (p. ej. `/about/`). Un hook de Husky en pre-commit (`.husky/pre-commit`, instalado por el script `prepare`) ejecuta `lint-staged`: ESLint sobre los ficheros `*.ts`/`*.tsx` en stage, que falla con cualquier aviso como `pnpm lint`. Las reglas de arquitectura y qué hace cumplir cada una están en la [Guía de arquitectura](ARCHITECTURE.md#-reglas-de-feature-sliced-design).
+`pnpm build` también alimenta `pnpm preview`, que sirve el bundle de producción en local; abre el shell de una ruta en su dirección con barra final (p. ej. `/about/`). Los hooks de Husky instalados por el script `prepare` ejecutan `lint-staged` en `.husky/pre-commit` (ESLint sobre los ficheros `*.ts`/`*.tsx` en stage, que falla con cualquier aviso como `pnpm lint`) y `pnpm lint`, `pnpm test` y `pnpm build` en `.husky/pre-push`. Las reglas de arquitectura y qué hace cumplir cada una están en la [Guía de arquitectura](ARCHITECTURE.md#-reglas-de-feature-sliced-design).
 
 ### Verificación de estados de carga
 

@@ -159,9 +159,9 @@ This contract concerns the bundled entity data. Route-module skeletons and galle
 - **Conventions**: tests next to what they test (`ARCHITECTURE.md` → *Feature-Sliced Design Rules*), `describe`/`it` blocks, mocks before imports
 - **Real MUI**: MUI renders in jsdom, so there is no global MUI mock; component tests render the real providers they need (`MemoryRouter`, `LanguageProvider`, `ThemeProvider`) and query by role and accessible name. Assertions use plain DOM APIs (`getAttribute`, `textContent`); jest-dom is not a dependency. jsdom has no `matchMedia` or `scrollTo`: stub them per test (`vi.stubGlobal`, `vi.spyOn`).
 - **Content integrity tests**: `entities/<entity>/api/data.test.ts` validate the static JSON (contract, ordering, images exist via `import.meta.glob`).
-- **Run**: `pnpm test` (CI: `frontend-ci.yml`)
+- **Run**: `pnpm test`
 - **Every test runs, and the architecture rules are tested**: see `ARCHITECTURE.md` → *Feature-Sliced Design Rules*.
-- **Local gate**: a Husky pre-commit hook (installed by the `prepare` script on `pnpm install`; after `pnpm install --ignore-scripts`, run `pnpm run prepare`) runs `lint-staged` — ESLint over staged `*.ts`/`*.tsx` files, failing on any warning like `pnpm lint`.
+- **Local gates**: Husky hooks (installed by the `prepare` script on `pnpm install`; after `pnpm install --ignore-scripts`, run `pnpm run prepare`) run `lint-staged` on `.husky/pre-commit` (ESLint over staged `*.ts`/`*.tsx` files, failing on any warning like `pnpm lint`) and `pnpm lint`, `pnpm test` and `pnpm build` on `.husky/pre-push`.
 
 ## Build & Deploy
 
@@ -169,8 +169,7 @@ This contract concerns the bundled entity data. Route-module skeletons and galle
 - **Chunks** (`build.rolldownOptions.output.codeSplitting`): `react-vendor` (react, react-dom, scheduler, react-router, react-router-dom) and `mui-vendor` (only the `@mui/*` and `@emotion/*` modules of the first render, `tags: ['$initial']`); MUI components used by a single page (Timeline, TextField, Dialog) stay in that page's chunk. Do not go back to `manualChunks`: Rolldown deprecates it and it pulled React into `mui-vendor`.
 - **TypeScript side-by-side layout**: `typescript` is aliased to `@typescript/typescript6` — the programmatic API that typescript-eslint consumes, exposing `tsc6` — while `@typescript/native` provides the native compiler that `tsc` (and therefore `pnpm build`) resolves to. Do not collapse them into a single `typescript` dependency until typescript-eslint supports the native compiler API.
 - **Dev**: Vite dev server on `localhost:5173` (`pnpm dev --host` to open it from a phone on the LAN); no API proxy needed. It serves the agent files but not the route shells: check shell metadata with `pnpm build && pnpm preview` at the trailing-slash address (`/about/`).
-- **Prod**: Vercel (root dir `frontend/`) with no rewrites: every route is a file of its own and any other address gets `404.html`; no `/api` proxy
-- **CI** (`.github/workflows/frontend-ci.yml`): `ubuntu-24.04`, `permissions: contents: read`, `pnpm install --frozen-lockfile --ignore-scripts`, lint → test → `pnpm build`. It runs on pushes/PRs to `main` touching `frontend/**` or the workflow itself, and can be started manually. It does not gate the deploy (no branch protection, no Vercel deployment checks): Vercel builds each push itself, and only type or build errors stop it. Actions are pinned to full commit SHAs with the release in a comment; to upgrade one, resolve the new tag with `gh api repos/<owner>/<repo>/git/ref/tags/<tag>` (dereference annotated tags) and update both.
+- **Prod**: Vercel (root dir `frontend/`) with no rewrites: every route is a file of its own and any other address gets `404.html`; no `/api` proxy. Verification runs locally through `.husky/pre-push`; there are no GitHub Actions workflows.
 - **Line endings**: `.gitattributes` keeps LF in every checkout (`* text=auto eol=lf`); the CSP hash of the inline script depends on it.
 
 ## Agent-Readable Output

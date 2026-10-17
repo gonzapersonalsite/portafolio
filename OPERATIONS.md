@@ -19,12 +19,9 @@ The project is **static-only** — a single deployment, zero servers.
 - **Frontend (Vercel):**
   - Vercel auto-deploys on every push to `main` from the `frontend/` directory.
   - Vercel detects pnpm from `pnpm-lock.yaml`; pnpm then switches to the version pinned in the `packageManager` field of `frontend/package.json` (the build log shows which version ran).
-  - GitHub Actions runs lint, tests and `pnpm build` (type-check + production build) on pushes/PRs touching `frontend/**` or `.github/workflows/frontend-ci.yml`. It does not block the Vercel deployment: Vercel's own build (`tsc -b && vite build`) stops a deploy on type or build errors, but a lint or test failure only shows as a failed check, so run `pnpm lint && pnpm test` before pushing. The workflow runs on `ubuntu-24.04` with read-only permissions, and its actions are pinned to full commit SHAs with the release in a comment. To upgrade an action, resolve the new tag with `gh api repos/<owner>/<repo>/git/ref/tags/<tag>` (an annotated tag points to a tag object: follow it to the commit) and replace the SHA and the comment together.
-  - esbuild's install script is approved in-repo by `allowBuilds: { esbuild: true }` in `frontend/pnpm-workspace.yaml`, the build-approval setting of pnpm 11 and later; every other dependency's install script stays blocked. Vercel needs no extra configuration, and CI installs with `--ignore-scripts`.
+  - Verification runs locally before pushing through `.husky/pre-push` (`pnpm lint`, `pnpm test` and `pnpm build`); there are no GitHub Actions workflows.
+  - esbuild's install script is approved in-repo by `allowBuilds: { esbuild: true }` in `frontend/pnpm-workspace.yaml`, the build-approval setting of pnpm 11 and later; every other dependency's install script stays blocked. Vercel needs no extra configuration.
   - Vercel dashboard: set Install Command to `pnpm install` and Build Command to `pnpm run build`.
-
-Pipeline details:
-- Workflow: `.github/workflows/frontend-ci.yml`
 
 ### 🌐 Hosting configuration (`frontend/vercel.json`)
 - **No rewrites:** every route is an HTML file of its own. Any other address, a missing asset or image included, gets `404.html` with status 404 (the app on that page sends visitors home). There is no `/favicon.ico`: pages link the icons in `/icons/`.
@@ -59,7 +56,7 @@ pnpm dev
 
 The dev server listens on `localhost` only; run `pnpm dev --host` to open it from a phone on the same network. It also serves `llms.txt`, `robots.txt`, `sitemap.xml` and the markdown twins; the per-route HTML shells (titles, canonical links, JSON-LD) and `404.html` only exist in the build output.
 
-`pnpm install` runs only the dependency install scripts approved in `pnpm-workspace.yaml` (esbuild) and then the project's `prepare` script, which installs the Git hook below. With `pnpm install --ignore-scripts` nothing runs; `pnpm run prepare` installs the hook afterwards.
+`pnpm install` runs only the dependency install scripts approved in `pnpm-workspace.yaml` (esbuild) and then the project's `prepare` script, which installs the Git hooks below. With `pnpm install --ignore-scripts` nothing runs; `pnpm run prepare` installs the hooks afterwards.
 
 ### Quality Gates
 ```bash
@@ -68,7 +65,7 @@ pnpm test     # Vitest: unit, content-integrity and architecture-rule tests
 pnpm build    # TypeScript compilation + Vite production build
 ```
 
-`pnpm build` also powers `pnpm preview`, which serves the production bundle locally; open a route's shell at its trailing-slash address (e.g. `/about/`). A Husky pre-commit hook (`.husky/pre-commit`, installed by the `prepare` script) runs `lint-staged` — ESLint over staged `*.ts`/`*.tsx` files, failing on any warning like `pnpm lint`. The architecture rules and what enforces each one are in the [Architecture Guide](ARCHITECTURE.md#-feature-sliced-design-rules).
+`pnpm build` also powers `pnpm preview`, which serves the production bundle locally; open a route's shell at its trailing-slash address (e.g. `/about/`). Husky hooks installed by the `prepare` script run `lint-staged` on `.husky/pre-commit` (ESLint over staged `*.ts`/`*.tsx` files, failing on any warning like `pnpm lint`) and `pnpm lint`, `pnpm test` and `pnpm build` on `.husky/pre-push`. The architecture rules and what enforces each one are in the [Architecture Guide](ARCHITECTURE.md#-feature-sliced-design-rules).
 
 ### Loading-state verification
 
